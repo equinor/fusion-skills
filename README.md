@@ -1,100 +1,91 @@
-# Fusion Skills
+# 🤖 Fusion Skills
 
-This repository is the shared home for Fusion team GitHub Copilot Agent Skills.
+This is Fusion’s shared catalog of GitHub Copilot **Agent Skills** — reusable, versioned “mini playbooks” that help you run common workflows consistently.
 
-- Contributing guide: see `CONTRIBUTING.md`
+Skills are designed to be:
+- 🧭 **Actionable**: they guide you through a specific task (not generic chat)
+- 📎 **Concrete**: they state what the agent will produce (files/commands/summary)
+- 🔒 **Safer by default**: they call out constraints and avoid risky automation
 
-## Purpose and scope
+If you just want to use the skills, start with **Quick start**.
 
-This repo:
-- Collects reusable Agent Skills that encode repeatable workflows (planning, triage, reviews, runbooks, etc.).
-- Provides a consistent structure so skills can be installed in a project or in a user profile.
+## 🚀 Quick start
 
-This repo is not:
-- A general documentation site for Fusion (put long-form docs in the relevant product repos).
-- A place for secrets, tokens, or environment-specific configuration.
-- A dumping ground for one-off prompts; keep skills focused, maintained, and owned.
-
-## Repository structure (Agent Skills standard)
-
-Skills live in:
-
-`skills/<skill-name>/SKILL.md`
-
-Each `SKILL.md` must include YAML frontmatter with at least `name` and `description`.
-
-Example:
-
-```markdown
----
-name: my-skill
-description: One sentence describing when to use it.
----
-
-# When to Activate
-...
-```
-
-Common optional folders (use only when needed):
-- `skills/<skill-name>/references/` - Longer docs, checklists, examples.
-- `skills/<skill-name>/assets/` - Images or other static assets referenced by the skill.
-- `skills/<skill-name>/scripts/` - Helper scripts used by the skill (treat as sensitive; see Security).
-
-## Consume skills in GitHub Copilot
-
-Use the `skills` CLI to install and keep skills up to date.
-
-### Project install (recommended for team sharing)
-
-Installs into `.github/skills/` in the current repository.
-
-```bash
-npx skills add equinor/fusion-skills
-```
-
-To see what skills are available before installing:
+List what’s available:
 
 ```bash
 npx skills add equinor/fusion-skills --list
 ```
 
-### Personal install (recommended for local experimentation)
+Install into a repo (team sharing):
 
-Installs globally for your user (Copilot user-level skills).
+```bash
+npx skills add equinor/fusion-skills
+```
+
+Install for your user (local experimentation):
 
 ```bash
 npx skills add equinor/fusion-skills -g
 ```
 
-### Update
-
-Update all installed skills to the latest versions:
+Update installed skills:
 
 ```bash
 npx skills update
 ```
 
-### Remove
-
-Interactive remove:
+Remove skills:
 
 ```bash
 npx skills remove
 ```
 
-Remove specific skills:
+## 🤌 What you get
 
-```bash
-npx skills remove <skill-name>
-```
+This repo contains reusable skills for common workflows (planning, triage, reviews, runbooks, etc.).
 
-## Install / update mechanics
+Each skill should tell you:
+- when to use it (and when not to),
+- what it will produce (files/commands/summary),
+- what inputs it needs,
+- and what safety constraints apply.
 
-Fusion supports installing skills via the `skills` CLI (which manages what is copied into the project/global skills locations). Avoid committing symlinks as an installation mechanism.
+## 📦 What’s in the repo
 
-## Security note
+Skills live under `skills/`. The structure inside a skill is intentionally flexible, but most skills have an entry file:
 
-Skills may reference scripts. Treat everything under `scripts/` as security-sensitive code:
-- Review scripts like any other code change (ownership + PR review).
-- Do not add secrets; never log or print credentials.
-- Prefer least-privilege execution and avoid running scripts from untrusted sources.
+`skills/<skill-name>/SKILL.md`
+
+Some conventions you may see:
+- `skills/.experimental/` 🧪 preview / in-development skills
+- `skills/.curated/` ✅ curated, broadly reusable skills
+- `skills/.system/` ⚙️ internal/system skills and shared building blocks
+
+<details>
+	<summary>Where do skills get installed?</summary>
+
+- Project installs typically land in `.github/skills/` in the current repo.
+- Personal installs use your Copilot user-level skills location.
+
+</details>
+
+## 🔒 Safety & security
+
+> [!CAUTION]
+> - Never paste secrets (tokens/keys/credentials) into prompts, logs, or docs
+> - Treat `skills/**/scripts/` as security-sensitive code; don’t run scripts you don’t understand
+> - Confirm side effects before running commands (especially destructive operations)
+
+For details and reporting guidance, see `SECURITY.md`.
+
+> [!WARNING]
+> - This is __NOT__ a general Fusion documentation site (keep long-form docs in the relevant product repos)
+> - This is __NOT__ a place for secrets, tokens, or environment-specific configuration
+> - This is __NOT__ a dumping ground for one-off prompts — skills should be owned and maintained
+
+---
+
+Want to contribute or review changes? See `CONTRIBUTING.md`.
+
+Are you an agent making changes in this repo? See `AGENT.md`.

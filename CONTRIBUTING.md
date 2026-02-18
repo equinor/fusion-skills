@@ -2,7 +2,7 @@
 
 Thanks for helping improve Fusion’s shared GitHub Copilot Agent Skills.
 
-This repo is intentionally small and strict: skills are meant to be reusable, owned, and safe.
+Skills are meant to be reusable, owned, and safe. This guide describes the maintainer workflow and the quality bar.
 
 ## Quick start (add a new skill)
 
@@ -32,7 +32,7 @@ This repo is intentionally small and strict: skills are meant to be reusable, ow
 6. Open a PR.
    - If your skill adds or modifies anything under `scripts/`, expect deeper review.
 
-## Minimum required content for `SKILL.md`
+## Minimum content expectations for `SKILL.md`
 
 `SKILL.md` is the entry point. It should be **easy to skim** and tell a user:
 - what the skill does,
@@ -40,13 +40,13 @@ This repo is intentionally small and strict: skills are meant to be reusable, ow
 - what it outputs,
 - and what safety constraints apply.
 
-### Required structure
+### What it must cover
 
-- YAML frontmatter with:
-  - `name`: must match the folder name
-  - `description`: one sentence describing the value and when to use it
+- Include YAML frontmatter (Agent Skills metadata) with:
+   - `name`: matches the folder name (lowercase letters, numbers, hyphens)
+   - `description`: brief description of what the skill does **and when to use it**
 
-- Headings/sections that cover:
+- Content that covers:
   - **When to use** (activation criteria)
   - **When not to use** (anti-patterns / when to choose a different skill)
   - **Expected output** (what the agent should produce: files, commands, a summary, etc.)
@@ -58,19 +58,29 @@ This repo is intentionally small and strict: skills are meant to be reusable, ow
 ```markdown
 ---
 name: example-skill
-description: One sentence describing when to use it.
+description: What it does + when to use it (trigger guidance).
 ---
 
-# When to use
+# Example Skill
 
-# When not to use
+## Instructions
 
-# Expected output
+Provide clear, step-by-step guidance. Ensure the instructions cover:
+- when to use / when not to use
+- expected output
+- required inputs
+- safety constraints (especially around scripts / destructive commands)
 
-# Inputs
+## Examples (optional but strongly encouraged)
 
-# Safety & constraints
+### Example
+User: ...
+Agent: ...
 ```
+
+For format background, see the Agent Skills overview and specification:
+- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview
+- https://agentskills.io/specification
 
 ## Progressive disclosure (keep `SKILL.md` lean)
 
