@@ -2,6 +2,8 @@
 
 This repository is the shared home for Fusion team GitHub Copilot Agent Skills.
 
+- Contributing guide: see `CONTRIBUTING.md`
+
 ## Purpose and scope
 
 This repo:

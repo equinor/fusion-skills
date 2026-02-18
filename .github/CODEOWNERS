@@ -1,0 +1,11 @@
+# Fusion Skills CODEOWNERS
+#
+# Last matching pattern wins.
+# Add per-skill ownership rules as new skills are introduced.
+
+# Default fallback owner(s) for the repo
+* @equinor/fusion-core
+
+# Skills
+/skills/ @equinor/fusion-core
+/skills/*/ @equinor/fusion-core
