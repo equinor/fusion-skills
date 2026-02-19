@@ -30,22 +30,30 @@ jobs:
       - name: Resolve version and tag state
         id: release
         run: |
+          echo "## Publish status" >> "$GITHUB_STEP_SUMMARY"
           CURRENT_VERSION=$(bun -e 'const p = JSON.parse(await Bun.file("package.json").text()); console.log(p.version)')
+          echo "version=${CURRENT_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "__📦 Version: ${CURRENT_VERSION}__" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
           TAG="v${CURRENT_VERSION}"
           TAG_EXISTS=false
+
           if git ls-remote --exit-code --tags origin "refs/tags/${TAG}" >/dev/null 2>&1; then
+            echo "- ☑️ Skipped due to existing tag: ${TAG}" >> "$GITHUB_STEP_SUMMARY"
             TAG_EXISTS=true
+          else
+            echo "- ✅ No existing tag found for ${TAG}, proceeding with release." >> "$GITHUB_STEP_SUMMARY"
           fi
 
-          echo "current=$CURRENT_VERSION" >> "$GITHUB_OUTPUT"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "tag_exists=$TAG_EXISTS" >> "$GITHUB_OUTPUT"
-          echo "Tag exists for ${TAG}: $TAG_EXISTS"
-
       - name: Finalize release artifacts
         id: finalize
         if: steps.release.outputs.tag_exists != 'true'
-        run: bun run release:finalize
+        run: |
+          bun run release:finalize
+          echo "- ✅ Finalize release artifacts" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Create and push release tag
         id: create_tag
@@ -55,6 +63,7 @@ jobs:
         run: |
           git tag "$TAG"
           git push origin "$TAG"
+          echo "- ✅ create 🏷️ ${TAG}" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Create GitHub Release
         id: create_release
@@ -65,45 +74,9 @@ jobs:
         run: |
           if gh release view "$TAG" >/dev/null 2>&1; then
             echo "Release $TAG already exists."
+            echo "- ☑️ release allready exists for 🏷️ ${TAG}" >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           gh release create "$TAG" --title "$TAG" --notes-file .release-notes.md
-
-      - name: Report publish status
-        if: always()
-        env:
-          CURRENT_VERSION: ${{ steps.release.outputs.current }}
-          TAG: ${{ steps.release.outputs.tag }}
-          TAG_EXISTS: ${{ steps.release.outputs.tag_exists }}
-          FINALIZE_OUTCOME: ${{ steps.finalize.outcome }}
-          TAG_OUTCOME: ${{ steps.create_tag.outcome }}
-          RELEASE_OUTCOME: ${{ steps.create_release.outcome }}
-        run: |
-          if [[ "$TAG_EXISTS" == "true" ]]; then
-            STATUS="Skipped publish (tag already exists)"
-          elif [[ "$RELEASE_OUTCOME" == "success" ]]; then
-            STATUS="Release published"
-          else
-            STATUS="Publish attempted but did not complete successfully"
-          fi
-
-          echo "Publish workflow status: $STATUS"
-          echo "Version: $CURRENT_VERSION"
-          echo "Tag: $TAG"
-          echo "Tag already existed: $TAG_EXISTS"
-          echo "Finalize release artifacts: $FINALIZE_OUTCOME"
-          echo "Create and push release tag: $TAG_OUTCOME"
-          echo "Create GitHub Release: $RELEASE_OUTCOME"
-
-          {
-            echo "## Publish status"
-            echo
-            echo "- **Result**: $STATUS"
-            echo "- **Version**: $CURRENT_VERSION"
-            echo "- **Tag**: $TAG"
-            echo "- **Tag existed before run**: $TAG_EXISTS"
-            echo "- **Finalize release artifacts**: $FINALIZE_OUTCOME"
-            echo "- **Create and push release tag**: $TAG_OUTCOME"
-            echo "- **Create GitHub Release**: $RELEASE_OUTCOME"
-          } >> "$GITHUB_STEP_SUMMARY"
+          echo "- ✅ release created for 🏷️ ${TAG}" >> "$GITHUB_STEP_SUMMARY"
 
