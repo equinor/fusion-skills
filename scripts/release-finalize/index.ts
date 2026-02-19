@@ -1,7 +1,7 @@
 import { rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import process from "node:process";
-import { extractReleaseSkillNames, readReleaseMarkdown } from "./read-release-md";
+import { extractReleaseBump, extractReleaseSkillNames, readReleaseMarkdown } from "./read-release-md";
 import { readSkillVersionAtRef } from "./read-skill-version-at-ref";
 import type { BumpType } from "./semver";
 import { detectBump, isHigherBump } from "./semver";
@@ -25,10 +25,11 @@ function main(): void {
   }
 
   const releaseSkills = extractReleaseSkillNames(releaseMarkdown);
+  const releaseBump = extractReleaseBump(releaseMarkdown);
   const beforeRef = process.env.BEFORE_SHA?.trim();
-  let packageBump: BumpType = "patch";
+  let packageBump: BumpType = releaseBump ?? "patch";
 
-  if (beforeRef) {
+  if (!releaseBump && beforeRef) {
     for (const skillName of releaseSkills) {
       const fromVersion = readSkillVersionAtRef(beforeRef, skillName);
       const toVersion = readSkillVersionAtRef("HEAD", skillName);

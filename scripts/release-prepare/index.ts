@@ -1,13 +1,34 @@
 import { readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import process from "node:process";
+import { getChangesetProvenance, getRepoSlug } from "./changeset-provenance";
 import { discoverSkillFiles } from "./discover-skill-files";
 import { listChangesetFiles } from "./list-changeset-files";
 import { parseChangeset } from "./parse-changeset";
+import {
+  type GroupedNotes,
+  normalizeNoteBody,
+  type NoteEntry,
+  renderGroupedNotes,
+} from "./release-notes-format";
 import type { BumpType } from "./semver";
 import { bumpSemver, isHigherBump } from "./semver";
 import { extractMetadataVersion, updateMetadataVersion } from "./skill-version";
 import { upsertSkillChangelog } from "./upsert-skill-changelog";
+
+function normalizeEntry(entry: NoteEntry): NoteEntry | null {
+  const body = normalizeNoteBody(entry.body);
+  if (!body) {
+    return null;
+  }
+
+  return {
+    body,
+    prNumber: entry.prNumber,
+    commitSha: entry.commitSha,
+    authorLogin: entry.authorLogin,
+  };
+}
 
 /**
  * CLI entrypoint for applying changesets into release artifacts.
@@ -15,6 +36,7 @@ import { upsertSkillChangelog } from "./upsert-skill-changelog";
 function main(): void {
   const repoRoot = process.cwd();
   const releasePath = join(repoRoot, ".changeset", "release.md");
+  const repoSlug = getRepoSlug();
   const changesetFiles = listChangesetFiles(repoRoot);
 
   if (changesetFiles.length === 0) {
@@ -24,10 +46,11 @@ function main(): void {
 
   const skillByName = discoverSkillFiles(repoRoot);
   const aggregateBumps = new Map<string, BumpType>();
-  const aggregateNotes = new Map<string, string[]>();
+  const aggregateNotes = new Map<string, GroupedNotes>();
 
   for (const changesetFile of changesetFiles) {
     const parsed = parseChangeset(readFileSync(changesetFile, "utf8"));
+    const provenance = getChangesetProvenance(repoRoot, changesetFile);
 
     for (const [skillName, bumpType] of Object.entries(parsed.skills)) {
       if (!skillByName.has(skillName)) {
@@ -39,13 +62,24 @@ function main(): void {
         aggregateBumps.set(skillName, bumpType);
       }
 
-      const notes = aggregateNotes.get(skillName) ?? [];
-      notes.push(parsed.body);
+      const notes =
+        aggregateNotes.get(skillName) ?? {
+          major: [],
+          minor: [],
+          patch: [],
+        };
+      notes[bumpType].push({
+        body: parsed.body,
+        prNumber: provenance.prNumber,
+        commitSha: provenance.commitSha,
+        authorLogin: provenance.authorLogin,
+      });
       aggregateNotes.set(skillName, notes);
     }
   }
 
   const releaseSections: string[] = [];
+  let highestReleaseBump: BumpType = "patch";
 
   for (const skillName of Array.from(aggregateBumps.keys()).sort()) {
     const skillFile = skillByName.get(skillName);
@@ -57,7 +91,15 @@ function main(): void {
     if (!bumpType) {
       throw new Error(`Missing bump type for: ${skillName}`);
     }
-    const notes = aggregateNotes.get(skillName) ?? [];
+    if (isHigherBump(bumpType, highestReleaseBump)) {
+      highestReleaseBump = bumpType;
+    }
+    const notes =
+      aggregateNotes.get(skillName) ?? {
+        major: [],
+        minor: [],
+        patch: [],
+      };
 
     const currentContent = readFileSync(skillFile, "utf8");
     const currentVersion = extractMetadataVersion(currentContent);
@@ -66,15 +108,27 @@ function main(): void {
     // Maintainer note: update SKILL.md before changelog so failures fail fast on version parsing.
     writeFileSync(skillFile, updateMetadataVersion(currentContent, newVersion), "utf8");
 
-    const formattedNotes = notes.map((note) => note.trim()).filter((note) => note.length > 0);
+    const formattedNotes: GroupedNotes = {
+      major: notes.major.map(normalizeEntry).filter((note): note is NoteEntry => note !== null),
+      minor: notes.minor.map(normalizeEntry).filter((note): note is NoteEntry => note !== null),
+      patch: notes.patch.map(normalizeEntry).filter((note): note is NoteEntry => note !== null),
+    };
 
-    upsertSkillChangelog(skillDir, newVersion, formattedNotes);
+    upsertSkillChangelog(skillDir, newVersion, formattedNotes, repoSlug);
 
-    releaseSections.push([`${skillName}@${newVersion}`, "", ...formattedNotes].join("\n"));
+    releaseSections.push([`### ${skillName}@${newVersion}`, "", ...renderGroupedNotes(formattedNotes, repoSlug, 4)].join("\n"));
     console.log(`Prepared ${skillName}: ${currentVersion} -> ${newVersion} (${bumpType})`);
   }
 
-  writeFileSync(releasePath, `${releaseSections.join("\n\n")}\n`, "utf8");
+  const frontmatterLines = [
+    "---",
+    `bump: ${highestReleaseBump}`,
+    "---",
+    "",
+    "",
+  ];
+
+  writeFileSync(releasePath, `${frontmatterLines.join("\n")}${releaseSections.join("\n\n")}\n`, "utf8");
   console.log(`Wrote ${releasePath}`);
 
   for (const changesetFile of changesetFiles) {

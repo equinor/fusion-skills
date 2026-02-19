@@ -34,7 +34,15 @@ jobs:
           BEFORE_SHA: ${{ github.event.before }}
         run: bun run release:finalize
 
+      - name: Resolve release version
+        id: version
+        run: |
+          VERSION=$(bun -e 'const p = JSON.parse(await Bun.file("package.json").text()); console.log(p.version)')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
       - name: Commit release files
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
           if git diff --quiet; then
             echo "No release changes to commit."
@@ -42,7 +50,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          VERSION=$(bun -e 'const p = JSON.parse(await Bun.file("package.json").text()); console.log(p.version)')
           git add -A
           git commit -m "chore(release): publish v${VERSION}"
           git tag "v${VERSION}"
@@ -51,8 +58,8 @@ jobs:
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          VERSION=$(bun -e 'const p = JSON.parse(await Bun.file("package.json").text()); console.log(p.version)')
           TAG="v${VERSION}"
           if gh release view "$TAG" >/dev/null 2>&1; then
             echo "Release $TAG already exists."
@@ -63,3 +70,4 @@ jobs:
           else
             gh release create "$TAG" --title "$TAG" --generate-notes
           fi
+

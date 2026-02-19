@@ -40,44 +40,36 @@ jobs:
           cat > "$BODY_FILE" <<'EOF'
           This PR was auto-generated from `.changeset/*.md` files.
 
-          Note: the `release/skills` branch is recreated automatically if deleted after merge.
+          ## What this PR does
 
-          It:
-          - removes processed changesets
-          - bumps `metadata.version` for affected skills
-          - updates per-skill `skills/<skill>/CHANGELOG.md`
-          - creates `.changeset/release.md` for publish automation
+          - Removes processed changesets
+          - Bumps affected skill `metadata.version`
+          - Updates `skills/<skill>/CHANGELOG.md`
+          - Creates `.changeset/release.md` for publish automation
 
           EOF
 
           if [ -f .changeset/release.md ]; then
+            RELEASE_BUMP=$(grep -E '^bump:[[:space:]]*(major|minor|patch)$' .changeset/release.md | head -n1 | sed -E 's/^bump:[[:space:]]*//')
+            SKILLS=$(grep -E '^#{2,6}[[:space:]]+[a-z0-9][a-z0-9-]*@[0-9]+\.[0-9]+\.[0-9]+$' .changeset/release.md | sed -E 's/^#{2,6}[[:space:]]+//')
+
             {
-              echo "## Skills to release"
-              grep -E '^[a-z0-9][a-z0-9-]*@[0-9]+\.[0-9]+\.[0-9]+$' .changeset/release.md | sed 's/^/- `/' | sed 's/$/`/'
+              echo "## Release summary"
               echo
-              echo "## Release notes input"
+              if [ -n "$RELEASE_BUMP" ]; then
+                echo "- Highest package bump: \`$RELEASE_BUMP\`"
+              fi
+              if [ -n "$SKILLS" ]; then
+                echo "- Skills in this release:"
+                echo "$SKILLS" | sed 's/^/- `/' | sed 's/$/`/'
+              else
+                echo "- Skills in this release: _none detected_"
+              fi
+              echo
+              echo "## Release notes input (.changeset/release.md)"
               echo
               echo "\`\`\`markdown"
               cat .changeset/release.md
-              echo "\`\`\`"
-              echo
-            } >> "$BODY_FILE"
-          fi
-
-          CHANGED_CHANGELOGS="$(git diff --name-only | grep -E '^skills/.+/CHANGELOG\.md$' || true)"
-          if [ -n "$CHANGED_CHANGELOGS" ]; then
-            {
-              echo "## Changelog diff preview"
-              echo
-              echo "\`\`\`diff"
-            } >> "$BODY_FILE"
-
-            while IFS= read -r file; do
-              [ -n "$file" ] || continue
-              git diff --unified=0 -- "$file"
-            done <<< "$CHANGED_CHANGELOGS" | sed -n '1,220p' >> "$BODY_FILE"
-
-            {
               echo "\`\`\`"
               echo
             } >> "$BODY_FILE"

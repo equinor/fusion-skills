@@ -1,5 +1,9 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
+function stripFrontmatter(content: string): string {
+  return content.replace(/^---\n[\s\S]*?\n---\n*/u, "").trim();
+}
+
 /**
  * Inserts a release section into root CHANGELOG.md.
  */
@@ -8,19 +12,13 @@ export function updateRootChangelog(
   packageVersion: string,
   releaseContent: string,
 ): void {
-  const releaseSection = `## v${packageVersion}\n\n${releaseContent}\n`;
-  let changelog = existsSync(changelogPath)
-    ? readFileSync(changelogPath, "utf8")
-    : "# Changelog\n\nAll notable changes to this repository are documented in this file.\n\n";
+  const normalizedReleaseContent = stripFrontmatter(releaseContent);
+  const releaseSection = `## v${packageVersion}\n\n${normalizedReleaseContent}\n`;
+  const currentChangelog = existsSync(changelogPath) ? readFileSync(changelogPath, "utf8") : "";
+  const changelog = currentChangelog.trim().length
+    ? currentChangelog
+    : "# Changelog\n\nAll notable changes to this repository are documented in this file.\n";
 
-  if (/^## \[Unreleased\]/m.test(changelog)) {
-    changelog = changelog.replace(
-      /^## \[Unreleased\][^\n]*\n/m,
-      (match) => `${match}\n${releaseSection}\n`,
-    );
-  } else {
-    changelog = `${changelog.trimEnd()}\n\n${releaseSection}\n`;
-  }
-
-  writeFileSync(changelogPath, `${changelog.trimEnd()}\n`, "utf8");
+  const updatedChangelog = `${changelog.trimEnd()}\n\n${releaseSection}\n`;
+  writeFileSync(changelogPath, `${updatedChangelog.trimEnd()}\n`, "utf8");
 }

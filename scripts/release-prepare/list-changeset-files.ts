@@ -9,7 +9,12 @@ export function listChangesetFiles(repoRoot: string): string[] {
   if (!existsSync(changesetDir)) return [];
 
   return readdirSync(changesetDir)
-    .filter((file) => file.endsWith(".md") && file.toLowerCase() !== "readme.md")
+    .filter(
+      (file) =>
+        file.endsWith(".md") &&
+        file.toLowerCase() !== "readme.md" &&
+        file.toLowerCase() !== "release.md",
+    )
     .map((file) => join(changesetDir, file))
     .sort();
 }

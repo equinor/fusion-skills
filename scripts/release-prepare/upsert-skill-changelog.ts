@@ -1,14 +1,19 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { type GroupedNotes, renderGroupedNotes } from "./release-notes-format";
 
 /**
  * Prepends a version entry to skills/<skill>/CHANGELOG.md.
  */
-export function upsertSkillChangelog(skillDir: string, version: string, notes: string[]): void {
+export function upsertSkillChangelog(
+  skillDir: string,
+  version: string,
+  notesByType: GroupedNotes,
+  repoSlug: string | null,
+): void {
   const changelogPath = join(skillDir, "CHANGELOG.md");
   const today = new Date().toISOString().slice(0, 10);
-  const normalizedNotes = notes.map((note) => note.trim()).filter((note) => note.length > 0);
-  const newEntry = [`## ${version} - ${today}`, "", ...normalizedNotes, ""].join("\n");
+  const newEntry = [`## ${version} - ${today}`, "", ...renderGroupedNotes(notesByType, repoSlug, 3)].join("\n");
 
   if (!existsSync(changelogPath)) {
     writeFileSync(changelogPath, `# Changelog\n\n${newEntry}\n`, "utf8");
