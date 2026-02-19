@@ -3,7 +3,7 @@ name: fusion-skill-authoring
 description: Create or scaffold a new skill in a repository with valid metadata, clear activation cues, standard resource folders, safety boundaries, and validation evidence.
 license: MIT
 metadata:
-   version: "0.0.0"
+   version: "0.1.0"
 ---
 
 # Create Skill
