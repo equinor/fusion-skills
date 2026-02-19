@@ -1,0 +1,35 @@
+name: Validate Skills
+
+on:
+  pull_request:
+    paths:
+      - "skills/**"
+      - "scripts/**"
+      - ".github/workflows/validate-skills.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "skills/**"
+      - "scripts/**"
+      - ".github/workflows/validate-skills.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate skill catalog
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Validate skills and counts
+        run: bash scripts/validate-skill-directories.sh

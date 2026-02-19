@@ -5,7 +5,3 @@
 
 # Default fallback owner(s) for the repo
 * @equinor/fusion-core
-
-# Skills
-/skills/ @equinor/fusion-core
-/skills/*/ @equinor/fusion-core
