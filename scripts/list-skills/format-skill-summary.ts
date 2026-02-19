@@ -1,0 +1,28 @@
+/**
+ * Formats a parsed frontmatter object for terminal output.
+ */
+export function formatSkillSummary(skillPath: string, frontmatter: Record<string, string>): string {
+  const lines: string[] = [];
+
+  lines.push("─".repeat(72));
+  lines.push(skillPath);
+  lines.push("─".repeat(72));
+  lines.push(`name:                 ${frontmatter.name ?? "(missing)"}`);
+  lines.push(`description:          ${frontmatter.description ?? "(missing)"}`);
+  lines.push(`license:              ${frontmatter.license ?? "(none)"}`);
+  lines.push(`metadata.version:     ${frontmatter["metadata.version"] ?? "(missing)"}`);
+
+  const metadataExtras = Object.keys(frontmatter)
+    .filter((key) => key.startsWith("metadata.") && key !== "metadata.version")
+    .sort();
+
+  if (metadataExtras.length > 0) {
+    lines.push("metadata extras:");
+    for (const key of metadataExtras) {
+      lines.push(`  - ${key}: ${frontmatter[key]}`);
+    }
+  }
+
+  lines.push("");
+  return lines.join("\n");
+}

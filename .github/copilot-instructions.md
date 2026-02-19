@@ -16,6 +16,8 @@ Collect before writing files:
 - Prefix choice (default to `fusion-` in this repository; ask if user wants a different prefix or none)
 - Final skill name (`fusion-<skill-name>` unless user chooses otherwise)
 - Target placement (`skills/<final-skill-name>/`, `skills/.experimental/<final-skill-name>/`, or `skills/.curated/<final-skill-name>/`)
+- Initial semantic version (`MAJOR.MINOR.PATCH`, default `1.0.0`)
+- License for frontmatter (default `MIT` in this repository)
 - One-sentence purpose for frontmatter `description`
 - Expected outputs (files, commands, summary)
 - Safety boundaries for the skill
@@ -37,6 +39,7 @@ If required inputs are missing, ask targeted follow-up questions first.
 Frontmatter must include:
 - `name`
 - `description`
+- `metadata.version`
 
 Field constraints:
 - `name`:
@@ -49,6 +52,15 @@ Field constraints:
   - max 1024 characters
   - no XML tags
   - specific enough for discovery (include activation cues)
+- `metadata.version`:
+  - must be a semantic version string (`MAJOR.MINOR.PATCH`)
+  - use quoted YAML string format (for example `"1.0.0"`)
+- `metadata`:
+  - must be a map of string keys to string values
+  - avoid arrays/objects as metadata values
+- `license` and `compatibility`:
+  - optional top-level frontmatter fields
+  - should not be nested under `metadata`
 
 ## Structure and progressive disclosure
 
@@ -100,6 +112,9 @@ Use this baseline for new `SKILL.md` files:
 ---
 name: <final-skill-name>
 description: <what it does + when to use it>
+license: MIT
+metadata:
+  version: "<initial-version>"
 ---
 
 # <Readable Skill Title>

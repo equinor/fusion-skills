@@ -1,6 +1,9 @@
 ---
 name: fusion-skill-authoring
 description: Create or scaffold a new skill in a repository with valid metadata, clear activation cues, standard resource folders, safety boundaries, and validation evidence.
+license: MIT
+metadata:
+   version: "1.0.0"
 ---
 
 # Create Skill
@@ -29,6 +32,8 @@ Collect before writing files:
 - Prefix choice (ask explicitly; suggest `custom-` by default unless the repository has its own convention)
 - Final skill name (`custom-<skill-name>` unless the user chooses a different prefix or none)
 - Target path (`skills/<final-skill-name>/`, `skills/.experimental/<final-skill-name>/`, or `skills/.curated/<final-skill-name>/`)
+- Initial semantic version for frontmatter metadata (`MAJOR.MINOR.PATCH`, default `1.0.0`)
+- License for frontmatter (`MIT` by default, or repository-specific choice)
 - One-sentence purpose for frontmatter `description`
 - Expected output (files, commands, summary)
 - Safety boundaries
@@ -36,6 +41,9 @@ Collect before writing files:
 Validate metadata constraints:
 - `name`: <= 64 chars, lowercase letters/numbers/hyphens only, no XML tags, and no platform-reserved words
 - `description`: non-empty, <= 1024 chars, no XML tags, includes both what it does and when to use it
+- `metadata.version`: semantic version string (`MAJOR.MINOR.PATCH`) in quoted YAML format
+- `metadata`: string-to-string key/value map (no arrays/objects for metadata values)
+- `license` and `compatibility`: optional top-level frontmatter fields (not inside `metadata`)
 
 If required inputs are missing, ask concise targeted questions first.
 Use `assets/follow-up-questions.md` as the default question bank.
@@ -92,6 +100,9 @@ Use this baseline for generated `SKILL.md` files:
 ---
 name: <final-skill-name>
 description: <what it does + when to use it>
+license: MIT
+metadata:
+   version: "<initial-version>"
 ---
 
 # <Skill Title>

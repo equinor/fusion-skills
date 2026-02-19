@@ -1,0 +1,65 @@
+name: Publish Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".changeset/release.md"
+      - "scripts/release-prepare/**"
+      - "scripts/release-finalize/**"
+      - "package.json"
+      - ".github/workflows/publish-release.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Finalize release artifacts
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+        run: bun run release:finalize
+
+      - name: Commit release files
+        run: |
+          if git diff --quiet; then
+            echo "No release changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          VERSION=$(bun -e 'const p = JSON.parse(await Bun.file("package.json").text()); console.log(p.version)')
+          git add -A
+          git commit -m "chore(release): publish v${VERSION}"
+          git tag "v${VERSION}"
+          git push origin HEAD:main --follow-tags
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(bun -e 'const p = JSON.parse(await Bun.file("package.json").text()); console.log(p.version)')
+          TAG="v${VERSION}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists."
+            exit 0
+          fi
+          if [ -f .release-notes.md ]; then
+            gh release create "$TAG" --title "$TAG" --notes-file .release-notes.md
+          else
+            gh release create "$TAG" --title "$TAG" --generate-notes
+          fi

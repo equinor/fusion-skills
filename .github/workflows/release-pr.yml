@@ -1,0 +1,100 @@
+name: Prepare Release PR
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".changeset/**"
+      - "scripts/release-prepare/**"
+      - "scripts/release-finalize/**"
+      - "package.json"
+      - ".github/workflows/release-pr.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  prepare-release-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Prepare release artifacts from changesets
+        run: bun run release:prepare
+
+      - name: Build release PR body
+        run: |
+          BODY_FILE=.release-pr-body.md
+
+          cat > "$BODY_FILE" <<'EOF'
+          This PR was auto-generated from `.changeset/*.md` files.
+
+          Note: the `release/skills` branch is recreated automatically if deleted after merge.
+
+          It:
+          - removes processed changesets
+          - bumps `metadata.version` for affected skills
+          - updates per-skill `skills/<skill>/CHANGELOG.md`
+          - creates `.changeset/release.md` for publish automation
+
+          EOF
+
+          if [ -f .changeset/release.md ]; then
+            {
+              echo "## Skills to release"
+              grep -E '^[a-z0-9][a-z0-9-]*@[0-9]+\.[0-9]+\.[0-9]+$' .changeset/release.md | sed 's/^/- `/' | sed 's/$/`/'
+              echo
+              echo "## Release notes input"
+              echo
+              echo "\`\`\`markdown"
+              cat .changeset/release.md
+              echo "\`\`\`"
+              echo
+            } >> "$BODY_FILE"
+          fi
+
+          CHANGED_CHANGELOGS="$(git diff --name-only | grep -E '^skills/.+/CHANGELOG\.md$' || true)"
+          if [ -n "$CHANGED_CHANGELOGS" ]; then
+            {
+              echo "## Changelog diff preview"
+              echo
+              echo "\`\`\`diff"
+            } >> "$BODY_FILE"
+
+            while IFS= read -r file; do
+              [ -n "$file" ] || continue
+              git diff --unified=0 -- "$file"
+            done <<< "$CHANGED_CHANGELOGS" | sed -n '1,220p' >> "$BODY_FILE"
+
+            {
+              echo "\`\`\`"
+              echo
+            } >> "$BODY_FILE"
+          fi
+
+      - name: Create or update release PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore(release): apply skill changesets"
+          title: "🤖 Bip Bop - Release skills"
+          body-path: ".release-pr-body.md"
+          branch: "release/skills"
+          labels: |
+            release
+            automated
+          add-paths: |
+            skills/**/SKILL.md
+            skills/**/CHANGELOG.md
+            .changeset/*.md
+            .changeset/release.md

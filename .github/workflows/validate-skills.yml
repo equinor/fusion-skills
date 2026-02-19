@@ -4,14 +4,14 @@ on:
   pull_request:
     paths:
       - "skills/**"
-      - "scripts/**"
+      - ".changeset/**"
       - ".github/workflows/validate-skills.yml"
   push:
     branches:
       - main
     paths:
       - "skills/**"
-      - "scripts/**"
+      - ".changeset/**"
       - ".github/workflows/validate-skills.yml"
   workflow_dispatch:
 
@@ -25,11 +25,25 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
 
       - name: Validate skills and counts
-        run: bash scripts/validate-skill-directories.sh
+        run: bun run validate:skills
+
+      - name: Validate skill version bumps and changesets (PR only)
+        if: github.event_name == 'pull_request'
+        run: bun run validate:pr
