@@ -15,7 +15,7 @@ flowchart TD
   C --> D[Collect changed skill context]
   D --> E{Any changed skills?}
   E -- No --> F[Exit]
-  E -- Yes --> G{.changeset/release.md touched?}
+  E -- Yes --> G{Release PR detected?}
   G -- No --> H[Validate changeset coverage]
   G -- Yes --> I[Skip changeset coverage]
   H --> J[Validate metadata.version bumps]

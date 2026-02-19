@@ -31,15 +31,28 @@ function main(): void {
     return;
   }
 
-  const { changedSkillDirs, changedSkillIds, changedChangesetFiles, releaseMdTouched } =
+  const {
+    changedSkillDirs,
+    changedSkillIds,
+    changedChangesetFiles,
+    packageJsonTouched,
+    rootChangelogTouched,
+  } =
     collectChangedSkillContext(changedFiles);
+
+  const activeChangesetFiles = changedChangesetFiles.filter((file) =>
+    Boolean(tryRunGit(`git show HEAD:${file}`)),
+  );
+
+  const releasePrDetected =
+    activeChangesetFiles.length === 0 && packageJsonTouched && rootChangelogTouched;
 
   if (changedSkillDirs.size === 0) {
     console.log("No changed skill directories detected.");
     return;
   }
 
-  if (changedChangesetFiles.length === 0 && !releaseMdTouched) {
+  if (activeChangesetFiles.length === 0 && !releasePrDetected) {
     console.error(
       "ERROR: One or more skills changed, but no .changeset/*.md file was updated in this PR.",
     );
@@ -53,12 +66,12 @@ function main(): void {
     throw new Error("Missing required changeset files.");
   }
 
-  // Maintainer note: release PRs remove processed changesets, so coverage check is skipped for those.
-  if (!releaseMdTouched) {
-    validateChangesetCoverage(changedSkillIds, changedChangesetFiles);
+  // Maintainer note: release PRs remove processed changesets and include package/changelog updates.
+  if (!releasePrDetected) {
+    validateChangesetCoverage(changedSkillIds, activeChangesetFiles);
   } else {
     console.log(
-      ".changeset/release.md detected; treating this as a release PR and skipping changeset coverage checks.",
+      "Detected release PR (package.json + CHANGELOG.md changed with no .changeset files); skipping changeset coverage checks.",
     );
   }
 

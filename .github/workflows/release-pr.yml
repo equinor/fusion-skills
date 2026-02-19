@@ -45,35 +45,19 @@ jobs:
           - Removes processed changesets
           - Bumps affected skill `metadata.version`
           - Updates `skills/<skill>/CHANGELOG.md`
-          - Creates `.changeset/release.md` for publish automation
+          - Bumps root `package.json` version
+          - Updates root `CHANGELOG.md`
 
           EOF
 
-          if [ -f .changeset/release.md ]; then
-            RELEASE_BUMP=$(grep -E '^bump:[[:space:]]*(major|minor|patch)$' .changeset/release.md | head -n1 | sed -E 's/^bump:[[:space:]]*//')
-            SKILLS=$(grep -E '^#{2,6}[[:space:]]+[a-z0-9][a-z0-9-]*@[0-9]+\.[0-9]+\.[0-9]+$' .changeset/release.md | sed -E 's/^#{2,6}[[:space:]]+//')
-
-            {
-              echo "## Release summary"
-              echo
-              if [ -n "$RELEASE_BUMP" ]; then
-                echo "- Highest package bump: \`$RELEASE_BUMP\`"
-              fi
-              if [ -n "$SKILLS" ]; then
-                echo "- Skills in this release:"
-                echo "$SKILLS" | sed 's/^/- `/' | sed 's/$/`/'
-              else
-                echo "- Skills in this release: _none detected_"
-              fi
-              echo
-              echo "## Release notes input (.changeset/release.md)"
-              echo
-              echo "\`\`\`markdown"
-              cat .changeset/release.md
-              echo "\`\`\`"
-              echo
-            } >> "$BODY_FILE"
-          fi
+          RELEASE_VERSION=$(node -p "require('./package.json').version")
+          {
+            echo "## Release summary"
+            echo
+            echo "- Target version: \`v${RELEASE_VERSION}\`"
+            echo "- Release notes source: root \`CHANGELOG.md\` section \`## v${RELEASE_VERSION}\`"
+            echo
+          } >> "$BODY_FILE"
 
       - name: Create or update release PR
         uses: peter-evans/create-pull-request@v6
@@ -89,4 +73,5 @@ jobs:
             skills/**/SKILL.md
             skills/**/CHANGELOG.md
             .changeset/*.md
-            .changeset/release.md
+            package.json
+            CHANGELOG.md

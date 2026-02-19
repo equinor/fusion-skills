@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - ".changeset/release.md"
+      - "CHANGELOG.md"
       - "scripts/release-prepare/**"
       - "scripts/release-finalize/**"
       - "package.json"
@@ -21,53 +21,48 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
+      - name: Resolve version and tag state
+        id: release
+        run: |
+          CURRENT_VERSION=$(bun -e 'const p = JSON.parse(await Bun.file("package.json").text()); console.log(p.version)')
+          TAG="v${CURRENT_VERSION}"
+          TAG_EXISTS=false
+          if git ls-remote --exit-code --tags origin "refs/tags/${TAG}" >/dev/null 2>&1; then
+            TAG_EXISTS=true
+          fi
+
+          echo "current=$CURRENT_VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "tag_exists=$TAG_EXISTS" >> "$GITHUB_OUTPUT"
+          echo "Tag exists for ${TAG}: $TAG_EXISTS"
+
       - name: Finalize release artifacts
-        env:
-          BEFORE_SHA: ${{ github.event.before }}
+        if: steps.release.outputs.tag_exists != 'true'
         run: bun run release:finalize
 
-      - name: Resolve release version
-        id: version
-        run: |
-          VERSION=$(bun -e 'const p = JSON.parse(await Bun.file("package.json").text()); console.log(p.version)')
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-
-      - name: Commit release files
+      - name: Create and push release tag
+        if: steps.release.outputs.tag_exists != 'true'
         env:
-          VERSION: ${{ steps.version.outputs.version }}
+          TAG: ${{ steps.release.outputs.tag }}
         run: |
-          if git diff --quiet; then
-            echo "No release changes to commit."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "chore(release): publish v${VERSION}"
-          git tag "v${VERSION}"
-          git push origin HEAD:main --follow-tags
+          git tag "$TAG"
+          git push origin "$TAG"
 
       - name: Create GitHub Release
+        if: steps.release.outputs.tag_exists != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
-          VERSION: ${{ steps.version.outputs.version }}
+          TAG: ${{ steps.release.outputs.tag }}
         run: |
-          TAG="v${VERSION}"
           if gh release view "$TAG" >/dev/null 2>&1; then
             echo "Release $TAG already exists."
             exit 0
           fi
-          if [ -f .release-notes.md ]; then
-            gh release create "$TAG" --title "$TAG" --notes-file .release-notes.md
-          else
-            gh release create "$TAG" --title "$TAG" --generate-notes
-          fi
+          gh release create "$TAG" --title "$TAG" --notes-file .release-notes.md
 

@@ -5,8 +5,9 @@ Applies changesets into release artifacts.
 Outputs:
 - bumps affected skill `metadata.version`
 - updates per-skill `skills/<skill>/CHANGELOG.md`
+- bumps root `package.json` version
+- updates root `CHANGELOG.md` under latest `## v<package_version>`
 - removes processed `.changeset/*.md`
-- creates `.changeset/release.md`
 
 ## Mermaid flow
 
@@ -19,7 +20,8 @@ flowchart TD
   E --> F[Aggregate bump + notes by skill]
   F --> G[Update skills/<skill>/SKILL.md version]
   G --> H[Update skills/<skill>/CHANGELOG.md]
-  H --> I[Write .changeset/release.md]
-  I --> J[Delete processed changesets]
-  J --> K[Done]
+  H --> I[Bump root package.json]
+  I --> J[Update root CHANGELOG.md]
+  J --> K[Delete processed changesets]
+  K --> L[Done]
 ```

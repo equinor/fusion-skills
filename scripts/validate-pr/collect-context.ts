@@ -2,7 +2,8 @@ export interface ChangedSkillContext {
   changedSkillDirs: Set<string>;
   changedSkillIds: Set<string>;
   changedChangesetFiles: string[];
-  releaseMdTouched: boolean;
+  packageJsonTouched: boolean;
+  rootChangelogTouched: boolean;
 }
 
 /**
@@ -12,11 +13,16 @@ export function collectChangedSkillContext(changedFiles: string[]): ChangedSkill
   const changedSkillDirs = new Set<string>();
   const changedSkillIds = new Set<string>();
   const changedChangesetFiles: string[] = [];
-  let releaseMdTouched = false;
+  let packageJsonTouched = false;
+  let rootChangelogTouched = false;
 
   for (const file of changedFiles) {
-    if (file === ".changeset/release.md") {
-      releaseMdTouched = true;
+    if (file === "package.json") {
+      packageJsonTouched = true;
+    }
+
+    if (file === "CHANGELOG.md") {
+      rootChangelogTouched = true;
     }
 
     if (/^\.changeset\/.*\.md$/.test(file)) {
@@ -42,5 +48,11 @@ export function collectChangedSkillContext(changedFiles: string[]): ChangedSkill
     changedSkillIds.add(second);
   }
 
-  return { changedSkillDirs, changedSkillIds, changedChangesetFiles, releaseMdTouched };
+  return {
+    changedSkillDirs,
+    changedSkillIds,
+    changedChangesetFiles,
+    packageJsonTouched,
+    rootChangelogTouched,
+  };
 }

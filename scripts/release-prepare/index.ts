@@ -1,6 +1,8 @@
 import { readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import process from "node:process";
+import { updatePackageVersion } from "../release-finalize/update-package-json";
+import { updateRootChangelog } from "../release-finalize/update-root-changelog";
 import { getChangesetProvenance, getRepoSlug } from "./changeset-provenance";
 import { discoverSkillFiles } from "./discover-skill-files";
 import { listChangesetFiles } from "./list-changeset-files";
@@ -35,7 +37,8 @@ function normalizeEntry(entry: NoteEntry): NoteEntry | null {
  */
 function main(): void {
   const repoRoot = process.cwd();
-  const releasePath = join(repoRoot, ".changeset", "release.md");
+  const packageJsonPath = join(repoRoot, "package.json");
+  const changelogPath = join(repoRoot, "CHANGELOG.md");
   const repoSlug = getRepoSlug();
   const changesetFiles = listChangesetFiles(repoRoot);
 
@@ -120,16 +123,11 @@ function main(): void {
     console.log(`Prepared ${skillName}: ${currentVersion} -> ${newVersion} (${bumpType})`);
   }
 
-  const frontmatterLines = [
-    "---",
-    `bump: ${highestReleaseBump}`,
-    "---",
-    "",
-    "",
-  ];
-
-  writeFileSync(releasePath, `${frontmatterLines.join("\n")}${releaseSections.join("\n\n")}\n`, "utf8");
-  console.log(`Wrote ${releasePath}`);
+  const releaseContent = releaseSections.join("\n\n").trim();
+  const newPackageVersion = updatePackageVersion(packageJsonPath, highestReleaseBump);
+  console.log(`Bumped package.json version to ${newPackageVersion} (${highestReleaseBump})`);
+  updateRootChangelog(changelogPath, newPackageVersion, releaseContent);
+  console.log(`Updated ${changelogPath} with ## v${newPackageVersion}`);
 
   for (const changesetFile of changesetFiles) {
     rmSync(changesetFile);

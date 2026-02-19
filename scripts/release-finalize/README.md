@@ -3,22 +3,19 @@
 Finalizes release artifacts on `main`.
 
 Outputs:
-- bumps root `package.json` version
-- injects `.changeset/release.md` into root `CHANGELOG.md` under `v<package_version>`
+- validates that root `CHANGELOG.md` contains `## v<package_version>`
+- validates that this heading is the latest (first) H2 section
 - writes `.release-notes.md`
-- deletes `.changeset/release.md`
 
 ## Mermaid flow
 
 ```mermaid
 flowchart TD
-  A[Start] --> B[Read .changeset/release.md]
-  B --> C{.changeset/release.md exists?}
-  C -- No --> D[Exit]
-  C -- Yes --> E[Detect package bump from skill version deltas]
-  E --> F[Bump package.json version]
-  F --> G[Update root CHANGELOG.md]
-  G --> H[Write .release-notes.md]
-  H --> I[Delete .changeset/release.md]
-  I --> J[Done]
+  A[Start] --> B[Read package.json version]
+  B --> C[Find ## v<version> in root CHANGELOG.md]
+  C --> D{Heading exists and is latest?}
+  D -- No --> E[Fail with error]
+  D -- Yes --> F[Extract section body]
+  F --> G[Write .release-notes.md]
+  G --> H[Done]
 ```

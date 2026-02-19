@@ -190,12 +190,12 @@ When releasing:
 ```
 
 - On `main`, release automation runs with Bun scripts:
-   - `bun run release:prepare` to apply changesets and generate `.changeset/release.md`
-   - `bun run release:finalize` to bump package version, update root changelog, and remove `.changeset/release.md`
+   - `bun run release:prepare` to apply changesets, bump `package.json`, and update root `CHANGELOG.md`
+   - `bun run release:finalize` to validate/extract release notes from root `CHANGELOG.md` for `package.json.version`
    - the automation branch `release/skills` is expected to be deleted after merge and is recreated automatically on the next release cycle
 - Workflows:
    - `.github/workflows/release-pr.yml` creates/updates the release PR
-   - `.github/workflows/publish-release.yml` commits finalize changes, tags, and publishes GitHub release
+   - `.github/workflows/publish-release.yml` validates changelog heading, tags, and publishes GitHub release
 
 ## CI validation split
 
