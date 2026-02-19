@@ -13,7 +13,9 @@ function compareSemver(left: string, right: string): number {
 }
 
 /**
- * Validates metadata.version bumps for changed skills compared to base ref.
+ * Validates that non-release PRs do not manually edit metadata.version for existing skills.
+ *
+ * Maintainer note: skill metadata.version is updated by release automation only.
  */
 export function validateVersionBumps(changedSkillDirs: Set<string>, baseRemoteRef: string): void {
   let errors = 0;
@@ -39,22 +41,17 @@ export function validateVersionBumps(changedSkillDirs: Set<string>, baseRemoteRe
 
     const versionComparison = compareSemver(headVersion, baseVersion);
 
-    if (versionComparison === 0) {
+    if (versionComparison !== 0) {
       console.error(
-        `ERROR: ${skillDir} changed, but metadata.version was not updated (still ${headVersion}).`,
-      );
-      errors += 1;
-    } else if (versionComparison < 0) {
-      console.error(
-        `ERROR: ${skillDir} changed, but metadata.version moved backwards (${baseVersion} -> ${headVersion}).`,
+        `ERROR: ${skillDir} changed metadata.version (${baseVersion} -> ${headVersion}). Do not manually edit metadata.version in non-release PRs.`,
       );
       errors += 1;
     } else {
-      console.log(`- ${skillDir} version bump detected: ${baseVersion} -> ${headVersion}`);
+      console.log(`- ${skillDir} metadata.version unchanged (${headVersion})`);
     }
   }
 
   if (errors > 0) {
-    throw new Error("Skill metadata.version bump validation failed.");
+    throw new Error("Manual skill metadata.version edits are not allowed in non-release PRs.");
   }
 }

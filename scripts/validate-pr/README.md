@@ -4,7 +4,7 @@ Validates pull requests that change skills.
 
 Checks:
 - changed skills are covered by `.changeset/*.md` (unless release PR)
-- changed skills bump `metadata.version`
+- existing changed skills keep `metadata.version` unchanged in non-release PRs
 
 ## Mermaid flow
 
@@ -17,9 +17,9 @@ flowchart TD
   E -- No --> F[Exit]
   E -- Yes --> G{Release PR detected?}
   G -- No --> H[Validate changeset coverage]
-  G -- Yes --> I[Skip changeset coverage]
-  H --> J[Validate metadata.version bumps]
-  I --> J
+  G -- Yes --> I[Skip changeset coverage + version check]
+  H --> J[Validate metadata.version unchanged]
+  I --> K
   J --> K{All valid?}
   K -- Yes --> L[Pass]
   K -- No --> M[Fail]

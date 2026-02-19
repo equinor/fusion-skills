@@ -94,7 +94,7 @@ If you are developing or maintaining skills in this repository, use `CONTRIBUTIN
 
 > [!CAUTION]
 > - Never paste secrets (tokens/keys/credentials) into prompts, logs, or docs
-> - Treat `skills/**/scripts/` as security-sensitive code; don’t run scripts you don’t understand
+> - Treat `skills/**/scripts/` as security-sensitive code; don’t run skills you don’t understand
 > - Confirm side effects before running commands (especially destructive operations)
 
 For details and reporting guidance, see `SECURITY.md`.
@@ -108,4 +108,4 @@ For details and reporting guidance, see `SECURITY.md`.
 
 Want to contribute or review changes? See `CONTRIBUTING.md`.
 
-Are you an agent making changes in this repo? See `AGENT.md`.
+Are you an agent making changes in this repo? See `AGENTS.md`.

@@ -17,6 +17,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
   validate:
@@ -47,3 +48,42 @@ jobs:
       - name: Validate skill version bumps and changesets (PR only)
         if: github.event_name == 'pull_request'
         run: bun run validate:pr
+
+      - name: Detect changed changeset files (PR only)
+        if: github.event_name == 'pull_request'
+        id: changed_changesets
+        uses: tj-actions/changed-files@v46
+        with:
+          files: |
+            .changeset/*.md
+            !.changeset/README.md
+
+      - name: Build changeset comment body (PR only)
+        if: github.event_name == 'pull_request'
+        run: |
+          mkdir -p .tmp
+          {
+            echo "## Changeset summary"
+            echo
+
+            if [[ -z "${{ steps.changed_changesets.outputs.all_changed_files }}" ]]; then
+              echo 'No `.changeset/*.md` files were changed in this PR.'
+            else
+              mapfile -t files < <(printf '%s\n' "${{ steps.changed_changesets.outputs.all_changed_files }}" | sed '/^$/d' | sort)
+              echo "Detected ${#files[@]} changeset file(s):"
+              for file in "${files[@]}"; do
+                echo
+                echo "**$file:**"
+                echo '```md'
+                cat "$file"
+                echo '```'
+              done
+            fi
+          } > .tmp/changeset-summary.md
+
+      - name: Comment changeset summary (PR only)
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          path: .tmp/changeset-summary.md
+          header: changeset-summary

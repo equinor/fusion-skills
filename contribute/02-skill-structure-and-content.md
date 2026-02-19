@@ -1,0 +1,68 @@
+# Skill structure and content
+
+## Minimum content expectations for SKILL.md
+
+`SKILL.md` is the entry point. It should be easy to skim and clearly explain:
+- what the skill does,
+- when to use it,
+- what it outputs,
+- and what safety constraints apply.
+
+## Frontmatter requirements
+
+Include YAML frontmatter with:
+- `name`: matches folder name; lowercase letters, numbers, hyphens
+- `description`: what the skill does and when to use it
+- `metadata.version`: semantic version (for example `"1.0.0"`)
+- `metadata`: string-to-string map
+- `license` and `compatibility`: optional top-level fields when needed
+
+## Content requirements
+
+Each skill should cover:
+- **When to use** (activation criteria)
+- **When not to use** (anti-patterns)
+- **Expected output** (files, commands, summary)
+- **Inputs** (repo context, env vars, links, etc.)
+- **Safety & constraints** (secrets, destructive commands, approvals)
+
+## Recommended baseline template
+
+```markdown
+---
+name: fusion-example-skill
+description: What it does + when to use it (trigger guidance).
+license: MIT
+metadata:
+   version: "1.0.0"
+---
+
+# Example Skill
+
+## Instructions
+
+Provide clear, step-by-step guidance. Ensure the instructions cover:
+- when to use / when not to use
+- expected output
+- required inputs
+- safety constraints (especially around scripts / destructive commands)
+
+## Examples (optional but strongly encouraged)
+
+### Example
+User: ...
+Agent: ...
+```
+
+## Progressive disclosure
+
+Keep `SKILL.md` lean. Prefer:
+- `SKILL.md` for activation rules, summary steps, and constraints
+- `references/` for long explanations, checklists, screenshots, and deeper background
+
+Guideline: if a section exceeds roughly one page, move it to `references/` and link to it.
+
+## Format background
+
+- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview
+- https://agentskills.io/specification

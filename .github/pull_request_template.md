@@ -29,6 +29,6 @@
 ## Self review checklist
 
 - [ ] I scoped this PR to one clear purpose.
-- [ ] I followed [CONTRIBUTING.md](../CONTRIBUTING.md) and [AGENT.md](../AGENT.md).
+- [ ] I followed [CONTRIBUTING.md](../CONTRIBUTING.md).
 - [ ] I did not include secrets, credentials, or sensitive data.
 - [ ] I reviewed my own diff for clarity and unintended changes.

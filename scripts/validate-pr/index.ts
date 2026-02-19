@@ -7,7 +7,7 @@ import { validateVersionBumps } from "./validate-version-bumps";
 /**
  * CLI entrypoint for PR validation:
  * - changeset coverage for changed skills
- * - metadata.version bumps for changed skills
+ * - no manual metadata.version edits in non-release PRs
  */
 function main(): void {
   const baseRef = process.env.GITHUB_BASE_REF?.trim();
@@ -74,8 +74,12 @@ function main(): void {
     );
   }
 
-  console.log("Validating metadata.version bumps for changed skills...");
-  validateVersionBumps(changedSkillDirs, baseRemoteRef);
+  if (!releasePrDetected) {
+    console.log("Validating metadata.version is unchanged for existing changed skills...");
+    validateVersionBumps(changedSkillDirs, baseRemoteRef);
+  } else {
+    console.log("Detected release PR; skipping manual metadata.version validation.");
+  }
   console.log("PR version/changeset checks passed.");
 }
 
