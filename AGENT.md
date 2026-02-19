@@ -9,7 +9,6 @@ This repo is a shared catalog of Fusion GitHub Copilot Agent Skills. Treat it li
 - Consumer-facing overview: `README.md`
 - Maintainer workflow / quality bar: `CONTRIBUTING.md`
 - Security policy / disclosure: `SECURITY.md`
-- Ownership rules: `.github/CODEOWNERS`
 
 ## Operating principles
 
@@ -42,7 +41,7 @@ Anything under `scripts/` is security-sensitive:
 - Document prerequisites and side effects.
 - If something could delete/overwrite/modify repos, require explicit user confirmation.
 
-If you touch `scripts/`, assume it needs owner review (see `.github/CODEOWNERS`).
+If you touch `scripts/`, assume it needs deeper maintainer review.
 
 ## When adding or changing a skill
 
@@ -50,7 +49,6 @@ Follow the maintainer guidance in `CONTRIBUTING.md` (metadata + instructions + e
 
 - Keep the entrypoint (`SKILL.md`) skimmable.
 - Use progressive disclosure (`references/`) for long docs.
-- Ensure ownership is represented in `.github/CODEOWNERS` for the skill folder.
 
 ## Documentation alignment
 

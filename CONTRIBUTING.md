@@ -26,10 +26,7 @@ Skills are meant to be reusable, owned, and safe. This guide describes the maint
    - `skills/<skill-name>/assets/` – images/static assets referenced by docs
    - `skills/<skill-name>/scripts/` – helper scripts (security-sensitive; see “Scripts”)
 
-5. Add ownership:
-   - Update `.github/CODEOWNERS` to include an explicit rule for `skills/<skill-name>/`.
-
-6. Open a PR.
+5. Open a PR.
    - If your skill adds or modifies anything under `scripts/`, expect deeper review.
 
 ## Minimum content expectations for `SKILL.md`
@@ -99,7 +96,6 @@ A PR is “good enough” when the skill is:
 - **Deterministic-ish**: minimizes branching; asks the user targeted questions only when required.
 - **Safe**: explicitly states what it must never do (secrets, destructive actions, policy violations).
 - **Scoped**: does one workflow well; not a catch-all.
-- **Owned**: CODEOWNERS entry exists for the skill folder.
 
 For skills that include `scripts/`:
 - **Reviewed**: at least one owner review (treat like production code).
