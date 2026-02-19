@@ -35,6 +35,12 @@ Update installed skills:
 npx skills update
 ```
 
+Check if updates are available before updating:
+
+```bash
+npx skills check
+```
+
 Remove skills:
 
 ```bash
@@ -55,12 +61,26 @@ Each skill should tell you:
 
 Skills live under `skills/`. The structure inside a skill is intentionally flexible, but most skills have an entry file:
 
-`skills/<skill-name>/SKILL.md`
+`skills/fusion-<skill-name>/SKILL.md`
+
+In this repository, use `fusion-<skill-name>` as the default skill naming convention.
 
 Some conventions you may see:
 - `skills/.experimental/` 🧪 preview / in-development skills
 - `skills/.curated/` ✅ curated, broadly reusable skills
 - `skills/.system/` ⚙️ internal/system skills and shared building blocks
+
+## 🔖 Versioning
+
+For predictable consumer upgrades with `npx skills add|update`:
+
+- Use git tags with semantic versioning for releases (`vMAJOR.MINOR.PATCH`)
+- Treat `main` as latest stable-ish; use prerelease tags for experiments (`v1.3.0-beta.1`)
+- Pin production installs to a tag: `npx skills add equinor/fusion-skills@v1.2.3`
+
+See `CHANGELOG.md` for release notes.
+
+If you are developing or maintaining skills in this repository, use `CONTRIBUTING.md` for changesets, release automation, and validation workflows.
 
 <details>
 	<summary>Where do skills get installed?</summary>

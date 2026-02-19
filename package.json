@@ -1,0 +1,24 @@
+{
+  "name": "fusion-skills",
+  "private": true,
+  "version": "0.1.0",
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.2",
+    "@types/node": "^25.3.0",
+    "typescript": "^5.8.2",
+    "vitest": "^4.0.18"
+  },
+  "scripts": {
+    "biome:check": "biome check .",
+    "biome:fix": "biome check --write .",
+    "biome:format": "biome format --write .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "list:skills": "bun run scripts/list-skills/index.ts",
+    "list:changesets": "bun run scripts/list-changesets/index.ts",
+    "validate:skills": "bun run scripts/validate-skills/index.ts",
+    "validate:pr": "bun run scripts/validate-pr/index.ts",
+    "release:prepare": "bun run scripts/release-prepare/index.ts",
+    "release:finalize": "bun run scripts/release-finalize/index.ts"
+  }
+}
