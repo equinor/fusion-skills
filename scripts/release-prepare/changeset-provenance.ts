@@ -55,7 +55,10 @@ export function getRepoSlug(): string | null {
 /**
  * Resolves commit/PR provenance for a changeset file from git history.
  */
-export function getChangesetProvenance(repoRoot: string, changesetFile: string): ChangesetProvenance {
+export function getChangesetProvenance(
+  repoRoot: string,
+  changesetFile: string,
+): ChangesetProvenance {
   const filePath = relative(repoRoot, changesetFile);
   const output = tryRunGit(
     `git log --diff-filter=A --format=%H%x09%s%x09%ae -n 1 -- ${shellEscape(filePath)}`,

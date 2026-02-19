@@ -37,8 +37,7 @@ function main(): void {
     changedChangesetFiles,
     packageJsonTouched,
     rootChangelogTouched,
-  } =
-    collectChangedSkillContext(changedFiles);
+  } = collectChangedSkillContext(changedFiles);
 
   const activeChangesetFiles = changedChangesetFiles.filter((file) =>
     Boolean(tryRunGit(`git show HEAD:${file}`)),

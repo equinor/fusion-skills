@@ -20,7 +20,8 @@ export function updateRootChangelog(
     : "# Changelog\n\nAll notable changes to this repository are documented in this file.\n";
   const h2Regex = /^##\s+/m;
   const firstH2Index = changelog.search(h2Regex);
-  const preamble = firstH2Index >= 0 ? changelog.slice(0, firstH2Index).trimEnd() : changelog.trimEnd();
+  const preamble =
+    firstH2Index >= 0 ? changelog.slice(0, firstH2Index).trimEnd() : changelog.trimEnd();
   const sectionsRaw = firstH2Index >= 0 ? changelog.slice(firstH2Index).trim() : "";
 
   const sectionSplitRegex = /^##\s+/gm;

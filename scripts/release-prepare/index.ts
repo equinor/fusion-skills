@@ -9,8 +9,8 @@ import { listChangesetFiles } from "./list-changeset-files";
 import { parseChangeset } from "./parse-changeset";
 import {
   type GroupedNotes,
-  normalizeNoteBody,
   type NoteEntry,
+  normalizeNoteBody,
   renderGroupedNotes,
 } from "./release-notes-format";
 import type { BumpType } from "./semver";
@@ -65,12 +65,11 @@ function main(): void {
         aggregateBumps.set(skillName, bumpType);
       }
 
-      const notes =
-        aggregateNotes.get(skillName) ?? {
-          major: [],
-          minor: [],
-          patch: [],
-        };
+      const notes = aggregateNotes.get(skillName) ?? {
+        major: [],
+        minor: [],
+        patch: [],
+      };
       notes[bumpType].push({
         body: parsed.body,
         prNumber: provenance.prNumber,
@@ -97,12 +96,11 @@ function main(): void {
     if (isHigherBump(bumpType, highestReleaseBump)) {
       highestReleaseBump = bumpType;
     }
-    const notes =
-      aggregateNotes.get(skillName) ?? {
-        major: [],
-        minor: [],
-        patch: [],
-      };
+    const notes = aggregateNotes.get(skillName) ?? {
+      major: [],
+      minor: [],
+      patch: [],
+    };
 
     const currentContent = readFileSync(skillFile, "utf8");
     const currentVersion = extractMetadataVersion(currentContent);
@@ -119,7 +117,13 @@ function main(): void {
 
     upsertSkillChangelog(skillDir, newVersion, formattedNotes, repoSlug);
 
-    releaseSections.push([`### ${skillName}@${newVersion}`, "", ...renderGroupedNotes(formattedNotes, repoSlug, 4)].join("\n"));
+    releaseSections.push(
+      [
+        `### ${skillName}@${newVersion}`,
+        "",
+        ...renderGroupedNotes(formattedNotes, repoSlug, 4),
+      ].join("\n"),
+    );
     console.log(`Prepared ${skillName}: ${currentVersion} -> ${newVersion} (${bumpType})`);
   }
 

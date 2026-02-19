@@ -19,7 +19,10 @@ export interface GroupedNotes {
  * Removes accidental semver headings from note body content.
  */
 export function normalizeNoteBody(note: string): string {
-  return note.trim().replace(/^###\s*(major|minor|patch)\s*\n+/i, "").trim();
+  return note
+    .trim()
+    .replace(/^###\s*(major|minor|patch)\s*\n+/i, "")
+    .trim();
 }
 
 function formatProvenance(entry: NoteEntry, repoSlug: string | null): string {

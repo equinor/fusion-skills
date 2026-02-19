@@ -13,7 +13,11 @@ export function upsertSkillChangelog(
 ): void {
   const changelogPath = join(skillDir, "CHANGELOG.md");
   const today = new Date().toISOString().slice(0, 10);
-  const newEntry = [`## ${version} - ${today}`, "", ...renderGroupedNotes(notesByType, repoSlug, 3)].join("\n");
+  const newEntry = [
+    `## ${version} - ${today}`,
+    "",
+    ...renderGroupedNotes(notesByType, repoSlug, 3),
+  ].join("\n");
 
   if (!existsSync(changelogPath)) {
     writeFileSync(changelogPath, `# Changelog\n\n${newEntry}\n`, "utf8");
