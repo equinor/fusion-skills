@@ -31,9 +31,11 @@ jobs:
           bun-version: latest
 
       - name: Prepare release artifacts from changesets
+        id: prepare_artifacts
         run: bun run release:prepare
 
       - name: Build release PR body
+        id: build_pr_body
         run: |
           BODY_FILE=.release-pr-body.md
 
@@ -60,6 +62,7 @@ jobs:
           } >> "$BODY_FILE"
 
       - name: Create or update release PR
+        id: create_release_pr
         uses: peter-evans/create-pull-request@v6
         with:
           commit-message: "chore(release): apply skill changesets"
@@ -75,3 +78,45 @@ jobs:
             .changeset/*.md
             package.json
             CHANGELOG.md
+
+      - name: Report release-pr status
+        if: always()
+        env:
+          PREPARE_OUTCOME: ${{ steps.prepare_artifacts.outcome }}
+          BUILD_BODY_OUTCOME: ${{ steps.build_pr_body.outcome }}
+          CREATE_PR_OUTCOME: ${{ steps.create_release_pr.outcome }}
+          PR_OPERATION: ${{ steps.create_release_pr.outputs.pull-request-operation }}
+          PR_NUMBER: ${{ steps.create_release_pr.outputs.pull-request-number }}
+          PR_URL: ${{ steps.create_release_pr.outputs.pull-request-url }}
+        run: |
+          if [[ "$CREATE_PR_OUTCOME" != "success" ]]; then
+            STATUS="Release PR workflow failed"
+          elif [[ "$PR_OPERATION" == "created" ]]; then
+            STATUS="Release PR created"
+          elif [[ "$PR_OPERATION" == "updated" ]]; then
+            STATUS="Release PR updated"
+          elif [[ "$PR_OPERATION" == "none" ]]; then
+            STATUS="No release PR changes needed"
+          else
+            STATUS="Release PR completed"
+          fi
+
+          echo "Release PR workflow status: $STATUS"
+          echo "Prepare release artifacts: $PREPARE_OUTCOME"
+          echo "Build release PR body: $BUILD_BODY_OUTCOME"
+          echo "Create/update release PR: $CREATE_PR_OUTCOME"
+          echo "PR operation: ${PR_OPERATION:-n/a}"
+          echo "PR number: ${PR_NUMBER:-n/a}"
+          echo "PR url: ${PR_URL:-n/a}"
+
+          {
+            echo "## Release PR status"
+            echo
+            echo "- **Result**: $STATUS"
+            echo "- **Prepare release artifacts**: $PREPARE_OUTCOME"
+            echo "- **Build release PR body**: $BUILD_BODY_OUTCOME"
+            echo "- **Create/update release PR**: $CREATE_PR_OUTCOME"
+            echo "- **PR operation**: ${PR_OPERATION:-n/a}"
+            echo "- **PR number**: ${PR_NUMBER:-n/a}"
+            echo "- **PR url**: ${PR_URL:-n/a}"
+          } >> "$GITHUB_STEP_SUMMARY"
