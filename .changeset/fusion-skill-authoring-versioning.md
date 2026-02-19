@@ -2,4 +2,5 @@
 "fusion-skill-authoring": minor
 ---
 
-Improved skill-authoring governance and validation guidance with semantic version metadata, default license handling, and changeset-based PR checks.
+New authoring skill to standardize how skills are created and reduce inconsistent. 
+The skill guides contributors to reuse existing skills when possible, collect required inputs, scaffold the skill structure, and run validation/checklist steps.
