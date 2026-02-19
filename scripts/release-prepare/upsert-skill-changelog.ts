@@ -7,9 +7,8 @@ import { join } from "node:path";
 export function upsertSkillChangelog(skillDir: string, version: string, notes: string[]): void {
   const changelogPath = join(skillDir, "CHANGELOG.md");
   const today = new Date().toISOString().slice(0, 10);
-  const newEntry = [`## ${version} - ${today}`, "", ...notes.map((note) => `- ${note}`), ""].join(
-    "\n",
-  );
+  const normalizedNotes = notes.map((note) => note.trim()).filter((note) => note.length > 0);
+  const newEntry = [`## ${version} - ${today}`, "", ...normalizedNotes, ""].join("\n");
 
   if (!existsSync(changelogPath)) {
     writeFileSync(changelogPath, `# Changelog\n\n${newEntry}\n`, "utf8");

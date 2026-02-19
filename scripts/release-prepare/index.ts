@@ -66,16 +66,11 @@ function main(): void {
     // Maintainer note: update SKILL.md before changelog so failures fail fast on version parsing.
     writeFileSync(skillFile, updateMetadataVersion(currentContent, newVersion), "utf8");
 
-    const flatNotes = notes
-      .flatMap((note) => note.split("\n"))
-      .map((line) => line.trim())
-      .filter((line) => line.length > 0);
+    const formattedNotes = notes.map((note) => note.trim()).filter((note) => note.length > 0);
 
-    upsertSkillChangelog(skillDir, newVersion, flatNotes);
+    upsertSkillChangelog(skillDir, newVersion, formattedNotes);
 
-    releaseSections.push(
-      [`${skillName}@${newVersion}`, ...flatNotes.map((line) => `- ${line}`)].join("\n"),
-    );
+    releaseSections.push([`${skillName}@${newVersion}`, "", ...formattedNotes].join("\n"));
     console.log(`Prepared ${skillName}: ${currentVersion} -> ${newVersion} (${bumpType})`);
   }
 
