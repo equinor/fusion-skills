@@ -12,8 +12,10 @@ Use this guidance for requests like:
 ## Required inputs
 
 Collect before writing files:
-- Skill name in kebab-case (`<skill-name>`)
-- Target placement (`skills/<skill-name>/`, `skills/.experimental/<skill-name>/`, or `skills/.curated/<skill-name>/`)
+- Base skill name in kebab-case (`<skill-name>`, without prefix)
+- Prefix choice (default to `fusion-` in this repository; ask if user wants a different prefix or none)
+- Final skill name (`fusion-<skill-name>` unless user chooses otherwise)
+- Target placement (`skills/<final-skill-name>/`, `skills/.experimental/<final-skill-name>/`, or `skills/.curated/<final-skill-name>/`)
 - One-sentence purpose for frontmatter `description`
 - Expected outputs (files, commands, summary)
 - Safety boundaries for the skill
@@ -50,7 +52,7 @@ Field constraints:
 
 ## Structure and progressive disclosure
 
-1. Create required file: `<target>/<skill-name>/SKILL.md`.
+1. Create required file: `<target>/<final-skill-name>/SKILL.md`.
 2. Add folders as needed:
    - `references/` for longer guidance and detailed docs
    - `assets/` for templates/checklists/static resources
@@ -63,18 +65,19 @@ Field constraints:
 ## Scaffold workflow
 
 1. Confirm scope and target path.
-2. Validate required inputs and metadata constraints.
-3. Create `SKILL.md` and any needed support folders/files.
-4. Populate `SKILL.md` with:
+2. Confirm prefix choice (default `fusion-`) and derive `<final-skill-name>`.
+3. Validate required inputs and metadata constraints.
+4. Create `SKILL.md` and any needed support folders/files.
+5. Populate `SKILL.md` with:
    - When to use
    - When not to use
    - Required inputs
    - Instructions/workflow
    - Expected output
    - Safety & constraints
-5. For complex tasks, use explicit step-by-step workflows and checklists.
-6. Add a feedback loop when quality is critical: validate → fix → re-validate.
-7. Run local validation and report pass/fail evidence.
+6. For complex tasks, use explicit step-by-step workflows and checklists.
+7. Add a feedback loop when quality is critical: validate → fix → re-validate.
+8. Run local validation and report pass/fail evidence.
 
 ## Script guidance (when `scripts/` is used)
 
@@ -95,7 +98,7 @@ Use this baseline for new `SKILL.md` files:
 
 ```markdown
 ---
-name: <skill-name>
+name: <final-skill-name>
 description: <what it does + when to use it>
 ---
 

@@ -9,22 +9,23 @@ Skills are meant to be reusable, owned, and safe. This guide describes the maint
 1. Choose where the skill belongs (stable vs preview vs system).
 
    Reserved folders under `skills/` (names starting with `.`) are conventions used in this repo:
-   - `skills/.experimental/<skill-name>/` – preview / in-development skills (closest thing to a “preview” convention)
-   - `skills/.curated/<skill-name>/` – curated, high-confidence skills intended for broad reuse
+   - `skills/.experimental/fusion-<skill-name>/` – preview / in-development skills (closest thing to a “preview” convention)
+   - `skills/.curated/fusion-<skill-name>/` – curated, high-confidence skills intended for broad reuse
    - `skills/.system/` – internal/system skills and shared building blocks (not generally intended for broad, direct use)
 
    If you are unsure, start in `skills/.experimental/` and promote later.
 
-2. Create the skill folder: `skills/<skill-name>/` (or `skills/.experimental/<skill-name>/`, etc.)
+2. Create the skill folder: `skills/fusion-<skill-name>/` (or `skills/.experimental/fusion-<skill-name>/`, etc.)
    - Use **kebab-case** for `<skill-name>`.
+   - Prefix with `fusion-` by default in this repository.
    - Keep the name stable; it becomes the installation identifier.
 
-3. Add the required file: `skills/<skill-name>/SKILL.md`
+3. Add the required file: `skills/fusion-<skill-name>/SKILL.md`
 
 4. (Optional) Add supporting folders only if needed:
-   - `skills/<skill-name>/references/` – long docs, checklists, examples (preferred over bloating `SKILL.md`)
-   - `skills/<skill-name>/assets/` – images/static assets referenced by docs
-   - `skills/<skill-name>/scripts/` – helper scripts (security-sensitive; see “Scripts”)
+   - `skills/fusion-<skill-name>/references/` – long docs, checklists, examples (preferred over bloating `SKILL.md`)
+   - `skills/fusion-<skill-name>/assets/` – images/static assets referenced by docs
+   - `skills/fusion-<skill-name>/scripts/` – helper scripts (security-sensitive; see “Scripts”)
 
 5. Open a PR.
    - If your skill adds or modifies anything under `scripts/`, expect deeper review.
@@ -54,7 +55,7 @@ Skills are meant to be reusable, owned, and safe. This guide describes the maint
 
 ```markdown
 ---
-name: example-skill
+name: fusion-example-skill
 description: What it does + when to use it (trigger guidance).
 ---
 
@@ -104,7 +105,7 @@ For skills that include `scripts/`:
 
 ## Scripts (extra scrutiny)
 
-Anything under `skills/<skill-name>/scripts/` is considered security-sensitive:
+Anything under `skills/fusion-<skill-name>/scripts/` is considered security-sensitive:
 
 - Prefer small, auditable scripts.
 - Avoid downloading/executing remote code.
@@ -121,7 +122,7 @@ If a script can modify repos, delete files, or perform network actions, the skil
 
 When a skill is no longer recommended:
 
-1. Update `skills/<skill-name>/SKILL.md` to clearly mark it as deprecated at the top.
+1. Update `skills/fusion-<skill-name>/SKILL.md` to clearly mark it as deprecated at the top.
 2. If there is a replacement, include:
    - the replacement skill name, and
    - what changed / why users should migrate.

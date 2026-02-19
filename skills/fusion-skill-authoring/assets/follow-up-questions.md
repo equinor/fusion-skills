@@ -4,7 +4,9 @@ Use these when required inputs are missing or ambiguous while creating a new ski
 
 ## Scope
 
-- What is the exact skill name in kebab-case?
+- What is the base skill name in kebab-case (without prefix)?
+- What prefix should be used (`custom-`, repo/org-specific prefix like `fusion-`, or none)?
+- What is the final skill name after applying the prefix choice?
 - Where should it be placed: `skills/`, `skills/.experimental/`, or `skills/.curated/`?
 - Is this a net-new skill or an update to an existing one?
 

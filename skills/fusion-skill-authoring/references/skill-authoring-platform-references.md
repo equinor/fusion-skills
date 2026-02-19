@@ -20,7 +20,7 @@
 - Supporting resources should be organized clearly (`references/`, `assets/`, and optional `scripts/`)
 - Keep the main instructions concise and move longer material to supporting files
 
-## How this informs `skill-authoring`
+## How this informs `fusion-skill-authoring`
 
 - Enforce metadata quality and naming constraints before scaffolding
 - Capture user intent, outcomes, and triggers through follow-up questions

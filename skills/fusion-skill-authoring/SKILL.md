@@ -1,6 +1,6 @@
 ---
-name: skill-authoring
-description: Create or scaffold a new skill in this repository with valid metadata, clear activation cues, standard resource folders, safety boundaries, and validation evidence.
+name: fusion-skill-authoring
+description: Create or scaffold a new skill in a repository with valid metadata, clear activation cues, standard resource folders, safety boundaries, and validation evidence.
 ---
 
 # Create Skill
@@ -25,8 +25,10 @@ Do not use this skill for:
 ## Required inputs
 
 Collect before writing files:
-- Skill name in kebab-case (`<skill-name>`)
-- Target path (`skills/<skill-name>/`, `skills/.experimental/<skill-name>/`, or `skills/.curated/<skill-name>/`)
+- Base skill name in kebab-case (`<skill-name>`, without prefix)
+- Prefix choice (ask explicitly; suggest `custom-` by default unless the repository has its own convention)
+- Final skill name (`custom-<skill-name>` unless the user chooses a different prefix or none)
+- Target path (`skills/<final-skill-name>/`, `skills/.experimental/<final-skill-name>/`, or `skills/.curated/<final-skill-name>/`)
 - One-sentence purpose for frontmatter `description`
 - Expected output (files, commands, summary)
 - Safety boundaries
@@ -41,28 +43,29 @@ Use `assets/follow-up-questions.md` as the default question bank.
 ## Instructions
 
 1. Check whether an existing skill already covers the request:
-   - Run `npx skills equinor/fusion-skills --list`
+   - Run `npx -y skills add . --list`
    - If an existing skill matches, recommend using/updating that skill instead of creating a duplicate
    - If a skill almost matches, open/recommend a repository issue to request tweaks to that existing skill instead of creating a new custom skill
    - Prioritize reuse of repository skills to avoid proliferation of one-off custom skills
-2. Confirm scope, skill name, and target path.
-3. Create `<target>/<skill-name>/SKILL.md`.
-4. Create resource directories as needed:
+2. Confirm scope, base skill name, prefix choice, and target path.
+3. Derive `<final-skill-name>` from prefix choice.
+4. Create `<target>/<final-skill-name>/SKILL.md`.
+5. Create resource directories as needed:
    - `references/` for longer guidance and detailed docs
    - `assets/` for templates/checklists/static resources
    - `scripts/` only when deterministic automation is required
-5. Write frontmatter (`name`, `description`) that satisfies constraints.
-6. Add the core sections:
+6. Write frontmatter (`name`, `description`) that satisfies constraints.
+7. Add the core sections:
    - When to use
    - When not to use
    - Required inputs
    - Instructions
    - Expected output
    - Safety & constraints
-7. Keep `SKILL.md` concise; move long guidance/examples to `references/`.
-8. Use `assets/` for templates, sample files, and static resources used by the skill.
-9. Add `scripts/` only when deterministic automation is required.
-10. When inputs are missing, ask from `assets/follow-up-questions.md` and proceed once answered.
+8. Keep `SKILL.md` concise; move long guidance/examples to `references/`.
+9. Use `assets/` for templates, sample files, and static resources used by the skill.
+10. Add `scripts/` only when deterministic automation is required.
+11. When inputs are missing, ask from `assets/follow-up-questions.md` and proceed once answered.
 
 ## Expected output
 
@@ -77,7 +80,7 @@ Return:
 For a newly scaffolded skill, the default structure should be:
 
 ```text
-skills/<skill-name>/
+skills/<final-skill-name>/
 ├── SKILL.md
 ├── references/
 └── assets/
@@ -87,7 +90,7 @@ Use this baseline for generated `SKILL.md` files:
 
 ```markdown
 ---
-name: <skill-name>
+name: <final-skill-name>
 description: <what it does + when to use it>
 ---
 

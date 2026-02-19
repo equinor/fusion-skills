@@ -55,7 +55,9 @@ Each skill should tell you:
 
 Skills live under `skills/`. The structure inside a skill is intentionally flexible, but most skills have an entry file:
 
-`skills/<skill-name>/SKILL.md`
+`skills/fusion-<skill-name>/SKILL.md`
+
+In this repository, use `fusion-<skill-name>` as the default skill naming convention.
 
 Some conventions you may see:
 - `skills/.experimental/` 🧪 preview / in-development skills
