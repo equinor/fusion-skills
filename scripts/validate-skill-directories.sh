@@ -29,7 +29,8 @@ echo "Running skills CLI validation..."
 cli_output="$(npx -y skills add . --list 2>&1)"
 echo "$cli_output"
 
-cli_count="$(printf '%s\n' "$cli_output" | grep -Eo 'Found[[:space:]]+[0-9]+[[:space:]]+skill(s)?' | grep -Eo '[0-9]+' | tail -n 1 || true)"
+sanitized_output="$(printf '%s\n' "$cli_output" | sed -E 's/\x1B\[[0-9;]*[A-Za-z]//g' | tr -cd '\11\12\15\40-\176')"
+cli_count="$(printf '%s\n' "$sanitized_output" | grep -Eo 'Found[^0-9]*[0-9]+' | grep -Eo '[0-9]+' | tail -n 1 || true)"
 
 if [[ -z "$cli_count" ]]; then
   echo
