@@ -52,7 +52,7 @@ jobs:
       - name: Detect changed changeset files (PR only)
         if: github.event_name == 'pull_request'
         id: changed_changesets
-        uses: tj-actions/changed-files@v46
+        uses: tj-actions/changed-files@v47
         with:
           files: |
             .changeset/*.md
