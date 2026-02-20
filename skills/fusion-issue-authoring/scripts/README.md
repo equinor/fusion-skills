@@ -7,7 +7,13 @@ These scripts are optional helpers for `fusion-issue-authoring` workflows.
 - Read-only scripts never mutate GitHub state.
 - Mutation scripts require explicit flags (`--yes`) and support `--dry-run`.
 - All scripts validate required inputs and fail with actionable messages.
-- Issue-type mutation scripts surface explicit compatibility/permission errors when repository API support is unavailable.
+- Issue-type mutation scripts use GraphQL `updateIssue(issueTypeId: ...)` and surface explicit compatibility/permission errors.
+
+## VS Code zsh strict mode note
+
+- In VS Code integrated zsh terminals, `set -u` can conflict with shell integration hooks.
+- Bash helpers keep strict-mode fail-fast behavior while guarding nounset in VS Code sessions.
+- For ad-hoc interactive snippets in VS Code zsh, avoid `set -u` unless you explicitly guard prompt-hook variables.
 
 ## Template policy
 
@@ -53,6 +59,9 @@ All scripts are `gh`-only and have the same safety model (`--yes`/`-Yes` and `--
 ./skills/fusion-issue-authoring/scripts/set-issue-type.sh --repo equinor/fusion-core-tasks --issue 391 --type "Feature" --dry-run
 ./skills/fusion-issue-authoring/scripts/set-issue-type.sh --repo equinor/fusion-core-tasks --issue 391 --type "Feature" --yes
 
+# Verify issue type directly
+gh api graphql -f query='query($owner: String!, $name: String!, $number: Int!) { repository(owner: $owner, name: $name) { issue(number: $number) { number url issueType { name } } } }' -F owner=equinor -F name=fusion-core-tasks -F number=391 --jq '.data.repository.issue'
+
 # Link one child issue
 ./skills/fusion-issue-authoring/scripts/add-sub-issues.sh --repo equinor/fusion-core-tasks --parent 362 --children 391 --dry-run
 
@@ -69,6 +78,7 @@ pwsh ./skills/fusion-issue-authoring/scripts/list-labels.ps1 -Repo equinor/fusio
 pwsh ./skills/fusion-issue-authoring/scripts/search-duplicates.ps1 -Repo equinor/fusion-core-tasks -Query "csv export"
 pwsh ./skills/fusion-issue-authoring/scripts/research-repo-content.ps1 -Repo equinor/fusion-core-tasks
 pwsh ./skills/fusion-issue-authoring/scripts/set-issue-type.ps1 -Repo equinor/fusion-core-tasks -Issue 391 -Type Feature -DryRun
+pwsh ./skills/fusion-issue-authoring/scripts/set-issue-type.ps1 -Repo equinor/fusion-core-tasks -Issue 391 -Type Feature -Yes
 pwsh ./skills/fusion-issue-authoring/scripts/add-sub-issues.ps1 -Repo equinor/fusion-core-tasks -Parent 362 -Children 391,392,393 -DryRun
 pwsh ./skills/fusion-issue-authoring/scripts/add-blocking-issues.ps1 -Repo equinor/fusion-core-tasks -Issue 394 -Blocking 391 -DryRun
 ```

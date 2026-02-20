@@ -108,6 +108,7 @@ Rule: never assume assignment preferences without asking.
 After issue creation/update, set issue type when supported by repository configuration.
 
 - For task decomposition work, set issue type to `Task`.
+- Use GraphQL `updateIssue` with `issueTypeId` (do not rely on REST `--field type=...` patching).
 - If issue type mutation is unsupported or fails, report the exact limitation and ask how to proceed.
 
 Rule: do not infer Task work but leave type unset.
@@ -131,6 +132,11 @@ Quick check before linking:
 
 ## Scripted helpers (optional)
 
+VS Code zsh note:
+
+- In integrated zsh sessions, unguarded `set -u` can interfere with shell integration hooks.
+- When using interactive ad-hoc shell snippets in VS Code, prefer `set -eo pipefail` or guard `set -u` explicitly.
+
 Use scripts in `../scripts/` to keep issue operations consistent:
 
 - List issues: `./skills/fusion-issue-authoring/scripts/list-issues.sh --repo <owner>/<repo>`
@@ -149,6 +155,12 @@ Suggested mutation order for Task batches:
 4. Apply assignees.
 5. Add sub-issue links.
 6. Add blocking links.
+
+Quick verification after setting type:
+
+```bash
+gh api graphql -f query='query($owner: String!, $name: String!, $number: Int!) { repository(owner: $owner, name: $name) { issue(number: $number) { number url issueType { name } } } }' -F owner=<owner> -F name=<repo> -F number=<n> --jq '.data.repository.issue'
+```
 
 ### Windows (PowerShell)
 
