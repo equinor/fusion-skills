@@ -8,33 +8,33 @@ vi.mock("../validate-pr/get-version-at-ref", () => ({
   getVersionAtRef: getVersionAtRefMock,
 }));
 
-import { validateVersionBumps } from "../validate-pr/validate-version-bumps";
+import { validateNoManualVersionEdits } from "../validate-pr/validate-no-manual-version-edits";
 
-describe("validateVersionBumps", () => {
+describe("validateNoManualVersionEdits", () => {
   beforeEach(() => {
     getVersionAtRefMock.mockReset();
   });
 
-  it("passes when a changed skill version increases", () => {
-    getVersionAtRefMock.mockImplementation((ref, skillDir) => {
-      if (skillDir !== "skills/fusion-skill-authoring") return null;
-      return ref === "HEAD" ? "1.1.0" : "1.0.0";
-    });
-
-    expect(() =>
-      validateVersionBumps(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
-    ).not.toThrow();
-  });
-
-  it("fails when the version is unchanged", () => {
+  it("passes when an existing changed skill version is unchanged", () => {
     getVersionAtRefMock.mockImplementation((ref, skillDir) => {
       if (skillDir !== "skills/fusion-skill-authoring") return null;
       return ref === "HEAD" ? "1.0.0" : "1.0.0";
     });
 
     expect(() =>
-      validateVersionBumps(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
-    ).toThrow("Skill metadata.version bump validation failed.");
+      validateNoManualVersionEdits(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
+    ).not.toThrow();
+  });
+
+  it("fails when the version increases", () => {
+    getVersionAtRefMock.mockImplementation((ref, skillDir) => {
+      if (skillDir !== "skills/fusion-skill-authoring") return null;
+      return ref === "HEAD" ? "1.1.0" : "1.0.0";
+    });
+
+    expect(() =>
+      validateNoManualVersionEdits(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
+    ).toThrow("Manual skill metadata.version edits are not allowed in non-release PRs.");
   });
 
   it("fails when the version is downgraded", () => {
@@ -44,8 +44,8 @@ describe("validateVersionBumps", () => {
     });
 
     expect(() =>
-      validateVersionBumps(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
-    ).toThrow("Skill metadata.version bump validation failed.");
+      validateNoManualVersionEdits(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
+    ).toThrow("Manual skill metadata.version edits are not allowed in non-release PRs.");
   });
 
   it("passes for newly added skills", () => {
@@ -55,7 +55,7 @@ describe("validateVersionBumps", () => {
     });
 
     expect(() =>
-      validateVersionBumps(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
+      validateNoManualVersionEdits(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
     ).not.toThrow();
   });
 });
