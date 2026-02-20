@@ -1,23 +1,24 @@
 # Contribute Guide
 
-Thanks for helping improve Fusion’s shared GitHub Copilot Agent Skills.
+👋 Welcome, builder of useful things.
 
-This folder contains the full contribution playbook in smaller, task-focused parts.
+You can absolutely YOLO a PR and hope for the best.
+Or you can spend two minutes here and save everyone (including future-you) a lot of pain.
 
-## Start here
+If you’re new, start with [Where to start](01-where-to-start.md). It helps you pick the right scope and where your change belongs.
 
-- [Where to start](01-where-to-start.md)
-- [Skill structure and content](02-skill-structure-and-content.md)
-- [Quality and safety](03-quality-and-safety.md)
-- [Repository scripts and code rules](06-scripts-code-rules.md)
-- [Versioning and release flow](04-versioning-and-release.md)
-- [Validation and CI split](05-validation-and-ci.md)
+## 🚀 A smooth path
 
-## Suggested reading order
+Then follow this path:
 
-1. Read [Where to start](01-where-to-start.md)
-2. Follow [Skill structure and content](02-skill-structure-and-content.md)
-3. Review [Quality and safety](03-quality-and-safety.md)
-4. Review [Repository scripts and code rules](06-scripts-code-rules.md)
-5. Apply [Versioning and release flow](04-versioning-and-release.md)
-6. Run checks from [Validation and CI split](05-validation-and-ci.md)
+- Shape the skill in [Skill structure and content](02-skill-structure-and-content.md)
+- Make safety and behavior explicit in [Quality and safety](03-quality-and-safety.md)
+- Add changeset/version context in [Versioning and release flow](04-versioning-and-release.md)
+- Run local checks from [Validation and CI split](05-validation-and-ci.md)
+- Confirm PR expectations in [CONTRIBUTING.md](../CONTRIBUTING.md)
+
+##  Working on scripts?
+
+If your change touches automation in `scripts/`, read [Repository scripts and code rules](06-scripts-code-rules.md) before opening a PR.
+
+Why? Script changes can break CI, release flow, or both — and nobody enjoys surprise archaeology in pipeline logs.

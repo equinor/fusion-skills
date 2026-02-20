@@ -26,7 +26,11 @@
    - `assets/` for static assets referenced by docs
    - `scripts/` for helper scripts (security-sensitive)
 
-5. Open a PR.
+5. Use Conventional Commits for your commit messages.
+   - Examples: `feat: add new skill scaffold`, `fix: tighten script safety guidance`, `docs: clarify changeset expectations`.
+   - If you need to include follow-up doc fixes in the latest commit, use `git commit --amend`.
+
+6. Open a PR.
    - If your skill adds or modifies anything under `scripts/`, expect deeper review.
 
 ## Questions and uncertainty
