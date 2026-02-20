@@ -1,5 +1,8 @@
 /**
  * Extracts metadata.version from SKILL.md content.
+ *
+ * @param skillContent - Full SKILL.md file content.
+ * @returns Extracted semantic version string.
  */
 export function extractMetadataVersion(skillContent: string): string {
   const metadataBlock = skillContent.match(/\nmetadata:\n([\s\S]*?)(\n[^\s]|\n---|$)/);
@@ -13,6 +16,10 @@ export function extractMetadataVersion(skillContent: string): string {
 
 /**
  * Updates metadata.version in SKILL.md frontmatter.
+ *
+ * @param skillContent - Full SKILL.md file content.
+ * @param newVersion - Semantic version string to persist.
+ * @returns Updated SKILL.md content.
  */
 export function updateMetadataVersion(skillContent: string, newVersion: string): string {
   const lines = skillContent.split("\n");

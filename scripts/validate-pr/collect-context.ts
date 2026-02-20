@@ -1,3 +1,6 @@
+/**
+ * Aggregated repository-change context used by PR validation checks.
+ */
 export interface ChangedSkillContext {
   changedSkillDirs: Set<string>;
   changedSkillIds: Set<string>;
@@ -8,6 +11,9 @@ export interface ChangedSkillContext {
 
 /**
  * Collects skill-related context from changed file paths.
+ *
+ * @param changedFiles - Repository-relative file paths changed in the PR diff.
+ * @returns Aggregated change context used by validation checks.
  */
 export function collectChangedSkillContext(changedFiles: string[]): ChangedSkillContext {
   const changedSkillDirs = new Set<string>();

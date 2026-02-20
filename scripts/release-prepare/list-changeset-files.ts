@@ -3,6 +3,9 @@ import { join } from "node:path";
 
 /**
  * Lists processable changeset files from .changeset.
+ *
+ * @param repoRoot - Absolute repository root path.
+ * @returns Sorted absolute paths to eligible changeset markdown files.
  */
 export function listChangesetFiles(repoRoot: string): string[] {
   const changesetDir = join(repoRoot, ".changeset");

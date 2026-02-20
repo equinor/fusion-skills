@@ -1,3 +1,6 @@
+/**
+ * Represents one skill bump declaration parsed from a changeset frontmatter block.
+ */
 export interface ChangesetEntry {
   skill: string;
   bump: "major" | "minor" | "patch";
@@ -5,6 +8,9 @@ export interface ChangesetEntry {
 
 /**
  * Parses changeset frontmatter entries.
+ *
+ * @param markdown - Full changeset markdown content.
+ * @returns Parsed skill bump entries from the frontmatter block.
  */
 export function parseChangesetEntries(markdown: string): ChangesetEntry[] {
   const frontmatter = markdown.match(/^---\n([\s\S]*?)\n---\n?/);
@@ -26,6 +32,9 @@ export function parseChangesetEntries(markdown: string): ChangesetEntry[] {
 
 /**
  * Extracts one-line summary text from changeset body.
+ *
+ * @param markdown - Full changeset markdown content.
+ * @returns First non-empty body line or a fallback placeholder.
  */
 export function extractChangesetSummary(markdown: string): string {
   const body = markdown.replace(/^---\n[\s\S]*?\n---\n?/, "").trim();

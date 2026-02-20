@@ -7,6 +7,8 @@ import { extractChangesetSummary, parseChangesetEntries } from "./parse-changese
 
 /**
  * CLI entrypoint for listing all changesets and their bump entries.
+ *
+ * @returns Nothing. Writes formatted changeset information to stdout.
  */
 function main(): void {
   const repoRoot = process.cwd();

@@ -6,6 +6,12 @@ type Heading = {
   endOfLine: number;
 };
 
+/**
+ * Parses all H2 headings from changelog markdown content.
+ *
+ * @param content - Full changelog markdown text.
+ * @returns Ordered list of detected H2 heading metadata.
+ */
 function parseH2Headings(content: string): Heading[] {
   const regex = /^##\s+(.+)$/gm;
   const headings: Heading[] = [];
@@ -27,6 +33,10 @@ function parseH2Headings(content: string): Heading[] {
 /**
  * Reads release notes body from root CHANGELOG.md for packageVersion.
  * Requires matching H2 section to exist and be the latest (first) H2.
+ *
+ * @param changelogPath - Absolute path to root CHANGELOG.md.
+ * @param packageVersion - Target package version to locate in headings.
+ * @returns Trimmed markdown body for the latest matching release section.
  */
 export function readLatestReleaseBodyFromRootChangelog(
   changelogPath: string,

@@ -8,6 +8,8 @@ import { validateNoManualVersionEdits } from "./validate-no-manual-version-edits
  * CLI entrypoint for PR validation:
  * - changeset coverage for changed skills
  * - no manual metadata.version edits in non-release PRs
+ *
+ * @returns Nothing.
  */
 function main(): void {
   const baseRef = process.env.GITHUB_BASE_REF?.trim();

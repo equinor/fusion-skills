@@ -1,5 +1,8 @@
 /**
  * Removes ANSI color/control escape sequences.
+ *
+ * @param input - Raw CLI output text.
+ * @returns Output text with ANSI escapes removed.
  */
 export function sanitizeAnsi(input: string): string {
   let output = "";
@@ -34,6 +37,9 @@ export function sanitizeAnsi(input: string): string {
 
 /**
  * Parses skill count from skills CLI output.
+ *
+ * @param output - CLI output text.
+ * @returns Parsed numeric skill count.
  */
 export function parseCliSkillCount(output: string): number {
   const match = output.match(/Found[^0-9]*([0-9]+)/i);

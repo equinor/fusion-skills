@@ -4,6 +4,10 @@ import { bumpSemver } from "./semver";
 
 /**
  * Bumps package.json version and writes file.
+ *
+ * @param packageJsonPath - Absolute path to package.json.
+ * @param bump - Semantic bump level to apply.
+ * @returns Newly written package version.
  */
 export function updatePackageVersion(packageJsonPath: string, bump: BumpType): string {
   const pkg = JSON.parse(readFileSync(packageJsonPath, "utf8")) as { version?: string };

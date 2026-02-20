@@ -1,11 +1,22 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
+/**
+ * Removes optional YAML frontmatter from generated release notes content.
+ *
+ * @param content - Raw release notes markdown.
+ * @returns Markdown body without frontmatter delimiters.
+ */
 function stripFrontmatter(content: string): string {
   return content.replace(/^---\n[\s\S]*?\n---\n*/u, "").trim();
 }
 
 /**
  * Inserts a release section into root CHANGELOG.md.
+ *
+ * @param changelogPath - Absolute path to root CHANGELOG.md.
+ * @param packageVersion - Version to use in the inserted heading.
+ * @param releaseContent - Rendered release notes markdown.
+ * @returns Nothing. Writes updated changelog content to disk.
  */
 export function updateRootChangelog(
   changelogPath: string,

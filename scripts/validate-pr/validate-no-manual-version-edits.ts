@@ -1,5 +1,12 @@
 import { getVersionAtRef } from "./get-version-at-ref";
 
+/**
+ * Compares two semantic versions.
+ *
+ * @param left - First semantic version.
+ * @param right - Second semantic version.
+ * @returns `1` when left is higher, `-1` when lower, otherwise `0`.
+ */
 function compareSemver(left: string, right: string): number {
   const leftParts = left.split(".").map((part) => Number(part));
   const rightParts = right.split(".").map((part) => Number(part));
@@ -16,6 +23,10 @@ function compareSemver(left: string, right: string): number {
  * Validates that non-release PRs do not manually edit metadata.version for existing skills.
  *
  * Maintainer note: skill metadata.version is updated by release automation only.
+ *
+ * @param changedSkillDirs - Changed skill directories detected in the PR.
+ * @param baseRemoteRef - Base remote git ref used for comparison.
+ * @returns Nothing.
  */
 export function validateNoManualVersionEdits(
   changedSkillDirs: Set<string>,

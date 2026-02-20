@@ -1,5 +1,9 @@
 /**
  * Formats a parsed frontmatter object for terminal output.
+ *
+ * @param skillPath - Repository-relative path to the SKILL.md file.
+ * @param frontmatter - Parsed frontmatter key/value data.
+ * @returns Human-readable multi-line summary text.
  */
 export function formatSkillSummary(skillPath: string, frontmatter: Record<string, string>): string {
   const lines: string[] = [];

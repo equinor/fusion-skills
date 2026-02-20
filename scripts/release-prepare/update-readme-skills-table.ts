@@ -13,10 +13,22 @@ type SkillRow = {
   relativePath: string;
 };
 
+/**
+ * Escapes markdown table cell content.
+ *
+ * @param value - Raw cell text.
+ * @returns Escaped single-line markdown-safe text.
+ */
 function escapeTableCell(value: string): string {
   return value.replace(/\\/g, "\\\\").replace(/\|/g, "\\|").replace(/\s+/g, " ").trim();
 }
 
+/**
+ * Renders the README skills markdown table.
+ *
+ * @param rows - Sorted skill table rows.
+ * @returns Markdown table string.
+ */
 function buildSkillsTable(rows: SkillRow[]): string {
   const header = ["| Skill | Description | Version |", "| --- | --- | --- |"];
 
@@ -32,6 +44,9 @@ function buildSkillsTable(rows: SkillRow[]): string {
  * Updates README skills table from discovered skill frontmatter files.
  *
  * The README must contain skills table start/end HTML comment markers.
+ *
+ * @param repoRoot - Absolute repository root path.
+ * @returns Number of discovered skills rendered into the table.
  */
 export function updateReadmeSkillsTable(repoRoot: string): number {
   const readmePath = join(repoRoot, "README.md");

@@ -45,6 +45,14 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      - name: Validate script TSDoc coverage (diff)
+        if: github.event_name == 'pull_request'
+        run: bun run validate:scripts --only-diff --base-ref origin/${{ github.base_ref }}
+
+      - name: Validate script TSDoc coverage (full)
+        if: github.event_name != 'pull_request'
+        run: bun run validate:scripts
+
       - name: Run tests
         run: bun test
 
