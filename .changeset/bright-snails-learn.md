@@ -9,4 +9,4 @@
 
 Migrate issue authoring guidance from helper scripts to GitHub MCP-first workflows, including MCP metadata declarations and updated orchestration/ref docs.
 
-resolves: equinor/fusion-skills#21
+resolves equinor/fusion-skills#21

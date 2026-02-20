@@ -19,8 +19,8 @@ SemVer meaning in this repo:
 
 1. Add a `.changeset/*.md` file describing skill-level bump(s) and impact in skill-changing PRs
 	- Use lower-case GitHub closing keywords when closure is intended.
-	- Prefer `resolves:` with direct references (for example `resolves: owner/repo#123`).
-	- Use `fixes:` or `closes:` only when those verbs are more accurate.
+	- Prefer `resolves` with direct references (for example `resolves owner/repo#123`).
+	- Use `fixes` or `closes` only when those verbs are more accurate.
 	- Remember that changeset text can be propagated into release PR/changelog content and may close issues when the release PR merges.
 2. Let release automation apply affected skill `metadata.version` bumps
 3. Tag the repository release

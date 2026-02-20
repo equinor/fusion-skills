@@ -35,4 +35,4 @@ Apply this guidance when creating, updating, or finalizing pull requests.
 - Check code and docs against repository guides (`CONTRIBUTING.md`, `contribute/`, and relevant `.github/instructions/*.instructions.md`).
 - Confirm validation commands run.
 - Use lower-case issue-closing keywords consistently in changeset and PR text when closure is intended.
-- Prefer `resolves: owner/repo#123`; use `fixes:` or `closes:` only when those verbs are more accurate.
+- Prefer `resolves owner/repo#123`; use `fixes owner/repo#123` or `closes owner/repo#123` only when those verbs are more accurate.

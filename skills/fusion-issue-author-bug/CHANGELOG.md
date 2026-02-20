@@ -18,7 +18,7 @@
 
   Refs: `equinor/fusion-core-tasks#391`
 
-  Closes: `equinor/fusion-core-tasks#395`
+  closes equinor/fusion-core-tasks#395
 
   Scope delivered:
   - `fusion-issue-authoring` is now the orchestration layer for shared gates (classification, labels, assignee, confirmation, publish flow).

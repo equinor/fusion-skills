@@ -177,4 +177,4 @@ Always:
 - Keep drafts concise and editable
 - Prefer WHAT/WHY over implementation HOW in issue text
 - Use full repository issue references (for example `owner/repo#123`)
-- Use issue-closing keywords when closure is intended (for example `fixes: owner/repo#123`, `resolves: owner/repo#123`, or `closes: owner/repo#123`)
+- Use issue-closing keywords when closure is intended (for example `fixes owner/repo#123`, `resolves owner/repo#123`, or `closes owner/repo#123`)
