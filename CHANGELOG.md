@@ -2,6 +2,14 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.1.1
+
+### fusion-skill-authoring@0.1.1
+
+#### patch
+
+- [#4](https://github.com/equinor/fusion-skills/pull/4) [`7dad576`](https://github.com/equinor/fusion-skills/commit/7dad5761f18701c15048130951d150e477c95189) - Fix wording in the skill changelog and align metadata/versioning consistency for the updated skill package.
+
 ## v0.1.0
 
 ### fusion-skill-authoring@0.1.0
