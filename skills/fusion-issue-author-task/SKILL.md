@@ -4,8 +4,12 @@ description: Draft and update task issues with checklist-first decomposition, de
 license: MIT
 metadata:
   version: "0.0.0"
-  required_skill: "fusion-issue-authoring"
-  skill_role: "subskill"
+  orchestrator: "fusion-issue-authoring"
+  role: "subordinate"
+  tags:
+    - github
+    - issue-authoring
+    - task
 ---
 
 # Author Task Issue

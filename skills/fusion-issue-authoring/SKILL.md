@@ -4,26 +4,29 @@ description: Orchestrate GitHub issue authoring by classifying request type, rou
 license: MIT
 metadata:
   version: "0.0.0"
-  skill_role: "orchestrator"
-  sub_skills:
+  role: "orchestrator"
+  skills:
     - fusion-issue-author-bug
     - fusion-issue-author-feature
     - fusion-issue-author-user-story
     - fusion-issue-author-task
+  tags:
+    - github
+    - issue-authoring
 ---
 
 # Issue Authoring Orchestrator
 
-## Subskills
+## Subordinates
 
-This skill routes to the following specialist subskills:
+This skill routes to the following subordinate skills:
 
 - `fusion-issue-author-bug` (`skills/fusion-issue-author-bug/SKILL.md`): bug-focused issue drafting and triage structure
 - `fusion-issue-author-feature` (`skills/fusion-issue-author-feature/SKILL.md`): feature-focused scope and acceptance structure
 - `fusion-issue-author-user-story` (`skills/fusion-issue-author-user-story/SKILL.md`): role/workflow/scenario-driven story structure
 - `fusion-issue-author-task` (`skills/fusion-issue-author-task/SKILL.md`): checklist-first task decomposition and dependency planning
 
-All subskills require this orchestrator for shared gates (labels, assignee confirmation, draft review, publish confirmation, and mutation sequencing).
+All subordinates require this orchestrator for shared gates (labels, assignee confirmation, draft review, publish confirmation, and mutation sequencing).
 
 ## When to use
 

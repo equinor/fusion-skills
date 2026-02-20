@@ -4,8 +4,12 @@ description: Draft and update feature issues with clear problem framing, scoped 
 license: MIT
 metadata:
   version: "0.0.0"
-  required_skill: "fusion-issue-authoring"
-  skill_role: "subskill"
+  orchestrator: "fusion-issue-authoring"
+  role: "subordinate"
+  tags:
+    - github
+    - issue-authoring
+    - feature
 ---
 
 # Author Feature Issue

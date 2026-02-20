@@ -48,12 +48,13 @@ export function parseFrontmatter(frontmatter: string): Record<string, string> {
     }
 
     const listItem = line.match(/^\s+-\s*(.+)$/);
-    if (listItem && currentListKey) {
+    if (listItem && (currentListKey || currentMapKey)) {
+      const listKey = currentListKey || currentMapKey;
       const itemValue = listItem[1].trim().replace(/^"|"$/g, "");
-      if (output[currentListKey]) {
-        output[currentListKey] = `${output[currentListKey]},${itemValue}`;
+      if (output[listKey]) {
+        output[listKey] = `${output[listKey]},${itemValue}`;
       } else {
-        output[currentListKey] = itemValue;
+        output[listKey] = itemValue;
       }
     }
   }

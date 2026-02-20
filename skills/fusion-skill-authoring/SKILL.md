@@ -4,6 +4,9 @@ description: Create or scaffold a new skill in a repository with valid metadata,
 license: MIT
 metadata:
    version: "0.1.1"
+   tags:
+     - skill-authoring
+     - scaffolding
 ---
 
 # Create Skill
@@ -42,7 +45,11 @@ Validate metadata constraints:
 - `name`: <= 64 chars, lowercase letters/numbers/hyphens only, no XML tags, and no platform-reserved words
 - `description`: non-empty, <= 1024 chars, no XML tags, includes both what it does and when to use it
 - `metadata.version`: semantic version string (`MAJOR.MINOR.PATCH`) in quoted YAML format
-- `metadata`: primarily string key/value map; arrays allowed for explicit relationship fields (for example `metadata.sub_skills`), avoid nested objects
+- `metadata`: primarily string key/value map; arrays allowed for explicit relationship fields, avoid nested objects
+  - `metadata.role`: `"orchestrator"` or `"subordinate"` (subordinates cannot run without their orchestrator)
+  - `metadata.orchestrator`: required orchestrator skill name (subordinates only)
+  - `metadata.skills`: list of subordinate skill names (orchestrators only)
+  - `metadata.tags`: optional list of lowercase kebab-case strings for discoverability
 - `license` and `compatibility`: optional top-level frontmatter fields (not inside `metadata`)
 
 If required inputs are missing, ask concise targeted questions first.
