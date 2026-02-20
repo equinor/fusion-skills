@@ -3,7 +3,7 @@ name: fusion-issue-author-feature
 description: Draft and update feature issues with clear problem framing, scoped requirements, repository-valid labels, and explicit confirmation before publishing.
 license: MIT
 metadata:
-  version: "0.0.0"
+  version: "0.1.0"
   orchestrator: "fusion-issue-authoring"
   role: "subordinate"
   tags:

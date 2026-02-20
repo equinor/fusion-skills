@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.2.0 - 2026-02-20
+
+### minor
+
+- [#10](https://github.com/equinor/fusion-skills/pull/10) [`d473723`](https://github.com/equinor/fusion-skills/commit/d4737239be54736e344d74be4ce8271b9be84313) - Adds structured frontmatter metadata for discoverability and clarifies skill relationship semantics.
+
+
+  Scope delivered:
+  - Added `metadata.tags` to affected skills for discoverability.
+  - Renamed relationship keys to a clearer schema: `skill_role` → `role`, `required_skill` → `orchestrator`, `sub_skills` → `skills`.
+  - Updated dependent role value from `subskill` to `subordinate` to explicitly indicate orchestrator dependency.
+  - Updated skill authoring guidance to document `metadata.role`, `metadata.orchestrator`, `metadata.skills`, and `metadata.tags`.
+
+- [#7](https://github.com/equinor/fusion-skills/pull/7) [`2194e7a`](https://github.com/equinor/fusion-skills/commit/2194e7a99f6055dd394dffca6e0e6286d3bb2d41) - Updates skill authoring defaults and metadata constraints to support complex repository-internal skill relationships.
+
+
+  Scope delivered:
+  - Permitted YAML arrays in frontmatter `metadata` specifically for modeling skill relationships (e.g., `metadata.sub_skills` or `metadata.required_skill`).
+  - Updated documentation and checklists to reflect the new versioning and metadata standards.
+
 ## 0.1.1 - 2026-02-20
 
 ### patch
