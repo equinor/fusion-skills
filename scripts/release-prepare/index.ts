@@ -16,6 +16,7 @@ import {
 import type { BumpType } from "./semver";
 import { bumpSemver, isHigherBump } from "./semver";
 import { extractMetadataVersion, updateMetadataVersion } from "./skill-version";
+import { updateReadmeSkillsTable } from "./update-readme-skills-table";
 import { upsertSkillChangelog } from "./upsert-skill-changelog";
 
 function normalizeEntry(entry: NoteEntry): NoteEntry | null {
@@ -43,7 +44,9 @@ function main(): void {
   const changesetFiles = listChangesetFiles(repoRoot);
 
   if (changesetFiles.length === 0) {
-    console.log("No changeset files found. Nothing to prepare.");
+    const skillCount = updateReadmeSkillsTable(repoRoot);
+    console.log(`Updated README skills table with ${skillCount} skill(s).`);
+    console.log("No changeset files found. Nothing else to prepare.");
     return;
   }
 
@@ -132,6 +135,8 @@ function main(): void {
   console.log(`Bumped package.json version to ${newPackageVersion} (${highestReleaseBump})`);
   updateRootChangelog(changelogPath, newPackageVersion, releaseContent);
   console.log(`Updated ${changelogPath} with ## v${newPackageVersion}`);
+  const skillCount = updateReadmeSkillsTable(repoRoot);
+  console.log(`Updated README skills table with ${skillCount} skill(s).`);
 
   for (const changesetFile of changesetFiles) {
     rmSync(changesetFile);

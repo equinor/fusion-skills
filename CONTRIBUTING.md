@@ -29,7 +29,8 @@ If a contribution could have legal, compliance, data handling, or operational im
 Before requesting review, make sure your PR is:
 - focused and minimal,
 - safe by default (no secret handling, no hidden side effects),
-- Conventional Commit messages.
+- uses Conventional Commit messages,
+- runs lint/format checks before commit operations (`bun run biome:check`; use `bun run biome:fix` when needed),
 - clear about what changed and why.
 
 If you are unsure about direction, open a draft PR early and ask for feedback.
