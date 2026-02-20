@@ -14,7 +14,7 @@ Run from repository root before opening or updating a PR:
 
 ```bash
 bun install --frozen-lockfile
-bun run test
+bun test
 bun run biome:check
 bunx tsc --noEmit -p tsconfig.json
 bun run validate:skills
@@ -33,4 +33,4 @@ Validation workflows are separated to reduce unrelated CI noise:
 
 - `.github/workflows/validate-scripts.yml`
   - runs on `scripts/**` and script-tooling files (`biome.json`, `tsconfig.json`, `package.json`, `bun.lock`)
-  - runs tests (`bun run test`), formatting/linting (`bun run biome:check`), and TypeScript (`bunx tsc --noEmit -p tsconfig.json`)
+  - runs tests (`bun test`), formatting/linting (`bun run biome:check`), and TypeScript (`bunx tsc --noEmit -p tsconfig.json`)
