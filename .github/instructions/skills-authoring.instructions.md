@@ -64,6 +64,9 @@ Field constraints:
 - `metadata`:
   - prefer string-to-string key/value pairs
   - arrays are allowed when modeling explicit skill relationships (for example `metadata.skills`)
+  - `metadata.role`: `"orchestrator"` for top-level skills, `"subordinate"` for skills that cannot run without their orchestrator
+  - `metadata.orchestrator`: name of the required orchestrator skill (subordinates only)
+  - `metadata.skills`: list of subordinate skill names (orchestrators only)
   - `metadata.tags`: optional list of free-form lowercase kebab-case strings for discoverability
   - avoid nested objects under `metadata`
 - `license` and `compatibility`:

@@ -15,6 +15,9 @@ Include YAML frontmatter with:
 - `description`: what the skill does and when to use it
 - `metadata.version`: semantic version (for example `"0.0.0"`)
 - `metadata`: primarily string key/value pairs; arrays allowed for explicit relationship fields (for example `metadata.skills`)
+- `metadata.role`: `"orchestrator"` for top-level skills; `"subordinate"` for skills that require their orchestrator to run
+- `metadata.orchestrator`: name of the required orchestrator skill (subordinates only)
+- `metadata.skills`: list of subordinate skill names (orchestrators only)
 - `metadata.tags`: optional list of free-form lowercase kebab-case strings for discoverability (for example `["github", "issue-authoring"]`)
 - `license` and `compatibility`: optional top-level fields when needed
 
