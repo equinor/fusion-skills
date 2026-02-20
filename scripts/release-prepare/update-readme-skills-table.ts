@@ -14,7 +14,7 @@ type SkillRow = {
 };
 
 function escapeTableCell(value: string): string {
-  return value.replace(/\|/g, "\\|").replace(/\s+/g, " ").trim();
+  return value.replace(/\\/g, "\\\\").replace(/\|/g, "\\|").replace(/\s+/g, " ").trim();
 }
 
 function buildSkillsTable(rows: SkillRow[]): string {

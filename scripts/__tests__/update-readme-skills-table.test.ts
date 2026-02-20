@@ -54,7 +54,7 @@ describe("updateReadmeSkillsTable", () => {
         repoRoot,
         "fusion-z-skill",
         "fusion-z-skill",
-        "Handles Z flow | carefully.",
+        "Handles Z flow \\ with pipe | carefully.",
         "1.2.3",
       );
       writeSkill(repoRoot, "fusion-a-skill", "fusion-a-skill", "Handles A flow.", "0.2.0");
@@ -68,7 +68,7 @@ describe("updateReadmeSkillsTable", () => {
         "| [`fusion-a-skill`](skills/fusion-a-skill/SKILL.md) | Handles A flow. | `0.2.0` |",
       );
       expect(readme).toContain(
-        "| [`fusion-z-skill`](skills/fusion-z-skill/SKILL.md) | Handles Z flow \\| carefully. | `1.2.3` |",
+        "| [`fusion-z-skill`](skills/fusion-z-skill/SKILL.md) | Handles Z flow \\\\ with pipe \\| carefully. | `1.2.3` |",
       );
 
       const aIndex = readme.indexOf("fusion-a-skill");
