@@ -1,5 +1,8 @@
 /**
  * Extracts YAML frontmatter from markdown content.
+ *
+ * @param markdown - Markdown text that may include a frontmatter block.
+ * @returns Frontmatter content without delimiters, or empty string when missing.
  */
 export function extractFrontmatter(markdown: string): string {
   const match = markdown.match(/^---\n([\s\S]*?)\n---\n?/);
@@ -11,6 +14,9 @@ export function extractFrontmatter(markdown: string): string {
  *
  * Maintainer note: this parser intentionally handles the subset used in SKILL.md
  * and avoids bringing in YAML dependencies for CI/runtime simplicity.
+ *
+ * @param frontmatter - Frontmatter content without `---` delimiters.
+ * @returns Flat record of parsed frontmatter keys and values.
  */
 export function parseFrontmatter(frontmatter: string): Record<string, string> {
   const lines = frontmatter.split("\n");

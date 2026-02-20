@@ -3,6 +3,10 @@ import { parseChangesetEntries } from "./parse-changeset-entries";
 
 /**
  * Validates that all changed skills are covered by updated changeset files.
+ *
+ * @param changedSkillIds - Skill ids changed in the current PR.
+ * @param changedChangesetFiles - Repository-relative changed changeset file paths.
+ * @returns Nothing.
  */
 export function validateChangesetCoverage(
   changedSkillIds: Set<string>,

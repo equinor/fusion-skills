@@ -1,7 +1,13 @@
+/**
+ * Supported bump values allowed in changeset frontmatter entries.
+ */
 export type ChangesetBumpType = "major" | "minor" | "patch";
 
 /**
  * Parses changeset frontmatter into skill->bump entries.
+ *
+ * @param content - Raw changeset markdown content.
+ * @returns Parsed skill bump entries from frontmatter.
  */
 export function parseChangesetEntries(content: string): Map<string, ChangesetBumpType> {
   const entries = new Map<string, ChangesetBumpType>();

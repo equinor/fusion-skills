@@ -1,5 +1,8 @@
 /**
  * Extracts metadata.version from SKILL.md content.
+ *
+ * @param skillContent - Full SKILL.md file content.
+ * @returns Parsed metadata version, or `null` when not present.
  */
 export function getMetadataVersionFromSkillContent(skillContent: string): string | null {
   const metadataBlock = skillContent.match(/\nmetadata:\n([\s\S]*?)(\n[^\s]|\n---|$)/);

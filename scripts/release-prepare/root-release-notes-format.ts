@@ -30,6 +30,12 @@ export interface GroupedRootReleaseNotes {
   patch: RootReleaseEntry[];
 }
 
+/**
+ * Converts a bump type into its root changelog heading label.
+ *
+ * @param bumpType - Semantic bump category.
+ * @returns Title-cased heading label.
+ */
 function toHeadingLabel(bumpType: BumpType): string {
   // Render title-cased heading for major bump sections.
   if (bumpType === "major") return "Major";
@@ -38,6 +44,14 @@ function toHeadingLabel(bumpType: BumpType): string {
   return "Patch";
 }
 
+/**
+ * Formats an entry title with optional PR link metadata.
+ *
+ * @param title - Display title text.
+ * @param prNumber - Optional pull request number.
+ * @param repoSlug - Optional `owner/repo` used to build PR links.
+ * @returns Linked title markdown when possible, otherwise plain text.
+ */
 function formatTitleLink(title: string, prNumber: string | null, repoSlug: string | null): string {
   const titleWithPr = prNumber ? `${title} #${prNumber}` : title;
   // Link title to PR when both PR number and repository slug are available.
@@ -47,6 +61,13 @@ function formatTitleLink(title: string, prNumber: string | null, repoSlug: strin
   return titleWithPr;
 }
 
+/**
+ * Formats a commit SHA as linked or plain short text.
+ *
+ * @param commitSha - Full commit SHA, if available.
+ * @param repoSlug - Optional `owner/repo` used to build commit links.
+ * @returns Linked short SHA, short SHA text, or `n/a` when missing.
+ */
 function formatCommitLink(commitSha: string | null, repoSlug: string | null): string {
   // Fall back to plain placeholder when commit provenance is unavailable.
   if (!commitSha) {
@@ -62,6 +83,13 @@ function formatCommitLink(commitSha: string | null, repoSlug: string | null): st
   return shortSha;
 }
 
+/**
+ * Renders the emphasized header block for one root release entry.
+ *
+ * @param entry - Root changelog entry payload.
+ * @param repoSlug - Optional `owner/repo` used for links.
+ * @returns Markdown line containing the formatted emphasized header block.
+ */
 function renderRootEntryHeader(entry: RootReleaseEntry, repoSlug: string | null): string {
   const { title: fallbackTitle } = splitNoteTitleAndBody(entry.body);
   const title = entry.prTitle?.trim() || fallbackTitle;
@@ -82,6 +110,12 @@ function renderRootEntryHeader(entry: RootReleaseEntry, repoSlug: string | null)
   return `__${block}__`;
 }
 
+/**
+ * Renders the body lines for one root release entry.
+ *
+ * @param entry - Root changelog entry payload.
+ * @returns Markdown body lines for the entry.
+ */
 function renderRootEntryBody(entry: RootReleaseEntry): string[] {
   const { title: fallbackTitle, body } = splitNoteTitleAndBody(entry.body);
   const prTitle = entry.prTitle?.trim();

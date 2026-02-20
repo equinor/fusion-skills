@@ -1,7 +1,13 @@
+/**
+ * Supported semantic-version bump levels used by release preparation scripts.
+ */
 export type BumpType = "major" | "minor" | "patch";
 
 /**
  * Parses semantic version text.
+ *
+ * @param version - Semantic version string in `major.minor.patch` format.
+ * @returns Parsed numeric semantic version parts.
  */
 export function parseSemver(version: string): { major: number; minor: number; patch: number } {
   const match = version.trim().match(/^(\d+)\.(\d+)\.(\d+)$/);
@@ -18,6 +24,10 @@ export function parseSemver(version: string): { major: number; minor: number; pa
 
 /**
  * Bumps semantic version by the specified bump type.
+ *
+ * @param version - Current semantic version string.
+ * @param bump - Bump level to apply.
+ * @returns Incremented semantic version string.
  */
 export function bumpSemver(version: string, bump: BumpType): string {
   const parsed = parseSemver(version);
@@ -28,6 +38,10 @@ export function bumpSemver(version: string, bump: BumpType): string {
 
 /**
  * Compares bump type priority.
+ *
+ * @param next - Candidate bump type.
+ * @param current - Existing bump type, if present.
+ * @returns `true` when `next` has higher priority than `current`.
  */
 export function isHigherBump(next: BumpType, current?: BumpType): boolean {
   const rank: Record<BumpType, number> = { patch: 0, minor: 1, major: 2 };

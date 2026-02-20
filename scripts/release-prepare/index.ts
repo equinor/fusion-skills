@@ -15,6 +15,12 @@ import { extractMetadataVersion, updateMetadataVersion } from "./skill-version";
 import { updateReadmeSkillsTable } from "./update-readme-skills-table";
 import { upsertSkillChangelog } from "./upsert-skill-changelog";
 
+/**
+ * Normalizes one note entry and drops empty results.
+ *
+ * @param entry - Raw note entry collected from changesets.
+ * @returns Normalized note entry, or `null` when no renderable body remains.
+ */
 function normalizeEntry(entry: NoteEntry): NoteEntry | null {
   // Empty/heading-only bodies are dropped so rendered changelogs never emit
   // blank bullets for a bump category.
@@ -34,6 +40,8 @@ function normalizeEntry(entry: NoteEntry): NoteEntry | null {
 
 /**
  * CLI entrypoint for applying changesets into release artifacts.
+ *
+ * @returns Nothing.
  */
 function main(): void {
   const repoRoot = process.cwd();

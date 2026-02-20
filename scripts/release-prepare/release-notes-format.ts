@@ -36,6 +36,13 @@ export function normalizeNoteBody(note: string): string {
   return normalizeNoteBodyShared(note);
 }
 
+/**
+ * Builds provenance text for one rendered note entry.
+ *
+ * @param entry - Note entry with optional PR, commit, and author metadata.
+ * @param repoSlug - Optional `owner/repo` used for GitHub links.
+ * @returns Provenance suffix string, or empty string when no metadata exists.
+ */
 function formatProvenance(entry: NoteEntry, repoSlug: string | null): string {
   const parts: string[] = [];
 
@@ -68,6 +75,13 @@ function formatProvenance(entry: NoteEntry, repoSlug: string | null): string {
   return parts.join(" ");
 }
 
+/**
+ * Renders a single note entry as markdown bullet lines.
+ *
+ * @param entry - Note entry to render.
+ * @param repoSlug - Optional `owner/repo` used for provenance links.
+ * @returns Markdown lines for the rendered note block.
+ */
 function renderNoteEntry(entry: NoteEntry, repoSlug: string | null): string[] {
   const lines = entry.body.split("\n");
   const firstLine = lines[0] ?? "";

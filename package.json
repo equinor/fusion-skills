@@ -16,6 +16,7 @@
     "test:watch": "bun test --watch",
     "list:skills": "bun run scripts/list-skills/index.ts",
     "list:changesets": "bun run scripts/list-changesets/index.ts",
+    "validate:scripts": "bun run scripts/validate-scripts/index.ts",
     "validate:skills": "bun run scripts/validate-skills/index.ts",
     "validate:pr": "bun run scripts/validate-pr/index.ts",
     "release:prepare": "bun run scripts/release-prepare/index.ts",

@@ -1,5 +1,8 @@
 import type { BumpType } from "./semver";
 
+/**
+ * Parsed representation of a changeset file frontmatter and descriptive body.
+ */
 export interface ParsedChangeset {
   skills: Record<string, BumpType>;
   body: string;
@@ -7,6 +10,9 @@ export interface ParsedChangeset {
 
 /**
  * Parses a changeset markdown file into skill bump entries + body.
+ *
+ * @param content - Raw changeset markdown content.
+ * @returns Parsed skill bump map and normalized description body.
  */
 export function parseChangeset(content: string): ParsedChangeset {
   const match = content.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);

@@ -1,6 +1,9 @@
 import { execSync } from "node:child_process";
 import { relative } from "node:path";
 
+/**
+ * Git provenance metadata resolved for a newly added changeset file.
+ */
 export interface ChangesetProvenance {
   prNumber: string | null;
   prTitle: string | null;
@@ -8,6 +11,13 @@ export interface ChangesetProvenance {
   authorLogin: string | null;
 }
 
+/**
+ * Extracts a clean PR title from a commit subject line.
+ *
+ * @param subject - Commit subject line from git log.
+ * @param prNumber - PR number inferred from subject, when available.
+ * @returns Clean PR title or null when no reliable title can be derived.
+ */
 function extractPrTitleFromSubject(subject: string, prNumber: string | null): string | null {
   const trimmed = subject.trim();
   if (!trimmed) {
@@ -27,11 +37,23 @@ function extractPrTitleFromSubject(subject: string, prNumber: string | null): st
   return withoutPrSuffix || null;
 }
 
+/**
+ * Infers a GitHub login from a noreply commit email address.
+ *
+ * @param email - Commit author email.
+ * @returns GitHub login when email uses GitHub noreply format; otherwise null.
+ */
 function extractGitHubLoginFromEmail(email: string): string | null {
   const match = email.match(/^(?:\d+\+)?([^@]+)@users\.noreply\.github\.com$/i);
   return match?.[1] ?? null;
 }
 
+/**
+ * Parses an `owner/repo` slug from common GitHub remote URL formats.
+ *
+ * @param remoteUrl - Git remote URL string.
+ * @returns Parsed repository slug or null when the URL is not a GitHub remote.
+ */
 function parseGitHubRepoSlug(remoteUrl: string): string | null {
   const sshMatch = remoteUrl.match(/^git@github\.com:([^/]+\/[^/]+?)(?:\.git)?$/i);
   if (sshMatch) {
@@ -46,10 +68,22 @@ function parseGitHubRepoSlug(remoteUrl: string): string | null {
   return null;
 }
 
+/**
+ * Escapes a value for safe use as a single shell argument.
+ *
+ * @param value - Raw argument value.
+ * @returns Shell-escaped argument wrapped in single quotes.
+ */
 function shellEscape(value: string): string {
   return `'${value.replace(/'/g, `'"'"'`)}'`;
 }
 
+/**
+ * Executes a git command and returns trimmed stdout when successful.
+ *
+ * @param command - Full git command string to execute.
+ * @returns Trimmed stdout, or null when command execution fails.
+ */
 function tryRunGit(command: string): string | null {
   try {
     return execSync(command, {
@@ -63,6 +97,8 @@ function tryRunGit(command: string): string | null {
 
 /**
  * Resolves owner/repo from git origin URL.
+ *
+ * @returns GitHub repository slug from `origin`, or null when unavailable.
  */
 export function getRepoSlug(): string | null {
   const remote = tryRunGit("git config --get remote.origin.url");
@@ -74,6 +110,10 @@ export function getRepoSlug(): string | null {
 
 /**
  * Resolves commit/PR provenance for a changeset file from git history.
+ *
+ * @param repoRoot - Absolute repository root path.
+ * @param changesetFile - Absolute path to a changeset file.
+ * @returns Provenance metadata for the file introduction commit.
  */
 export function getChangesetProvenance(
   repoRoot: string,

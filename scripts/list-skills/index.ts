@@ -7,6 +7,8 @@ import { extractFrontmatter, parseFrontmatter } from "./parse-frontmatter";
 
 /**
  * CLI entrypoint for listing skill frontmatter in a readable format.
+ *
+ * @returns Nothing. Writes formatted skill metadata to stdout.
  */
 function main(): void {
   const repoRoot = process.cwd();
