@@ -45,7 +45,7 @@ Validate metadata constraints:
 - `name`: <= 64 chars, lowercase letters/numbers/hyphens only, no XML tags, and no platform-reserved words
 - `description`: non-empty, <= 1024 chars, no XML tags, includes both what it does and when to use it
 - `metadata.version`: semantic version string (`MAJOR.MINOR.PATCH`) in quoted YAML format
-- `metadata`: primarily string key/value map; arrays allowed for explicit relationship fields (for example `metadata.sub_skills`), avoid nested objects
+- `metadata`: primarily string key/value map; arrays allowed for explicit relationship fields (for example `metadata.skills`), avoid nested objects
 - `license` and `compatibility`: optional top-level frontmatter fields (not inside `metadata`)
 
 If required inputs are missing, ask concise targeted questions first.

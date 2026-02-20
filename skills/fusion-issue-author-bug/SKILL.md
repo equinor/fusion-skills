@@ -4,8 +4,8 @@ description: Draft and update bug issues using a bug-focused structure, reposito
 license: MIT
 metadata:
   version: "0.0.0"
-  required_skill: "fusion-issue-authoring"
-  skill_role: "subskill"
+  orchestrator: "fusion-issue-authoring"
+  role: "subskill"
   tags:
     - github
     - issue-authoring

@@ -4,8 +4,8 @@ description: Orchestrate GitHub issue authoring by classifying request type, rou
 license: MIT
 metadata:
   version: "0.0.0"
-  skill_role: "orchestrator"
-  sub_skills:
+  role: "orchestrator"
+  skills:
     - fusion-issue-author-bug
     - fusion-issue-author-feature
     - fusion-issue-author-user-story

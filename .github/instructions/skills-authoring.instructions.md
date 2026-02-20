@@ -63,7 +63,7 @@ Field constraints:
   - quoted YAML string (for example `"0.0.0"`)
 - `metadata`:
   - prefer string-to-string key/value pairs
-  - arrays are allowed when modeling explicit skill relationships (for example `metadata.sub_skills`)
+  - arrays are allowed when modeling explicit skill relationships (for example `metadata.skills`)
   - `metadata.tags`: optional list of free-form lowercase kebab-case strings for discoverability
   - avoid nested objects under `metadata`
 - `license` and `compatibility`:
