@@ -3,8 +3,28 @@ import { relative } from "node:path";
 
 export interface ChangesetProvenance {
   prNumber: string | null;
+  prTitle: string | null;
   commitSha: string | null;
   authorLogin: string | null;
+}
+
+function extractPrTitleFromSubject(subject: string, prNumber: string | null): string | null {
+  const trimmed = subject.trim();
+  if (!trimmed) {
+    return null;
+  }
+
+  // Merge commits rarely carry the authored PR title in the subject line.
+  if (/^Merge pull request #\d+/i.test(trimmed)) {
+    return null;
+  }
+
+  if (!prNumber) {
+    return null;
+  }
+
+  const withoutPrSuffix = trimmed.replace(/\s*\(#\d+\)\s*$/u, "").trim();
+  return withoutPrSuffix || null;
 }
 
 function extractGitHubLoginFromEmail(email: string): string | null {
@@ -65,16 +85,19 @@ export function getChangesetProvenance(
   );
 
   if (!output) {
-    return { prNumber: null, commitSha: null, authorLogin: null };
+    return { prNumber: null, prTitle: null, commitSha: null, authorLogin: null };
   }
 
   const [rawSha, rawSubject = "", rawEmail = ""] = output.split("\t");
   const subject = rawSubject;
   const prMatch = subject.match(/\(#(\d+)\)|#(\d+)/);
+  const prNumber = prMatch?.[1] ?? prMatch?.[2] ?? null;
   const authorLogin = extractGitHubLoginFromEmail(rawEmail);
+  const prTitle = extractPrTitleFromSubject(subject, prNumber);
 
   return {
-    prNumber: prMatch?.[1] ?? prMatch?.[2] ?? null,
+    prNumber,
+    prTitle,
     commitSha: rawSha || null,
     authorLogin,
   };
