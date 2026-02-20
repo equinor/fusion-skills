@@ -5,36 +5,46 @@
  * @returns Output text with ANSI escapes removed.
  */
 export function sanitizeAnsi(input: string): string {
+  const isAnsiPrefixCode = (code: number): boolean => code === 0x1b || code === 0x9b;
+
+  const findAnsiCommandTerminatorIndex = (text: string, startIndex: number): number => {
+    // Move forward until we hit the terminating ANSI command letter.
+    for (let index = startIndex; index < text.length; index += 1) {
+      // Return as soon as we reach the command byte that ends the ANSI sequence.
+      if (/[A-Za-z]/.test(text[index])) {
+        return index;
+      }
+    }
+
+    return text.length;
+  };
+
   let output = "";
-  let index = 0;
 
-  // Walk input byte-by-byte to remove ANSI control sequences deterministically.
-  while (index < input.length) {
+  // Copy plain text and skip ANSI sequences one token at a time.
+  for (let index = 0; index < input.length; index += 1) {
     const code = input.charCodeAt(index);
-    const isAnsiPrefix = code === 0x1b || code === 0x9b;
 
-    // Keep plain characters untouched when current byte is not an ANSI prefix.
-    if (!isAnsiPrefix) {
+    // Keep regular characters unchanged.
+    if (!isAnsiPrefixCode(code)) {
       output += input[index];
-      index += 1;
       continue;
     }
 
-    index += 1;
-    // Skip explicit CSI bracket when escape sequence uses ESC [ form.
-    if (input[index] === "[") {
-      index += 1;
+    let sequenceStart = index + 1;
+    // `ESC [` is a common ANSI form; skip the `[` before scanning parameters.
+    if (input[sequenceStart] === "[") {
+      sequenceStart += 1;
     }
 
-    // Advance through parameter bytes until reaching final ANSI command letter.
-    while (index < input.length && !/[A-Za-z]/.test(input[index])) {
-      index += 1;
+    const terminatorIndex = findAnsiCommandTerminatorIndex(input, sequenceStart);
+    // Stop if the sequence is truncated at end-of-input.
+    if (terminatorIndex >= input.length) {
+      break;
     }
 
-    // Consume the final command letter when sequence termination was found.
-    if (index < input.length) {
-      index += 1;
-    }
+    // Jump to the terminator; loop increment moves to the next visible character.
+    index = terminatorIndex;
   }
 
   return output;
