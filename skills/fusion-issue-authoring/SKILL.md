@@ -10,6 +10,9 @@ metadata:
     - fusion-issue-author-feature
     - fusion-issue-author-user-story
     - fusion-issue-author-task
+  tags:
+    - github
+    - issue-authoring
 ---
 
 # Issue Authoring Orchestrator

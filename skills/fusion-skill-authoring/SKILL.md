@@ -4,6 +4,9 @@ description: Create or scaffold a new skill in a repository with valid metadata,
 license: MIT
 metadata:
    version: "0.1.1"
+   tags:
+     - skill-authoring
+     - scaffolding
 ---
 
 # Create Skill

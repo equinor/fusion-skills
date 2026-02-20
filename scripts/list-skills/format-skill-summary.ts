@@ -10,6 +10,7 @@ export function formatSkillSummary(skillPath: string, frontmatter: Record<string
   lines.push(`name:                 ${frontmatter.name ?? "(missing)"}`);
   lines.push(`description:          ${frontmatter.description ?? "(missing)"}`);
   lines.push(`license:              ${frontmatter.license ?? "(none)"}`);
+
   lines.push("metadata:");
   lines.push(`  - version: ${frontmatter["metadata.version"] ?? "(missing)"}`);
 

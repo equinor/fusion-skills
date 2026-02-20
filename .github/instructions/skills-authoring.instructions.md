@@ -64,6 +64,7 @@ Field constraints:
 - `metadata`:
   - prefer string-to-string key/value pairs
   - arrays are allowed when modeling explicit skill relationships (for example `metadata.sub_skills`)
+  - `metadata.tags`: optional list of free-form lowercase kebab-case strings for discoverability
   - avoid nested objects under `metadata`
 - `license` and `compatibility`:
   - optional top-level fields
@@ -114,6 +115,8 @@ description: <what it does + when to use it>
 license: MIT
 metadata:
   version: "<initial-version>"
+  tags:
+    - <tag>
 ---
 
 # <Readable Skill Title>

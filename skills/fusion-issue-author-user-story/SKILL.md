@@ -6,6 +6,10 @@ metadata:
   version: "0.0.0"
   required_skill: "fusion-issue-authoring"
   skill_role: "subskill"
+  tags:
+    - github
+    - issue-authoring
+    - user-story
 ---
 
 # Author User Story Issue
