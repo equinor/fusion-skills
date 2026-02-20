@@ -2,6 +2,29 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.2.1
+
+### fusion-issue-authoring@0.1.1
+
+#### patch
+
+- [#20](https://github.com/equinor/fusion-skills/pull/20) [`66d85b8`](https://github.com/equinor/fusion-skills/commit/66d85b8200f7712fd916148e75906bf7fa15101c) - Clarify issue-closing keyword guidance across skill and contributor docs:
+
+
+  - align wording to keyword families (`fix|fixes|resolve|resolves|close|closes`)
+  - standardize direct issue reference examples (`owner/repo#123`)
+  - keep `Refs`/`Ref` as the default for non-closing references
+
+- [#13](https://github.com/equinor/fusion-skills/pull/13) [`205df94`](https://github.com/equinor/fusion-skills/commit/205df948ffaaf785e15f2cacd392126ca4c398e3) - Improve issue automation reliability in `fusion-issue-authoring`:
+
+
+  - switch issue-type updates to GraphQL `updateIssue(issueTypeId: ...)` in shell and PowerShell helpers
+  - add explicit post-update verification output for issue type
+  - guard `set -u` in VS Code integrated zsh sessions to avoid shell integration hook failures
+  - update runbook/docs snippets to use the robust pattern and verification command
+
+  resolves: equinor/fusion-core-tasks#402
+
 ## v0.2.0
 
 ### fusion-issue-author-bug@0.1.0
