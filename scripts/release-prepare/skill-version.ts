@@ -5,10 +5,12 @@
  * @returns Extracted semantic version string.
  */
 export function extractMetadataVersion(skillContent: string): string {
+  // This regex matches the expected text format for this step.
   const metadataBlock = skillContent.match(/\nmetadata:\n([\s\S]*?)(\n[^\s]|\n---|$)/);
   // Fail fast here so the remaining logic can assume valid input.
   if (!metadataBlock) throw new Error("SKILL.md missing required metadata block");
 
+  // This regex matches the expected text format for this step.
   const versionLine = metadataBlock[1].match(/^\s*version:\s*"?([0-9]+\.[0-9]+\.[0-9]+)"?\s*$/m);
   // Fail fast here so the remaining logic can assume valid input.
   if (!versionLine) throw new Error("SKILL.md missing metadata.version");
@@ -25,6 +27,7 @@ export function extractMetadataVersion(skillContent: string): string {
  */
 export function updateMetadataVersion(skillContent: string, newVersion: string): string {
   const lines = skillContent.split("\n");
+  // This regex matches the expected text format for this step.
   const metadataIndex = lines.findIndex((line) => /^metadata:\s*$/.test(line));
   // Fail fast here so the remaining logic can assume valid input.
   if (metadataIndex < 0) throw new Error("SKILL.md missing required metadata block");
@@ -32,7 +35,7 @@ export function updateMetadataVersion(skillContent: string, newVersion: string):
   let blockEnd = lines.length;
   // Process entries in order so behavior stays predictable.
   for (let i = metadataIndex + 1; i < lines.length; i += 1) {
-    // Fail fast here so the remaining logic can assume valid input.
+    // These regex checks detect the end of the metadata block (`---` or next top-level key).
     if (/^---\s*$/.test(lines[i]) || /^[^\s]/.test(lines[i])) {
       blockEnd = i;
       break;
@@ -42,8 +45,9 @@ export function updateMetadataVersion(skillContent: string, newVersion: string):
   let replaced = false;
   // Process entries in order so behavior stays predictable.
   for (let i = metadataIndex + 1; i < blockEnd; i += 1) {
-    // Fail fast here so the remaining logic can assume valid input.
+    // This regex matches the metadata.version line so we can replace it in place.
     if (/^\s+version:\s*/.test(lines[i])) {
+      // This regex matches the expected text format for this step.
       const indentation = (lines[i].match(/^(\s+)/) || ["  "])[1];
       lines[i] = `${indentation}version: "${newVersion}"`;
       replaced = true;

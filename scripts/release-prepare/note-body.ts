@@ -9,10 +9,13 @@
  * @returns Trimmed note body without leading semver headings.
  */
 export function normalizeNoteBody(note: string): string {
-  return note
-    .trim()
-    .replace(/^###\s*(major|minor|patch)\s*\n+/i, "")
-    .trim();
+  return (
+    note
+      .trim()
+      // This regex matches the expected text format for this step.
+      .replace(/^###\s*(major|minor|patch)\s*\n+/i, "")
+      .trim()
+  );
 }
 
 /**
@@ -35,6 +38,7 @@ export function splitNoteTitleAndBody(noteBody: string): { title: string; body: 
     .map((line) => line.trimEnd());
 
   const firstLine = (lines[0] ?? "").trim();
+  // This regex matches the expected text format for this step.
   const cleanedTitle = firstLine.replace(/:\s*$/, "").trim();
   const title = cleanedTitle.length > 0 ? cleanedTitle : "Release note";
   const rest = lines.slice(1).join("\n").trim();

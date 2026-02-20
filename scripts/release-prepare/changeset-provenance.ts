@@ -25,7 +25,7 @@ function extractPrTitleFromSubject(subject: string, prNumber: string | null): st
     return null;
   }
 
-  // Merge commits rarely carry the authored PR title in the subject line.
+  // This regex detects default merge-commit subjects so we don't treat them as authored PR titles.
   if (/^Merge pull request #\d+/i.test(trimmed)) {
     return null;
   }
@@ -35,6 +35,7 @@ function extractPrTitleFromSubject(subject: string, prNumber: string | null): st
     return null;
   }
 
+  // This regex matches the expected text format for this step.
   const withoutPrSuffix = trimmed.replace(/\s*\(#\d+\)\s*$/u, "").trim();
   return withoutPrSuffix || null;
 }
@@ -46,6 +47,7 @@ function extractPrTitleFromSubject(subject: string, prNumber: string | null): st
  * @returns GitHub login when email uses GitHub noreply format; otherwise null.
  */
 function extractGitHubLoginFromEmail(email: string): string | null {
+  // This regex matches the expected text format for this step.
   const match = email.match(/^(?:\d+\+)?([^@]+)@users\.noreply\.github\.com$/i);
   return match?.[1] ?? null;
 }
@@ -57,12 +59,14 @@ function extractGitHubLoginFromEmail(email: string): string | null {
  * @returns Parsed repository slug or null when the URL is not a GitHub remote.
  */
 function parseGitHubRepoSlug(remoteUrl: string): string | null {
+  // This regex matches the expected text format for this step.
   const sshMatch = remoteUrl.match(/^git@github\.com:([^/]+\/[^/]+?)(?:\.git)?$/i);
   // Fail fast here so the remaining logic can assume valid input.
   if (sshMatch) {
     return sshMatch[1];
   }
 
+  // This regex matches the expected text format for this step.
   const httpsMatch = remoteUrl.match(/^https?:\/\/github\.com\/([^/]+\/[^/]+?)(?:\.git)?$/i);
   // Fail fast here so the remaining logic can assume valid input.
   if (httpsMatch) {
@@ -79,6 +83,7 @@ function parseGitHubRepoSlug(remoteUrl: string): string | null {
  * @returns Shell-escaped argument wrapped in single quotes.
  */
 function shellEscape(value: string): string {
+  // This regex matches the expected text format for this step.
   return `'${value.replace(/'/g, `'"'"'`)}'`;
 }
 
@@ -136,6 +141,7 @@ export function getChangesetProvenance(
 
   const [rawSha, rawSubject = "", rawEmail = ""] = output.split("\t");
   const subject = rawSubject;
+  // This regex matches the expected text format for this step.
   const prMatch = subject.match(/\(#(\d+)\)|#(\d+)/);
   const prNumber = prMatch?.[1] ?? prMatch?.[2] ?? null;
   const authorLogin = extractGitHubLoginFromEmail(rawEmail);

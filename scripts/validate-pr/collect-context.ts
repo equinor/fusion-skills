@@ -34,7 +34,7 @@ export function collectChangedSkillContext(changedFiles: string[]): ChangedSkill
       rootChangelogTouched = true;
     }
 
-    // Fail fast here so the remaining logic can assume valid input.
+    // This regex identifies changed markdown files under the .changeset directory.
     if (/^\.changeset\/.*\.md$/.test(file)) {
       changedChangesetFiles.push(file);
     }

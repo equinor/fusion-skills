@@ -39,6 +39,37 @@ if (value > 0) {
     expect(issues[1]?.statement).toContain(".map(");
   });
 
+  it("rejects while loops", () => {
+    const source = `
+// Keep scanning while values are present.
+while (index < values.length) {
+  index += 1;
+}
+`;
+
+    const issues = collectFileIntentCommentIssues(source, "/repo/scripts/example.ts");
+    expect(issues.some((issue) => issue.code === "disallowed-while-loop")).toBe(true);
+  });
+
+  it("requires a regex explanation comment above regex literals", () => {
+    const source = `
+const match = input.match(/Found[^0-9]*([0-9]+)/i);
+`;
+
+    const issues = collectFileIntentCommentIssues(source, "/repo/scripts/example.ts");
+    expect(issues.some((issue) => issue.code === "missing-regex-explanation")).toBe(true);
+  });
+
+  it("accepts regex literals when a regex explanation comment is present", () => {
+    const source = `
+// This regex extracts the numeric count from the CLI output line.
+const match = input.match(/Found[^0-9]*([0-9]+)/i);
+`;
+
+    const issues = collectFileIntentCommentIssues(source, "/repo/scripts/example.ts");
+    expect(issues.some((issue) => issue.code === "missing-regex-explanation")).toBe(false);
+  });
+
   it("validates only provided file paths", () => {
     const tempRoot = mkdtempSync(join(tmpdir(), "fusion-skills-validate-intent-"));
     const checkedFile = join(tempRoot, "checked.ts");

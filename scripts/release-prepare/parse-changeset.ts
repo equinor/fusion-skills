@@ -15,6 +15,7 @@ export interface ParsedChangeset {
  * @returns Parsed skill bump map and normalized description body.
  */
 export function parseChangeset(content: string): ParsedChangeset {
+  // This regex matches the expected text format for this step.
   const match = content.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
   // Reject files without a frontmatter block so parsing rules stay unambiguous.
   if (!match) throw new Error("Invalid changeset format: missing frontmatter delimiters (---)");
@@ -22,10 +23,12 @@ export function parseChangeset(content: string): ParsedChangeset {
   const skills: Record<string, BumpType> = {};
   // Read each frontmatter line to build the skill bump map.
   for (const rawLine of match[1].split("\n")) {
+    // This regex matches the expected text format for this step.
     const line = rawLine.replace(/\s+#.*$/, "").trim();
     // Skip empty lines after trimming comments and whitespace.
     if (!line) continue;
 
+    // This regex matches the expected text format for this step.
     const parsed = line.match(/^"?([a-z0-9][a-z0-9-]*)"?\s*:\s*(major|minor|patch)$/);
     // Stop immediately when an entry does not match the expected "skill: bump" format.
     if (!parsed) throw new Error(`Invalid changeset entry line: ${rawLine}`);

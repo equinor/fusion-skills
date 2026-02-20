@@ -108,6 +108,12 @@ function main(): void {
   const intentIssues = options.onlyDiff
     ? collectIntentCommentIssuesForFiles(diffFiles)
     : collectIntentCommentIssues(scriptsRoot);
+  // Keep disallowed-pattern violations separate from general intent-comment findings.
+  const disallowedIssues = intentIssues.filter((issue) => issue.code === "disallowed-while-loop");
+  // Keep intent-check findings focused on comment and regex-explanation coverage.
+  const nonDisallowedIntentIssues = intentIssues.filter(
+    (issue) => issue.code !== "disallowed-while-loop",
+  );
 
   // In diff mode, print scope details so CI output explains what was checked.
   if (options.onlyDiff) {
@@ -119,8 +125,12 @@ function main(): void {
   }
 
   // Exit early on success to keep failure output reserved for actionable issues.
-  if (tsdocIssues.length === 0 && intentIssues.length === 0) {
-    console.log("TSDoc and intent-comment checks passed for scripts/**.");
+  if (
+    tsdocIssues.length === 0 &&
+    nonDisallowedIntentIssues.length === 0 &&
+    disallowedIssues.length === 0
+  ) {
+    console.log("TSDoc, intent-comment, and disallowed-pattern checks passed for scripts/**.");
     return;
   }
 
@@ -134,16 +144,25 @@ function main(): void {
   }
 
   // Fail fast here so the remaining logic can assume valid input.
-  if (intentIssues.length > 0) {
+  if (nonDisallowedIntentIssues.length > 0) {
     console.error("ERROR: Intent-comment check failed for scripts/**.");
     // Emit one line per issue so missing control-flow intent comments are actionable.
-    for (const line of formatIntentCommentIssues(intentIssues, repoRoot)) {
+    for (const line of formatIntentCommentIssues(nonDisallowedIntentIssues, repoRoot)) {
+      console.error(`- ${line}`);
+    }
+  }
+
+  // Fail fast here so the remaining logic can assume valid input.
+  if (disallowedIssues.length > 0) {
+    console.error("ERROR: Disallowed-pattern check failed for scripts/**.");
+    // Emit one line per issue so banned syntax usage is easy to locate.
+    for (const line of formatIntentCommentIssues(disallowedIssues, repoRoot)) {
       console.error(`- ${line}`);
     }
   }
 
   throw new Error(
-    `Script quality checks failed (tsdoc=${tsdocIssues.length}, intent=${intentIssues.length}).`,
+    `Script quality checks failed (tsdoc=${tsdocIssues.length}, intent=${nonDisallowedIntentIssues.length}, disallowed=${disallowedIssues.length}).`,
   );
 }
 

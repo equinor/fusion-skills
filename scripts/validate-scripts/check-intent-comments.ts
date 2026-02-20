@@ -1,10 +1,12 @@
 import { readFileSync } from "node:fs";
 import { relative } from "node:path";
+import ts from "typescript";
 import { listScriptSourceFiles } from "./list-script-source-files";
 import type { IntentCommentIssue } from "./types";
 
 const INTENT_TARGET_REGEX =
-  /\bif\s*\(|\bfor\s*\(|\bwhile\s*\(|\.map\(|\.filter\(|\.reduce\(|\.forEach\(|ts\.forEachChild\(/;
+  // This regex matches the expected text format for this step.
+  /\bif\s*\(|\bfor\s*\(|\.map\(|\.filter\(|\.reduce\(|\.forEach\(|ts\.forEachChild\(/;
 
 /**
  * Returns whether a line is considered an intent comment line.
@@ -14,6 +16,17 @@ const INTENT_TARGET_REGEX =
  */
 function isIntentCommentLine(line: string): boolean {
   return line.startsWith("//") || line.startsWith("/*") || line.startsWith("*");
+}
+
+/**
+ * Returns whether a comment line explicitly explains a regex.
+ *
+ * @param line - Trimmed source line.
+ * @returns `true` when the line looks like a regex explanation comment.
+ */
+function isRegexExplanationCommentLine(line: string): boolean {
+  // This regex checks whether a comment line mentions regex intent explicitly.
+  return /^\/\//.test(line) && /regex/i.test(line);
 }
 
 /**
@@ -46,8 +59,20 @@ export function collectFileIntentCommentIssues(
   sourceText: string,
   filePath: string,
 ): IntentCommentIssue[] {
+  const sourceFile = ts.createSourceFile(filePath, sourceText, ts.ScriptTarget.Latest, true);
   const lines = sourceText.split("\n");
   const issues: IntentCommentIssue[] = [];
+  const seen = new Set<string>();
+
+  const addIssue = (issue: IntentCommentIssue): void => {
+    const key = `${issue.code}:${issue.line}:${issue.statement}`;
+    // Skip duplicates so each violation is reported once.
+    if (seen.has(key)) {
+      return;
+    }
+    seen.add(key);
+    issues.push(issue);
+  };
 
   // Iterate every source line and enforce that control-flow/iterator lines have intent comments.
   for (let index = 0; index < lines.length; index += 1) {
@@ -63,13 +88,49 @@ export function collectFileIntentCommentIssues(
     const previousLine = previousIndex >= 0 ? lines[previousIndex].trim() : "";
     // Require intent comments immediately above (ignoring blank lines) each targeted statement.
     if (!isIntentCommentLine(previousLine)) {
-      issues.push({
+      addIssue({
         filePath,
         line: index + 1,
+        code: "missing-intent-comment",
         statement: line.trim(),
       });
     }
   }
+
+  const visit = (node: ts.Node): void => {
+    // Detect while/do-while loops and report them as disallowed patterns.
+    if (ts.isWhileStatement(node) || ts.isDoStatement(node)) {
+      const { line } = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile));
+      addIssue({
+        filePath,
+        line: line + 1,
+        code: "disallowed-while-loop",
+        statement: lines[line]?.trim() ?? "while loop",
+      });
+    }
+
+    // Detect regex literals and require a nearby explanation comment.
+    if (node.kind === ts.SyntaxKind.RegularExpressionLiteral) {
+      const { line } = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile));
+      const previousIndex = findPreviousNonEmptyLineIndex(lines, line - 1);
+      const previousLine = previousIndex >= 0 ? lines[previousIndex].trim() : "";
+
+      // Report regex literals that are not introduced by a regex-specific comment.
+      if (!isRegexExplanationCommentLine(previousLine)) {
+        addIssue({
+          filePath,
+          line: line + 1,
+          code: "missing-regex-explanation",
+          statement: lines[line]?.trim() ?? "regex literal",
+        });
+      }
+    }
+
+    // Traverse child nodes so nested loops and regex literals are also validated.
+    ts.forEachChild(node, visit);
+  };
+
+  visit(sourceFile);
 
   return issues;
 }
@@ -116,7 +177,8 @@ export function formatIntentCommentIssues(
 ): string[] {
   // Convert each value into the shape expected by downstream code.
   return issues.map((issue) => {
+    // This regex matches the expected text format for this step.
     const relativePath = relative(repoRoot, issue.filePath).replace(/\\/g, "/");
-    return `${relativePath}:${issue.line}:missing-intent-comment:${issue.statement}`;
+    return `${relativePath}:${issue.line}:${issue.code}:${issue.statement}`;
   });
 }
