@@ -128,8 +128,8 @@ lookup_cmd=(gh api graphql -f query="$read_query" -F owner="$owner" -F name="$na
 mutate_cmd=(gh api graphql -f query="$update_mutation")
 
 if [[ "$dry_run" == "true" ]]; then
-  echo "DRY RUN: ${lookup_cmd[*]}"
-  echo "DRY RUN: ${mutate_cmd[*]} -F issueId=<issue-node-id> -F issueTypeId=<issue-type-node-id>"
+  echo "DRY RUN: gh api graphql -f query='<read-query>' -F owner=$owner -F name=$name -F number=$issue"
+  echo "DRY RUN: gh api graphql -f query='<update-mutation>' -F issueId=<issue-node-id> -F issueTypeId=<issue-type-node-id>"
   echo "DRY RUN: gh api graphql -f query='<verify-query>' -F owner=$owner -F name=$name -F number=$issue"
   exit 0
 fi
