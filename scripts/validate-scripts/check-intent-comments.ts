@@ -1,7 +1,4 @@
-import { readFileSync } from "node:fs";
-import { relative } from "node:path";
 import ts from "typescript";
-import { listScriptSourceFiles } from "./list-script-source-files";
 import type { IntentCommentIssue } from "./types";
 
 const INTENT_TARGET_REGEX =
@@ -137,53 +134,71 @@ export function collectFileIntentCommentIssues(
 
   visit(sourceFile);
 
-  return issues;
-}
+  // Gather top-level function names so we can resolve which exports point to functions.
+  const topLevelFunctionNames = new Set(
+    sourceFile.statements
+      // Keep only function declarations from top-level statements.
+      .filter((statement): statement is ts.FunctionDeclaration =>
+        ts.isFunctionDeclaration(statement),
+      )
+      // Convert function declarations into optional function names.
+      .map((statement) => statement.name?.text)
+      // Keep only concrete function names.
+      .filter((name): name is string => Boolean(name)),
+  );
+  const exportedFunctionNames = new Set<string>();
 
-/**
- * Collects missing intent-comment issues for a provided set of files.
- *
- * @param filePaths - Absolute TypeScript source file paths to validate.
- * @returns Missing intent-comment issues in the provided files.
- */
-export function collectIntentCommentIssuesForFiles(filePaths: string[]): IntentCommentIssue[] {
-  const issues: IntentCommentIssue[] = [];
+  // Resolve exported functions from declarations, export clauses, and default exports.
+  for (const statement of sourceFile.statements) {
+    // Collect names from direct `export function ...` declarations.
+    if (
+      ts.isFunctionDeclaration(statement) &&
+      statement.name &&
+      (ts.getCombinedModifierFlags(statement) & ts.ModifierFlags.Export) !== 0
+    ) {
+      exportedFunctionNames.add(statement.name.text);
+      continue;
+    }
 
-  // Aggregate file-level issues into one CI-friendly result set.
-  for (const filePath of filePaths) {
-    const sourceText = readFileSync(filePath, "utf8");
-    issues.push(...collectFileIntentCommentIssues(sourceText, filePath));
+    // Resolve named export lists like `export { foo, bar }`.
+    if (ts.isExportDeclaration(statement) && statement.exportClause) {
+      // Inspect named exports and keep only those mapping to local function declarations.
+      if (ts.isNamedExports(statement.exportClause)) {
+        // Process entries in order so behavior stays predictable.
+        for (const element of statement.exportClause.elements) {
+          const localName = element.propertyName?.text ?? element.name.text;
+          // Include only symbols that point to local function declarations.
+          if (topLevelFunctionNames.has(localName)) {
+            exportedFunctionNames.add(element.name.text);
+          }
+        }
+      }
+      continue;
+    }
+
+    // Resolve default export assignments that point to local function names.
+    if (ts.isExportAssignment(statement) && ts.isIdentifier(statement.expression)) {
+      // Include `export default fnName` when `fnName` is a local function declaration.
+      if (topLevelFunctionNames.has(statement.expression.text)) {
+        exportedFunctionNames.add(statement.expression.text);
+      }
+    }
+  }
+
+  // Report files exporting multiple function symbols to enforce one-function-per-file style.
+  if (exportedFunctionNames.size > 1) {
+    const triggerStatement = sourceFile.statements.find((statement) =>
+      ts.isExportDeclaration(statement),
+    );
+    const triggerNode = triggerStatement ?? sourceFile;
+    const { line } = sourceFile.getLineAndCharacterOfPosition(triggerNode.getStart(sourceFile));
+    addIssue({
+      filePath,
+      line: line + 1,
+      code: "disallowed-multiple-exported-functions",
+      statement: `exported-functions:${exportedFunctionNames.size}`,
+    });
   }
 
   return issues;
-}
-
-/**
- * Collects missing intent-comment issues across all script source files.
- *
- * @param scriptsRoot - Absolute path to repository scripts directory.
- * @returns Missing intent-comment issues found across scripts.
- */
-export function collectIntentCommentIssues(scriptsRoot: string): IntentCommentIssue[] {
-  const files = listScriptSourceFiles(scriptsRoot);
-  return collectIntentCommentIssuesForFiles(files);
-}
-
-/**
- * Formats intent-comment issues for terminal diagnostics.
- *
- * @param issues - Intent-comment issues to render.
- * @param repoRoot - Absolute repository root for relative path display.
- * @returns Human-readable diagnostic lines.
- */
-export function formatIntentCommentIssues(
-  issues: IntentCommentIssue[],
-  repoRoot: string,
-): string[] {
-  // Convert each value into the shape expected by downstream code.
-  return issues.map((issue) => {
-    // This regex matches the expected text format for this step.
-    const relativePath = relative(repoRoot, issue.filePath).replace(/\\/g, "/");
-    return `${relativePath}:${issue.line}:${issue.code}:${issue.statement}`;
-  });
 }

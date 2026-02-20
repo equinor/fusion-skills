@@ -2,8 +2,9 @@
 
 import process from "node:process";
 import { discoverLocalSkills } from "./discover-local-skills";
-import { parseCliSkillCount, sanitizeAnsi } from "./parse-cli-count";
+import { parseCliSkillCount } from "./parse-cli-count";
 import { runSkillsCliList } from "./run-skills-cli-list";
+import { sanitizeAnsi } from "./sanitize-ansi";
 
 /**
  * CLI entrypoint for validating local skill count vs skills CLI output.

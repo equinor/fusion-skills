@@ -1,9 +1,10 @@
 import { readFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import process from "node:process";
+import { extractFrontmatter } from "./extract-frontmatter";
 import { findSkillFiles } from "./find-skill-files";
 import { formatSkillSummary } from "./format-skill-summary";
-import { extractFrontmatter, parseFrontmatter } from "./parse-frontmatter";
+import { parseFrontmatter } from "./parse-frontmatter";
 
 /**
  * CLI entrypoint for listing skill frontmatter in a readable format.

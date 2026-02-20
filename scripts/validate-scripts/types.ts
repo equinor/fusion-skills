@@ -18,6 +18,7 @@ export interface IntentCommentIssue {
     | "missing-intent-comment"
     | "disallowed-while-loop"
     | "disallowed-let-declaration"
+    | "disallowed-multiple-exported-functions"
     | "missing-regex-explanation";
   statement: string;
 }

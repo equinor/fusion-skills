@@ -1,7 +1,8 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
+import { extractFrontmatter } from "../list-skills/extract-frontmatter";
 import { findSkillFiles } from "../list-skills/find-skill-files";
-import { extractFrontmatter, parseFrontmatter } from "../list-skills/parse-frontmatter";
+import { parseFrontmatter } from "../list-skills/parse-frontmatter";
 
 const SKILLS_TABLE_START = "<!-- skills-table:start -->";
 const SKILLS_TABLE_END = "<!-- skills-table:end -->";

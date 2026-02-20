@@ -2,8 +2,9 @@
 import { readFileSync } from "node:fs";
 import { relative } from "node:path";
 import process from "node:process";
+import { extractChangesetSummary } from "./extract-changeset-summary";
 import { listChangesetFiles } from "./list-changeset-files";
-import { extractChangesetSummary, parseChangesetEntries } from "./parse-changeset-file";
+import { parseChangesetEntries } from "./parse-changeset-file";
 
 /**
  * CLI entrypoint for listing all changesets and their bump entries.

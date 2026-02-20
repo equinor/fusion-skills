@@ -1,4 +1,5 @@
-import { gitPathExists, runGit } from "./git-helpers";
+import { runGit } from "./git-helpers";
+import { gitPathExists } from "./git-path-exists";
 import { getMetadataVersionFromSkillContent } from "./version-from-skill-content";
 
 /**

@@ -1,6 +1,7 @@
 import process from "node:process";
 import { collectChangedSkillContext } from "./collect-context";
-import { runGit, tryRunGit } from "./git-helpers";
+import { runGit } from "./git-helpers";
+import { tryRunGit } from "./try-run-git";
 import { validateChangesetCoverage } from "./validate-changeset-coverage";
 import { validateNoManualVersionEdits } from "./validate-no-manual-version-edits";
 

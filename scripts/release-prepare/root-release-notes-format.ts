@@ -1,5 +1,6 @@
-import { normalizeNoteBody, splitNoteTitleAndBody } from "./note-body";
+import { normalizeNoteBody } from "./note-body";
 import type { BumpType } from "./semver";
+import { splitNoteTitleAndBody } from "./split-note-title-and-body";
 
 const BUMP_ORDER: BumpType[] = ["major", "minor", "patch"];
 

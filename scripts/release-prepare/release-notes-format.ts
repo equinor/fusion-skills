@@ -27,16 +27,6 @@ export interface GroupedNotes {
 }
 
 /**
- * Compatibility export for note-body normalization helper.
- *
- * @param note - Raw changeset note body.
- * @returns Normalized note body with accidental semver headings removed.
- */
-export function normalizeNoteBody(note: string): string {
-  return normalizeNoteBodyShared(note);
-}
-
-/**
  * Builds provenance text for one rendered note entry.
  *
  * @param entry - Note entry with optional PR, commit, and author metadata.
@@ -129,7 +119,7 @@ export function renderGroupedNotes(
       // Convert each value into the shape expected by downstream code.
       .map((entry) => ({
         ...entry,
-        body: normalizeNoteBody(entry.body),
+        body: normalizeNoteBodyShared(entry.body),
       }))
       // Keep only items that meet the rules for this step.
       .filter((entry) => entry.body.length > 0);

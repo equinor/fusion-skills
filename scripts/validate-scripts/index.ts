@@ -2,15 +2,13 @@ import { execSync } from "node:child_process";
 import { join } from "node:path";
 import process from "node:process";
 import {
-  collectIntentCommentIssues,
-  collectIntentCommentIssuesForFiles,
-  formatIntentCommentIssues,
-} from "./check-intent-comments";
-import {
   collectTSDocCoverageIssues,
   collectTSDocCoverageIssuesForFiles,
   formatCoverageIssues,
 } from "./check-tsdoc-coverage";
+import { collectIntentCommentIssues } from "./collect-intent-comment-issues";
+import { collectIntentCommentIssuesForFiles } from "./collect-intent-comment-issues-for-files";
+import { formatIntentCommentIssues } from "./format-intent-comment-issues";
 
 /**
  * Parsed CLI options for the validate-scripts command.
@@ -114,7 +112,11 @@ function main(): void {
     ? collectIntentCommentIssuesForFiles(diffFiles)
     : collectIntentCommentIssues(scriptsRoot);
   // Keep disallowed-pattern violations separate from general intent-comment findings.
-  const disallowedIssueCodes = new Set(["disallowed-while-loop", "disallowed-let-declaration"]);
+  const disallowedIssueCodes = new Set([
+    "disallowed-while-loop",
+    "disallowed-let-declaration",
+    "disallowed-multiple-exported-functions",
+  ]);
   // Keep only issues that represent explicitly banned syntax patterns.
   const disallowedIssues = intentIssues.filter((issue) => disallowedIssueCodes.has(issue.code));
   // Keep intent-check findings focused on comment and regex-explanation coverage.
