@@ -5,7 +5,8 @@ Validates TSDoc coverage for function declarations under `scripts/**`.
 Checks:
 - each function declaration has a TSDoc block,
 - each named parameter has an `@param` tag,
-- functions returning values include `@returns`.
+- functions returning values include `@returns`,
+- control-flow and iterator lines (`if`, `for`, `while`, `map`, `filter`, `reduce`, `forEach`) have intent comments directly above.
 
 Excluded paths:
 - `scripts/__tests__/**`
@@ -27,7 +28,8 @@ flowchart TD
   B --> C[Exclude scripts/__tests__]
   C --> D[Parse source with TypeScript AST]
   D --> E[Validate doc + @param + @returns]
-  E --> F{Any issues?}
-  F -- No --> G[Pass]
-  F -- Yes --> H[Print actionable file:line:function issues and fail]
+  E --> F[Validate intent comments on control-flow and iterators]
+  F --> G{Any issues?}
+  G -- No --> H[Pass]
+  G -- Yes --> I[Print actionable diagnostics and fail]
 ```

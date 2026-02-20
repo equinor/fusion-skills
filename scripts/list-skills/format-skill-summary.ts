@@ -19,19 +19,25 @@ export function formatSkillSummary(skillPath: string, frontmatter: Record<string
   lines.push(`  - version: ${frontmatter["metadata.version"] ?? "(missing)"}`);
 
   const metadataExtras = Object.keys(frontmatter)
+    // Keep only items that meet the rules for this step.
     .filter((key) => key.startsWith("metadata.") && key !== "metadata.version")
     .sort();
 
+  // Process entries in order so behavior stays predictable.
   for (const key of metadataExtras) {
     const displayKey = key.replace(/^metadata\./, "");
     const value = frontmatter[key] ?? "";
+    // Fail fast here so the remaining logic can assume valid input.
     if (value.includes(",")) {
       const items = value
         .split(",")
+        // Convert each value into the shape expected by downstream code.
         .map((item) => item.trim())
+        // Keep only items that meet the rules for this step.
         .filter(Boolean);
 
       lines.push(`  - ${displayKey}:`);
+      // Process entries in order so behavior stays predictable.
       for (const item of items) {
         lines.push(`      - ${item}`);
       }

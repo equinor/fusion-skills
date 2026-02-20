@@ -2,6 +2,11 @@ import { execSync } from "node:child_process";
 import { join } from "node:path";
 import process from "node:process";
 import {
+  collectIntentCommentIssues,
+  collectIntentCommentIssuesForFiles,
+  formatIntentCommentIssues,
+} from "./check-intent-comments";
+import {
   collectTSDocCoverageIssues,
   collectTSDocCoverageIssuesForFiles,
   formatCoverageIssues,
@@ -27,6 +32,7 @@ function parseArgs(argv: string[]): ValidateScriptsOptions {
     baseRef: process.env.GITHUB_BASE_REF ? `origin/${process.env.GITHUB_BASE_REF}` : "origin/main",
   };
 
+  // Walk arguments in order so flag/value pairs can be consumed deterministically.
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
 
@@ -68,18 +74,26 @@ function listDiffScriptSourceFiles(repoRoot: string, baseRef: string): string[] 
     stdio: ["ignore", "pipe", "pipe"],
   });
 
-  return output
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .filter((path) => path.startsWith("scripts/") && path.endsWith(".ts"))
-    .filter((path) => !path.includes("/__tests__/"))
-    .map((path) => join(repoRoot, path))
-    .sort();
+  // Split command output into one path candidate per line.
+  const diffLines = output.split("\n");
+  // Normalize each line for robust downstream filtering.
+  const trimmedLines = diffLines.map((line) => line.trim());
+  // Drop blank lines emitted by trailing newlines in command output.
+  const nonEmptyLines = trimmedLines.filter(Boolean);
+  // Keep only TypeScript files under scripts/ where this validator applies.
+  const scriptSourcePaths = nonEmptyLines.filter(
+    (path) => path.startsWith("scripts/") && path.endsWith(".ts"),
+  );
+  // Exclude tests so diff mode mirrors full-scan scope.
+  const nonTestScriptPaths = scriptSourcePaths.filter((path) => !path.includes("/__tests__/"));
+  // Convert repository-relative paths to absolute paths for file IO.
+  const absolutePaths = nonTestScriptPaths.map((path) => join(repoRoot, path));
+  // Sort for deterministic check output in local and CI runs.
+  return absolutePaths.sort();
 }
 
 /**
- * CLI entrypoint for validating function-level TSDoc coverage in scripts.
+ * CLI entrypoint for validating script quality checks.
  *
  * @returns Nothing.
  */
@@ -88,13 +102,16 @@ function main(): void {
   const repoRoot = process.cwd();
   const scriptsRoot = join(repoRoot, "scripts");
   const diffFiles = options.onlyDiff ? listDiffScriptSourceFiles(repoRoot, options.baseRef) : [];
-  const issues = options.onlyDiff
+  const tsdocIssues = options.onlyDiff
     ? collectTSDocCoverageIssuesForFiles(diffFiles)
     : collectTSDocCoverageIssues(scriptsRoot);
+  const intentIssues = options.onlyDiff
+    ? collectIntentCommentIssuesForFiles(diffFiles)
+    : collectIntentCommentIssues(scriptsRoot);
 
   // In diff mode, print scope details so CI output explains what was checked.
   if (options.onlyDiff) {
-    console.log(`Running diff-only TSDoc coverage check against ${options.baseRef}`);
+    console.log(`Running diff-only script quality checks against ${options.baseRef}`);
     // Explicitly note empty diffs so a pass is clearly intentional.
     if (diffFiles.length === 0) {
       console.log("No changed script source files found in diff.");
@@ -102,16 +119,32 @@ function main(): void {
   }
 
   // Exit early on success to keep failure output reserved for actionable issues.
-  if (issues.length === 0) {
-    console.log("TSDoc coverage check passed for scripts/**.");
+  if (tsdocIssues.length === 0 && intentIssues.length === 0) {
+    console.log("TSDoc and intent-comment checks passed for scripts/**.");
     return;
   }
 
-  console.error("ERROR: TSDoc coverage check failed for scripts/**.");
-  for (const line of formatCoverageIssues(issues, repoRoot)) {
-    console.error(`- ${line}`);
+  // Fail fast here so the remaining logic can assume valid input.
+  if (tsdocIssues.length > 0) {
+    console.error("ERROR: TSDoc coverage check failed for scripts/**.");
+    // Emit one line per issue so CI annotations are easy to scan and copy.
+    for (const line of formatCoverageIssues(tsdocIssues, repoRoot)) {
+      console.error(`- ${line}`);
+    }
   }
-  throw new Error(`Missing TSDoc coverage in ${issues.length} function declaration(s).`);
+
+  // Fail fast here so the remaining logic can assume valid input.
+  if (intentIssues.length > 0) {
+    console.error("ERROR: Intent-comment check failed for scripts/**.");
+    // Emit one line per issue so missing control-flow intent comments are actionable.
+    for (const line of formatIntentCommentIssues(intentIssues, repoRoot)) {
+      console.error(`- ${line}`);
+    }
+  }
+
+  throw new Error(
+    `Script quality checks failed (tsdoc=${tsdocIssues.length}, intent=${intentIssues.length}).`,
+  );
 }
 
 try {

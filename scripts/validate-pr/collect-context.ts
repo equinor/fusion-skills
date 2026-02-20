@@ -22,28 +22,35 @@ export function collectChangedSkillContext(changedFiles: string[]): ChangedSkill
   let packageJsonTouched = false;
   let rootChangelogTouched = false;
 
+  // Process entries in order so behavior stays predictable.
   for (const file of changedFiles) {
+    // Fail fast here so the remaining logic can assume valid input.
     if (file === "package.json") {
       packageJsonTouched = true;
     }
 
+    // Fail fast here so the remaining logic can assume valid input.
     if (file === "CHANGELOG.md") {
       rootChangelogTouched = true;
     }
 
+    // Fail fast here so the remaining logic can assume valid input.
     if (/^\.changeset\/.*\.md$/.test(file)) {
       changedChangesetFiles.push(file);
     }
 
+    // Fail fast here so the remaining logic can assume valid input.
     if (!file.startsWith("skills/")) {
       continue;
     }
 
     const [_, second, third] = file.split("/");
+    // Fail fast here so the remaining logic can assume valid input.
     if (!second) continue;
 
     // Maintainer note: hidden top-level folders store skill id in path segment #3.
     if (second.startsWith(".")) {
+      // Fail fast here so the remaining logic can assume valid input.
       if (!third) continue;
       changedSkillDirs.add(`skills/${second}/${third}`);
       changedSkillIds.add(third);

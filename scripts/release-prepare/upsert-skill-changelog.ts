@@ -25,16 +25,19 @@ export function upsertSkillChangelog(
     ...renderGroupedNotes(notesByType, repoSlug, 3),
   ].join("\n");
 
+  // Fail fast here so the remaining logic can assume valid input.
   if (!existsSync(changelogPath)) {
     writeFileSync(changelogPath, `# Changelog\n\n${newEntry}\n`, "utf8");
     return;
   }
 
   const current = readFileSync(changelogPath, "utf8");
+  // Fail fast here so the remaining logic can assume valid input.
   if (current.includes(`## ${version}`)) {
     return;
   }
 
+  // Fail fast here so the remaining logic can assume valid input.
   if (current.startsWith("# Changelog")) {
     const rest = current.replace(/^# Changelog\s*\n?/, "");
     writeFileSync(changelogPath, `${`# Changelog\n\n${newEntry}\n${rest}`.trimEnd()}\n`, "utf8");

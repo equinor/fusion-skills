@@ -126,10 +126,12 @@ export function renderGroupedNotes(
     // Map note bodies through normalization to remove accidental headings.
     // Filter out entries that become empty after normalization.
     const notes = notesByType[bumpType]
+      // Convert each value into the shape expected by downstream code.
       .map((entry) => ({
         ...entry,
         body: normalizeNoteBody(entry.body),
       }))
+      // Keep only items that meet the rules for this step.
       .filter((entry) => entry.body.length > 0);
 
     // Skip headings for bump buckets without any renderable notes.

@@ -32,6 +32,7 @@ function escapeTableCell(value: string): string {
 function buildSkillsTable(rows: SkillRow[]): string {
   const header = ["| Skill | Description | Version |", "| --- | --- | --- |"];
 
+  // Convert each value into the shape expected by downstream code.
   const body = rows.map((row) => {
     const safeDescription = escapeTableCell(row.description);
     return `| [\`${row.name}\`](${row.relativePath}) | ${safeDescription} | \`${row.version}\` |`;
@@ -54,6 +55,7 @@ export function updateReadmeSkillsTable(repoRoot: string): number {
   const startIndex = readmeContent.indexOf(SKILLS_TABLE_START);
   const endIndex = readmeContent.indexOf(SKILLS_TABLE_END);
 
+  // Fail fast here so the remaining logic can assume valid input.
   if (startIndex === -1 || endIndex === -1 || endIndex <= startIndex) {
     throw new Error(
       "README.md is missing valid skills table markers: <!-- skills-table:start --> / <!-- skills-table:end -->",
@@ -61,6 +63,7 @@ export function updateReadmeSkillsTable(repoRoot: string): number {
   }
 
   const skillFiles = findSkillFiles(join(repoRoot, "skills")).sort();
+  // Convert each value into the shape expected by downstream code.
   const rows: SkillRow[] = skillFiles.map((skillFile) => {
     const markdown = readFileSync(skillFile, "utf8");
     const frontmatter = parseFrontmatter(extractFrontmatter(markdown));
@@ -68,6 +71,7 @@ export function updateReadmeSkillsTable(repoRoot: string): number {
     const description = frontmatter.description?.trim();
     const version = frontmatter["metadata.version"]?.trim();
 
+    // Fail fast here so the remaining logic can assume valid input.
     if (!name || !description || !version) {
       throw new Error(`Missing required frontmatter fields in ${relative(repoRoot, skillFile)}`);
     }

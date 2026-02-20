@@ -9,6 +9,7 @@ import type { TSDocCoverageIssue } from "./types";
  * @returns Human-readable output lines.
  */
 export function formatCoverageIssues(issues: TSDocCoverageIssue[], repoRoot: string): string[] {
+  // Convert each value into the shape expected by downstream code.
   return issues.map((issue) => {
     const relativePath = relative(repoRoot, issue.filePath).replace(/\\/g, "/");
     return `${relativePath}:${issue.line}:${issue.functionName}:${issue.missing.join(",")}`;

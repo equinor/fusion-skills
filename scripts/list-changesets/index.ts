@@ -14,6 +14,7 @@ function main(): void {
   const repoRoot = process.cwd();
   const files = listChangesetFiles(repoRoot);
 
+  // Fail fast here so the remaining logic can assume valid input.
   if (files.length === 0) {
     console.log("No changesets found.");
     return;
@@ -31,9 +32,11 @@ function main(): void {
     console.log(relative(repoRoot, fullPath));
     console.log("─".repeat(72));
 
+    // Fail fast here so the remaining logic can assume valid input.
     if (entries.length === 0) {
       console.log("entries: (none)");
     } else {
+      // Process entries in order so behavior stays predictable.
       for (const entry of entries) {
         console.log(`- ${entry.skill}: ${entry.bump}`);
       }

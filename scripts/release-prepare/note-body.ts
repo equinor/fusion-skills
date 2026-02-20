@@ -31,6 +31,7 @@ export function splitNoteTitleAndBody(noteBody: string): { title: string; body: 
   // indentation in markdown content.
   const lines = normalizeNoteBody(noteBody)
     .split("\n")
+    // Convert each value into the shape expected by downstream code.
     .map((line) => line.trimEnd());
 
   const firstLine = (lines[0] ?? "").trim();

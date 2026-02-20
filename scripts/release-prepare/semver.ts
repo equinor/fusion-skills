@@ -11,6 +11,7 @@ export type BumpType = "major" | "minor" | "patch";
  */
 export function parseSemver(version: string): { major: number; minor: number; patch: number } {
   const match = version.trim().match(/^(\d+)\.(\d+)\.(\d+)$/);
+  // Fail fast here so the remaining logic can assume valid input.
   if (!match) {
     throw new Error(`Invalid semantic version: ${version}`);
   }
@@ -31,7 +32,9 @@ export function parseSemver(version: string): { major: number; minor: number; pa
  */
 export function bumpSemver(version: string, bump: BumpType): string {
   const parsed = parseSemver(version);
+  // Fail fast here so the remaining logic can assume valid input.
   if (bump === "major") return `${parsed.major + 1}.0.0`;
+  // Fail fast here so the remaining logic can assume valid input.
   if (bump === "minor") return `${parsed.major}.${parsed.minor + 1}.0`;
   return `${parsed.major}.${parsed.minor}.${parsed.patch + 1}`;
 }
@@ -45,6 +48,7 @@ export function bumpSemver(version: string, bump: BumpType): string {
  */
 export function isHigherBump(next: BumpType, current?: BumpType): boolean {
   const rank: Record<BumpType, number> = { patch: 0, minor: 1, major: 2 };
+  // Fail fast here so the remaining logic can assume valid input.
   if (!current) return true;
   return rank[next] > rank[current];
 }

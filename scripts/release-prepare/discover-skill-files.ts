@@ -11,6 +11,7 @@ export function discoverSkillFiles(repoRoot: string): Map<string, string> {
   const files = findSkillFiles(join(repoRoot, "skills"));
   const map = new Map<string, string>();
 
+  // Process entries in order so behavior stays predictable.
   for (const skillFile of files) {
     map.set(basename(dirname(skillFile)), skillFile);
   }

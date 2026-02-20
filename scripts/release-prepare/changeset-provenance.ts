@@ -20,6 +20,7 @@ export interface ChangesetProvenance {
  */
 function extractPrTitleFromSubject(subject: string, prNumber: string | null): string | null {
   const trimmed = subject.trim();
+  // Fail fast here so the remaining logic can assume valid input.
   if (!trimmed) {
     return null;
   }
@@ -29,6 +30,7 @@ function extractPrTitleFromSubject(subject: string, prNumber: string | null): st
     return null;
   }
 
+  // Fail fast here so the remaining logic can assume valid input.
   if (!prNumber) {
     return null;
   }
@@ -56,11 +58,13 @@ function extractGitHubLoginFromEmail(email: string): string | null {
  */
 function parseGitHubRepoSlug(remoteUrl: string): string | null {
   const sshMatch = remoteUrl.match(/^git@github\.com:([^/]+\/[^/]+?)(?:\.git)?$/i);
+  // Fail fast here so the remaining logic can assume valid input.
   if (sshMatch) {
     return sshMatch[1];
   }
 
   const httpsMatch = remoteUrl.match(/^https?:\/\/github\.com\/([^/]+\/[^/]+?)(?:\.git)?$/i);
+  // Fail fast here so the remaining logic can assume valid input.
   if (httpsMatch) {
     return httpsMatch[1];
   }
@@ -102,6 +106,7 @@ function tryRunGit(command: string): string | null {
  */
 export function getRepoSlug(): string | null {
   const remote = tryRunGit("git config --get remote.origin.url");
+  // Fail fast here so the remaining logic can assume valid input.
   if (!remote) {
     return null;
   }
@@ -124,6 +129,7 @@ export function getChangesetProvenance(
     `git log --diff-filter=A --format=%H%x09%s%x09%ae -n 1 -- ${shellEscape(filePath)}`,
   );
 
+  // Fail fast here so the remaining logic can assume valid input.
   if (!output) {
     return { prNumber: null, prTitle: null, commitSha: null, authorLogin: null };
   }
