@@ -1,5 +1,5 @@
-import { tryRunGit } from "./git-helpers";
 import { parseChangesetEntries } from "./parse-changeset-entries";
+import { tryRunGit } from "./try-run-git";
 
 /**
  * Validates that all changed skills are covered by updated changeset files.

@@ -2,10 +2,8 @@ import { describe, expect, it } from "bun:test";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import {
-  collectFileIntentCommentIssues,
-  collectIntentCommentIssuesForFiles,
-} from "../validate-scripts/check-intent-comments";
+import { collectFileIntentCommentIssues } from "../validate-scripts/check-intent-comments";
+import { collectIntentCommentIssuesForFiles } from "../validate-scripts/collect-intent-comment-issues-for-files";
 
 describe("collectFileIntentCommentIssues", () => {
   it("passes when intent comments exist before control-flow lines", () => {
@@ -58,6 +56,29 @@ let value = 1;
 
     const issues = collectFileIntentCommentIssues(source, "/repo/scripts/example.ts");
     expect(issues.some((issue) => issue.code === "disallowed-let-declaration")).toBe(true);
+  });
+
+  it("rejects files with more than one exported function declaration", () => {
+    const source = `
+export function first(): void {}
+export function second(): void {}
+`;
+
+    const issues = collectFileIntentCommentIssues(source, "/repo/scripts/example.ts");
+    expect(issues.some((issue) => issue.code === "disallowed-multiple-exported-functions")).toBe(
+      true,
+    );
+  });
+
+  it("allows files with a single exported function declaration", () => {
+    const source = `
+export function onlyOne(): void {}
+`;
+
+    const issues = collectFileIntentCommentIssues(source, "/repo/scripts/example.ts");
+    expect(issues.some((issue) => issue.code === "disallowed-multiple-exported-functions")).toBe(
+      false,
+    );
   });
 
   it("requires a regex explanation comment above regex literals", () => {

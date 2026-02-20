@@ -9,7 +9,7 @@ import type { TSDocCoverageIssue } from "./types";
  * @param node - Function declaration to inspect.
  * @returns JSDoc block text including delimiters, or `null` when missing.
  */
-export function getLeadingJSDocBlock(
+function getLeadingJSDocBlock(
   sourceFile: ts.SourceFile,
   sourceText: string,
   node: ts.FunctionDeclaration,
@@ -42,7 +42,7 @@ export function getLeadingJSDocBlock(
  * @param docBlock - JSDoc block text.
  * @returns Parameter names declared through `@param` tags.
  */
-export function getDocumentedParamNames(docBlock: string): Set<string> {
+function getDocumentedParamNames(docBlock: string): Set<string> {
   const names = new Set<string>();
   // This regex matches the expected text format for this step.
   const regex = /@param\s+([A-Za-z_$][A-Za-z0-9_$]*)/g;
@@ -63,7 +63,7 @@ export function getDocumentedParamNames(docBlock: string): Set<string> {
  * @param docBlock - JSDoc block text.
  * @returns `true` when `@returns` or `@return` appears in the block.
  */
-export function hasReturnsTag(docBlock: string): boolean {
+function hasReturnsTag(docBlock: string): boolean {
   // This regex matches the expected text format for this step.
   return /@returns?\b/.test(docBlock);
 }
@@ -74,7 +74,7 @@ export function hasReturnsTag(docBlock: string): boolean {
  * @param node - Function declaration to inspect.
  * @returns `true` when an expression-bearing return statement exists.
  */
-export function hasValueReturn(node: ts.FunctionDeclaration): boolean {
+function hasValueReturn(node: ts.FunctionDeclaration): boolean {
   const body = node.body;
   // Declarations without a body cannot return runtime values.
   if (!body) {

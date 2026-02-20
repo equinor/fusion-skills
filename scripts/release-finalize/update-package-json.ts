@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from "node:fs";
+import { bumpSemver } from "./bump-semver";
 import type { BumpType } from "./semver";
-import { bumpSemver } from "./semver";
 
 /**
  * Bumps package.json version and writes file.
