@@ -3,7 +3,7 @@ name: fusion-issue-author-user-story
 description: Draft and update user-story issues with role-action-value framing, workflow scenarios, repository-valid labels, and explicit publish confirmation.
 license: MIT
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
   orchestrator: "fusion-issue-authoring"
   role: "subordinate"
   tags:

@@ -84,12 +84,12 @@ Skills live under `skills/`. The structure inside a skill is intentionally flexi
 <!-- skills-table:start -->
 | Skill | Description | Version |
 | --- | --- | --- |
-| [`fusion-issue-author-bug`](skills/fusion-issue-author-bug/SKILL.md) | Draft and update bug issues using a bug-focused structure, repository-valid labels, and explicit publish confirmation before GitHub mutation. | `0.1.0` |
-| [`fusion-issue-author-feature`](skills/fusion-issue-author-feature/SKILL.md) | Draft and update feature issues with clear problem framing, scoped requirements, repository-valid labels, and explicit confirmation before publishing. | `0.1.0` |
-| [`fusion-issue-author-task`](skills/fusion-issue-author-task/SKILL.md) | Draft and update task issues with checklist-first decomposition, dependency-aware sequencing, repository-valid labels, and explicit publish confirmation. | `0.1.0` |
-| [`fusion-issue-author-user-story`](skills/fusion-issue-author-user-story/SKILL.md) | Draft and update user-story issues with role-action-value framing, workflow scenarios, repository-valid labels, and explicit publish confirmation. | `0.1.0` |
-| [`fusion-issue-authoring`](skills/fusion-issue-authoring/SKILL.md) | Orchestrate GitHub issue authoring by classifying request type, routing to a type-specific issue-author skill, and enforcing shared safety gates before mutation. | `0.1.1` |
-| [`fusion-skill-authoring`](skills/fusion-skill-authoring/SKILL.md) | Create or scaffold a new skill in a repository with valid metadata, clear activation cues, standard resource folders, safety boundaries, and validation evidence. | `0.2.0` |
+| [`fusion-issue-author-bug`](skills/fusion-issue-author-bug/SKILL.md) | Draft and update bug issues using a bug-focused structure, repository-valid labels, and explicit publish confirmation before GitHub mutation. | `0.1.1` |
+| [`fusion-issue-author-feature`](skills/fusion-issue-author-feature/SKILL.md) | Draft and update feature issues with clear problem framing, scoped requirements, repository-valid labels, and explicit confirmation before publishing. | `0.1.1` |
+| [`fusion-issue-author-task`](skills/fusion-issue-author-task/SKILL.md) | Draft and update task issues with checklist-first decomposition, dependency-aware sequencing, repository-valid labels, and explicit publish confirmation. | `0.1.1` |
+| [`fusion-issue-author-user-story`](skills/fusion-issue-author-user-story/SKILL.md) | Draft and update user-story issues with role-action-value framing, workflow scenarios, repository-valid labels, and explicit publish confirmation. | `0.1.1` |
+| [`fusion-issue-authoring`](skills/fusion-issue-authoring/SKILL.md) | Orchestrate GitHub issue authoring by classifying request type, routing to a type-specific issue-author skill, and enforcing shared safety gates before mutation. | `0.2.0` |
+| [`fusion-skill-authoring`](skills/fusion-skill-authoring/SKILL.md) | Create or scaffold a new skill in a repository with valid metadata, clear activation cues, standard resource folders, safety boundaries, and validation evidence. | `0.2.1` |
 <!-- skills-table:end -->
 
 In this repository, use `fusion-<skill-name>` as the default skill naming convention.
