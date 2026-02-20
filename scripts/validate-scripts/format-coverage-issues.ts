@@ -11,6 +11,7 @@ import type { TSDocCoverageIssue } from "./types";
 export function formatCoverageIssues(issues: TSDocCoverageIssue[], repoRoot: string): string[] {
   // Convert each value into the shape expected by downstream code.
   return issues.map((issue) => {
+    // This regex matches the expected text format for this step.
     const relativePath = relative(repoRoot, issue.filePath).replace(/\\/g, "/");
     return `${relativePath}:${issue.line}:${issue.functionName}:${issue.missing.join(",")}`;
   });

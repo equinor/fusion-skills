@@ -20,6 +20,7 @@ type SkillRow = {
  * @returns Escaped single-line markdown-safe text.
  */
 function escapeTableCell(value: string): string {
+  // This regex matches the expected text format for this step.
   return value.replace(/\\/g, "\\\\").replace(/\|/g, "\\|").replace(/\s+/g, " ").trim();
 }
 
@@ -80,6 +81,7 @@ export function updateReadmeSkillsTable(repoRoot: string): number {
       name,
       description,
       version,
+      // This regex matches the expected text format for this step.
       relativePath: relative(repoRoot, skillFile).replace(/\\/g, "/"),
     };
   });

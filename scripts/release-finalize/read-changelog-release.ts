@@ -13,6 +13,7 @@ type Heading = {
  * @returns Ordered list of detected H2 heading metadata.
  */
 function parseH2Headings(content: string): Heading[] {
+  // This regex matches the expected text format for this step.
   const regex = /^##\s+(.+)$/gm;
   const headings: Heading[] = [];
 

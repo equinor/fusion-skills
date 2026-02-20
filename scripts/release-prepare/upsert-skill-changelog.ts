@@ -39,6 +39,7 @@ export function upsertSkillChangelog(
 
   // Fail fast here so the remaining logic can assume valid input.
   if (current.startsWith("# Changelog")) {
+    // This regex matches the expected text format for this step.
     const rest = current.replace(/^# Changelog\s*\n?/, "");
     writeFileSync(changelogPath, `${`# Changelog\n\n${newEntry}\n${rest}`.trimEnd()}\n`, "utf8");
   } else {

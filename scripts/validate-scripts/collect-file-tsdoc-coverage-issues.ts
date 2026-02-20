@@ -44,6 +44,7 @@ export function getLeadingJSDocBlock(
  */
 export function getDocumentedParamNames(docBlock: string): Set<string> {
   const names = new Set<string>();
+  // This regex matches the expected text format for this step.
   const regex = /@param\s+([A-Za-z_$][A-Za-z0-9_$]*)/g;
   // Process entries in order so behavior stays predictable.
   for (const match of docBlock.matchAll(regex)) {
@@ -63,6 +64,7 @@ export function getDocumentedParamNames(docBlock: string): Set<string> {
  * @returns `true` when `@returns` or `@return` appears in the block.
  */
 export function hasReturnsTag(docBlock: string): boolean {
+  // This regex matches the expected text format for this step.
   return /@returns?\b/.test(docBlock);
 }
 

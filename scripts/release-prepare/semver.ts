@@ -10,6 +10,7 @@ export type BumpType = "major" | "minor" | "patch";
  * @returns Parsed numeric semantic version parts.
  */
 export function parseSemver(version: string): { major: number; minor: number; patch: number } {
+  // This regex matches the expected text format for this step.
   const match = version.trim().match(/^(\d+)\.(\d+)\.(\d+)$/);
   // Fail fast here so the remaining logic can assume valid input.
   if (!match) {

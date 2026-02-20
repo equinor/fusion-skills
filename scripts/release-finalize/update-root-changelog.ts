@@ -7,6 +7,7 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
  * @returns Markdown body without frontmatter delimiters.
  */
 function stripFrontmatter(content: string): string {
+  // This regex matches the expected text format for this step.
   return content.replace(/^---\n[\s\S]*?\n---\n*/u, "").trim();
 }
 
@@ -29,12 +30,14 @@ export function updateRootChangelog(
   const changelog = currentChangelog.trim().length
     ? currentChangelog
     : "# Changelog\n\nAll notable changes to this repository are documented in this file.\n";
+  // This regex matches the expected text format for this step.
   const h2Regex = /^##\s+/m;
   const firstH2Index = changelog.search(h2Regex);
   const preamble =
     firstH2Index >= 0 ? changelog.slice(0, firstH2Index).trimEnd() : changelog.trimEnd();
   const sectionsRaw = firstH2Index >= 0 ? changelog.slice(firstH2Index).trim() : "";
 
+  // This regex matches the expected text format for this step.
   const sectionSplitRegex = /^##\s+/gm;
   const sectionMatches = [...sectionsRaw.matchAll(sectionSplitRegex)];
   const sections: string[] = [];

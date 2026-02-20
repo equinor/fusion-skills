@@ -10,7 +10,7 @@ export function sanitizeAnsi(input: string): string {
   const findAnsiCommandTerminatorIndex = (text: string, startIndex: number): number => {
     // Move forward until we hit the terminating ANSI command letter.
     for (let index = startIndex; index < text.length; index += 1) {
-      // Return as soon as we reach the command byte that ends the ANSI sequence.
+      // This regex detects the terminating ANSI command byte (`A`-`Z` or `a`-`z`).
       if (/[A-Za-z]/.test(text[index])) {
         return index;
       }
@@ -57,6 +57,7 @@ export function sanitizeAnsi(input: string): string {
  * @returns Parsed numeric skill count.
  */
 export function parseCliSkillCount(output: string): number {
+  // This regex matches the expected text format for this step.
   const match = output.match(/Found[^0-9]*([0-9]+)/i);
   // Fail with actionable error when CLI output format is unexpected.
   if (!match) {

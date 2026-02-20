@@ -25,6 +25,7 @@ export function formatSkillSummary(skillPath: string, frontmatter: Record<string
 
   // Process entries in order so behavior stays predictable.
   for (const key of metadataExtras) {
+    // This regex matches the expected text format for this step.
     const displayKey = key.replace(/^metadata\./, "");
     const value = frontmatter[key] ?? "";
     // Fail fast here so the remaining logic can assume valid input.
