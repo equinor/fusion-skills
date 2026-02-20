@@ -13,6 +13,9 @@ metadata:
   tags:
     - github
     - issue-authoring
+  mcp:
+    required:
+      - github
 ---
 
 # Issue Authoring Orchestrator
@@ -65,88 +68,70 @@ If issue destination is unclear, ask explicitly where the issue should be create
 
 ## Instructions
 
-### Step 1 — Classify issue type and route
+### Step 1 — Classify and route
 
-Use this decision tree:
-- Broken behavior -> Bug
-- New capability -> Feature
-- User workflow/use case -> User Story
-- Enablement work -> Task (planning/research/spec/testing/documentation/generic)
-
-Route to the matching specialized skill:
+Classify request as `Bug`, `Feature`, `User Story`, or `Task`, then route to:
 - Bug -> `skills/fusion-issue-author-bug/SKILL.md`
 - Feature -> `skills/fusion-issue-author-feature/SKILL.md`
 - User Story -> `skills/fusion-issue-author-user-story/SKILL.md`
 - Task -> `skills/fusion-issue-author-task/SKILL.md`
 
-If type is ambiguous, ask concise clarifying questions before routing.
+If ambiguous, ask only essential clarifying questions.
 
-### Step 2 — Enforce shared pre-publish gates
+### Step 2 — Resolve repository and template
 
-Before proposing or applying labels:
-- Inspect available labels in the target repository.
-- Propose labels that exist in that repository only.
-- If no suitable labels exist, ask whether to proceed without labels or use nearest available labels.
+- Resolve the destination repository before any mutation.
+- Template precedence:
+  1. repository template (`.github/ISSUE_TEMPLATE/`)
+  2. specialist fallback template
 
-Before publishing or updating issues:
-- Ask whether the issue should be assigned.
-- Confirm assignee target (for example `@me` or specific login) when assignment is requested.
-- If assignment is not requested, proceed unassigned.
+### Step 3 — Check duplicates
 
-Always run draft-first review and explicit publish confirmation before mutation.
+Search for likely duplicates with `search_issues` and surface matches before drafting/publishing.
 
-### Step 3 — Resolve target repository
+### Step 4 — Draft first
 
-Before any GitHub mutation:
-- Use explicit user input when provided.
-- If missing, inspect repository guidance first (for example `CONTRIBUTING.md`, `contribute/`, and maintainer docs).
-- If still unclear, ask the user directly which repository should own the issue.
+Draft in `.tmp/{TYPE}-{CONTEXT}.md` using GitHub Flavored Markdown.
 
-### Step 4 — Check duplicates for new issues
+### Step 5 — Review and confirm
 
-Run a quick issue search in the target repository and surface likely duplicates.
+- Ask for content edits first.
+- Ask explicit publish confirmation before mutation.
+- Never publish/update in the same pass as first draft unless user explicitly confirms.
 
-### Step 5 — Resolve template source
+### Step 6 — Apply shared gates
 
-Template precedence:
-- Inspect target repository templates first (for example `.github/ISSUE_TEMPLATE/`).
-- Use repository template when suitable.
-- Use type-specific specialist fallback templates only when no suitable repository template exists.
-- Suggest template follow-up improvements if repository templates are missing/outdated.
+Before mutation, confirm:
+- labels (only labels that exist in the target repo)
+- assignee intent (`@me`, specific login, or unassigned)
 
-### Step 6 — Draft locally first
+### Step 7 — Mutate via MCP (ordered)
 
-Prepare a local draft in `.tmp/{TYPE}-{CONTEXT}.md` using GitHub Flavored Markdown.
+After explicit confirmation, execute MCP mutations in this order:
+1. `issue_write` create/update (include `type` only when supported)
+2. `issue_write` labels / assignees
+3. `sub_issue_write` relationships and execution ordering
+4. `add_issue_comment` for blocker/status notes when requested
 
-### Step 7 — Run user draft review
+If mutation fails due to missing MCP server/auth/config:
+- explain the failure clearly
+- guide user to setup steps in `references/mcp-server.md`
+- retry after user confirms setup is complete
 
-Share draft summary and ask for edits before publication.
+`type` rule:
+- Only use `type` if the repository has issue types configured.
+- Use cached issue types per organization when available.
+- Call `list_issue_types` only on cache miss or invalid cache.
+- If issue types are not supported, omit `type`.
 
-### Step 8 — Ask explicit publish confirmation
+### Step 8 — Validate relationships
 
-Only after content is approved, ask:
-- "I've drafted this in `.tmp/{TYPE}-{CONTEXT}.md`. Do you want any edits before publishing?"
-- After edits/approval: "Draft looks good. Want me to apply this to GitHub now? (y/n)"
+Before linking:
+- use sub-issues for decomposition
+- use sub-issue ordering to represent prerequisites
+- ensure no contradictory dependency graph
 
-### Step 9 — Mutate GitHub only after confirmation
-
-Only if the user confirms publication, run mutation commands (`gh issue create` or issue update).
-After creation/update:
-- Apply requested labels from repository-validated label names.
-- Set issue type explicitly (for Task work, set type to `Task`).
-- Apply assignee updates based on confirmed assignee intent.
-
-### Step 10 — Optional relationship/type operations
-
-If requested, set issue type and link parent/sub-issue/blocking relationships.
-
-### Step 11 — Validate relationship logic before linking
-
-Before adding relationships:
-- Verify ordering is logically consistent (prerequisite tasks first).
-- Use sub-issues for decomposition under a parent.
-- Use blocking links when a task depends on completion of another task.
-- Avoid contradictory links (for example a task both blocking and depending on the same issue).
+Use detailed behavior and payload examples in `references/instructions.md` and `references/mcp-server.md`.
 
 ## Core behavior to preserve
 
@@ -157,7 +142,6 @@ Before adding relationships:
 - Explicit confirmation before any GitHub mutation
 
 Use detailed authoring guidance in `references/instructions.md`.
-Use optional command helpers in `scripts/README.md`.
 Specialist fallback template locations:
 - Bug: `skills/fusion-issue-author-bug/assets/issue-templates/bug.md`
 - Feature: `skills/fusion-issue-author-feature/assets/issue-templates/feature.md`
@@ -183,7 +167,7 @@ Return:
 ## Safety & constraints
 
 Never:
-- Run `gh issue create` without explicit user confirmation
+- Run `issue_write` create/update without explicit user confirmation
 - Publish/update an issue before the user confirms the draft content is correct
 - Assume the user wants to publish to GitHub
 - Request or expose secrets/credentials
@@ -193,4 +177,4 @@ Always:
 - Keep drafts concise and editable
 - Prefer WHAT/WHY over implementation HOW in issue text
 - Use full repository issue references (for example `owner/repo#123`)
-- Use issue-closing keywords when closure is intended (for example `fixes owner/repo#123`, `resolves owner/repo#123`, or `closes owner/repo#123`)
+- Use issue-closing keywords when closure is intended (for example `fixes: owner/repo#123`, `resolves: owner/repo#123`, or `closes: owner/repo#123`)

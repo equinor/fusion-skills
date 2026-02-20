@@ -10,6 +10,9 @@ metadata:
     - github
     - issue-authoring
     - bug
+  mcp:
+    required:
+      - github
 ---
 
 # Author Bug Issue

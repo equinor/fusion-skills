@@ -5,8 +5,11 @@ license: MIT
 metadata:
    version: "0.2.0"
    tags:
-     - skill-authoring
-     - scaffolding
+      - skill-authoring
+      - scaffolding
+   mcp:
+      suggested:
+         - github
 ---
 
 # Create Skill
@@ -50,6 +53,7 @@ Validate metadata constraints:
   - `metadata.orchestrator`: required orchestrator skill name (subordinates only)
   - `metadata.skills`: list of subordinate skill names (orchestrators only)
   - `metadata.tags`: optional list of lowercase kebab-case strings for discoverability
+   - `metadata.mcp`: optional map for MCP server needs (`required` and `suggested` lists)
 - `license` and `compatibility`: optional top-level frontmatter fields (not inside `metadata`)
 
 If required inputs are missing, ask concise targeted questions first.

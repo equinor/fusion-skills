@@ -10,6 +10,9 @@ metadata:
     - github
     - issue-authoring
     - user-story
+  mcp:
+    required:
+      - github
 ---
 
 # Author User Story Issue

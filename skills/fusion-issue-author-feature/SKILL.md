@@ -10,6 +10,9 @@ metadata:
     - github
     - issue-authoring
     - feature
+  mcp:
+    required:
+      - github
 ---
 
 # Author Feature Issue
