@@ -2,6 +2,14 @@
 
 ## Local pre-PR checks
 
+Before commit operations, run lint/format checks:
+
+```bash
+bun run biome:check
+# optional auto-fix when needed
+bun run biome:fix
+```
+
 Run from repository root before opening or updating a PR:
 
 ```bash

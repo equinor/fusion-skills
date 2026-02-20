@@ -63,6 +63,14 @@ Skills live under `skills/`. The structure inside a skill is intentionally flexi
 
 `skills/fusion-<skill-name>/SKILL.md`
 
+### Available skills
+
+<!-- skills-table:start -->
+| Skill | Description | Version |
+| --- | --- | --- |
+| [`fusion-skill-authoring`](skills/fusion-skill-authoring/SKILL.md) | Create or scaffold a new skill in a repository with valid metadata, clear activation cues, standard resource folders, safety boundaries, and validation evidence. | `0.1.1` |
+<!-- skills-table:end -->
+
 In this repository, use `fusion-<skill-name>` as the default skill naming convention.
 
 Some conventions you may see:

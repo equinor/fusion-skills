@@ -92,6 +92,7 @@ jobs:
             .changeset/*.md
             package.json
             CHANGELOG.md
+            README.md
 
       - name: Report release PR action
         if: steps.create_release_pr.outcome == 'success'

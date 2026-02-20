@@ -29,6 +29,7 @@ Apply this guidance when creating, updating, or finalizing pull requests.
 
 ## Required checks before PR update/create
 
+- Run lint/format checks before commit operations (`bun run biome:check`; optionally `bun run biome:fix` first).
 - Check current branch changes and summarize staged/unstaged scope.
 - Check code and docs against repository guides (`CONTRIBUTING.md`, `contribute/`, and relevant `.github/instructions/*.instructions.md`).
 - Confirm validation commands run.
