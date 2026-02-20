@@ -2,6 +2,23 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.3.0
+
+### Minor
+
+__🎯 [docs(skills): migrate issue-authoring docs to mcp #23](https://github.com/equinor/fusion-skills/pull/23)<br/>
+🗂️ [14b9c99](https://github.com/equinor/fusion-skills/commit/14b9c9902dbf8bafdae9fe0fc6c08c81dec004b1)<br/>
+📦 fusion-issue-author-bug@0.1.1<br/>
+📦 fusion-issue-author-feature@0.1.1<br/>
+📦 fusion-issue-author-task@0.1.1<br/>
+📦 fusion-issue-author-user-story@0.1.1<br/>
+📦 fusion-issue-authoring@0.2.0<br/>
+📦 fusion-skill-authoring@0.2.1__
+
+Migrate issue authoring guidance from helper scripts to GitHub MCP-first workflows, including MCP metadata declarations and updated orchestration/ref docs.
+
+resolves equinor/fusion-skills#21
+
 ## v0.2.1
 
 ### Patch

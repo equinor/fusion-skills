@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.1 - 2026-02-20
+
+### patch
+
+- [#23](https://github.com/equinor/fusion-skills/pull/23) [`14b9c99`](https://github.com/equinor/fusion-skills/commit/14b9c9902dbf8bafdae9fe0fc6c08c81dec004b1) - Migrate issue authoring guidance from helper scripts to GitHub MCP-first workflows, including MCP metadata declarations and updated orchestration/ref docs.
+
+
+  resolves equinor/fusion-skills#21
+
 ## 0.2.0 - 2026-02-20
 
 ### minor

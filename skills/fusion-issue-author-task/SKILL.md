@@ -3,7 +3,7 @@ name: fusion-issue-author-task
 description: Draft and update task issues with checklist-first decomposition, dependency-aware sequencing, repository-valid labels, and explicit publish confirmation.
 license: MIT
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
   orchestrator: "fusion-issue-authoring"
   role: "subordinate"
   tags:
