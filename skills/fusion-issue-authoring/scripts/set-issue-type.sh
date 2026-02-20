@@ -140,23 +140,27 @@ if [[ "$confirm" != "true" ]]; then
   exit 1
 fi
 
-if ! "${lookup_cmd[@]}" >/dev/null 2>&1; then
-  echo "Failed to read issue metadata for #$issue in $repo." >&2
-  lookup_error=$("${lookup_cmd[@]}" 2>&1 || true)
-  echo "Original error: $lookup_error" >&2
+if ! command -v jq >/dev/null 2>&1; then
+  echo "This script requires 'jq' to be installed to process GitHub API responses." >&2
   exit 1
 fi
 
-issue_id=$(gh api graphql -f query="$read_query" -F owner="$owner" -F name="$name" -F number="$issue" --jq '.data.repository.issue.id // empty')
+if ! issue_payload=$("${lookup_cmd[@]}" 2>&1); then
+  echo "Failed to read issue metadata for #$issue in $repo." >&2
+  echo "Original error: $issue_payload" >&2
+  exit 1
+fi
+
+issue_id=$(printf '%s\n' "$issue_payload" | jq -r '.data.repository.issue.id // empty')
 
 if [[ -z "$issue_id" ]]; then
   echo "Issue #$issue was not found in $repo, or issue metadata is unavailable." >&2
   exit 1
 fi
 
-issue_type_id=$(gh api graphql -f query="$read_query" -F owner="$owner" -F name="$name" -F number="$issue" --jq ".data.repository.issueTypes.nodes[] | select(.name == \"$type\") | .id" | head -n 1)
+issue_type_id=$(printf '%s\n' "$issue_payload" | jq -r --arg type "$type" '.data.repository.issueTypes.nodes[] | select(.name == $type) | .id' | head -n 1)
 if [[ -z "$issue_type_id" ]]; then
-  available_types=$(gh api graphql -f query="$read_query" -F owner="$owner" -F name="$name" -F number="$issue" --jq '.data.repository.issueTypes.nodes[].name' | paste -sd ', ' -)
+  available_types=$(printf '%s\n' "$issue_payload" | jq -r '.data.repository.issueTypes.nodes[].name' | paste -sd ', ' -)
   echo "Issue type '$type' is not available in $repo." >&2
   if [[ -n "$available_types" ]]; then
     echo "Available issue types: $available_types" >&2

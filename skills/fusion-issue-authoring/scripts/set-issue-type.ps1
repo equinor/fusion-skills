@@ -71,7 +71,7 @@ query($owner: String!, $name: String!, $number: Int!) {
 }
 '@
 
-$lookupCmd = "gh api graphql -f query=\"$($readQuery.Replace('"', '\"'))\" -F owner=$owner -F name=$name -F number=$Issue"
+$lookupCmd = "gh api graphql -f query=\"$readQuery\" -F owner=\"$owner\" -F name=\"$name\" -F number=\"$Issue\""
 $mutateCmd = 'gh api graphql -f query="<update-mutation>" -F issueId=<issue-node-id> -F issueTypeId=<issue-type-node-id>'
 $verifyCmd = "gh api graphql -f query=\"<verify-query>\" -F owner=$owner -F name=$name -F number=$Issue"
 
