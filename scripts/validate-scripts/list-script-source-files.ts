@@ -21,7 +21,9 @@ export function listScriptSourceFiles(scriptsRoot: string): string[] {
       const fullPath = join(dir, entry);
       const stats = statSync(fullPath);
 
+      // Recurse into directories, but skip tests to avoid policing fixture-style code.
       if (stats.isDirectory()) {
+        // Test files are intentionally excluded from this repository-level quality gate.
         if (entry === "__tests__") {
           continue;
         }
@@ -29,6 +31,7 @@ export function listScriptSourceFiles(scriptsRoot: string): string[] {
         continue;
       }
 
+      // Only TypeScript source files are in scope for this validator.
       if (!fullPath.endsWith(".ts")) {
         continue;
       }

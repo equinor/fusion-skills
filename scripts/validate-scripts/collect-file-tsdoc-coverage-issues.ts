@@ -15,17 +15,20 @@ export function getLeadingJSDocBlock(
   node: ts.FunctionDeclaration,
 ): string | null {
   const commentRanges = ts.getLeadingCommentRanges(sourceText, node.getFullStart()) ?? [];
+  // A function without leading comments cannot have a JSDoc block.
   if (commentRanges.length === 0) {
     return null;
   }
 
   const nearest = commentRanges[commentRanges.length - 1];
   const commentText = sourceText.slice(nearest.pos, nearest.end);
+  // Enforce JSDoc-style block comments only, not regular line/block comments.
   if (!commentText.startsWith("/**")) {
     return null;
   }
 
   const between = sourceText.slice(nearest.end, node.getStart(sourceFile));
+  // Reject detached comments; doc blocks must be directly attached to the function.
   if (between.trim().length > 0) {
     return null;
   }
@@ -44,6 +47,7 @@ export function getDocumentedParamNames(docBlock: string): Set<string> {
   const regex = /@param\s+([A-Za-z_$][A-Za-z0-9_$]*)/g;
   for (const match of docBlock.matchAll(regex)) {
     const name = (match[1] ?? "").trim();
+    // Guard against malformed tags so only valid parameter names are tracked.
     if (name.length > 0) {
       names.add(name);
     }
@@ -69,15 +73,18 @@ export function hasReturnsTag(docBlock: string): boolean {
  */
 export function hasValueReturn(node: ts.FunctionDeclaration): boolean {
   const body = node.body;
+  // Declarations without a body cannot return runtime values.
   if (!body) {
     return false;
   }
 
   let found = false;
   const scan = (current: ts.Node): void => {
+    // Stop traversing once a value-return has already been found.
     if (found) {
       return;
     }
+    // Count only returns with an expression to avoid requiring @returns on bare returns.
     if (ts.isReturnStatement(current) && current.expression) {
       found = true;
       return;
@@ -104,6 +111,7 @@ export function collectFileTSDocCoverageIssues(
   const issues: TSDocCoverageIssue[] = [];
 
   const visit = (node: ts.Node): void => {
+    // Restrict checks to function declarations; other node types are traversed recursively.
     if (!ts.isFunctionDeclaration(node)) {
       ts.forEachChild(node, visit);
       return;
@@ -113,6 +121,7 @@ export function collectFileTSDocCoverageIssues(
     const docBlock = getLeadingJSDocBlock(sourceFile, sourceText, node);
     const hasDoc = Boolean(docBlock);
 
+    // Every function declaration must carry a JSDoc block.
     if (!hasDoc) {
       missing.push("doc");
     }
@@ -120,20 +129,24 @@ export function collectFileTSDocCoverageIssues(
     const taggedParamNames = hasDoc && docBlock ? getDocumentedParamNames(docBlock) : new Set();
 
     for (const parameter of node.parameters) {
+      // Skip non-identifier patterns until explicit policy for destructured params is needed.
       if (!ts.isIdentifier(parameter.name)) {
         continue;
       }
 
       const paramName = parameter.name.text;
+      // Require explicit @param coverage for every named function parameter.
       if (hasDoc && !taggedParamNames.has(paramName)) {
         missing.push(`param:${paramName}`);
       }
     }
 
+    // Require @returns only when the function actually returns a value.
     if (hasDoc && docBlock && hasValueReturn(node) && !hasReturnsTag(docBlock)) {
       missing.push("returns");
     }
 
+    // Emit a single issue entry per function with all missing documentation items.
     if (missing.length > 0) {
       const position = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile));
       issues.push({

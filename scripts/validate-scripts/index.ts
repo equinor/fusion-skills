@@ -30,13 +30,16 @@ function parseArgs(argv: string[]): ValidateScriptsOptions {
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
 
+    // Enable diff-only mode so CI can validate only files touched by the PR.
     if (arg === "--only-diff") {
       options.onlyDiff = true;
       continue;
     }
 
+    // Allow callers to override base ref for git diff resolution.
     if (arg === "--base-ref") {
       const value = argv[index + 1]?.trim();
+      // Fail fast when a flag expects a value but none is provided.
       if (!value) {
         throw new Error("Missing value for --base-ref");
       }
@@ -89,13 +92,16 @@ function main(): void {
     ? collectTSDocCoverageIssuesForFiles(diffFiles)
     : collectTSDocCoverageIssues(scriptsRoot);
 
+  // In diff mode, print scope details so CI output explains what was checked.
   if (options.onlyDiff) {
     console.log(`Running diff-only TSDoc coverage check against ${options.baseRef}`);
+    // Explicitly note empty diffs so a pass is clearly intentional.
     if (diffFiles.length === 0) {
       console.log("No changed script source files found in diff.");
     }
   }
 
+  // Exit early on success to keep failure output reserved for actionable issues.
   if (issues.length === 0) {
     console.log("TSDoc coverage check passed for scripts/**.");
     return;
