@@ -5,7 +5,7 @@ Use this checklist before opening a PR for a new or updated skill.
 ## Must pass
 
 - [ ] Frontmatter includes `name` and `description`
-- [ ] Frontmatter includes `metadata.version` as quoted SemVer (for example `"1.0.0"`)
+- [ ] Frontmatter includes `metadata.version` as quoted SemVer (for example `"0.0.0"`)
 - [ ] `name` matches folder name, uses kebab-case, and is <= 64 chars (`[a-z0-9-]` only)
 - [ ] `name` does not include reserved words (`anthropic`, `claude`) and contains no XML tags
 - [ ] `description` is non-empty, <= 1024 chars, contains no XML tags, and includes activation cues
