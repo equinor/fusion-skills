@@ -45,12 +45,19 @@ jobs:
           bun run release:prepare
           echo "- ✅ Release artifacts prepared from changesets" >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Prepare release notes excerpt from root changelog
+        id: prepare_release_notes
+        run: |
+          bun run release:finalize
+          echo "- ✅ Release notes excerpt prepared from root CHANGELOG.md" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Build release PR body
         id: build_pr_body
         env:
           RELEASE_VERSION: ${{ steps.release.outputs.version }}
         run: |
           BODY_FILE=.release-pr-body.md
+          RELEASE_NOTES_FILE=.release-notes.md
 
           cat > "$BODY_FILE" <<'EOF'
           This PR was auto-generated from `.changeset/*.md` files.
@@ -72,6 +79,10 @@ jobs:
             echo "- Release notes source: root \`CHANGELOG.md\` section \`## v${RELEASE_VERSION}\`"
             echo
           } >> "$BODY_FILE"
+
+          cat "$RELEASE_NOTES_FILE" >> "$BODY_FILE"
+
+          echo "" >> "$BODY_FILE"
 
           echo "- ✅ Release PR body generated" >> "$GITHUB_STEP_SUMMARY"
 
