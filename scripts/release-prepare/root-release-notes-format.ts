@@ -159,8 +159,7 @@ export function renderRootReleaseNotes(
     output.push(`### ${toHeadingLabel(bumpType)}`, "");
 
     // Iterate entries within the bump bucket and render each block.
-    for (let index = 0; index < entries.length; index++) {
-      const entry = entries[index];
+    for (const [index, entry] of entries.entries()) {
       output.push(renderRootEntryHeader(entry, repoSlug), "", ...renderRootEntryBody(entry));
 
       // Insert separator only between entries (never trailing after last/only).

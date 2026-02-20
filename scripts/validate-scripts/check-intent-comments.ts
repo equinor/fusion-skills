@@ -38,14 +38,9 @@ function isRegexExplanationCommentLine(line: string): boolean {
  */
 function findPreviousNonEmptyLineIndex(lines: string[], startIndex: number): number {
   // Scan upward to find the first line with actual content.
-  for (let index = startIndex; index >= 0; index -= 1) {
-    // Stop at the first non-empty line because that's the effective context line.
-    if (lines[index].trim() !== "") {
-      return index;
-    }
-  }
-
-  return -1;
+  const reversedSlice = lines.slice(0, startIndex + 1).reverse();
+  const offset = reversedSlice.findIndex((line) => line.trim() !== "");
+  return offset < 0 ? -1 : startIndex - offset;
 }
 
 /**
@@ -75,8 +70,7 @@ export function collectFileIntentCommentIssues(
   };
 
   // Iterate every source line and enforce that control-flow/iterator lines have intent comments.
-  for (let index = 0; index < lines.length; index += 1) {
-    const line = lines[index];
+  for (const [index, line] of lines.entries()) {
     // Fail fast here so the remaining logic can assume valid input.
     if (!INTENT_TARGET_REGEX.test(line)) {
       continue;
@@ -106,6 +100,17 @@ export function collectFileIntentCommentIssues(
         line: line + 1,
         code: "disallowed-while-loop",
         statement: lines[line]?.trim() ?? "while loop",
+      });
+    }
+
+    // Detect let declarations and report them as disallowed mutation style.
+    if (ts.isVariableDeclarationList(node) && (node.flags & ts.NodeFlags.Let) !== 0) {
+      const { line } = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile));
+      addIssue({
+        filePath,
+        line: line + 1,
+        code: "disallowed-let-declaration",
+        statement: lines[line]?.trim() ?? "let declaration",
       });
     }
 

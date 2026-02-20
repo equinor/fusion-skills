@@ -42,8 +42,8 @@ export function updateRootChangelog(
   const sectionMatches = [...sectionsRaw.matchAll(sectionSplitRegex)];
   const sections: string[] = [];
   // Process entries in order so behavior stays predictable.
-  for (let index = 0; index < sectionMatches.length; index++) {
-    const start = sectionMatches[index].index ?? 0;
+  for (const [index, sectionMatch] of sectionMatches.entries()) {
+    const start = sectionMatch.index ?? 0;
     const end = sectionMatches[index + 1]?.index ?? sectionsRaw.length;
     const section = sectionsRaw.slice(start, end).trim();
     // Fail fast here so the remaining logic can assume valid input.

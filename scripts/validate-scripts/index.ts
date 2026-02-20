@@ -31,10 +31,15 @@ function parseArgs(argv: string[]): ValidateScriptsOptions {
     onlyDiff: false,
     baseRef: process.env.GITHUB_BASE_REF ? `origin/${process.env.GITHUB_BASE_REF}` : "origin/main",
   };
+  const state = { skipNext: false };
 
   // Walk arguments in order so flag/value pairs can be consumed deterministically.
-  for (let index = 0; index < argv.length; index += 1) {
-    const arg = argv[index];
+  for (const [index, arg] of argv.entries()) {
+    // Skip the value token immediately following --base-ref.
+    if (state.skipNext) {
+      state.skipNext = false;
+      continue;
+    }
 
     // Enable diff-only mode so CI can validate only files touched by the PR.
     if (arg === "--only-diff") {
@@ -50,7 +55,7 @@ function parseArgs(argv: string[]): ValidateScriptsOptions {
         throw new Error("Missing value for --base-ref");
       }
       options.baseRef = value;
-      index += 1;
+      state.skipNext = true;
       continue;
     }
 
@@ -109,10 +114,12 @@ function main(): void {
     ? collectIntentCommentIssuesForFiles(diffFiles)
     : collectIntentCommentIssues(scriptsRoot);
   // Keep disallowed-pattern violations separate from general intent-comment findings.
-  const disallowedIssues = intentIssues.filter((issue) => issue.code === "disallowed-while-loop");
+  const disallowedIssueCodes = new Set(["disallowed-while-loop", "disallowed-let-declaration"]);
+  // Keep only issues that represent explicitly banned syntax patterns.
+  const disallowedIssues = intentIssues.filter((issue) => disallowedIssueCodes.has(issue.code));
   // Keep intent-check findings focused on comment and regex-explanation coverage.
   const nonDisallowedIntentIssues = intentIssues.filter(
-    (issue) => issue.code !== "disallowed-while-loop",
+    (issue) => !disallowedIssueCodes.has(issue.code),
   );
 
   // In diff mode, print scope details so CI output explains what was checked.

@@ -32,32 +32,31 @@ export function updateMetadataVersion(skillContent: string, newVersion: string):
   // Fail fast here so the remaining logic can assume valid input.
   if (metadataIndex < 0) throw new Error("SKILL.md missing required metadata block");
 
-  let blockEnd = lines.length;
-  // Process entries in order so behavior stays predictable.
-  for (let i = metadataIndex + 1; i < lines.length; i += 1) {
-    // These regex checks detect the end of the metadata block (`---` or next top-level key).
-    if (/^---\s*$/.test(lines[i]) || /^[^\s]/.test(lines[i])) {
-      blockEnd = i;
-      break;
+  const afterMetadata = lines.slice(metadataIndex + 1);
+  const isMetadataBoundary = (line: string): boolean => {
+    // This regex matches frontmatter delimiters that end the metadata block.
+    if (/^---\s*$/.test(line)) {
+      return true;
     }
-  }
 
-  let replaced = false;
-  // Process entries in order so behavior stays predictable.
-  for (let i = metadataIndex + 1; i < blockEnd; i += 1) {
-    // This regex matches the metadata.version line so we can replace it in place.
-    if (/^\s+version:\s*/.test(lines[i])) {
-      // This regex matches the expected text format for this step.
-      const indentation = (lines[i].match(/^(\s+)/) || ["  "])[1];
-      lines[i] = `${indentation}version: "${newVersion}"`;
-      replaced = true;
-      break;
-    }
-  }
+    // This regex matches top-level keys (non-indented lines) that end metadata nesting.
+    return /^[^\s]/.test(line);
+  };
+  const relativeBlockEnd = afterMetadata.findIndex(isMetadataBoundary);
+  const blockEnd = relativeBlockEnd < 0 ? lines.length : metadataIndex + 1 + relativeBlockEnd;
+
+  const metadataLines = lines.slice(metadataIndex + 1, blockEnd);
+  // This regex matches the metadata.version line so we can replace it in place.
+  const versionRelativeIndex = metadataLines.findIndex((line) => /^\s+version:\s*/.test(line));
+  const versionIndex = versionRelativeIndex < 0 ? -1 : metadataIndex + 1 + versionRelativeIndex;
 
   // Fail fast here so the remaining logic can assume valid input.
-  if (!replaced) {
+  if (versionIndex < 0) {
     lines.splice(metadataIndex + 1, 0, `  version: "${newVersion}"`);
+  } else {
+    // This regex matches the expected text format for this step.
+    const indentation = (lines[versionIndex].match(/^(\s+)/) || ["  "])[1];
+    lines[versionIndex] = `${indentation}version: "${newVersion}"`;
   }
 
   return lines.join("\n");
