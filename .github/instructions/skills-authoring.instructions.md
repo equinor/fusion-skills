@@ -68,6 +68,9 @@ Field constraints:
   - `metadata.orchestrator`: name of the required orchestrator skill (subordinates only)
   - `metadata.skills`: list of subordinate skill names (orchestrators only)
   - `metadata.tags`: optional list of free-form lowercase kebab-case strings for discoverability
+  - `metadata.mcp`: optional map of MCP server needs
+    - `metadata.mcp.required`: optional list of required MCP servers
+    - `metadata.mcp.suggested`: optional list of suggested MCP servers
   - avoid nested objects under `metadata`
 - `license` and `compatibility`:
   - optional top-level fields
@@ -120,6 +123,11 @@ metadata:
   version: "<initial-version>"
   tags:
     - <tag>
+  mcp:
+    required:
+      - <server-id>
+    suggested:
+      - <server-id>
 ---
 
 # <Readable Skill Title>

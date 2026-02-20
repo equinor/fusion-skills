@@ -19,7 +19,7 @@
   - guard `set -u` in VS Code integrated zsh sessions to avoid shell integration hook failures
   - update runbook/docs snippets to use the robust pattern and verification command
 
-  resolves: equinor/fusion-core-tasks#402
+  resolves equinor/fusion-core-tasks#402
 
 ## 0.1.0 - 2026-02-20
 
@@ -39,7 +39,7 @@
 
   Refs: `equinor/fusion-core-tasks#391`
 
-  Closes: `equinor/fusion-core-tasks#395`
+  closes equinor/fusion-core-tasks#395
 
   Scope delivered:
   - `fusion-issue-authoring` is now the orchestration layer for shared gates (classification, labels, assignee, confirmation, publish flow).

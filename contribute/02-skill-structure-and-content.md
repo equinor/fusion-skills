@@ -19,6 +19,9 @@ Include YAML frontmatter with:
 - `metadata.orchestrator`: name of the required orchestrator skill (subordinates only)
 - `metadata.skills`: list of subordinate skill names (orchestrators only)
 - `metadata.tags`: optional list of free-form lowercase kebab-case strings for discoverability (for example `["github", "issue-authoring"]`)
+- `metadata.mcp`: optional map for MCP server requirements
+  - `metadata.mcp.required`: list of required MCP servers
+  - `metadata.mcp.suggested`: list of suggested MCP servers
 - `license` and `compatibility`: optional top-level fields when needed
 
 ## Content requirements
@@ -41,6 +44,9 @@ metadata:
   version: "0.0.0"
   tags:
     - example-tag
+  mcp:
+    suggested:
+      - github
 ---
 
 # Example Skill

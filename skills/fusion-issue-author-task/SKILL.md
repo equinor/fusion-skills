@@ -10,6 +10,9 @@ metadata:
     - github
     - issue-authoring
     - task
+  mcp:
+    required:
+      - github
 ---
 
 # Author Task Issue

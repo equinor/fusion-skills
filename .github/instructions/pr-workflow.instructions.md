@@ -34,6 +34,5 @@ Apply this guidance when creating, updating, or finalizing pull requests.
 - Check current branch changes and summarize staged/unstaged scope.
 - Check code and docs against repository guides (`CONTRIBUTING.md`, `contribute/`, and relevant `.github/instructions/*.instructions.md`).
 - Confirm validation commands run.
-- For changeset-driven skill PRs, default to non-closing issue references in changeset and PR text (`Ref`/`Refs`).
-- Use issue-closing keywords (`fix|fixes|resolve|resolves|close|closes`) only when the release PR merge is intended to close the issue because the skill fix directly resolves it.
-- Use direct references like `fixes owner/repo#123`.
+- Use lower-case issue-closing keywords consistently in changeset and PR text when closure is intended.
+- Prefer `resolves owner/repo#123`; use `fixes owner/repo#123` or `closes owner/repo#123` only when those verbs are more accurate.
