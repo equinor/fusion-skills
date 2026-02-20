@@ -9,7 +9,7 @@ This repository is a shared catalog of Fusion GitHub Copilot Agent Skills. Treat
 - Consumer overview: `README.md`
 - Maintainer workflow: `CONTRIBUTING.md`
 - Security policy: `SECURITY.md`
-- Script-specific agent rules: `scripts/AGENTS.md`
+- Script-specific guidance: documentation in the `scripts/` directory
 
 ## Operating principles
 

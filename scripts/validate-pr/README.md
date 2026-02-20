@@ -19,8 +19,8 @@ flowchart TD
   G -- No --> H[Validate changeset coverage]
   G -- Yes --> I[Skip changeset coverage + version check]
   H --> J[Validate metadata.version unchanged]
-  I --> K
-  J --> K{All valid?}
+  I --> K{All valid?}
+  J --> K
   K -- Yes --> L[Pass]
   K -- No --> M[Fail]
 ```

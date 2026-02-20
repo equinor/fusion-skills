@@ -17,7 +17,10 @@ function compareSemver(left: string, right: string): number {
  *
  * Maintainer note: skill metadata.version is updated by release automation only.
  */
-export function validateVersionBumps(changedSkillDirs: Set<string>, baseRemoteRef: string): void {
+export function validateNoManualVersionEdits(
+  changedSkillDirs: Set<string>,
+  baseRemoteRef: string,
+): void {
   let errors = 0;
 
   for (const skillDir of changedSkillDirs) {

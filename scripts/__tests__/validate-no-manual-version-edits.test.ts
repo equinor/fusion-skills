@@ -8,9 +8,9 @@ vi.mock("../validate-pr/get-version-at-ref", () => ({
   getVersionAtRef: getVersionAtRefMock,
 }));
 
-import { validateVersionBumps } from "../validate-pr/validate-version-bumps";
+import { validateNoManualVersionEdits } from "../validate-pr/validate-no-manual-version-edits";
 
-describe("validateVersionBumps", () => {
+describe("validateNoManualVersionEdits", () => {
   beforeEach(() => {
     getVersionAtRefMock.mockReset();
   });
@@ -22,7 +22,7 @@ describe("validateVersionBumps", () => {
     });
 
     expect(() =>
-      validateVersionBumps(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
+      validateNoManualVersionEdits(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
     ).not.toThrow();
   });
 
@@ -33,7 +33,7 @@ describe("validateVersionBumps", () => {
     });
 
     expect(() =>
-      validateVersionBumps(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
+      validateNoManualVersionEdits(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
     ).toThrow("Manual skill metadata.version edits are not allowed in non-release PRs.");
   });
 
@@ -44,7 +44,7 @@ describe("validateVersionBumps", () => {
     });
 
     expect(() =>
-      validateVersionBumps(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
+      validateNoManualVersionEdits(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
     ).toThrow("Manual skill metadata.version edits are not allowed in non-release PRs.");
   });
 
@@ -55,7 +55,7 @@ describe("validateVersionBumps", () => {
     });
 
     expect(() =>
-      validateVersionBumps(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
+      validateNoManualVersionEdits(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
     ).not.toThrow();
   });
 });

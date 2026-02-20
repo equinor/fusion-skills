@@ -12,8 +12,8 @@ Apply this guidance when creating, updating, or finalizing pull requests.
 - Create temporary PR body drafts in `.tmp/` (for example `.tmp/pr-body.md`) and edit with the user before submission.
 - Ask which base branch to target.
 - Propose a likely default base branch when asking:
-	- usually the repository default branch (for example `main`),
-	- but if the current branch is clearly cut from another branch (for example `next` or a feature branch), suggest that branch instead.
+  - usually the repository default branch (for example `main`),
+  - but if the current branch is clearly cut from another branch (for example `next` or a feature branch), suggest that branch instead.
 - Assume head ref is the current branch unless the user explicitly requests another head branch.
 - Follow up by asking whether related issues should be linked.
 - Ask whether the PR should be assigned to the user.

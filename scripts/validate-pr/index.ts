@@ -2,7 +2,7 @@ import process from "node:process";
 import { collectChangedSkillContext } from "./collect-context";
 import { runGit, tryRunGit } from "./git-helpers";
 import { validateChangesetCoverage } from "./validate-changeset-coverage";
-import { validateVersionBumps } from "./validate-version-bumps";
+import { validateNoManualVersionEdits } from "./validate-no-manual-version-edits";
 
 /**
  * CLI entrypoint for PR validation:
@@ -76,7 +76,7 @@ function main(): void {
 
   if (!releasePrDetected) {
     console.log("Validating metadata.version is unchanged for existing changed skills...");
-    validateVersionBumps(changedSkillDirs, baseRemoteRef);
+    validateNoManualVersionEdits(changedSkillDirs, baseRemoteRef);
   } else {
     console.log("Detected release PR; skipping manual metadata.version validation.");
   }
