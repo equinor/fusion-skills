@@ -27,20 +27,20 @@ export function validateChangesetCoverage(
     }
   }
 
-  let errors = 0;
   // Process entries in order so behavior stays predictable.
-  for (const skillId of changedSkillIds) {
+  const errors = Array.from(changedSkillIds).reduce((count, skillId) => {
     const bump = coverage.get(skillId);
     // Fail fast here so the remaining logic can assume valid input.
     if (!bump) {
       console.error(
         `ERROR: Changed skill '${skillId}' is not listed in any updated .changeset/*.md file.`,
       );
-      errors += 1;
-    } else {
-      console.log(`- Changeset entry found for ${skillId} (${bump})`);
+      return count + 1;
     }
-  }
+
+    console.log(`- Changeset entry found for ${skillId} (${bump})`);
+    return count;
+  }, 0);
 
   // Fail fast here so the remaining logic can assume valid input.
   if (errors > 0) {

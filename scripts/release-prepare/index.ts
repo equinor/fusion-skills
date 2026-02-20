@@ -80,7 +80,7 @@ function main(): void {
     // 2) per-changeset release entries (for root changelog).
     const parsed = parseChangeset(readFileSync(changesetFile, "utf8"));
     const provenance = getChangesetProvenance(repoRoot, changesetFile);
-    let changesetHighestBump: BumpType = "patch";
+    const changesetHighestBump = { value: "patch" as BumpType };
     const changesetSkills = Object.keys(parsed.skills).sort();
 
     // Iterate skill bump declarations inside a single changeset.
@@ -91,9 +91,9 @@ function main(): void {
       }
 
       // Track strongest bump for this changeset to classify root changelog section.
-      if (isHigherBump(bumpType, changesetHighestBump)) {
+      if (isHigherBump(bumpType, changesetHighestBump.value)) {
         // Root changelog groups each changeset under its strongest bump impact.
-        changesetHighestBump = bumpType;
+        changesetHighestBump.value = bumpType;
       }
 
       const current = aggregateBumps.get(skillName);
@@ -118,7 +118,7 @@ function main(): void {
     }
 
     pendingRootEntries.push({
-      bumpType: changesetHighestBump,
+      bumpType: changesetHighestBump.value,
       body: parsed.body,
       prNumber: provenance.prNumber,
       prTitle: provenance.prTitle,
@@ -127,7 +127,7 @@ function main(): void {
     });
   }
 
-  let highestReleaseBump: BumpType = "patch";
+  const highestReleaseBump = { value: "patch" as BumpType };
   const nextVersionBySkill = new Map<string, string>();
 
   // Iterate affected skills in stable order for deterministic output.
@@ -145,8 +145,8 @@ function main(): void {
       throw new Error(`Missing bump type for: ${skillName}`);
     }
     // Track strongest bump to determine root package version increment.
-    if (isHigherBump(bumpType, highestReleaseBump)) {
-      highestReleaseBump = bumpType;
+    if (isHigherBump(bumpType, highestReleaseBump.value)) {
+      highestReleaseBump.value = bumpType;
     }
     const notes = aggregateNotes.get(skillName) ?? {
       major: [],
@@ -211,8 +211,8 @@ function main(): void {
   const releaseContent = renderRootReleaseNotes(groupedRootReleaseNotes, repoSlug)
     .join("\n")
     .trim();
-  const newPackageVersion = updatePackageVersion(packageJsonPath, highestReleaseBump);
-  console.log(`Bumped package.json version to ${newPackageVersion} (${highestReleaseBump})`);
+  const newPackageVersion = updatePackageVersion(packageJsonPath, highestReleaseBump.value);
+  console.log(`Bumped package.json version to ${newPackageVersion} (${highestReleaseBump.value})`);
   updateRootChangelog(changelogPath, newPackageVersion, releaseContent);
   console.log(`Updated ${changelogPath} with ## v${newPackageVersion}`);
   const skillCount = updateReadmeSkillsTable(repoRoot);

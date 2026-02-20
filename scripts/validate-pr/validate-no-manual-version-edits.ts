@@ -14,11 +14,11 @@ function compareSemver(left: string, right: string): number {
   const rightParts = right.split(".").map((part) => Number(part));
 
   // Process entries in order so behavior stays predictable.
-  for (let i = 0; i < 3; i += 1) {
+  for (const index of [0, 1, 2]) {
     // Fail fast here so the remaining logic can assume valid input.
-    if (leftParts[i] > rightParts[i]) return 1;
+    if (leftParts[index] > rightParts[index]) return 1;
     // Fail fast here so the remaining logic can assume valid input.
-    if (leftParts[i] < rightParts[i]) return -1;
+    if (leftParts[index] < rightParts[index]) return -1;
   }
 
   return 0;
@@ -37,29 +37,27 @@ export function validateNoManualVersionEdits(
   changedSkillDirs: Set<string>,
   baseRemoteRef: string,
 ): void {
-  let errors = 0;
-
   // Process entries in order so behavior stays predictable.
-  for (const skillDir of changedSkillDirs) {
+  const errors = Array.from(changedSkillDirs).reduce((count, skillDir) => {
     const headVersion = getVersionAtRef("HEAD", skillDir);
     const baseVersion = getVersionAtRef(baseRemoteRef, skillDir);
 
     // Fail fast here so the remaining logic can assume valid input.
     if (!headVersion && baseVersion) {
       console.log(`- ${skillDir} removed in PR (skipping version bump check).`);
-      continue;
+      return count;
     }
 
     // Fail fast here so the remaining logic can assume valid input.
     if (!headVersion) {
       console.log(`- ${skillDir} has no SKILL.md in HEAD (skipping).`);
-      continue;
+      return count;
     }
 
     // Fail fast here so the remaining logic can assume valid input.
     if (!baseVersion) {
       console.log(`- ${skillDir} added with metadata.version=${headVersion}`);
-      continue;
+      return count;
     }
 
     const versionComparison = compareSemver(headVersion, baseVersion);
@@ -69,11 +67,12 @@ export function validateNoManualVersionEdits(
       console.error(
         `ERROR: ${skillDir} changed metadata.version (${baseVersion} -> ${headVersion}). Do not manually edit metadata.version in non-release PRs.`,
       );
-      errors += 1;
-    } else {
-      console.log(`- ${skillDir} metadata.version unchanged (${headVersion})`);
+      return count + 1;
     }
-  }
+
+    console.log(`- ${skillDir} metadata.version unchanged (${headVersion})`);
+    return count;
+  }, 0);
 
   // Fail fast here so the remaining logic can assume valid input.
   if (errors > 0) {

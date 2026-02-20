@@ -14,6 +14,10 @@ export interface TSDocCoverageIssue {
 export interface IntentCommentIssue {
   filePath: string;
   line: number;
-  code: "missing-intent-comment" | "disallowed-while-loop" | "missing-regex-explanation";
+  code:
+    | "missing-intent-comment"
+    | "disallowed-while-loop"
+    | "disallowed-let-declaration"
+    | "missing-regex-explanation";
   statement: string;
 }

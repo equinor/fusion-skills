@@ -51,6 +51,15 @@ while (index < values.length) {
     expect(issues.some((issue) => issue.code === "disallowed-while-loop")).toBe(true);
   });
 
+  it("rejects let declarations", () => {
+    const source = `
+let value = 1;
+`;
+
+    const issues = collectFileIntentCommentIssues(source, "/repo/scripts/example.ts");
+    expect(issues.some((issue) => issue.code === "disallowed-let-declaration")).toBe(true);
+  });
+
   it("requires a regex explanation comment above regex literals", () => {
     const source = `
 const match = input.match(/Found[^0-9]*([0-9]+)/i);

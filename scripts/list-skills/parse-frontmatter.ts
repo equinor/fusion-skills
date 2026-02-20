@@ -22,8 +22,7 @@ export function extractFrontmatter(markdown: string): string {
 export function parseFrontmatter(frontmatter: string): Record<string, string> {
   const lines = frontmatter.split("\n");
   const output: Record<string, string> = {};
-  let currentMapKey = "";
-  let currentListKey = "";
+  const state = { currentMapKey: "", currentListKey: "" };
 
   // Process entries in order so behavior stays predictable.
   for (const rawLine of lines) {
@@ -36,14 +35,14 @@ export function parseFrontmatter(frontmatter: string): Record<string, string> {
     const topLevel = line.match(/^([a-zA-Z0-9_-]+):\s*(.*)$/);
     // Fail fast here so the remaining logic can assume valid input.
     if (topLevel && !rawLine.startsWith(" ")) {
-      currentMapKey = "";
-      currentListKey = "";
+      state.currentMapKey = "";
+      state.currentListKey = "";
       const key = topLevel[1];
       const value = topLevel[2].trim();
 
       // Fail fast here so the remaining logic can assume valid input.
       if (!value) {
-        currentMapKey = key;
+        state.currentMapKey = key;
         continue;
       }
 
@@ -55,20 +54,20 @@ export function parseFrontmatter(frontmatter: string): Record<string, string> {
     // This regex matches the expected text format for this step.
     const nested = line.match(/^\s+([a-zA-Z0-9_-]+):\s*(.*)$/);
     // Fail fast here so the remaining logic can assume valid input.
-    if (nested && currentMapKey) {
-      const nestedKey = `${currentMapKey}.${nested[1]}`;
+    if (nested && state.currentMapKey) {
+      const nestedKey = `${state.currentMapKey}.${nested[1]}`;
       // This regex matches the expected text format for this step.
       const nestedValue = nested[2].trim().replace(/^"|"$/g, "");
       output[nestedKey] = nestedValue;
-      currentListKey = nestedValue ? "" : nestedKey;
+      state.currentListKey = nestedValue ? "" : nestedKey;
       continue;
     }
 
     // This regex matches the expected text format for this step.
     const listItem = line.match(/^\s+-\s*(.+)$/);
     // Fail fast here so the remaining logic can assume valid input.
-    if (listItem && (currentListKey || currentMapKey)) {
-      const listKey = currentListKey || currentMapKey;
+    if (listItem && (state.currentListKey || state.currentMapKey)) {
+      const listKey = state.currentListKey || state.currentMapKey;
       // This regex matches the expected text format for this step.
       const itemValue = listItem[1].trim().replace(/^"|"$/g, "");
       // Fail fast here so the remaining logic can assume valid input.

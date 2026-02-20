@@ -81,15 +81,15 @@ export function hasValueReturn(node: ts.FunctionDeclaration): boolean {
     return false;
   }
 
-  let found = false;
+  const state = { found: false };
   const scan = (current: ts.Node): void => {
     // Stop traversing once a value-return has already been found.
-    if (found) {
+    if (state.found) {
       return;
     }
     // Count only returns with an expression to avoid requiring @returns on bare returns.
     if (ts.isReturnStatement(current) && current.expression) {
-      found = true;
+      state.found = true;
       return;
     }
     // Visit child nodes so nested structures are checked as well.
@@ -97,7 +97,7 @@ export function hasValueReturn(node: ts.FunctionDeclaration): boolean {
   };
 
   scan(body);
-  return found;
+  return state.found;
 }
 
 /**

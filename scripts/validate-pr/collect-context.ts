@@ -19,19 +19,18 @@ export function collectChangedSkillContext(changedFiles: string[]): ChangedSkill
   const changedSkillDirs = new Set<string>();
   const changedSkillIds = new Set<string>();
   const changedChangesetFiles: string[] = [];
-  let packageJsonTouched = false;
-  let rootChangelogTouched = false;
+  const state = { packageJsonTouched: false, rootChangelogTouched: false };
 
   // Process entries in order so behavior stays predictable.
   for (const file of changedFiles) {
     // Fail fast here so the remaining logic can assume valid input.
     if (file === "package.json") {
-      packageJsonTouched = true;
+      state.packageJsonTouched = true;
     }
 
     // Fail fast here so the remaining logic can assume valid input.
     if (file === "CHANGELOG.md") {
-      rootChangelogTouched = true;
+      state.rootChangelogTouched = true;
     }
 
     // This regex identifies changed markdown files under the .changeset directory.
@@ -65,7 +64,7 @@ export function collectChangedSkillContext(changedFiles: string[]): ChangedSkill
     changedSkillDirs,
     changedSkillIds,
     changedChangesetFiles,
-    packageJsonTouched,
-    rootChangelogTouched,
+    packageJsonTouched: state.packageJsonTouched,
+    rootChangelogTouched: state.rootChangelogTouched,
   };
 }

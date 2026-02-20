@@ -141,8 +141,8 @@ export function renderGroupedNotes(
 
     output.push(`${"#".repeat(bumpHeadingLevel)} ${bumpType}`, "");
     // Iterate notes inside the bump bucket and render each markdown block.
-    for (let index = 0; index < notes.length; index++) {
-      output.push(...renderNoteEntry(notes[index], repoSlug));
+    for (const [index, note] of notes.entries()) {
+      output.push(...renderNoteEntry(note, repoSlug));
       // Insert spacing only between notes, not after the last one.
       if (index < notes.length - 1) {
         output.push("");
