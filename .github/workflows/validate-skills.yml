@@ -69,7 +69,8 @@ jobs:
             if [[ -z "${{ steps.changed_changesets.outputs.all_changed_files }}" ]]; then
               echo 'No `.changeset/*.md` files were changed in this PR.'
             else
-              mapfile -t files < <(printf '%s\n' "${{ steps.changed_changesets.outputs.all_changed_files }}" | sed '/^$/d' | sort)
+              # Use tr to split space-separated file list into lines
+              mapfile -t files < <(echo "${{ steps.changed_changesets.outputs.all_changed_files }}" | tr ' ' '\n' | sed '/^$/d' | sort)
               echo "Detected ${#files[@]} changeset file(s):"
               for file in "${files[@]}"; do
                 echo

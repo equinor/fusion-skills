@@ -24,7 +24,7 @@ Collect before writing files:
   - internal repository-owned skills: `fusion-<skill-name>` unless intentionally overridden
   - external/user-created skills: `custom-<skill-name>` unless intentionally overridden
 - Target placement (`skills/<final-skill-name>/`, `skills/.experimental/<final-skill-name>/`, or `skills/.curated/<final-skill-name>/`)
-- Initial semantic version (`MAJOR.MINOR.PATCH`, default `1.0.0`)
+- Initial semantic version (`MAJOR.MINOR.PATCH`, default `0.0.0` for skills created in this repository)
 - License for frontmatter (default `MIT`)
 - One-sentence purpose for frontmatter `description`
 - Expected outputs (files, commands, summary)
@@ -60,10 +60,11 @@ Field constraints:
   - includes discovery cues (what + when)
 - `metadata.version`:
   - semantic version (`MAJOR.MINOR.PATCH`)
-  - quoted YAML string (for example `"1.0.0"`)
+  - quoted YAML string (for example `"0.0.0"`)
 - `metadata`:
-  - string-to-string map only
-  - avoid arrays/objects as metadata values
+  - prefer string-to-string key/value pairs
+  - arrays are allowed when modeling explicit skill relationships (for example `metadata.sub_skills`)
+  - avoid nested objects under `metadata`
 - `license` and `compatibility`:
   - optional top-level fields
   - do not nest under `metadata`
