@@ -5,7 +5,7 @@ license: MIT
 metadata:
   version: "0.0.0"
   orchestrator: "fusion-issue-authoring"
-  role: "subskill"
+  role: "subordinate"
   tags:
     - github
     - issue-authoring
