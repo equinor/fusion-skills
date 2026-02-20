@@ -22,5 +22,6 @@ Notes:
 - You can include multiple skills in one changeset file.
 - PR validation enforces that changed skills are present in updated `.changeset/*.md` files.
 - Use non-closing issue references by default in changeset bodies (for example `Refs: owner/repo#123`).
-- Use auto-closing keywords intentionally (for example `Fixes:`/`Resolves:`) when the skill fix in the release PR should close that issue on merge.
+- Use auto-closing keywords intentionally when the skill fix in the release PR should close that issue on merge.
+- Use GitHub issue-closing keywords with direct references (for example `fixes owner/repo#123`, `resolves owner/repo#123`, or `closes owner/repo#123`).
 - Keep in mind that release PR/changelog generation can propagate these strings and trigger merge-time issue closure.

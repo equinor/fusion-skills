@@ -9,4 +9,4 @@ Improve issue automation reliability in `fusion-issue-authoring`:
 - guard `set -u` in VS Code integrated zsh sessions to avoid shell integration hook failures
 - update runbook/docs snippets to use the robust pattern and verification command
 
-Resolves: equinor/fusion-core-tasks#402
+resolves: equinor/fusion-core-tasks#402
