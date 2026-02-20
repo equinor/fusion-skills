@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -eo pipefail
+
+# VS Code integrated zsh shell hooks can touch unset prompt vars when nounset is on.
+if [[ -z "${VSCODE_SHELL_INTEGRATION:-}" ]]; then
+  set -u
+fi
 
 usage() {
   cat <<'EOF'
