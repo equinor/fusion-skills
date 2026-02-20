@@ -18,8 +18,9 @@ SemVer meaning in this repo:
 ## Releasing changes
 
 1. Add a `.changeset/*.md` file describing skill-level bump(s) and impact in skill-changing PRs
-	- In changeset body text, use non-closing references (`Refs: owner/repo#123`).
-	- Avoid auto-closing keywords (`close|closes|fixes|resolves`, etc.) because changeset text can be propagated into release PR/changelog content and may close issues when the release PR merges.
+	- In changeset body text, use non-closing references by default (`Refs: owner/repo#123`).
+	- Use auto-closing keywords (`Fixes:`/`Resolves:`) only when the release PR should close the issue because the skill fix directly resolves it.
+	- Remember that changeset text can be propagated into release PR/changelog content and may close issues when the release PR merges.
 2. Let release automation apply affected skill `metadata.version` bumps
 3. Tag the repository release
 4. Document behavior impact and migration notes in release notes/changelog
