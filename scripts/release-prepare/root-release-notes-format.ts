@@ -1,4 +1,4 @@
-import { splitNoteTitleAndBody } from "./note-body";
+import { normalizeNoteBody, splitNoteTitleAndBody } from "./note-body";
 import type { BumpType } from "./semver";
 
 const BUMP_ORDER: BumpType[] = ["major", "minor", "patch"];
@@ -13,6 +13,8 @@ export interface RootReleaseEntry {
   body: string;
   /** Pull request number associated with the introducing commit, if discoverable. */
   prNumber: string | null;
+  /** Pull request title associated with the introducing commit, if discoverable. */
+  prTitle?: string | null;
   /** Full commit SHA associated with the changeset provenance, if discoverable. */
   commitSha: string | null;
   /** Final `skill@version` list for all skills updated by this changeset. */
@@ -61,7 +63,8 @@ function formatCommitLink(commitSha: string | null, repoSlug: string | null): st
 }
 
 function renderRootEntryHeader(entry: RootReleaseEntry, repoSlug: string | null): string {
-  const { title } = splitNoteTitleAndBody(entry.body);
+  const { title: fallbackTitle } = splitNoteTitleAndBody(entry.body);
+  const title = entry.prTitle?.trim() || fallbackTitle;
   // Package list reflects all skills affected by one changeset entry.
   // Map package identifiers into display lines for the emphasized header block.
   const packageLines = entry.packages.map((pkg) => `📦 ${pkg}`);
@@ -80,7 +83,15 @@ function renderRootEntryHeader(entry: RootReleaseEntry, repoSlug: string | null)
 }
 
 function renderRootEntryBody(entry: RootReleaseEntry): string[] {
-  const { body } = splitNoteTitleAndBody(entry.body);
+  const { title: fallbackTitle, body } = splitNoteTitleAndBody(entry.body);
+  const prTitle = entry.prTitle?.trim();
+
+  // When the rendered headline comes from PR title (not changeset first line),
+  // preserve the full normalized changeset body so no authored content is lost.
+  if (prTitle && prTitle !== fallbackTitle) {
+    return normalizeNoteBody(entry.body).split("\n");
+  }
+
   return body.split("\n");
 }
 

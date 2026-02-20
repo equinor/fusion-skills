@@ -18,6 +18,7 @@ describe("renderRootReleaseNotes", () => {
             "- Added metadata tags.",
           ].join("\n"),
           prNumber: "10",
+          prTitle: "docs(skills): migrate issue-authoring docs to mcp",
           commitSha: "d4737239be54736e344d74be4ce8271b9be84313",
           packages: ["fusion-issue-authoring@0.1.0", "fusion-skill-authoring@0.2.0"],
         },
@@ -39,13 +40,16 @@ describe("renderRootReleaseNotes", () => {
     expect(output).not.toContain("### Patch");
 
     expect(output).toContain(
-      "__🎯 [Adds structured frontmatter metadata for discoverability and clarifies skill relationship semantics #10](https://github.com/equinor/fusion-skills/pull/10)<br/>",
+      "__🎯 [docs(skills): migrate issue-authoring docs to mcp #10](https://github.com/equinor/fusion-skills/pull/10)<br/>",
     );
     expect(output).toContain(
       "🗂️ [d473723](https://github.com/equinor/fusion-skills/commit/d4737239be54736e344d74be4ce8271b9be84313)<br/>",
     );
     expect(output).toContain("📦 fusion-issue-authoring@0.1.0<br/>");
     expect(output).toContain("📦 fusion-skill-authoring@0.2.0__");
+    expect(output).toContain(
+      "Adds structured frontmatter metadata for discoverability and clarifies skill relationship semantics:",
+    );
     expect(output).toContain("Scope delivered:\n- Added metadata tags.");
 
     const separatorCount = output.split("\n---\n").length - 1;

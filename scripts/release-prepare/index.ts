@@ -60,6 +60,7 @@ function main(): void {
     bumpType: BumpType;
     body: string;
     prNumber: string | null;
+    prTitle: string | null;
     commitSha: string | null;
     skillNames: string[];
   }> = [];
@@ -112,6 +113,7 @@ function main(): void {
       bumpType: changesetHighestBump,
       body: parsed.body,
       prNumber: provenance.prNumber,
+      prTitle: provenance.prTitle,
       commitSha: provenance.commitSha,
       skillNames: changesetSkills,
     });
@@ -173,6 +175,7 @@ function main(): void {
     bumpType: entry.bumpType,
     body: entry.body,
     prNumber: entry.prNumber,
+    prTitle: entry.prTitle,
     commitSha: entry.commitSha,
     // Packages must reflect post-bump versions, not versions at
     // parse time, so this mapping is intentionally deferred until after skill
