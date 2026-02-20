@@ -11,6 +11,22 @@ If you just want to use the skills, start with **Quick start**.
 
 ## 🚀 Quick start
 
+For Fusion issue-authoring with GitHub Copilot, use the explicit agent-targeted install command:
+
+```bash
+npx skills add equinor/fusion-skills \
+	--skill fusion-issue-authoring \
+	--skill fusion-issue-author-feature \
+	--skill fusion-issue-author-user-story \
+	--skill fusion-issue-author-task \
+	--skill fusion-issue-author-bug \
+	--agent github-copilot \
+	-y
+```
+
+For GitHub Copilot project installs, skills are placed in `.agents/skills`.
+See https://skills.sh for CLI behavior and agent support details.
+
 List what’s available:
 
 ```bash
@@ -98,7 +114,7 @@ If you are developing or maintaining skills in this repository, use `CONTRIBUTIN
 <details>
 	<summary>Where do skills get installed?</summary>
 
-- Project installs typically land in `.github/skills/` in the current repo.
+- For GitHub Copilot project installs, skills land in `.agents/skills/` in the current repo.
 - Personal installs use your Copilot user-level skills location.
 
 </details>
