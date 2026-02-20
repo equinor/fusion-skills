@@ -17,6 +17,25 @@ function isIntentCommentLine(line: string): boolean {
 }
 
 /**
+ * Finds the nearest previous non-empty line index.
+ *
+ * @param lines - Full source lines.
+ * @param startIndex - Index to start scanning upward from.
+ * @returns Index of the nearest non-empty line, or `-1` when none exists.
+ */
+function findPreviousNonEmptyLineIndex(lines: string[], startIndex: number): number {
+  // Scan upward to find the first line with actual content.
+  for (let index = startIndex; index >= 0; index -= 1) {
+    // Stop at the first non-empty line because that's the effective context line.
+    if (lines[index].trim() !== "") {
+      return index;
+    }
+  }
+
+  return -1;
+}
+
+/**
  * Collects missing intent-comment issues in one source file.
  *
  * @param sourceText - TypeScript source text.
@@ -39,11 +58,7 @@ export function collectFileIntentCommentIssues(
     }
 
     // Find the nearest non-empty line above the target statement.
-    let previousIndex = index - 1;
-    // Process entries in order so behavior stays predictable.
-    while (previousIndex >= 0 && lines[previousIndex].trim() === "") {
-      previousIndex -= 1;
-    }
+    const previousIndex = findPreviousNonEmptyLineIndex(lines, index - 1);
 
     const previousLine = previousIndex >= 0 ? lines[previousIndex].trim() : "";
     // Require intent comments immediately above (ignoring blank lines) each targeted statement.
