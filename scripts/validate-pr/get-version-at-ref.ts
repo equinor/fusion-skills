@@ -10,6 +10,7 @@ import { getMetadataVersionFromSkillContent } from "./version-from-skill-content
  */
 export function getVersionAtRef(ref: string, skillDir: string): string | null {
   const skillPath = `${skillDir}/SKILL.md`;
+  // Fail fast here so the remaining logic can assume valid input.
   if (!gitPathExists(ref, skillPath)) return null;
 
   const skillContent = runGit(`git show ${ref}:${skillPath}`);

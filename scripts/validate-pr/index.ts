@@ -13,6 +13,7 @@ import { validateNoManualVersionEdits } from "./validate-no-manual-version-edits
  */
 function main(): void {
   const baseRef = process.env.GITHUB_BASE_REF?.trim();
+  // Fail fast here so the remaining logic can assume valid input.
   if (!baseRef) {
     console.log("No GITHUB_BASE_REF detected. Skipping PR version/changeset checks.");
     return;
@@ -25,9 +26,12 @@ function main(): void {
 
   const changedFiles = runGit(`git diff --name-only --diff-filter=ACMRD ${baseRemoteRef}...HEAD`)
     .split("\n")
+    // Convert each value into the shape expected by downstream code.
     .map((line) => line.trim())
+    // Keep only items that meet the rules for this step.
     .filter(Boolean);
 
+  // Fail fast here so the remaining logic can assume valid input.
   if (changedFiles.length === 0) {
     console.log("No changed files found in PR diff.");
     return;
@@ -41,6 +45,7 @@ function main(): void {
     rootChangelogTouched,
   } = collectChangedSkillContext(changedFiles);
 
+  // Keep only items that meet the rules for this step.
   const activeChangesetFiles = changedChangesetFiles.filter((file) =>
     Boolean(tryRunGit(`git show HEAD:${file}`)),
   );
@@ -48,16 +53,19 @@ function main(): void {
   const releasePrDetected =
     activeChangesetFiles.length === 0 && packageJsonTouched && rootChangelogTouched;
 
+  // Fail fast here so the remaining logic can assume valid input.
   if (changedSkillDirs.size === 0) {
     console.log("No changed skill directories detected.");
     return;
   }
 
+  // Fail fast here so the remaining logic can assume valid input.
   if (activeChangesetFiles.length === 0 && !releasePrDetected) {
     console.error(
       "ERROR: One or more skills changed, but no .changeset/*.md file was updated in this PR.",
     );
     console.error("Changed skill directories:");
+    // Process entries in order so behavior stays predictable.
     for (const dir of changedSkillDirs) {
       console.error(`- ${dir}`);
     }
@@ -76,6 +84,7 @@ function main(): void {
     );
   }
 
+  // Fail fast here so the remaining logic can assume valid input.
   if (!releasePrDetected) {
     console.log("Validating metadata.version is unchanged for existing changed skills...");
     validateNoManualVersionEdits(changedSkillDirs, baseRemoteRef);

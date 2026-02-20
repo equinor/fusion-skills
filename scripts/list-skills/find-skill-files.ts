@@ -9,17 +9,21 @@ import { join } from "node:path";
  * @returns Collected absolute SKILL.md file paths.
  */
 export function findSkillFiles(rootDir: string, results: string[] = []): string[] {
+  // Fail fast here so the remaining logic can assume valid input.
   if (!existsSync(rootDir)) return results;
 
+  // Process entries in order so behavior stays predictable.
   for (const entry of readdirSync(rootDir)) {
     const fullPath = join(rootDir, entry);
     const stats = statSync(fullPath);
 
+    // Fail fast here so the remaining logic can assume valid input.
     if (stats.isDirectory()) {
       findSkillFiles(fullPath, results);
       continue;
     }
 
+    // Fail fast here so the remaining logic can assume valid input.
     if (entry === "SKILL.md") {
       results.push(fullPath);
     }

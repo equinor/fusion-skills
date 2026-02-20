@@ -45,6 +45,7 @@ export function getLeadingJSDocBlock(
 export function getDocumentedParamNames(docBlock: string): Set<string> {
   const names = new Set<string>();
   const regex = /@param\s+([A-Za-z_$][A-Za-z0-9_$]*)/g;
+  // Process entries in order so behavior stays predictable.
   for (const match of docBlock.matchAll(regex)) {
     const name = (match[1] ?? "").trim();
     // Guard against malformed tags so only valid parameter names are tracked.
@@ -89,6 +90,7 @@ export function hasValueReturn(node: ts.FunctionDeclaration): boolean {
       found = true;
       return;
     }
+    // Visit child nodes so nested structures are checked as well.
     ts.forEachChild(current, scan);
   };
 
@@ -113,6 +115,7 @@ export function collectFileTSDocCoverageIssues(
   const visit = (node: ts.Node): void => {
     // Restrict checks to function declarations; other node types are traversed recursively.
     if (!ts.isFunctionDeclaration(node)) {
+      // Visit child nodes so nested structures are checked as well.
       ts.forEachChild(node, visit);
       return;
     }
@@ -128,6 +131,7 @@ export function collectFileTSDocCoverageIssues(
 
     const taggedParamNames = hasDoc && docBlock ? getDocumentedParamNames(docBlock) : new Set();
 
+    // Process entries in order so behavior stays predictable.
     for (const parameter of node.parameters) {
       // Skip non-identifier patterns until explicit policy for destructured params is needed.
       if (!ts.isIdentifier(parameter.name)) {
@@ -157,6 +161,7 @@ export function collectFileTSDocCoverageIssues(
       });
     }
 
+    // Visit child nodes so nested structures are checked as well.
     ts.forEachChild(node, visit);
   };
 

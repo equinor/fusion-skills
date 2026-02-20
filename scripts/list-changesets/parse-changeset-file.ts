@@ -14,14 +14,18 @@ export interface ChangesetEntry {
  */
 export function parseChangesetEntries(markdown: string): ChangesetEntry[] {
   const frontmatter = markdown.match(/^---\n([\s\S]*?)\n---\n?/);
+  // Fail fast here so the remaining logic can assume valid input.
   if (!frontmatter) return [];
 
   const entries: ChangesetEntry[] = [];
+  // Process entries in order so behavior stays predictable.
   for (const rawLine of frontmatter[1].split("\n")) {
     const line = rawLine.replace(/\s+#.*$/, "").trim();
+    // Fail fast here so the remaining logic can assume valid input.
     if (!line) continue;
 
     const parsed = line.match(/^"?([a-z0-9][a-z0-9-]*)"?\s*:\s*(major|minor|patch)$/);
+    // Fail fast here so the remaining logic can assume valid input.
     if (!parsed) continue;
 
     entries.push({ skill: parsed[1], bump: parsed[2] as ChangesetEntry["bump"] });
@@ -38,11 +42,13 @@ export function parseChangesetEntries(markdown: string): ChangesetEntry[] {
  */
 export function extractChangesetSummary(markdown: string): string {
   const body = markdown.replace(/^---\n[\s\S]*?\n---\n?/, "").trim();
+  // Fail fast here so the remaining logic can assume valid input.
   if (!body) return "(no description)";
 
   return (
     body
       .split("\n")
+      // Convert each value into the shape expected by downstream code.
       .map((line) => line.trim())
       .find((line) => line.length > 0) ?? "(no description)"
   );

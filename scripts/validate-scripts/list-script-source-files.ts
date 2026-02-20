@@ -17,6 +17,7 @@ export function listScriptSourceFiles(scriptsRoot: string): string[] {
    * @returns Nothing.
    */
   function walk(dir: string): void {
+    // Process entries in order so behavior stays predictable.
     for (const entry of readdirSync(dir)) {
       const fullPath = join(dir, entry);
       const stats = statSync(fullPath);

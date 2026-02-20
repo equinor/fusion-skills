@@ -24,17 +24,21 @@ export function parseFrontmatter(frontmatter: string): Record<string, string> {
   let currentMapKey = "";
   let currentListKey = "";
 
+  // Process entries in order so behavior stays predictable.
   for (const rawLine of lines) {
     const line = rawLine.replace(/\s+#.*$/, "");
+    // Fail fast here so the remaining logic can assume valid input.
     if (!line.trim()) continue;
 
     const topLevel = line.match(/^([a-zA-Z0-9_-]+):\s*(.*)$/);
+    // Fail fast here so the remaining logic can assume valid input.
     if (topLevel && !rawLine.startsWith(" ")) {
       currentMapKey = "";
       currentListKey = "";
       const key = topLevel[1];
       const value = topLevel[2].trim();
 
+      // Fail fast here so the remaining logic can assume valid input.
       if (!value) {
         currentMapKey = key;
         continue;
@@ -45,6 +49,7 @@ export function parseFrontmatter(frontmatter: string): Record<string, string> {
     }
 
     const nested = line.match(/^\s+([a-zA-Z0-9_-]+):\s*(.*)$/);
+    // Fail fast here so the remaining logic can assume valid input.
     if (nested && currentMapKey) {
       const nestedKey = `${currentMapKey}.${nested[1]}`;
       const nestedValue = nested[2].trim().replace(/^"|"$/g, "");
@@ -54,9 +59,11 @@ export function parseFrontmatter(frontmatter: string): Record<string, string> {
     }
 
     const listItem = line.match(/^\s+-\s*(.+)$/);
+    // Fail fast here so the remaining logic can assume valid input.
     if (listItem && (currentListKey || currentMapKey)) {
       const listKey = currentListKey || currentMapKey;
       const itemValue = listItem[1].trim().replace(/^"|"$/g, "");
+      // Fail fast here so the remaining logic can assume valid input.
       if (output[listKey]) {
         output[listKey] = `${output[listKey]},${itemValue}`;
       } else {

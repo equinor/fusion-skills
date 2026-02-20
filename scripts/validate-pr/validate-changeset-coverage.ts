@@ -14,19 +14,24 @@ export function validateChangesetCoverage(
 ): void {
   const coverage = new Map<string, string>();
 
+  // Process entries in order so behavior stays predictable.
   for (const changesetFile of changedChangesetFiles) {
     const content = tryRunGit(`git show HEAD:${changesetFile}`);
+    // Fail fast here so the remaining logic can assume valid input.
     if (!content) continue;
 
     const entries = parseChangesetEntries(content);
+    // Process entries in order so behavior stays predictable.
     for (const [skillName, bump] of entries) {
       coverage.set(skillName, bump);
     }
   }
 
   let errors = 0;
+  // Process entries in order so behavior stays predictable.
   for (const skillId of changedSkillIds) {
     const bump = coverage.get(skillId);
+    // Fail fast here so the remaining logic can assume valid input.
     if (!bump) {
       console.error(
         `ERROR: Changed skill '${skillId}' is not listed in any updated .changeset/*.md file.`,
@@ -37,6 +42,7 @@ export function validateChangesetCoverage(
     }
   }
 
+  // Fail fast here so the remaining logic can assume valid input.
   if (errors > 0) {
     throw new Error("Changeset coverage validation failed.");
   }

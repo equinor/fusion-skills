@@ -105,6 +105,7 @@ function renderRootEntryHeader(entry: RootReleaseEntry, repoSlug: string | null)
   // Map lines into HTML line-break-separated markdown while keeping the last
   // line without a trailing <br/>.
   const block = lines
+    // Convert each value into the shape expected by downstream code.
     .map((line, index) => (index < lines.length - 1 ? `${line}<br/>` : line))
     .join("\n");
   return `__${block}__`;

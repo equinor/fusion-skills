@@ -23,6 +23,7 @@ export function collectTSDocCoverageIssues(scriptsRoot: string): TSDocCoverageIs
 export function collectTSDocCoverageIssuesForFiles(filePaths: string[]): TSDocCoverageIssue[] {
   const issues: TSDocCoverageIssue[] = [];
 
+  // Process entries in order so behavior stays predictable.
   for (const filePath of filePaths) {
     const sourceText = readFileSync(filePath, "utf8");
     issues.push(...collectFileTSDocCoverageIssues(sourceText, filePath));

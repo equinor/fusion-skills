@@ -14,6 +14,7 @@ function main(): void {
   const repoRoot = process.cwd();
   const skillFiles = findSkillFiles(join(repoRoot, "skills")).sort();
 
+  // Fail fast here so the remaining logic can assume valid input.
   if (skillFiles.length === 0) {
     console.log("No skills found under skills/.");
     return;

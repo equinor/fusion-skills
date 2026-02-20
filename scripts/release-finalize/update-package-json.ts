@@ -11,6 +11,7 @@ import { bumpSemver } from "./semver";
  */
 export function updatePackageVersion(packageJsonPath: string, bump: BumpType): string {
   const pkg = JSON.parse(readFileSync(packageJsonPath, "utf8")) as { version?: string };
+  // Fail fast here so the remaining logic can assume valid input.
   if (!pkg.version) throw new Error("package.json is missing version");
 
   const nextVersion = bumpSemver(pkg.version, bump);
