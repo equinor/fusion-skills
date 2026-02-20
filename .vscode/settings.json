@@ -1,0 +1,12 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^bun run biome:check$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^bun test$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

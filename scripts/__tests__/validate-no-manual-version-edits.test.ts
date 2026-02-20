@@ -1,10 +1,12 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, mock } from "bun:test";
 
-const { getVersionAtRefMock } = vi.hoisted(() => ({
-  getVersionAtRefMock: vi.fn<(ref: string, skillDir: string) => string | null>(),
-}));
+const getVersionAtRefMock = mock((ref: string, skillDir: string): string | null => {
+  void ref;
+  void skillDir;
+  return null;
+});
 
-vi.mock("../validate-pr/get-version-at-ref", () => ({
+mock.module("../validate-pr/get-version-at-ref", () => ({
   getVersionAtRef: getVersionAtRefMock,
 }));
 
