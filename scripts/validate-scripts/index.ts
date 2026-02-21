@@ -71,11 +71,21 @@ function parseArgs(argv: string[]): ValidateScriptsOptions {
  * @returns Sorted absolute paths for changed script source files.
  */
 function listDiffScriptSourceFiles(repoRoot: string, baseRef: string): string[] {
-  const output = execSync(`git diff --name-only --diff-filter=ACMR ${baseRef}...HEAD`, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
-  });
+  const readDiff = (diffBase: string): string =>
+    execSync(`git diff --name-only --diff-filter=ACMR ${diffBase}...HEAD`, {
+      cwd: repoRoot,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+
+  const output = (() => {
+    try {
+      return readDiff(baseRef);
+    } catch {
+      // Some CI checkouts do not fetch origin/<base>; compare against parent commit instead.
+      return readDiff("HEAD^");
+    }
+  })();
 
   // Split command output into one path candidate per line.
   const diffLines = output.split("\n");
