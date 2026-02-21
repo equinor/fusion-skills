@@ -1,4 +1,4 @@
-import type { BumpType } from "./parse-changeset";
+import type { BumpType } from "./semver";
 
 /**
  * Compares bump type priority.
