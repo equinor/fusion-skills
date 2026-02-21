@@ -14,7 +14,7 @@ export function formatIntentCommentIssues(
 ): string[] {
   // Convert each value into the shape expected by downstream code.
   return issues.map((issue) => {
-    // This regex matches the expected text format for this step.
+    // This regex normalizes path separators for cross-platform output formatting.
     const relativePath = relative(repoRoot, issue.filePath).replace(/\\/g, "/");
     return `${relativePath}:${issue.line}:${issue.code}:${issue.statement}`;
   });
