@@ -82,7 +82,12 @@ function readDiffOutput(repoRoot: string, baseRef: string): string {
     return readDiff(baseRef);
   } catch {
     // Some CI checkouts do not fetch origin/<base>; compare against parent commit instead.
-    return readDiff("HEAD^");
+    try {
+      return readDiff("HEAD^");
+    } catch {
+      // In depth-1 checkouts without a parent commit, continue with an empty diff.
+      return "";
+    }
   }
 }
 
