@@ -64,13 +64,13 @@ function parseArgs(argv: string[]): ValidateScriptsOptions {
 }
 
 /**
- * Resolves changed script source files by git diff against a base ref.
+ * Reads changed file paths from git diff, with fallback when base ref is unavailable.
  *
  * @param repoRoot - Absolute repository root path.
- * @param baseRef - Git base ref to compare against.
- * @returns Sorted absolute paths for changed script source files.
+ * @param baseRef - Preferred git base ref to compare against.
+ * @returns Raw newline-delimited git diff output.
  */
-function listDiffScriptSourceFiles(repoRoot: string, baseRef: string): string[] {
+function readDiffOutput(repoRoot: string, baseRef: string): string {
   const readDiff = (diffBase: string): string =>
     execSync(`git diff --name-only --diff-filter=ACMR ${diffBase}...HEAD`, {
       cwd: repoRoot,
@@ -78,14 +78,23 @@ function listDiffScriptSourceFiles(repoRoot: string, baseRef: string): string[] 
       stdio: ["ignore", "pipe", "pipe"],
     });
 
-  const output = (() => {
-    try {
-      return readDiff(baseRef);
-    } catch {
-      // Some CI checkouts do not fetch origin/<base>; compare against parent commit instead.
-      return readDiff("HEAD^");
-    }
-  })();
+  try {
+    return readDiff(baseRef);
+  } catch {
+    // Some CI checkouts do not fetch origin/<base>; compare against parent commit instead.
+    return readDiff("HEAD^");
+  }
+}
+
+/**
+ * Resolves changed script source files by git diff against a base ref.
+ *
+ * @param repoRoot - Absolute repository root path.
+ * @param baseRef - Git base ref to compare against.
+ * @returns Sorted absolute paths for changed script source files.
+ */
+function listDiffScriptSourceFiles(repoRoot: string, baseRef: string): string[] {
+  const output = readDiffOutput(repoRoot, baseRef);
 
   // Split command output into one path candidate per line.
   const diffLines = output.split("\n");
