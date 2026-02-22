@@ -1,5 +1,5 @@
-import { execSync } from "node:child_process";
 import { relative } from "node:path";
+import { tryRunGit } from "./try-run-git";
 
 /**
  * Git provenance metadata resolved for a newly added changeset file.
@@ -61,23 +61,6 @@ function extractGitHubLoginFromEmail(email: string): string | null {
 function shellEscape(value: string): string {
   // This regex matches the expected text format for this step.
   return `'${value.replace(/'/g, `'"'"'`)}'`;
-}
-
-/**
- * Executes a git command and returns trimmed stdout when successful.
- *
- * @param command - Full git command string to execute.
- * @returns Trimmed stdout, or null when command execution fails.
- */
-function tryRunGit(command: string): string | null {
-  try {
-    return execSync(command, {
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
-    }).trim();
-  } catch {
-    return null;
-  }
 }
 
 /**
