@@ -4,11 +4,13 @@ applyTo: "**"
 
 # Pull request workflow instructions
 
-Apply this guidance when creating, updating, or finalizing pull requests.
+Apply this guidance when handling issue and pull request workflows, including issue intake, branch/PR preparation, PR updates, and PR finalization.
 
 ## Required PR flow
 
 - Use `.github/pull_request_template.md` as the PR structure.
+- For PR and issue work, ask whether to use a dedicated `git worktree` before any other workflow questions (for example before branch, base branch, PR body, or PR creation steps).
+- Trigger this question immediately when issue intent is detected, including references like `#123`, `issue 123`, or a GitHub issue URL.
 - Create temporary PR body drafts in `.tmp/` using issue/context-specific names (for example `.tmp/pr-body-issue-402-issue-automation-reliability.md`) and edit with the user before submission.
 - Do not use a generic shared filename like `.tmp/pr-body.md` for new PR drafts.
 - Ask which base branch to target.
