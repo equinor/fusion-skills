@@ -2,10 +2,8 @@ import { describe, expect, it } from "bun:test";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import {
-  collectFileTSDocCoverageIssues,
-  collectTSDocCoverageIssuesForFiles,
-} from "../validate-scripts/check-tsdoc-coverage";
+import { collectFileTSDocCoverageIssues } from "../validate-scripts/collect-file-tsdoc-coverage-issues";
+import { collectTSDocCoverageIssuesForFiles } from "../validate-scripts/collect-tsdoc-coverage-issues-for-files";
 
 describe("collectFileTSDocCoverageIssues", () => {
   it("returns no issues when function TSDoc coverage is complete", () => {

@@ -1,13 +1,11 @@
 import { execSync } from "node:child_process";
 import { join } from "node:path";
 import process from "node:process";
-import {
-  collectTSDocCoverageIssues,
-  collectTSDocCoverageIssuesForFiles,
-  formatCoverageIssues,
-} from "./check-tsdoc-coverage";
 import { collectIntentCommentIssues } from "./collect-intent-comment-issues";
 import { collectIntentCommentIssuesForFiles } from "./collect-intent-comment-issues-for-files";
+import { collectTSDocCoverageIssues } from "./collect-tsdoc-coverage-issues";
+import { collectTSDocCoverageIssuesForFiles } from "./collect-tsdoc-coverage-issues-for-files";
+import { formatCoverageIssues } from "./format-coverage-issues";
 import { formatIntentCommentIssues } from "./format-intent-comment-issues";
 
 /**
