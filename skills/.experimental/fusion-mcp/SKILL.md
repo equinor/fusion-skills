@@ -100,8 +100,8 @@ Return:
 
 ## References
 
-[references/README.md](references/README.md)
-[assets/bug-report-template.md](assets/bug-report-template.md)
+- [references/README.md](references/README.md)
+- [assets/bug-report-template.md](assets/bug-report-template.md)
 
 ## Safety & constraints
 
