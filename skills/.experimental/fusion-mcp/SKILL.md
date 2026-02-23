@@ -78,7 +78,12 @@ If details are missing, ask concise follow-up questions first.
    - Apple Silicon manifest mismatch -> add Docker arg `--platform linux/amd64`
    - `tools/list` returns empty or basic query fails -> re-check API key env mapping and MCP server selection in VS Code
    - startup looks healthy but tool behavior is partial -> re-check env/config/auth alignment and restart MCP server
-8. For uncertainty or repo-private constraints, state assumptions explicitly and link to authoritative docs instead of guessing.
+8. When MCP setup fails, MCP behavior is incorrect, or the user asks to file a bug, produce a bug report draft from `assets/bug-report-template.md`.
+   - default target repository: `equinor/fusion-poc-mcp`
+   - include concrete repro steps, expected vs actual behavior, and troubleshooting already attempted
+   - include non-sensitive environment details (OS, VS Code version, Docker version, image tag, transport mode)
+   - never include secrets, API keys, or raw token values
+9. For uncertainty or repo-private constraints, state assumptions explicitly and link to authoritative docs instead of guessing.
 
 ## Expected output
 
@@ -87,6 +92,7 @@ Return:
 - setup path tailored to the user environment (GHCR/local, `stdio`/HTTP)
 - minimal validation checklist with concrete pass criteria
 - troubleshooting steps mapped to observed error symptoms
+- bug report draft (when setup fails/misbehaves or user requests) using `assets/bug-report-template.md` with default target `equinor/fusion-poc-mcp`
 - script snippets when user asks for copy/paste automation aids
 - assumptions and missing information called out explicitly
 - links to the exact upstream docs used
@@ -94,6 +100,7 @@ Return:
 ## References
 
 [references/README.md](references/README.md)
+[assets/bug-report-template.md](assets/bug-report-template.md)
 
 ## Safety & constraints
 
