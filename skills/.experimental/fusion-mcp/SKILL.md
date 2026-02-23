@@ -60,9 +60,10 @@ If details are missing, ask concise follow-up questions first.
    - `gh auth login -h github.com -w`
    - `gh auth refresh -h github.com -s read:packages`
    - `gh auth token | docker login ghcr.io -u <github-username> --password-stdin`
-4. For local build setup, use the documented sequence:
+4. For local build setup, use the documented sequence so the API is built, started, and validated:
    - `cp .env.example .env`
-   - `docker compose build api`
+   - `docker compose up -d --build api`
+   - then follow the health-check step in `references/local-http-quickstart.md` to confirm the API is healthy
 5. Provide required configuration categories without exposing secret values:
    - Azure Search keys (`AzureSearch__*`)
    - Foundry keys/settings (`Foundry__*`)
