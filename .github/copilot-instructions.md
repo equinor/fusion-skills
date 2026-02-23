@@ -28,3 +28,8 @@ Copilot is a repository contributor and must follow the same standards as human 
 - Never request, expose, or store secrets/credentials.
 - Do not run destructive commands without explicit user confirmation.
 - Do not invent validation outcomes; run commands and report actual results.
+- For skill create/update PRs, never manually edit generated release artifacts:
+	- root `README.md`
+	- root `CHANGELOG.md`
+	- any `skills/**/CHANGELOG.md`
+	These are maintained by release automation.

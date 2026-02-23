@@ -22,9 +22,13 @@ SemVer meaning in this repo:
 	- Prefer `resolves` with direct references (for example `resolves owner/repo#123`).
 	- Use `fixes` or `closes` only when those verbs are more accurate.
 	- Remember that changeset text can be propagated into release PR/changelog content and may close issues when the release PR merges.
-2. Let release automation apply affected skill `metadata.version` bumps
-3. Tag the repository release
-4. Document behavior impact and migration notes in release notes/changelog
+2. Do not manually edit generated release artifacts in skill PRs:
+	- root `README.md`
+	- root `CHANGELOG.md`
+	- any `skills/**/CHANGELOG.md`
+3. Let release automation apply affected skill `metadata.version` bumps and generated docs/changelogs
+4. Tag the repository release
+5. Document behavior impact and migration notes in release notes/changelog
 
 ## Changeset release flow
 
