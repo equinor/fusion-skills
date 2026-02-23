@@ -2,7 +2,7 @@
 
 Use this folder for concrete setup playbooks that support `fusion-mcp`.
 
-Current iteration scope: VS Code MCP client configuration with Docker transport.
+Current iteration scope: VS Code MCP client configuration with Docker `stdio` transport and local HTTP endpoint validation quickstart.
 
 ## Choose the right guide
 
