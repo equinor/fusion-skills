@@ -1,6 +1,6 @@
 # Local build + HTTP endpoint quickstart (Fusion MCP)
 
-Use this reference when the user wants to run `fusion-poc-mcp` locally and call it through an HTTP MCP endpoint.
+Use this reference when the user wants to run `fusion-poc-mcp` locally and validate its HTTP health and MCP readiness.
 
 ## Prerequisites
 
