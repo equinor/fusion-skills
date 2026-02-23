@@ -2,6 +2,18 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.4.0
+
+### Minor
+
+__🎯 [feat(skills): add fusion-skill-self-report-bug #28](https://github.com/equinor/fusion-skills/pull/28)<br/>
+🗂️ [443ec19](https://github.com/equinor/fusion-skills/commit/443ec197e8a6e9705cf471f29fd0b4400b79c081)<br/>
+📦 fusion-skill-self-report-bug@0.1.0__
+
+Add a new skill that self-reports Fusion skill workflow failures into a structured local bug draft with explicit confirmation gates before any GitHub mutation.
+
+resolves equinor/fusion-core-tasks#403
+
 ## v0.3.0
 
 ### Minor

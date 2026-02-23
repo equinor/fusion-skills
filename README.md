@@ -90,6 +90,7 @@ Skills live under `skills/`. The structure inside a skill is intentionally flexi
 | [`fusion-issue-author-user-story`](skills/fusion-issue-author-user-story/SKILL.md) | Draft and update user-story issues with role-action-value framing, workflow scenarios, repository-valid labels, and explicit publish confirmation. | `0.1.1` |
 | [`fusion-issue-authoring`](skills/fusion-issue-authoring/SKILL.md) | Orchestrate GitHub issue authoring by classifying request type, routing to a type-specific issue-author skill, and enforcing shared safety gates before mutation. | `0.2.0` |
 | [`fusion-skill-authoring`](skills/fusion-skill-authoring/SKILL.md) | Create or scaffold a new skill in a repository with valid metadata, clear activation cues, standard resource folders, safety boundaries, and validation evidence. | `0.2.1` |
+| [`fusion-skill-self-report-bug`](skills/fusion-skill-self-report-bug/SKILL.md) | Capture Fusion skill workflow failure context and guide a draft-first bug reporting flow with explicit confirmation before any GitHub mutation. | `0.1.0` |
 <!-- skills-table:end -->
 
 In this repository, use `fusion-<skill-name>` as the default skill naming convention.
