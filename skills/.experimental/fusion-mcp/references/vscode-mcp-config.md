@@ -8,7 +8,11 @@ Use it when the user asks for a concrete VS Code MCP config example.
 - Docker available locally
 - Access to image source:
   - GHCR release image (`ghcr.io/equinor/fusion-poc-mcp[:tag]`), or
-  - locally built image (`fusion-poc-mcp:local`)
+  - locally built image (`fusion-poc-mcp:local`). From the repository root, you can build and tag this image with:
+
+    ```bash
+    docker build -t fusion-poc-mcp:local .
+    ```
 - Required API keys available to the user (do not request values in plain text)
 
 If using GHCR image, authenticate first:
