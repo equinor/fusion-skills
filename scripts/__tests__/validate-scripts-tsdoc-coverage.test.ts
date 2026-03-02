@@ -51,6 +51,24 @@ function internal(value: number): number {
     expect(issues[0]?.missing).toEqual(["doc"]);
   });
 
+  it("does not require @returns when only nested functions return values", () => {
+    const source = `
+/**
+ * Runs a callback without returning a value.
+ *
+ * @param values - Values to process.
+ */
+export function run(values: number[]): void {
+  values.forEach((value) => {
+    return value + 1;
+  });
+}
+`;
+
+    const issues = collectFileTSDocCoverageIssues(source, "/repo/scripts/example.ts");
+    expect(issues).toEqual([]);
+  });
+
   it("validates only provided file paths", () => {
     const tempRoot = mkdtempSync(join(tmpdir(), "fusion-skills-validate-scripts-"));
     const documentedFile = join(tempRoot, "documented.ts");

@@ -87,6 +87,10 @@ function hasValueReturn(node: ts.FunctionDeclaration): boolean {
     if (state.found) {
       return;
     }
+    // Skip nested function-like nodes so inner returns do not count for the outer function.
+    if (current !== body && ts.isFunctionLike(current)) {
+      return;
+    }
     // Count only returns with an expression to avoid requiring @returns on bare returns.
     if (ts.isReturnStatement(current) && current.expression) {
       state.found = true;
