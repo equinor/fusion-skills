@@ -84,11 +84,16 @@ Optional inputs:
 8. Prepare PR-ready output
    - Summarize what changed and why.
    - Include validation evidence and known follow-ups.
-   - Use a PR body draft file under `.tmp/` when preparing PR updates/creation.
+   - Draft the PR body in a `.tmp/` file with an issue/context-specific name (for example, `.tmp/pr-body-issue-123-scope-summary.md`), not a shared `.tmp/pr-body.md`.
+   - Base the draft on `.github/pull_request_template.md` and keep it updated as implementation evolves.
+   - Ask which base branch to target and propose a likely default (typically `main`, or the branch the current branch was cut from).
+   - Ask whether the PR should be opened as draft or ready for review.
+   - Ask whether the PR should be assigned to the user and whether related issues should be linked.
 
 9. Optional GitHub mutation steps
+   - Before any GitHub mutation (create/edit/comment/close), ask for explicit user confirmation.
    - If requested, update issue status/comments with objective progress.
-   - If requested, create or update the PR using the repository PR template.
+   - If requested, create or update the PR using the repository PR template and the `.tmp/` PR body draft file, using the confirmed base branch, draft/ready state, assignee choice, and related issue links.
 
 ## Expected output
 
