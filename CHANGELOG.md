@@ -2,6 +2,46 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.5.0
+
+### Minor
+
+__🎯 [feat(skills): add experimental github review resolution skill #33](https://github.com/equinor/fusion-skills/pull/33)<br/>
+🗂️ [c8b513c](https://github.com/equinor/fusion-skills/commit/c8b513cb9070f73fa5c90464dc8ecfd29fab3a0c)<br/>
+📦 fusion-github-review-resolution@0.1.0__
+
+Add experimental `fusion-github-review-resolution` skill with a deterministic workflow for unresolved PR review comments, including review-url trigger guidance, per-comment remediation process, and checklist support.
+
+Add companion bash helpers:
+- `skills/.experimental/fusion-github-review-resolution/scripts/get-review-comments.sh`
+- `skills/.experimental/fusion-github-review-resolution/scripts/resolve-review-comments.sh`
+
+The scripts support review-id scoped collection and safe dry-run-first resolution flows using `gh`.
+
+resolves equinor/fusion-core-tasks#432
+
+---
+
+__🎯 [feat: add experimental fusion-mcp setup skill #30](https://github.com/equinor/fusion-skills/pull/30)<br/>
+🗂️ [1ad69fb](https://github.com/equinor/fusion-skills/commit/1ad69fb80e6f8c9050f40b26b10e281a376f15e7)<br/>
+📦 fusion-mcp@0.1.0__
+
+Add an experimental `fusion-mcp` skill scoped to VS Code + Docker setup, with prerequisite guidance, MCP client configuration instructions, actionable troubleshooting, and MCP JSON-RPC validation examples including a non-empty basic query pass check.
+
+Bug-report guidance and template updates are tracked in a dedicated follow-up changeset.
+
+resolves equinor/fusion-core-tasks#409
+
+### Patch
+
+__🎯 [feat: add experimental fusion-mcp setup skill #30](https://github.com/equinor/fusion-skills/pull/30)<br/>
+🗂️ [1ad69fb](https://github.com/equinor/fusion-skills/commit/1ad69fb80e6f8c9050f40b26b10e281a376f15e7)<br/>
+📦 fusion-mcp@0.1.0__
+
+Add bug report guidance and template usage for MCP setup failures/misbehavior, including default issue-target guidance in the skill and sanitized report structure.
+
+resolves equinor/fusion-core-tasks#413
+
 ## v0.4.0
 
 ### Minor
