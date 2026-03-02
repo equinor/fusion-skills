@@ -14,6 +14,11 @@ Repository-wide guidance for Copilot in this repository.
 - For repository script changes in `scripts/**`, follow `.github/instructions/scripts-code-rules.instructions.md`.
 - For pull request preparation and updates, follow `.github/instructions/pr-workflow.instructions.md`.
 
+## Skill discovery defaults
+
+- For local skill discovery in this repository, search `skills/` first.
+- Include `skills/` in local `.agents/skills` lookup paths for this workspace.
+
 ## Maintainer docs
 
 - For maintainer workflow and policy context, use `contribute/README.md` and the topic files in `contribute/`.
