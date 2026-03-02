@@ -1,7 +1,7 @@
 import process from "node:process";
 import { collectChangedSkillContext } from "./collect-context";
-import { runGit } from "./git-helpers";
-import { tryRunGit } from "./try-run-git";
+import { runGitArgs } from "./git-helpers";
+import { tryRunGitArgs } from "./try-run-git";
 import { validateChangesetCoverage } from "./validate-changeset-coverage";
 import { validateNoManualVersionEdits } from "./validate-no-manual-version-edits";
 
@@ -23,9 +23,14 @@ function main(): void {
   const baseRemoteRef = `origin/${baseRef}`;
   console.log(`Comparing PR changes against ${baseRemoteRef}`);
 
-  tryRunGit(`git fetch --no-tags origin ${baseRef}`);
+  tryRunGitArgs(["fetch", "--no-tags", "origin", baseRef]);
 
-  const changedFiles = runGit(`git diff --name-only --diff-filter=ACMRD ${baseRemoteRef}...HEAD`)
+  const changedFiles = runGitArgs([
+    "diff",
+    "--name-only",
+    "--diff-filter=ACMRD",
+    `${baseRemoteRef}...HEAD`,
+  ])
     .split("\n")
     // Convert each value into the shape expected by downstream code.
     .map((line) => line.trim())
@@ -48,7 +53,7 @@ function main(): void {
 
   // Keep only items that meet the rules for this step.
   const activeChangesetFiles = changedChangesetFiles.filter((file) =>
-    Boolean(tryRunGit(`git show HEAD:${file}`)),
+    Boolean(tryRunGitArgs(["show", `HEAD:${file}`])),
   );
 
   const releasePrDetected =

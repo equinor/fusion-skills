@@ -1,5 +1,5 @@
 import { parseChangesetEntries } from "./parse-changeset-entries";
-import { tryRunGit } from "./try-run-git";
+import { tryRunGitArgs } from "./try-run-git";
 
 /**
  * Validates that all changed skills are covered by updated changeset files.
@@ -16,7 +16,7 @@ export function validateChangesetCoverage(
 
   // Process entries in order so behavior stays predictable.
   for (const changesetFile of changedChangesetFiles) {
-    const content = tryRunGit(`git show HEAD:${changesetFile}`);
+    const content = tryRunGitArgs(["show", `HEAD:${changesetFile}`]);
     // Fail fast here so the remaining logic can assume valid input.
     if (!content) continue;
 

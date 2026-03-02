@@ -1,4 +1,4 @@
-import { runGit } from "./git-helpers";
+import { runGitArgs } from "./git-helpers";
 import { gitPathExists } from "./git-path-exists";
 import { getMetadataVersionFromSkillContent } from "./version-from-skill-content";
 
@@ -14,6 +14,6 @@ export function getVersionAtRef(ref: string, skillDir: string): string | null {
   // Fail fast here so the remaining logic can assume valid input.
   if (!gitPathExists(ref, skillPath)) return null;
 
-  const skillContent = runGit(`git show ${ref}:${skillPath}`);
+  const skillContent = runGitArgs(["show", `${ref}:${skillPath}`]);
   return getMetadataVersionFromSkillContent(skillContent);
 }

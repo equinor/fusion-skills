@@ -1,14 +1,14 @@
-import { runGit } from "./git-helpers";
+import { runGitArgs } from "./git-helpers";
 
 /**
- * Runs a git command and returns null on failure.
+ * Runs a git argv command and returns null on failure.
  *
- * @param command - Full git command to execute.
+ * @param args - Git argv list, excluding the `git` executable.
  * @returns Trimmed output text, or `null` when the command fails.
  */
-export function tryRunGit(command: string): string | null {
+export function tryRunGitArgs(args: string[]): string | null {
   try {
-    return runGit(command);
+    return runGitArgs(args);
   } catch {
     return null;
   }

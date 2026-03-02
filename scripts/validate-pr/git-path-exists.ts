@@ -1,4 +1,4 @@
-import { tryRunGit } from "./try-run-git";
+import { tryRunGitArgs } from "./try-run-git";
 
 /**
  * Checks if a file exists at a git ref/path.
@@ -8,5 +8,5 @@ import { tryRunGit } from "./try-run-git";
  * @returns `true` when the object exists at the ref/path pair.
  */
 export function gitPathExists(ref: string, path: string): boolean {
-  return tryRunGit(`git cat-file -e ${ref}:${path}`) !== null;
+  return tryRunGitArgs(["cat-file", "-e", `${ref}:${path}`]) !== null;
 }
