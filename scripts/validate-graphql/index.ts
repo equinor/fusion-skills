@@ -14,6 +14,7 @@ function main(): void {
   const repoRoot = process.cwd();
   const files = findGraphqlFiles(repoRoot);
 
+  // Fail fast here so callers get clear feedback when no files match scope.
   if (files.length === 0) {
     console.log("No GraphQL files found under skills/**/assets/graphql/*.github.graphql.");
     return;
@@ -21,6 +22,7 @@ function main(): void {
 
   console.log(`Validating ${files.length} GraphQL file(s)...`);
 
+  // Process files in deterministic order to keep output stable across runs.
   for (const file of files) {
     const source = readFileSync(file, "utf8");
     parse(source);
@@ -32,6 +34,8 @@ function main(): void {
 
 /**
  * Finds GraphQL asset files under skills directories.
+ * @param repoRoot Repository root path.
+ * @returns Sorted list of GraphQL asset file paths.
  */
 function findGraphqlFiles(repoRoot: string): string[] {
   const skillsRoot = join(repoRoot, "skills");
@@ -45,6 +49,9 @@ function findGraphqlFiles(repoRoot: string): string[] {
 
 /**
  * Walks directories recursively and collects graphql files in assets/graphql folders.
+ * @param directoryPath Absolute path for directory traversal root.
+ * @param files Mutable collection of discovered GraphQL file paths.
+ * @param repoRoot Repository root path used to normalize relative paths.
  */
 function walkDirectory(directoryPath: string, files: string[], repoRoot: string): void {
   const entries = readdirSync(directoryPath, {
@@ -52,16 +59,20 @@ function walkDirectory(directoryPath: string, files: string[], repoRoot: string)
     recursive: true,
   });
 
+  // Only include files that match the intended GraphQL naming convention.
   for (const entry of entries) {
+    // Ignore non-files to avoid directory-specific handling complexity.
     if (!entry.isFile()) {
       continue;
     }
 
     const parentPath = entry.parentPath;
     const relativeParent = parentPath.replace(`${repoRoot}/`, "").replaceAll("\\", "/");
+    // Restrict scope to skill GraphQL assets folder to avoid unrelated files.
     if (!relativeParent.endsWith("/assets/graphql")) {
       continue;
     }
+    // Enforce GitHub-targeted GraphQL suffix for explicit API compatibility.
     if (!entry.name.endsWith(".github.graphql")) {
       continue;
     }
