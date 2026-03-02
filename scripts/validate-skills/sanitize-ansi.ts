@@ -8,28 +8,41 @@ export function sanitizeAnsi(input: string): string {
   const isAnsiPrefixCode = (code: number): boolean => code === 0x1b || code === 0x9b;
 
   const findAnsiCommandTerminatorIndex = (text: string, startIndex: number): number => {
+    const state = { offset: 0 };
+
     // Move forward until we hit the terminating ANSI command letter.
-    for (let index = startIndex; index < text.length; index += 1) {
-      const code = text.charCodeAt(index);
+    for (const character of text.slice(startIndex)) {
+      const index = startIndex + state.offset;
+      const code = character.charCodeAt(0);
       // This range check detects the terminating ANSI command byte (`A`-`Z` or `a`-`z`).
       if ((code >= 0x41 && code <= 0x5a) || (code >= 0x61 && code <= 0x7a)) {
         return index;
       }
+
+      state.offset += character.length;
     }
 
     return text.length;
   };
 
   const output: string[] = [];
-  let index = 0;
+  const state = { currentIndex: 0, nextUnconsumedIndex: 0 };
 
   // Iterate once across input to avoid recursion depth and repeated string concatenation.
-  while (index < input.length) {
-    const code = input.charCodeAt(index);
+  for (const character of input) {
+    const index = state.currentIndex;
+    state.currentIndex += character.length;
+
+    // Skip bytes that are already consumed by a previously detected ANSI sequence.
+    if (index < state.nextUnconsumedIndex) {
+      continue;
+    }
+
+    const code = character.charCodeAt(0);
     // Keep regular characters unchanged.
     if (!isAnsiPrefixCode(code)) {
-      output.push(input[index] ?? "");
-      index += 1;
+      output.push(character);
+      state.nextUnconsumedIndex = index + 1;
       continue;
     }
 
@@ -41,7 +54,7 @@ export function sanitizeAnsi(input: string): string {
     }
 
     // Resume after the ANSI terminator.
-    index = terminatorIndex + 1;
+    state.nextUnconsumedIndex = terminatorIndex + 1;
   }
 
   return output.join("");
