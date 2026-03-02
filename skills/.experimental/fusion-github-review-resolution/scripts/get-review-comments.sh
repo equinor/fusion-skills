@@ -30,6 +30,15 @@ REVIEW_ID=""
 INCLUDE_RESOLVED="false"
 INCLUDE_OUTDATED="false"
 
+require_command() {
+  local name="$1"
+  local hint="$2"
+  if ! command -v "$name" >/dev/null 2>&1; then
+    echo "ERROR: '$name' is required. $hint" >&2
+    exit 1
+  fi
+}
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --owner)
@@ -81,6 +90,13 @@ fi
 
 if ! [[ "$REVIEW_ID" =~ ^[1-9][0-9]*$ ]]; then
   echo "ERROR: --review-id must be a positive integer." >&2
+  exit 1
+fi
+
+require_command "gh" "Install GitHub CLI and authenticate with 'gh auth login'."
+require_command "jq" "Install jq to parse JSON output."
+if ! gh auth status >/dev/null 2>&1; then
+  echo "ERROR: GitHub CLI is not authenticated. Run 'gh auth login'." >&2
   exit 1
 fi
 

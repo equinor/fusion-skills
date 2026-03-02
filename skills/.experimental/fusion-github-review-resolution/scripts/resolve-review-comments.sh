@@ -41,6 +41,15 @@ INCLUDE_OUTDATED="false"
 MESSAGE_FROM_INLINE="false"
 MESSAGE_FROM_FILE="false"
 
+require_command() {
+  local name="$1"
+  local hint="$2"
+  if ! command -v "$name" >/dev/null 2>&1; then
+    echo "ERROR: '$name' is required. $hint" >&2
+    exit 1
+  fi
+}
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --owner)
@@ -128,6 +137,13 @@ if [[ "$APPLY" == "true" && -z "${MESSAGE// }" ]]; then
   exit 1
 fi
 
+require_command "gh" "Install GitHub CLI and authenticate with 'gh auth login'."
+require_command "jq" "Install jq to parse JSON output."
+if ! gh auth status >/dev/null 2>&1; then
+  echo "ERROR: GitHub CLI is not authenticated. Run 'gh auth login'." >&2
+  exit 1
+fi
+
 # shellcheck disable=SC2016
 QUERY='query($owner:String!,$repo:String!,$number:Int!){repository(owner:$owner,name:$repo){pullRequest(number:$number){reviewThreads(first:100){nodes{id isResolved isOutdated path line comments(first:100){nodes{databaseId url body pullRequestReview{databaseId}}}}}}}}'
 
@@ -189,7 +205,7 @@ fi
 echo "Found $TARGET_COUNT matching thread(s):"
 printf '%s\n' "$TARGETS_JSON" | jq -r '
   to_entries[]
-  | "\(.key + 1). \(.value.threadId) \(.value.path)\(if .value.line then ":\(.value.line)" else "" end) comments=\(.value.matchingReviewCommentIds|join(","))\(if .value.isResolved then " [resolved]" else "" end)\(if .value.isOutdated then " [outdated]" else "" end)"
+  | "\(.key + 1). \(.value.threadId) \(.value.path)\(if .value.line then ":\(.value.line)" else "" end) comments=\(.value.matchingReviewCommentIds | map(tostring) | join(","))\(if .value.isResolved then " [resolved]" else "" end)\(if .value.isOutdated then " [outdated]" else "" end)"
 '
 
 if [[ "$APPLY" != "true" ]]; then
