@@ -81,6 +81,18 @@ export function onlyOne(): void {}
     );
   });
 
+  it("ignores re-export declarations when counting exported local functions", () => {
+    const source = `
+function localOnly(): void {}
+export { localOnly } from "./other";
+`;
+
+    const issues = collectFileIntentCommentIssues(source, "/repo/scripts/example.ts");
+    expect(issues.some((issue) => issue.code === "disallowed-multiple-exported-functions")).toBe(
+      false,
+    );
+  });
+
   it("requires a regex explanation comment above regex literals", () => {
     const source = `
 const match = input.match(/Found[^0-9]*([0-9]+)/i);

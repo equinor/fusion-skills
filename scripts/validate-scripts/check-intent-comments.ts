@@ -162,6 +162,10 @@ export function collectFileIntentCommentIssues(
 
     // Resolve named export lists like `export { foo, bar }`.
     if (ts.isExportDeclaration(statement) && statement.exportClause) {
+      // Ignore re-exports (`export { foo } from "..."`) because they are not local bindings.
+      if (statement.moduleSpecifier) {
+        continue;
+      }
       // Inspect named exports and keep only those mapping to local function declarations.
       if (ts.isNamedExports(statement.exportClause)) {
         // Process entries in order so behavior stays predictable.
