@@ -61,6 +61,30 @@ require_arg() {
   fi
 }
 
+validate_owner() {
+  local value="$1"
+  if ! [[ "$value" =~ ^[A-Za-z0-9]([A-Za-z0-9-]{0,37}[A-Za-z0-9])?$ ]]; then
+    echo "ERROR: --owner must match GitHub owner naming rules (1-39 chars, alphanumeric or single hyphens, no leading/trailing hyphen)." >&2
+    exit 1
+  fi
+  if [[ "$value" =~ -- ]]; then
+    echo "ERROR: --owner cannot contain consecutive hyphens." >&2
+    exit 1
+  fi
+}
+
+validate_repo() {
+  local value="$1"
+  if ! [[ "$value" =~ ^[A-Za-z0-9._-]+$ ]]; then
+    echo "ERROR: --repo must contain only letters, numbers, dots, underscores, or hyphens." >&2
+    exit 1
+  fi
+  if (( ${#value} > 100 )); then
+    echo "ERROR: --repo must be 100 characters or fewer." >&2
+    exit 1
+  fi
+}
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --owner)
@@ -129,6 +153,9 @@ if [[ -z "$OWNER" || -z "$REPO" || -z "$PR_NUMBER" || -z "$REVIEW_ID" ]]; then
   usage
   exit 1
 fi
+
+validate_owner "$OWNER"
+validate_repo "$REPO"
 
 if ! [[ "$PR_NUMBER" =~ ^[1-9][0-9]*$ ]]; then
   echo "ERROR: --pr must be a positive integer." >&2
