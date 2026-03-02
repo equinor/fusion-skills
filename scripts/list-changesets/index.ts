@@ -2,16 +2,20 @@
 import { readFileSync } from "node:fs";
 import { relative } from "node:path";
 import process from "node:process";
+import { extractChangesetSummary } from "./extract-changeset-summary";
 import { listChangesetFiles } from "./list-changeset-files";
-import { extractChangesetSummary, parseChangesetEntries } from "./parse-changeset-file";
+import { parseChangesetEntries } from "./parse-changeset-file";
 
 /**
  * CLI entrypoint for listing all changesets and their bump entries.
+ *
+ * @returns Nothing. Writes formatted changeset information to stdout.
  */
 function main(): void {
   const repoRoot = process.cwd();
   const files = listChangesetFiles(repoRoot);
 
+  // Fail fast here so the remaining logic can assume valid input.
   if (files.length === 0) {
     console.log("No changesets found.");
     return;
@@ -29,9 +33,11 @@ function main(): void {
     console.log(relative(repoRoot, fullPath));
     console.log("─".repeat(72));
 
+    // Fail fast here so the remaining logic can assume valid input.
     if (entries.length === 0) {
       console.log("entries: (none)");
     } else {
+      // Process entries in order so behavior stays predictable.
       for (const entry of entries) {
         console.log(`- ${entry.skill}: ${entry.bump}`);
       }

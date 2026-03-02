@@ -27,15 +27,12 @@ export interface GroupedNotes {
 }
 
 /**
- * Compatibility export for note-body normalization helper.
+ * Builds provenance text for one rendered note entry.
  *
- * @param note - Raw changeset note body.
- * @returns Normalized note body with accidental semver headings removed.
+ * @param entry - Note entry with optional PR, commit, and author metadata.
+ * @param repoSlug - Optional `owner/repo` used for GitHub links.
+ * @returns Provenance suffix string, or empty string when no metadata exists.
  */
-export function normalizeNoteBody(note: string): string {
-  return normalizeNoteBodyShared(note);
-}
-
 function formatProvenance(entry: NoteEntry, repoSlug: string | null): string {
   const parts: string[] = [];
 
@@ -68,6 +65,13 @@ function formatProvenance(entry: NoteEntry, repoSlug: string | null): string {
   return parts.join(" ");
 }
 
+/**
+ * Renders a single note entry as markdown bullet lines.
+ *
+ * @param entry - Note entry to render.
+ * @param repoSlug - Optional `owner/repo` used for provenance links.
+ * @returns Markdown lines for the rendered note block.
+ */
 function renderNoteEntry(entry: NoteEntry, repoSlug: string | null): string[] {
   const lines = entry.body.split("\n");
   const firstLine = lines[0] ?? "";
@@ -112,10 +116,12 @@ export function renderGroupedNotes(
     // Map note bodies through normalization to remove accidental headings.
     // Filter out entries that become empty after normalization.
     const notes = notesByType[bumpType]
+      // Convert each value into the shape expected by downstream code.
       .map((entry) => ({
         ...entry,
-        body: normalizeNoteBody(entry.body),
+        body: normalizeNoteBodyShared(entry.body),
       }))
+      // Keep only items that meet the rules for this step.
       .filter((entry) => entry.body.length > 0);
 
     // Skip headings for bump buckets without any renderable notes.
@@ -125,8 +131,8 @@ export function renderGroupedNotes(
 
     output.push(`${"#".repeat(bumpHeadingLevel)} ${bumpType}`, "");
     // Iterate notes inside the bump bucket and render each markdown block.
-    for (let index = 0; index < notes.length; index++) {
-      output.push(...renderNoteEntry(notes[index], repoSlug));
+    for (const [index, note] of notes.entries()) {
+      output.push(...renderNoteEntry(note, repoSlug));
       // Insert spacing only between notes, not after the last one.
       if (index < notes.length - 1) {
         output.push("");

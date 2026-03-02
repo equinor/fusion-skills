@@ -3,18 +3,28 @@ import { dirname, join } from "node:path";
 import process from "node:process";
 import { updatePackageVersion } from "../release-finalize/update-package-json";
 import { updateRootChangelog } from "../release-finalize/update-root-changelog";
-import { getChangesetProvenance, getRepoSlug } from "./changeset-provenance";
+import { bumpSemver } from "./bump-semver";
+import { getChangesetProvenance } from "./changeset-provenance";
 import { discoverSkillFiles } from "./discover-skill-files";
+import { getRepoSlug } from "./get-repo-slug";
+import { isHigherBump } from "./is-higher-bump";
 import { listChangesetFiles } from "./list-changeset-files";
+import { normalizeNoteBody } from "./note-body";
 import { parseChangeset } from "./parse-changeset";
-import { type GroupedNotes, type NoteEntry, normalizeNoteBody } from "./release-notes-format";
+import type { GroupedNotes, NoteEntry } from "./release-notes-format";
 import { type RootReleaseEntry, renderRootReleaseNotes } from "./root-release-notes-format";
 import type { BumpType } from "./semver";
-import { bumpSemver, isHigherBump } from "./semver";
-import { extractMetadataVersion, updateMetadataVersion } from "./skill-version";
+import { extractMetadataVersion } from "./skill-version";
+import { updateMetadataVersion } from "./update-metadata-version";
 import { updateReadmeSkillsTable } from "./update-readme-skills-table";
 import { upsertSkillChangelog } from "./upsert-skill-changelog";
 
+/**
+ * Normalizes one note entry and drops empty results.
+ *
+ * @param entry - Raw note entry collected from changesets.
+ * @returns Normalized note entry, or `null` when no renderable body remains.
+ */
 function normalizeEntry(entry: NoteEntry): NoteEntry | null {
   // Empty/heading-only bodies are dropped so rendered changelogs never emit
   // blank bullets for a bump category.
@@ -34,6 +44,8 @@ function normalizeEntry(entry: NoteEntry): NoteEntry | null {
 
 /**
  * CLI entrypoint for applying changesets into release artifacts.
+ *
+ * @returns Nothing.
  */
 function main(): void {
   const repoRoot = process.cwd();
@@ -72,7 +84,7 @@ function main(): void {
     // 2) per-changeset release entries (for root changelog).
     const parsed = parseChangeset(readFileSync(changesetFile, "utf8"));
     const provenance = getChangesetProvenance(repoRoot, changesetFile);
-    let changesetHighestBump: BumpType = "patch";
+    const changesetHighestBump = { value: "patch" as BumpType };
     const changesetSkills = Object.keys(parsed.skills).sort();
 
     // Iterate skill bump declarations inside a single changeset.
@@ -83,9 +95,9 @@ function main(): void {
       }
 
       // Track strongest bump for this changeset to classify root changelog section.
-      if (isHigherBump(bumpType, changesetHighestBump)) {
+      if (isHigherBump(bumpType, changesetHighestBump.value)) {
         // Root changelog groups each changeset under its strongest bump impact.
-        changesetHighestBump = bumpType;
+        changesetHighestBump.value = bumpType;
       }
 
       const current = aggregateBumps.get(skillName);
@@ -110,7 +122,7 @@ function main(): void {
     }
 
     pendingRootEntries.push({
-      bumpType: changesetHighestBump,
+      bumpType: changesetHighestBump.value,
       body: parsed.body,
       prNumber: provenance.prNumber,
       prTitle: provenance.prTitle,
@@ -119,7 +131,7 @@ function main(): void {
     });
   }
 
-  let highestReleaseBump: BumpType = "patch";
+  const highestReleaseBump = { value: "patch" as BumpType };
   const nextVersionBySkill = new Map<string, string>();
 
   // Iterate affected skills in stable order for deterministic output.
@@ -137,8 +149,8 @@ function main(): void {
       throw new Error(`Missing bump type for: ${skillName}`);
     }
     // Track strongest bump to determine root package version increment.
-    if (isHigherBump(bumpType, highestReleaseBump)) {
-      highestReleaseBump = bumpType;
+    if (isHigherBump(bumpType, highestReleaseBump.value)) {
+      highestReleaseBump.value = bumpType;
     }
     const notes = aggregateNotes.get(skillName) ?? {
       major: [],
@@ -203,8 +215,8 @@ function main(): void {
   const releaseContent = renderRootReleaseNotes(groupedRootReleaseNotes, repoSlug)
     .join("\n")
     .trim();
-  const newPackageVersion = updatePackageVersion(packageJsonPath, highestReleaseBump);
-  console.log(`Bumped package.json version to ${newPackageVersion} (${highestReleaseBump})`);
+  const newPackageVersion = updatePackageVersion(packageJsonPath, highestReleaseBump.value);
+  console.log(`Bumped package.json version to ${newPackageVersion} (${highestReleaseBump.value})`);
   updateRootChangelog(changelogPath, newPackageVersion, releaseContent);
   console.log(`Updated ${changelogPath} with ## v${newPackageVersion}`);
   const skillCount = updateReadmeSkillsTable(repoRoot);

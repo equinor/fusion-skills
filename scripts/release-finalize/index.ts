@@ -3,8 +3,15 @@ import { join } from "node:path";
 import process from "node:process";
 import { readLatestReleaseBodyFromRootChangelog } from "./read-changelog-release";
 
+/**
+ * Reads and validates the current root package version from package.json.
+ *
+ * @param packageJsonPath - Absolute path to the repository package.json.
+ * @returns Semantic version string from the package manifest.
+ */
 function readPackageVersion(packageJsonPath: string): string {
   const pkg = JSON.parse(readFileSync(packageJsonPath, "utf8")) as { version?: string };
+  // Fail fast here so the remaining logic can assume valid input.
   if (!pkg.version) {
     throw new Error("package.json is missing version");
   }
@@ -13,6 +20,8 @@ function readPackageVersion(packageJsonPath: string): string {
 
 /**
  * CLI entrypoint for finalizing a release on main.
+ *
+ * @returns Nothing. Writes `.release-notes.md` derived from root changelog.
  */
 function main(): void {
   const repoRoot = process.cwd();

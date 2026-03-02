@@ -1,17 +1,21 @@
 import { readFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import process from "node:process";
+import { extractFrontmatter } from "./extract-frontmatter";
 import { findSkillFiles } from "./find-skill-files";
 import { formatSkillSummary } from "./format-skill-summary";
-import { extractFrontmatter, parseFrontmatter } from "./parse-frontmatter";
+import { parseFrontmatter } from "./parse-frontmatter";
 
 /**
  * CLI entrypoint for listing skill frontmatter in a readable format.
+ *
+ * @returns Nothing. Writes formatted skill metadata to stdout.
  */
 function main(): void {
   const repoRoot = process.cwd();
   const skillFiles = findSkillFiles(join(repoRoot, "skills")).sort();
 
+  // Fail fast here so the remaining logic can assume valid input.
   if (skillFiles.length === 0) {
     console.log("No skills found under skills/.");
     return;
