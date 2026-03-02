@@ -84,11 +84,13 @@ Skills live under `skills/`. The structure inside a skill is intentionally flexi
 <!-- skills-table:start -->
 | Skill | Description | Version |
 | --- | --- | --- |
+| [`fusion-github-review-resolution`](skills/.experimental/fusion-github-review-resolution/SKILL.md) | Resolve unresolved GitHub pull request review comments by researching each comment, applying fixes with validation, committing per comment, then posting fix replies and resolving threads. | `0.1.0` |
 | [`fusion-issue-author-bug`](skills/fusion-issue-author-bug/SKILL.md) | Draft and update bug issues using a bug-focused structure, repository-valid labels, and explicit publish confirmation before GitHub mutation. | `0.1.1` |
 | [`fusion-issue-author-feature`](skills/fusion-issue-author-feature/SKILL.md) | Draft and update feature issues with clear problem framing, scoped requirements, repository-valid labels, and explicit confirmation before publishing. | `0.1.1` |
 | [`fusion-issue-author-task`](skills/fusion-issue-author-task/SKILL.md) | Draft and update task issues with checklist-first decomposition, dependency-aware sequencing, repository-valid labels, and explicit publish confirmation. | `0.1.1` |
 | [`fusion-issue-author-user-story`](skills/fusion-issue-author-user-story/SKILL.md) | Draft and update user-story issues with role-action-value framing, workflow scenarios, repository-valid labels, and explicit publish confirmation. | `0.1.1` |
 | [`fusion-issue-authoring`](skills/fusion-issue-authoring/SKILL.md) | Orchestrate GitHub issue authoring by classifying request type, routing to a type-specific issue-author skill, and enforcing shared safety gates before mutation. | `0.2.0` |
+| [`fusion-mcp`](skills/.experimental/fusion-mcp/SKILL.md) | Explain what Fusion MCP is and guide users through setting it up when they need Fusion-aware MCP capabilities in Copilot workflows. | `0.1.0` |
 | [`fusion-skill-authoring`](skills/fusion-skill-authoring/SKILL.md) | Create or scaffold a new skill in a repository with valid metadata, clear activation cues, standard resource folders, safety boundaries, and validation evidence. | `0.2.1` |
 | [`fusion-skill-self-report-bug`](skills/fusion-skill-self-report-bug/SKILL.md) | Capture Fusion skill workflow failure context and guide a draft-first bug reporting flow with explicit confirmation before any GitHub mutation. | `0.1.0` |
 <!-- skills-table:end -->
