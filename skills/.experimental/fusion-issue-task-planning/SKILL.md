@@ -56,9 +56,9 @@ If missing inputs block planning, ask up to 3 focused follow-up questions from `
 Execute in order and state assumptions explicitly.
 
 1. Probe preferred skills and classify drafting mode
-   - `orchestrated`: both `fusion-issue-authoring` and `fusion-issue-author-task` available
-   - `direct-subordinate`: only `fusion-issue-author-task` available
-   - `inline`: neither available; draft task issues from `skills/fusion-issue-author-task/assets/issue-templates/task*.md`
+   - `orchestrated`: both `fusion-issue-authoring` and `fusion-issue-author-task` available; full workflow with explicit publish gates handled by the orchestrator.
+   - `direct-subordinate`: only `fusion-issue-author-task` available; operate in **draft-only** mode using its templates and safeguards, do **not** perform any GitHub mutations, and surface drafts plus clear instructions for how an orchestrator or user should publish them.
+   - `inline`: neither available; behave like draft-only template-based drafting using `skills/fusion-issue-author-task/assets/issue-templates/task*.md` with no direct mutations.
    - Never stop due to missing preferred skills; degrade gracefully.
 
 2. Research the user story
@@ -80,7 +80,7 @@ Execute in order and state assumptions explicitly.
 
 6. Generate task issue drafts
    - `orchestrated`: route through `fusion-issue-authoring` with issue type `Task`
-   - `direct-subordinate`: invoke `fusion-issue-author-task` and apply shared gates manually
+   - `direct-subordinate`: invoke `fusion-issue-author-task` in draft-only mode and output explicit publish instructions for orchestrator or direct MCP paths
    - `inline`: write `.tmp/TASK-<nn>-<slug>.md` drafts using the closest matching `skills/fusion-issue-author-task/assets/issue-templates/task*.md` template
    - Keep drafts local until explicit publish approval.
 
