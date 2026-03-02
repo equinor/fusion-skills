@@ -48,6 +48,11 @@ jobs:
       - name: Validate GraphQL skill assets
         run: bun run validate:graphql
 
+      - name: Validate GraphQL operations with Codegen
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bun run validate:graphql:codegen
+
       - name: Detect changed skill scripts
         id: changed_skill_scripts
         uses: tj-actions/changed-files@v47
