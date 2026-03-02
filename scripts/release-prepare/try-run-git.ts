@@ -1,15 +1,15 @@
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import process from "node:process";
 
 /**
- * Executes a git command and returns trimmed stdout when successful.
+ * Executes git with explicit argv and returns trimmed stdout when successful.
  *
- * @param command - Full git command string to execute.
+ * @param args - Git argv list, excluding the `git` executable.
  * @returns Trimmed stdout, or null when command execution fails.
  */
-export function tryRunGit(command: string): string | null {
+export function tryRunGitArgs(args: string[]): string | null {
   try {
-    return execSync(command, {
+    return execFileSync("git", args, {
       cwd: process.cwd(),
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],

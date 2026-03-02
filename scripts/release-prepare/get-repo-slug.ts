@@ -1,4 +1,4 @@
-import { tryRunGit } from "./try-run-git";
+import { tryRunGitArgs } from "./try-run-git";
 
 /**
  * Parses an `owner/repo` slug from common GitHub remote URL formats.
@@ -30,7 +30,7 @@ function parseGitHubRepoSlug(remoteUrl: string): string | null {
  * @returns GitHub repository slug from `origin`, or null when unavailable.
  */
 export function getRepoSlug(): string | null {
-  const remote = tryRunGit("git config --get remote.origin.url");
+  const remote = tryRunGitArgs(["config", "--get", "remote.origin.url"]);
   // Fail fast here so the remaining logic can assume valid input.
   if (!remote) {
     return null;

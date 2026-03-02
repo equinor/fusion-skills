@@ -1,5 +1,5 @@
 import { relative } from "node:path";
-import { tryRunGit } from "./try-run-git";
+import { tryRunGitArgs } from "./try-run-git";
 
 /**
  * Git provenance metadata resolved for a newly added changeset file.
@@ -53,17 +53,6 @@ function extractGitHubLoginFromEmail(email: string): string | null {
 }
 
 /**
- * Escapes a value for safe use as a single shell argument.
- *
- * @param value - Raw argument value.
- * @returns Shell-escaped argument wrapped in single quotes.
- */
-function shellEscape(value: string): string {
-  // This regex matches the expected text format for this step.
-  return `'${value.replace(/'/g, `'"'"'`)}'`;
-}
-
-/**
  * Resolves commit/PR provenance for a changeset file from git history.
  *
  * @param repoRoot - Absolute repository root path.
@@ -75,9 +64,15 @@ export function getChangesetProvenance(
   changesetFile: string,
 ): ChangesetProvenance {
   const filePath = relative(repoRoot, changesetFile);
-  const output = tryRunGit(
-    `git log --diff-filter=A --format=%H%x09%s%x09%ae -n 1 -- ${shellEscape(filePath)}`,
-  );
+  const output = tryRunGitArgs([
+    "log",
+    "--diff-filter=A",
+    "--format=%H%x09%s%x09%ae",
+    "-n",
+    "1",
+    "--",
+    filePath,
+  ]);
 
   // Fail fast here so the remaining logic can assume valid input.
   if (!output) {
