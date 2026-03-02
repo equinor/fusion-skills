@@ -33,6 +33,7 @@ function findCompanionSkillMetadataEntries(repoRoot: string, localSkills: string
     const hasMetadataSkills = Boolean(frontmatter["metadata.skills"]);
     const isOrchestrator = frontmatter["metadata.role"] === "orchestrator";
 
+    // Collect only skills that use metadata.skills as companion metadata.
     if (hasMetadataSkills && !isOrchestrator) {
       excluded.push(skillDir);
     }
@@ -80,6 +81,7 @@ function main(): void {
         `Adjusted count matched local skills by tolerating ${companionMetadataSkills.length} companion metadata.skills entr${companionMetadataSkills.length === 1 ? "y" : "ies"}.`,
       );
 
+      // Print each tolerated exclusion so CI output remains auditable.
       for (const skill of companionMetadataSkills) {
         console.log(`- tolerated CLI exclusion: ${skill}`);
       }
