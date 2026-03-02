@@ -65,12 +65,6 @@ jobs:
               byte_count=$(wc -c < "$artifact_path" | tr -d ' ')
               echo "- Generated artifact: $artifact_path"
               echo "- Artifact size: ${line_count} lines, ${byte_count} bytes"
-              echo
-              echo "### Generated interface"
-              echo
-              echo '```ts'
-              cat "$artifact_path"
-              echo '```'
             elif [[ "${{ steps.validate_codegen.outcome }}" == "success" ]]; then
               echo "- Generated artifact: missing (expected $artifact_path)"
             else
