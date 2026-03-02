@@ -40,4 +40,15 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Validate skills and counts
+        id: validate_skills
         run: bun run validate:skills
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "## Validate skills and counts"
+            echo
+            echo "- Result: ${{ steps.validate_skills.outcome }}"
+            echo "- Command: \\`bun run validate:skills\\`"
+          } >> "$GITHUB_STEP_SUMMARY"

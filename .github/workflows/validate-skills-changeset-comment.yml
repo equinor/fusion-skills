@@ -26,6 +26,7 @@ jobs:
             !.changeset/README.md
 
       - name: Build changeset comment body (PR only)
+        id: build_summary
         run: |
           mkdir -p .tmp
           {
@@ -49,7 +50,26 @@ jobs:
           } > .tmp/changeset-summary.md
 
       - name: Comment changeset summary (PR only)
+        id: post_comment
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           path: .tmp/changeset-summary.md
           header: changeset-summary
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "## Comment changeset summary"
+            echo
+            echo "- Changesets detected: ${{ steps.changed_changesets.outputs.any_changed }}"
+            echo "- Build summary step: ${{ steps.build_summary.outcome }}"
+            echo "- Post comment step: ${{ steps.post_comment.outcome }}"
+
+            if [[ "${{ steps.changed_changesets.outputs.any_changed }}" == "true" ]]; then
+              echo "- Changeset files:"
+              echo '```text'
+              echo "${{ steps.changed_changesets.outputs.all_changed_files }}" | tr ' ' '\n' | sed '/^$/d'
+              echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

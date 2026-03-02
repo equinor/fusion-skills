@@ -40,9 +40,34 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Validate GraphQL skill assets
+        id: validate_graphql
         run: bun run validate:graphql
 
       - name: Validate GraphQL operations with Codegen
+        id: validate_codegen
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: bun run validate:graphql:codegen
+
+      - name: Job summary
+        if: always()
+        run: |
+          artifact_path=".tmp/graphql-codegen/github-operations.ts"
+
+          {
+            echo "## Validate GraphQL assets and operations"
+            echo
+            echo "- validate:graphql: ${{ steps.validate_graphql.outcome }}"
+            echo "- validate:graphql:codegen: ${{ steps.validate_codegen.outcome }}"
+
+            if [[ "${{ steps.validate_codegen.outcome }}" == "success" && -f "$artifact_path" ]]; then
+              line_count=$(wc -l < "$artifact_path" | tr -d ' ')
+              byte_count=$(wc -c < "$artifact_path" | tr -d ' ')
+              echo "- Generated artifact: $artifact_path"
+              echo "- Artifact size: ${line_count} lines, ${byte_count} bytes"
+            elif [[ "${{ steps.validate_codegen.outcome }}" == "success" ]]; then
+              echo "- Generated artifact: missing (expected $artifact_path)"
+            else
+              echo "- Generated artifact: not verified (codegen step outcome: ${{ steps.validate_codegen.outcome }})"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

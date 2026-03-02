@@ -40,4 +40,15 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Validate skill version bumps and changesets (PR only)
+        id: validate_pr
         run: bun run validate:pr
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "## Validate skill version bumps and changesets"
+            echo
+            echo "- Result: ${{ steps.validate_pr.outcome }}"
+            echo "- Command: \\`bun run validate:pr\\`"
+          } >> "$GITHUB_STEP_SUMMARY"
