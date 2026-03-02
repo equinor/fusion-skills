@@ -3,7 +3,7 @@ name: fusion-mcp
 description: Explain what Fusion MCP is and guide users through setting it up when they need Fusion-aware MCP capabilities in Copilot workflows.
 license: MIT
 metadata:
-  version: "0.0.0"
+  version: "0.1.0"
   tags:
     - fusion
     - mcp
