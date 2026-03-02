@@ -20,6 +20,7 @@ Run from repository root.
 
 ```bash
 GH_PAGER=cat gh api graphql \
+  -H "GraphQL-Features: issue_types,sub_issues" \
   -f query="$(cat skills/.experimental/fusion-issue-task-planning/assets/graphql/issue_lookup.github.graphql)" \
   -F owner=equinor \
   -F repo=fusion-core-tasks \
@@ -30,6 +31,7 @@ GH_PAGER=cat gh api graphql \
 
 ```bash
 GH_PAGER=cat gh api graphql \
+  -H "GraphQL-Features: issue_types,sub_issues" \
   -f query="$(cat skills/.experimental/fusion-issue-task-planning/assets/graphql/issue_types_list.github.graphql)" \
   -F owner=equinor
 ```
@@ -38,6 +40,7 @@ GH_PAGER=cat gh api graphql \
 
 ```bash
 GH_PAGER=cat gh api graphql \
+  -H "GraphQL-Features: issue_types,sub_issues" \
   -f query="$(cat skills/.experimental/fusion-issue-task-planning/assets/graphql/issue_type_update.github.graphql)" \
   -F id='<child-issue-node-id>' \
   -F issueTypeId='<task-issue-type-node-id>'
@@ -47,6 +50,7 @@ GH_PAGER=cat gh api graphql \
 
 ```bash
 GH_PAGER=cat gh api graphql \
+  -H "GraphQL-Features: issue_types,sub_issues" \
   -f query="$(cat skills/.experimental/fusion-issue-task-planning/assets/graphql/sub_issue_write.github.graphql)" \
   -F issueId='<parent-issue-node-id>' \
   -F subIssueId='<child-issue-node-id>'
@@ -56,6 +60,7 @@ GH_PAGER=cat gh api graphql \
 
 ```bash
 GH_PAGER=cat gh api graphql \
+  -H "GraphQL-Features: issue_types,sub_issues" \
   -f query="$(cat skills/.experimental/fusion-issue-task-planning/assets/graphql/linkage_verify.github.graphql)" \
   -F owner=equinor \
   -F repo=fusion-core-tasks \
@@ -66,4 +71,5 @@ GH_PAGER=cat gh api graphql \
 ## Notes
 
 - `subIssueId` expects the child issue node id, not issue number.
+- Use `-H "GraphQL-Features: issue_types,sub_issues"` for these operations to ensure feature-gated fields are available.
 - Prefer MCP tools first when available; use these GraphQL files as explicit fallback.

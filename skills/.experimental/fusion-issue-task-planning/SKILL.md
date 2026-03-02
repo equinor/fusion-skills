@@ -5,12 +5,13 @@ license: MIT
 metadata:
   version: "0.1.0"
   status: experimental
-  origin: equinor/fusion-poc-bip-bop:custom-user-story-task-planning
   tags:
     - github
     - planning
     - user-story
     - task-planning
+      - prefers-fusion-issue-authoring
+      - prefers-fusion-issue-author-task
   mcp:
     required:
       - github
@@ -58,7 +59,8 @@ Execute in order and state assumptions explicitly.
 1. Probe preferred skills and classify drafting mode
    - `orchestrated`: both `fusion-issue-authoring` and `fusion-issue-author-task` available; full workflow with explicit publish gates handled by the orchestrator.
    - `direct-subordinate`: only `fusion-issue-author-task` available; operate in **draft-only** mode using its templates and safeguards, do **not** perform any GitHub mutations, and surface drafts plus clear instructions for how an orchestrator or user should publish them.
-   - `inline`: neither available; behave like draft-only template-based drafting using `../fusion-issue-author-task/assets/issue-templates/task*.md` with no direct mutations.
+   - `inline`: neither available; stay in **draft-only** mode, generate task drafts with a minimal built-in structure (`Title`, `Problem`, `Scope`, `Acceptance criteria mapping`, `Verification`, `Dependencies`), and avoid direct references to another skill's `assets/` files.
+   - Prefer `fusion-issue-author-task` whenever it is available; do not bypass it with direct cross-skill file references.
    - Never stop due to missing preferred skills; degrade gracefully.
 
 2. Research the user story
@@ -81,7 +83,7 @@ Execute in order and state assumptions explicitly.
 6. Generate task issue drafts
    - `orchestrated`: route through `fusion-issue-authoring` with issue type `Task`
    - `direct-subordinate`: invoke `fusion-issue-author-task` in draft-only mode and output explicit publish instructions for orchestrator or direct MCP paths
-   - `inline`: write `.tmp/TASK-<nn>-<slug>.md` drafts using the closest matching `../fusion-issue-author-task/assets/issue-templates/task*.md` template
+   - `inline`: write `.tmp/TASK-<nn>-<slug>.md` drafts using the minimal built-in structure from step 1
    - Keep drafts local until explicit publish approval.
 
 7. Generate plan preview
@@ -94,7 +96,7 @@ Execute in order and state assumptions explicitly.
    - Use GitHub MCP tools as the canonical publish path:
      - `mcp_github_issue_write` (or `mcp_github2_issue_write`) with `method=create`, `owner`, `repo`, `title`, and optional `body`, `labels`, `type=Task`.
      - `mcp_github_issue_write` (or `mcp_github2_issue_write`) with `method=update`, `owner`, `repo`, `issue_number`, and `type=Task` to repair type metadata when needed.
-      - `sub_issue_write` (when exposed in the runtime) with `method=add`, `owner`, `repo`, `issue_number=<parent-number>`, `sub_issue_id=<child-issue-id>` to link each task to the parent story.
+       - `sub_issue_write` (when exposed in the runtime) with `method=add`, `owner`, `repo`, `issue_number=<parent-number>`, `sub_issue_id=<child-issue-id>` to link each task to the parent story.
      - `mcp_github_search_issues` with `query` (+ optional `owner`, `repo`, `perPage`) and `mcp_github_issue_read` with `method=get` to verify created issues exist and have expected metadata.
    - Parent linkage is not a `create` argument; it is a separate sub-issue link step after child issue creation.
    - If `sub_issue_write` is not exposed in the active MCP binding, use `gh api graphql` fallback for the link step and then re-verify.
@@ -103,9 +105,9 @@ Execute in order and state assumptions explicitly.
 9. Repair mode for already-created tasks
    - If tasks were created but are missing `Issue Type` or parent linkage, use repair mode via MCP updates:
      - `mcp_github_issue_write` (or `mcp_github2_issue_write`) with `method=update`, `owner`, `repo`, `issue_number`, and `type=Task`.
-      - `sub_issue_write` (when exposed in the runtime) with `method=add`, `owner`, `repo`, `issue_number=<parent-number>`, `sub_issue_id=<child-issue-id>` when parent linkage is missing.
+     - `sub_issue_write` (when exposed in the runtime) with `method=add`, `owner`, `repo`, `issue_number=<parent-number>`, `sub_issue_id=<child-issue-id>` when parent linkage is missing.
      - Verify with `mcp_github_issue_read` using `method=get` (and `method=get_labels` when labels are required).
-      - If `sub_issue_write` is unavailable, perform parent linking via `gh api graphql` and re-run verification.
+     - If `sub_issue_write` is unavailable, perform parent linking via `gh api graphql` and re-run verification.
    - Repair mode must be idempotent: skip already-correct issues and fix only missing metadata.
    - Run post-flight verification after repairs and return actionable failures.
 

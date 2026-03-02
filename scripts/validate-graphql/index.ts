@@ -1,7 +1,7 @@
 /// <reference types="node" />
 
 import { readdirSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, relative } from "node:path";
 import process from "node:process";
 import { parse } from "graphql";
 
@@ -14,9 +14,11 @@ function main(): void {
   const repoRoot = process.cwd();
   const files = findGraphqlFiles(repoRoot);
 
-  // Fail fast here so callers get clear feedback when no files match scope.
+  // Exit early so callers get clear feedback when no files match scope.
   if (files.length === 0) {
-    console.log("No GraphQL files found under skills/**/assets/graphql/*.github.graphql.");
+    console.log(
+      "No GraphQL files found under skills/**/assets/graphql/*.github.graphql; skipping validation.",
+    );
     return;
   }
 
@@ -67,7 +69,7 @@ function walkDirectory(directoryPath: string, files: string[], repoRoot: string)
     }
 
     const parentPath = entry.parentPath;
-    const relativeParent = parentPath.replace(`${repoRoot}/`, "").replaceAll("\\", "/");
+    const relativeParent = relative(repoRoot, parentPath).replaceAll("\\", "/");
     // Restrict scope to skill GraphQL assets folder to avoid unrelated files.
     if (!relativeParent.endsWith("/assets/graphql")) {
       continue;
