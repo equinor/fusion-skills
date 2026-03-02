@@ -17,7 +17,7 @@ Repository-wide guidance for Copilot in this repository.
 ## Skill discovery defaults
 
 - For local skill discovery in this repository, search `skills/` first.
-- Include `skills/` in local `.agents/skills` lookup paths for this workspace.
+- Include `skills/` and `skills/.experimental/` in local `.agents/skills` lookup paths for this workspace.
 
 ## Maintainer docs
 

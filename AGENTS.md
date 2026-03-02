@@ -34,7 +34,7 @@ This repository is a shared catalog of Fusion GitHub Copilot Agent Skills. Treat
 ## Skills changes
 
 When creating or editing skills, follow `CONTRIBUTING.md` and `.github/copilot-instructions.md`.
-For local skill discovery in this repository, search `skills/` first and include it in local `.agents/skills` lookup paths for this workspace.
+For local skill discovery in this repository, search `skills/` first and include both `skills/` and `skills/.experimental/` in local `.agents/skills` lookup paths for this workspace.
 
 ## Custom instruction files
 
