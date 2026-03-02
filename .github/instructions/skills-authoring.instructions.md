@@ -66,7 +66,7 @@ Field constraints:
   - arrays are allowed when modeling explicit skill relationships (for example `metadata.skills`)
   - `metadata.role`: `"orchestrator"` for top-level skills, `"subordinate"` for skills that cannot run without their orchestrator
   - `metadata.orchestrator`: name of the required orchestrator skill (subordinates only)
-  - `metadata.skills`: list of subordinate skill names (orchestrators only)
+  - `metadata.skills`: optional list of related/companion skill names for composition and routing hints
   - `metadata.tags`: optional list of free-form lowercase kebab-case strings for discoverability
   - `metadata.mcp`: optional map of MCP server needs
     - `metadata.mcp.required`: optional list of required MCP servers
