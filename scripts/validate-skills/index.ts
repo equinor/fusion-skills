@@ -11,30 +11,79 @@ import { runSkillsCliList } from "./run-skills-cli-list";
 import { sanitizeAnsi } from "./sanitize-ansi";
 
 /**
- * Finds local skills that declare `metadata.skills` without orchestrator role.
+ * Gets skill id from a repository-relative skill directory path.
+ *
+ * @param skillDir - Repository-relative skill directory path.
+ * @returns Skill id inferred from path segments.
+ */
+function getSkillIdFromDir(skillDir: string): string {
+  const parts = skillDir.split("/");
+  // Hidden skill folders store skill id in segment #3.
+  if (parts[1]?.startsWith(".")) {
+    return parts[2] ?? "";
+  }
+
+  return parts[1] ?? "";
+}
+
+/**
+ * Extracts skill ids listed by the external skills CLI.
+ *
+ * @param cliOutput - Raw skills CLI output text.
+ * @returns Skill ids discovered in CLI list output.
+ */
+function extractCliSkillIds(cliOutput: string): Set<string> {
+  const skillIds = new Set<string>();
+  const cleanOutput = sanitizeAnsi(cliOutput);
+
+  // Process output lines in order to preserve deterministic parsing.
+  for (const line of cleanOutput.split("\n")) {
+    // This regex matches the expected text format for this step.
+    const match = line.match(/\b((?:fusion|custom)-[a-z0-9-]+)\s*$/);
+    // Collect parsed skill ids for presence checks against local skill folders.
+    if (match) {
+      skillIds.add(match[1]);
+    }
+  }
+
+  return skillIds;
+}
+
+/**
+ * Finds missing local skills that declare `metadata.skills`.
  *
  * Maintainer note: the external skills CLI currently excludes these from `--list`
  * output, so we treat them as known/explicit companion-skill metadata usage.
  *
  * @param repoRoot - Absolute repository root path.
  * @param localSkills - Repository-relative skill directory paths.
+ * @param cliSkillIds - Skill ids discovered in CLI output.
  * @returns Skill directories expected to be excluded by external CLI listing.
  */
-function findCompanionSkillMetadataEntries(repoRoot: string, localSkills: string[]): string[] {
+function findCompanionSkillMetadataEntries(
+  repoRoot: string,
+  localSkills: string[],
+  cliSkillIds: Set<string>,
+): string[] {
   const excluded: string[] = [];
 
   // Process entries in order so behavior stays predictable.
   for (const skillDir of localSkills) {
+    const skillId = getSkillIdFromDir(skillDir);
+    // Skip skills that are already listed by external CLI.
+    if (cliSkillIds.has(skillId)) {
+      continue;
+    }
+
     const skillPath = join(repoRoot, skillDir, "SKILL.md");
     const markdown = readFileSync(skillPath, "utf8");
     const frontmatter = parseFrontmatter(extractFrontmatter(markdown));
 
-    // Treat metadata.skills as companion metadata unless role is explicit orchestrator.
+    // Treat metadata.skills as companion metadata regardless of role hint.
     const hasMetadataSkills = Boolean(frontmatter["metadata.skills"]);
-    const isOrchestrator = frontmatter["metadata.role"] === "orchestrator";
 
     // Collect only skills that use metadata.skills as companion metadata.
-    if (hasMetadataSkills && !isOrchestrator) {
+    if (hasMetadataSkills) {
       excluded.push(skillDir);
     }
   }
@@ -68,11 +117,16 @@ function main(): void {
   console.log(cliOutput);
 
   const cliCount = parseCliSkillCount(sanitizeAnsi(cliOutput));
+  const cliSkillIds = extractCliSkillIds(cliOutput);
   console.log(`CLI reported skills: ${cliCount}`);
 
   // Fail fast here so the remaining logic can assume valid input.
   if (cliCount !== localSkills.length) {
-    const companionMetadataSkills = findCompanionSkillMetadataEntries(repoRoot, localSkills);
+    const companionMetadataSkills = findCompanionSkillMetadataEntries(
+      repoRoot,
+      localSkills,
+      cliSkillIds,
+    );
     const adjustedCliCount = cliCount + companionMetadataSkills.length;
 
     // Allow known mismatch where external CLI excludes companion metadata.skills usage.
