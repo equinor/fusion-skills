@@ -1,4 +1,4 @@
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import { join } from "node:path";
 import process from "node:process";
 import { collectIntentCommentIssues } from "./collect-intent-comment-issues";
@@ -14,6 +14,14 @@ import { formatIntentCommentIssues } from "./format-intent-comment-issues";
 interface ValidateScriptsOptions {
   onlyDiff: boolean;
   baseRef: string;
+}
+
+/**
+ * Diff-only file resolution result.
+ */
+interface DiffScriptSourceFilesResult {
+  files: string[];
+  resolvedBaseRef: string;
 }
 
 /**
@@ -68,23 +76,28 @@ function parseArgs(argv: string[]): ValidateScriptsOptions {
  * @param baseRef - Preferred git base ref to compare against.
  * @returns Raw newline-delimited git diff output.
  */
-function readDiffOutput(repoRoot: string, baseRef: string): string {
+function readDiffOutput(
+  repoRoot: string,
+  baseRef: string,
+): { output: string; resolvedBaseRef: string } {
   const readDiff = (diffBase: string): string =>
-    execSync(`git diff --name-only --diff-filter=ACMR ${diffBase}...HEAD`, {
+    execFileSync("git", ["diff", "--name-only", "--diff-filter=ACMR", `${diffBase}...HEAD`], {
       cwd: repoRoot,
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],
     });
 
   try {
-    return readDiff(baseRef);
+    return { output: readDiff(baseRef), resolvedBaseRef: baseRef };
   } catch {
     // Some CI checkouts do not fetch origin/<base>; compare against parent commit instead.
     try {
-      return readDiff("HEAD^");
+      return { output: readDiff("HEAD^"), resolvedBaseRef: "HEAD^" };
     } catch {
-      // In depth-1 checkouts without a parent commit, continue with an empty diff.
-      return "";
+      // In depth-1 checkouts without base refs, fail loudly so CI does not skip validation.
+      throw new Error(
+        `Unable to resolve git diff base from ${baseRef} or HEAD^. Ensure checkout fetch depth includes base history.`,
+      );
     }
   }
 }
@@ -96,8 +109,8 @@ function readDiffOutput(repoRoot: string, baseRef: string): string {
  * @param baseRef - Git base ref to compare against.
  * @returns Sorted absolute paths for changed script source files.
  */
-function listDiffScriptSourceFiles(repoRoot: string, baseRef: string): string[] {
-  const output = readDiffOutput(repoRoot, baseRef);
+function listDiffScriptSourceFiles(repoRoot: string, baseRef: string): DiffScriptSourceFilesResult {
+  const { output, resolvedBaseRef } = readDiffOutput(repoRoot, baseRef);
 
   // Split command output into one path candidate per line.
   const diffLines = output.split("\n");
@@ -114,7 +127,7 @@ function listDiffScriptSourceFiles(repoRoot: string, baseRef: string): string[] 
   // Convert repository-relative paths to absolute paths for file IO.
   const absolutePaths = nonTestScriptPaths.map((path) => join(repoRoot, path));
   // Sort for deterministic check output in local and CI runs.
-  return absolutePaths.sort();
+  return { files: absolutePaths.sort(), resolvedBaseRef };
 }
 
 /**
@@ -126,7 +139,10 @@ function main(): void {
   const options = parseArgs(process.argv.slice(2));
   const repoRoot = process.cwd();
   const scriptsRoot = join(repoRoot, "scripts");
-  const diffFiles = options.onlyDiff ? listDiffScriptSourceFiles(repoRoot, options.baseRef) : [];
+  const diffResult = options.onlyDiff
+    ? listDiffScriptSourceFiles(repoRoot, options.baseRef)
+    : { files: [], resolvedBaseRef: options.baseRef };
+  const diffFiles = diffResult.files;
   const tsdocIssues = options.onlyDiff
     ? collectTSDocCoverageIssuesForFiles(diffFiles)
     : collectTSDocCoverageIssues(scriptsRoot);
@@ -148,7 +164,7 @@ function main(): void {
 
   // In diff mode, print scope details so CI output explains what was checked.
   if (options.onlyDiff) {
-    console.log(`Running diff-only script quality checks against ${options.baseRef}`);
+    console.log(`Running diff-only script quality checks against ${diffResult.resolvedBaseRef}`);
     // Explicitly note empty diffs so a pass is clearly intentional.
     if (diffFiles.length === 0) {
       console.log("No changed script source files found in diff.");
