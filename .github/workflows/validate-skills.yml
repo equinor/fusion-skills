@@ -84,4 +84,7 @@ jobs:
     name: Comment changeset summary
     needs: detect_changes
     if: github.event_name == 'pull_request' && (needs.detect_changes.outputs.changesets_changed == 'true' || needs.detect_changes.outputs.workflow_changed == 'true')
+    permissions:
+      contents: read
+      pull-requests: write
     uses: ./.github/workflows/validate-skills-changeset-comment.yml
