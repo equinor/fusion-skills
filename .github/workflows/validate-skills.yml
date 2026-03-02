@@ -45,6 +45,19 @@ jobs:
       - name: Validate skills and counts
         run: bun run validate:skills
 
+      - name: Detect changed skill scripts
+        id: changed_skill_scripts
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            skills/**/scripts/**
+
+      - name: ShellCheck changed skill scripts
+        if: steps.changed_skill_scripts.outputs.any_changed == 'true'
+        uses: docker://koalaman/shellcheck:stable
+        with:
+          args: ${{ steps.changed_skill_scripts.outputs.all_changed_files }}
+
       - name: Validate skill version bumps and changesets (PR only)
         if: github.event_name == 'pull_request'
         run: bun run validate:pr
