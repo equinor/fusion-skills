@@ -10,6 +10,8 @@ Usage:
 
 Description:
   Resolves matching review threads for a given pull request review id.
+  Note: Uses GraphQL queries limited to the first 100 review threads and first 100
+  comments per thread; results may be incomplete on very large pull requests.
 
 Safety:
   - Default mode is dry-run and performs no GitHub mutations.
@@ -60,7 +62,16 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     --message-file)
-      MESSAGE="$(cat "${2:-}")"
+      MESSAGE_FILE="${2:-}"
+      if [[ -z "$MESSAGE_FILE" ]]; then
+        echo "ERROR: --message-file requires a path argument" >&2
+        exit 1
+      fi
+      if [[ ! -r "$MESSAGE_FILE" ]]; then
+        echo "ERROR: Message file '$MESSAGE_FILE' does not exist or is not readable" >&2
+        exit 1
+      fi
+      MESSAGE="$(cat "$MESSAGE_FILE")"
       shift 2
       ;;
     --apply)
@@ -93,12 +104,12 @@ if [[ -z "$OWNER" || -z "$REPO" || -z "$PR_NUMBER" || -z "$REVIEW_ID" ]]; then
   exit 1
 fi
 
-if ! [[ "$PR_NUMBER" =~ ^[0-9]+$ ]]; then
+if ! [[ "$PR_NUMBER" =~ ^[1-9][0-9]*$ ]]; then
   echo "ERROR: --pr must be a positive integer." >&2
   exit 1
 fi
 
-if ! [[ "$REVIEW_ID" =~ ^[0-9]+$ ]]; then
+if ! [[ "$REVIEW_ID" =~ ^[1-9][0-9]*$ ]]; then
   echo "ERROR: --review-id must be a positive integer." >&2
   exit 1
 fi
@@ -159,7 +170,7 @@ if [[ "$APPLY" != "true" ]]; then
   exit 0
 fi
 
-for row in $(printf '%s\n' "$TARGETS_JSON" | jq -c '.[]'); do
+while IFS= read -r row; do
   THREAD_ID="$(printf '%s\n' "$row" | jq -r '.threadId')"
   REPLY_TO_COMMENT_ID="$(printf '%s\n' "$row" | jq -r '.commentIds[-1]')"
 
@@ -172,6 +183,6 @@ for row in $(printf '%s\n' "$TARGETS_JSON" | jq -c '.[]'); do
     -F "threadId=$THREAD_ID" >/dev/null
 
   echo "Resolved thread $THREAD_ID (reply comment target $REPLY_TO_COMMENT_ID)."
-done
+done < <(printf '%s\n' "$TARGETS_JSON" | jq -c '.[]')
 
 echo "Completed: resolved $TARGET_COUNT thread(s)."

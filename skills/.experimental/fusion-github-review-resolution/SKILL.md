@@ -24,7 +24,7 @@ Typical triggers:
 - "Handle all unresolved comments on this PR"
 - "For each review comment: fix, test, commit, reply, resolve"
 - "Close review threads with concrete commit references"
-- "https://github.com/<owner>/<repo>/pull/<number>#pullrequestreview-<id>"
+- `https://github.com/<owner>/<repo>/pull/<number>#pullrequestreview-<id>`
 - "See all sub comments for this review URL and fix them"
 
 ## When not to use
@@ -49,49 +49,54 @@ Optional context:
 
 ## Instructions
 
-1. Gather unresolved comments
+1. Ask whether to use a dedicated git worktree
+   - Ask this before any other workflow questions.
+   - If yes, use/create the worktree and continue there.
+
+2. Gather unresolved comments
    - Copy `assets/review-resolution-checklist.md` and use it as the working tracker.
    - Fetch review threads for the PR and filter unresolved threads.
    - If a specific review id or review URL is provided, limit to comments from that review.
    - Within the targeted review, collect all comments in each matching thread, including sub-comments/replies.
    - Build a working list with: thread id, comment id, parent review id, file path, comment body, reply context.
 
-2. Understand and research each comment
+3. Understand and research each comment
    - Read the referenced file(s) and nearby logic.
    - Verify root cause and identify the smallest safe fix.
    - If uncertain, inspect adjacent tests/usages before editing.
 
-3. Fix, check, commit (per comment)
+4. Fix, check, commit (per comment)
    - Apply focused code/doc changes for one comment at a time.
    - Run targeted checks first, then required repo checks.
    - Create one commit per comment when practical.
    - If two comments require one inseparable change, use one commit and map both comments to that commit in replies.
 
-4. Push once after all fixes
+5. Push once after all fixes
    - After all comment-related commits are created, push branch updates once.
 
-5. Reply and resolve each review comment
+6. Reply and resolve each review comment
    - For each resolved comment/thread:
      - post a reply describing what changed,
      - include commit hash(es),
      - resolve the review thread.
    - Keep replies precise and implementation-specific.
 
-6. Verify closure state
+7. Verify closure state
    - Re-check review threads and confirm no targeted unresolved threads remain.
    - Re-check latest CI status if the workflow expects green checks.
 
-7. Optional scripted execution
-    - Use `scripts/get-review-comments.sh` to fetch matching review comments (including sub-comments in matching threads).
-    - Example test:
-       - `skills/.experimental/fusion-github-review-resolution/scripts/get-review-comments.sh --owner equinor --repo fusion-skills --pr 27 --review-id 3837647674`
-    - Use `--include-outdated` when you need comments from outdated matching threads.
-    - Use `scripts/resolve-review-comments.sh` to reply+resolve matching threads.
-    - Keep default dry-run behavior; use `--apply` only after fixes are committed and pushed.
-    - Example dry-run:
-       - `skills/.experimental/fusion-github-review-resolution/scripts/resolve-review-comments.sh --owner equinor --repo fusion-skills --pr 27 --review-id 3837647674 --include-resolved`
-    - Example apply:
-       - `skills/.experimental/fusion-github-review-resolution/scripts/resolve-review-comments.sh --owner equinor --repo fusion-skills --pr 27 --review-id 3837647674 --apply --message "Addressed in <commit>: <what changed>."`
+8. Optional scripted execution
+   - Use `scripts/get-review-comments.sh` to fetch matching review comments (including sub-comments associated with the review id).
+   - Results are limited to the first 100 review threads and first 100 comments per thread.
+   - Example test:
+      - `skills/.experimental/fusion-github-review-resolution/scripts/get-review-comments.sh --owner equinor --repo fusion-skills --pr 27 --review-id 3837647674`
+   - Use `--include-outdated` when you need comments from outdated matching threads.
+   - Use `scripts/resolve-review-comments.sh` to reply+resolve matching threads.
+   - Keep default dry-run behavior; use `--apply` only after fixes are committed and pushed.
+   - Example dry-run:
+      - `skills/.experimental/fusion-github-review-resolution/scripts/resolve-review-comments.sh --owner equinor --repo fusion-skills --pr 27 --review-id 3837647674 --include-resolved`
+   - Example apply:
+      - `skills/.experimental/fusion-github-review-resolution/scripts/resolve-review-comments.sh --owner equinor --repo fusion-skills --pr 27 --review-id 3837647674 --apply --message "Addressed in <commit>: <what changed>."`
 
 ## Expected output
 

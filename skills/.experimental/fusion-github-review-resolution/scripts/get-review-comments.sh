@@ -8,8 +8,11 @@ Usage:
     --owner <owner> --repo <repo> --pr <number> --review-id <number> [--include-resolved] [--include-outdated]
 
 Description:
-  Lists review-thread comments for a specific PR review id, including sub-comments
-  (all comments in matching threads). Default output is unresolved + non-outdated threads only.
+  Lists review-thread comments for a specific PR review id, including any sub-comments
+  that are associated with that review id. Default output is unresolved + non-outdated
+  threads only.
+  Note: Uses GraphQL queries limited to the first 100 review threads and first 100
+  comments per thread; results may be incomplete on very large pull requests.
 
 Examples:
   skills/.experimental/fusion-github-review-resolution/scripts/get-review-comments.sh \
@@ -71,12 +74,12 @@ if [[ -z "$OWNER" || -z "$REPO" || -z "$PR_NUMBER" || -z "$REVIEW_ID" ]]; then
   exit 1
 fi
 
-if ! [[ "$PR_NUMBER" =~ ^[0-9]+$ ]]; then
+if ! [[ "$PR_NUMBER" =~ ^[1-9][0-9]*$ ]]; then
   echo "ERROR: --pr must be a positive integer." >&2
   exit 1
 fi
 
-if ! [[ "$REVIEW_ID" =~ ^[0-9]+$ ]]; then
+if ! [[ "$REVIEW_ID" =~ ^[1-9][0-9]*$ ]]; then
   echo "ERROR: --review-id must be a positive integer." >&2
   exit 1
 fi
