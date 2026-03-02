@@ -57,8 +57,8 @@ Optional context:
    - Copy `assets/review-resolution-checklist.md` and use it as the working tracker.
    - Fetch review threads for the PR and filter unresolved threads.
    - If a specific review id or review URL is provided, limit to comments from that review.
-   - Within the targeted review, collect all comments in each matching thread, including sub-comments/replies.
-   - Build a working list with: thread id, comment id, parent review id, file path, comment body, reply context.
+   - Within the targeted review, collect all comments associated with that review id (do not include replies from other reviews unless explicitly requested).
+   - Build a working list with: thread id, comment id, parent review id, file path, comment body, reply context from this review.
 
 3. Understand and research each comment
    - Read the referenced file(s) and nearby logic.

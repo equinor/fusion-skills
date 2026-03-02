@@ -145,7 +145,7 @@ if [[ "$MESSAGE_FROM_INLINE" == "true" && "$MESSAGE_FROM_FILE" == "true" ]]; the
   exit 1
 fi
 
-if [[ "$APPLY" == "true" && -z "${MESSAGE// }" ]]; then
+if [[ "$APPLY" == "true" && ! "$MESSAGE" =~ [^[:space:]] ]]; then
   echo "ERROR: --message or --message-file is required when --apply is set." >&2
   exit 1
 fi
