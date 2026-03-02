@@ -85,7 +85,11 @@ Optional context:
    - Re-check review threads and confirm no targeted unresolved threads remain.
    - Re-check latest CI status if the workflow expects green checks.
 
-8. Optional scripted execution
+8. Ask whether to request a new review from the original review author
+   - After fixes are pushed and threads are resolved, ask if the user wants to request a new review from the author of the review comments.
+   - If yes, request review from that reviewer username and report that the request was sent.
+
+9. Optional scripted execution
    - Use `scripts/get-review-comments.sh` to fetch matching review comments (including sub-comments associated with the review id).
    - Results are limited to the first 100 review threads and first 100 comments per thread.
    - Example test:
