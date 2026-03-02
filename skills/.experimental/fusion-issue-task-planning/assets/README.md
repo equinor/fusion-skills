@@ -4,13 +4,13 @@ These GraphQL documents are fallback helpers for environments where GitHub MCP w
 
 ## Files
 
-- `issue_lookup.graphql`: fetch issue id/type/parent/labels by issue number.
-- `issue_types_list.graphql`: list organization issue types and ids.
-- `issue_type_update.graphql`: set issue type by ids.
-- `sub_issue_write.graphql`: add child issue to parent issue.
-- `sub_issue_remove.graphql`: remove child issue from parent issue.
-- `sub_issue_reprioritize.graphql`: reprioritize child issue order.
-- `linkage_verify.graphql`: verify parent/child linkage and child type.
+- `graphql/issue_lookup.graphql`: fetch issue id/type/parent/labels by issue number.
+- `graphql/issue_types_list.graphql`: list organization issue types and ids.
+- `graphql/issue_type_update.graphql`: set issue type by ids.
+- `graphql/sub_issue_write.graphql`: add child issue to parent issue.
+- `graphql/sub_issue_remove.graphql`: remove child issue from parent issue.
+- `graphql/sub_issue_reprioritize.graphql`: reprioritize child issue order.
+- `graphql/linkage_verify.graphql`: verify parent/child linkage and child type.
 
 ## Usage examples
 
@@ -20,7 +20,7 @@ Run from repository root.
 
 ```bash
 GH_PAGER=cat gh api graphql \
-  -f query="$(cat skills/.experimental/fusion-issue-task-planning/scripts/issue_lookup.graphql)" \
+  -f query="$(cat skills/.experimental/fusion-issue-task-planning/assets/graphql/issue_lookup.graphql)" \
   -F owner=equinor \
   -F repo=fusion-core-tasks \
   -F number=410
@@ -30,7 +30,7 @@ GH_PAGER=cat gh api graphql \
 
 ```bash
 GH_PAGER=cat gh api graphql \
-  -f query="$(cat skills/.experimental/fusion-issue-task-planning/scripts/issue_types_list.graphql)" \
+  -f query="$(cat skills/.experimental/fusion-issue-task-planning/assets/graphql/issue_types_list.graphql)" \
   -F owner=equinor
 ```
 
@@ -38,7 +38,7 @@ GH_PAGER=cat gh api graphql \
 
 ```bash
 GH_PAGER=cat gh api graphql \
-  -f query="$(cat skills/.experimental/fusion-issue-task-planning/scripts/issue_type_update.graphql)" \
+  -f query="$(cat skills/.experimental/fusion-issue-task-planning/assets/graphql/issue_type_update.graphql)" \
   -F id='<child-issue-node-id>' \
   -F issueTypeId='<task-issue-type-node-id>'
 ```
@@ -47,7 +47,7 @@ GH_PAGER=cat gh api graphql \
 
 ```bash
 GH_PAGER=cat gh api graphql \
-  -f query="$(cat skills/.experimental/fusion-issue-task-planning/scripts/sub_issue_write.graphql)" \
+  -f query="$(cat skills/.experimental/fusion-issue-task-planning/assets/graphql/sub_issue_write.graphql)" \
   -F issueId='<parent-issue-node-id>' \
   -F subIssueId='<child-issue-node-id>'
 ```
@@ -56,7 +56,7 @@ GH_PAGER=cat gh api graphql \
 
 ```bash
 GH_PAGER=cat gh api graphql \
-  -f query="$(cat skills/.experimental/fusion-issue-task-planning/scripts/linkage_verify.graphql)" \
+  -f query="$(cat skills/.experimental/fusion-issue-task-planning/assets/graphql/linkage_verify.graphql)" \
   -F owner=equinor \
   -F repo=fusion-core-tasks \
   -F parentNumber=410 \
