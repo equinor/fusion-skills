@@ -2,6 +2,18 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.7.0
+
+### Minor
+
+__🎯 [feat(skills): add experimental fusion-issue-task-planning skill #37](https://github.com/equinor/fusion-skills/pull/37)<br/>
+🗂️ [54d03bc](https://github.com/equinor/fusion-skills/commit/54d03bcc21bdf71c0f8aefa5f00c3ded7f22b3b9)<br/>
+📦 fusion-issue-task-planning@0.1.0__
+
+Add experimental `fusion-issue-task-planning` skill with user-story task planning workflow, explicit publish gates, provenance metadata, and reusable planning assets.
+
+References equinor/fusion-core-tasks#430.
+
 ## v0.6.0
 
 ### Minor
