@@ -84,8 +84,10 @@ if ! [[ "$REVIEW_ID" =~ ^[1-9][0-9]*$ ]]; then
   exit 1
 fi
 
+# shellcheck disable=SC2016
 QUERY='query($owner:String!,$repo:String!,$number:Int!){repository(owner:$owner,name:$repo){pullRequest(number:$number){reviewThreads(first:100){nodes{id isResolved isOutdated path line comments(first:100){nodes{databaseId body url author{login}createdAt pullRequestReview{databaseId state author{login}}}}}}}}}'
 
+# shellcheck disable=SC2209
 JSON_OUTPUT="$({
   GH_PAGER=cat gh api graphql \
     -f "query=$QUERY" \
@@ -96,6 +98,16 @@ JSON_OUTPUT="$({
 
 if [[ -z "$JSON_OUTPUT" ]]; then
   echo "ERROR: Empty response from GitHub API." >&2
+  exit 1
+fi
+
+if printf '%s\n' "$JSON_OUTPUT" | jq -e '.errors | length > 0' >/dev/null 2>&1; then
+  echo "ERROR: GitHub GraphQL errors: $(printf '%s\n' "$JSON_OUTPUT" | jq -c '.errors')" >&2
+  exit 1
+fi
+
+if printf '%s\n' "$JSON_OUTPUT" | jq -e '.data == null' >/dev/null 2>&1; then
+  echo "ERROR: GitHub GraphQL response missing data." >&2
   exit 1
 fi
 

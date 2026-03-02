@@ -38,6 +38,8 @@ MESSAGE=""
 APPLY="false"
 INCLUDE_RESOLVED="false"
 INCLUDE_OUTDATED="false"
+MESSAGE_FROM_INLINE="false"
+MESSAGE_FROM_FILE="false"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -59,6 +61,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     --message)
       MESSAGE="${2:-}"
+      MESSAGE_FROM_INLINE="true"
       shift 2
       ;;
     --message-file)
@@ -72,6 +75,7 @@ while [[ $# -gt 0 ]]; do
         exit 1
       fi
       MESSAGE="$(cat "$MESSAGE_FILE")"
+      MESSAGE_FROM_FILE="true"
       shift 2
       ;;
     --apply)
@@ -114,13 +118,20 @@ if ! [[ "$REVIEW_ID" =~ ^[1-9][0-9]*$ ]]; then
   exit 1
 fi
 
+if [[ "$MESSAGE_FROM_INLINE" == "true" && "$MESSAGE_FROM_FILE" == "true" ]]; then
+  echo "ERROR: Use only one of --message or --message-file." >&2
+  exit 1
+fi
+
 if [[ "$APPLY" == "true" && -z "${MESSAGE// }" ]]; then
   echo "ERROR: --message or --message-file is required when --apply is set." >&2
   exit 1
 fi
 
+# shellcheck disable=SC2016
 QUERY='query($owner:String!,$repo:String!,$number:Int!){repository(owner:$owner,name:$repo){pullRequest(number:$number){reviewThreads(first:100){nodes{id isResolved isOutdated path line comments(first:100){nodes{databaseId url body pullRequestReview{databaseId}}}}}}}}'
 
+# shellcheck disable=SC2209
 JSON_OUTPUT="$({
   GH_PAGER=cat gh api graphql \
     -f "query=$QUERY" \
@@ -128,6 +139,21 @@ JSON_OUTPUT="$({
     -F "repo=$REPO" \
     -F "number=$PR_NUMBER"
 } )"
+
+if [[ -z "$JSON_OUTPUT" ]]; then
+  echo "ERROR: Empty response from GitHub API." >&2
+  exit 1
+fi
+
+if printf '%s\n' "$JSON_OUTPUT" | jq -e '.errors | length > 0' >/dev/null 2>&1; then
+  echo "ERROR: GitHub GraphQL errors: $(printf '%s\n' "$JSON_OUTPUT" | jq -c '.errors')" >&2
+  exit 1
+fi
+
+if printf '%s\n' "$JSON_OUTPUT" | jq -e '.data == null' >/dev/null 2>&1; then
+  echo "ERROR: GitHub GraphQL response missing data." >&2
+  exit 1
+fi
 
 TARGETS_JSON="$(printf '%s\n' "$JSON_OUTPUT" | jq -c \
   --argjson reviewId "$REVIEW_ID" \
@@ -142,12 +168,13 @@ TARGETS_JSON="$(printf '%s\n' "$JSON_OUTPUT" | jq -c \
             isOutdated: $thread.isOutdated,
             path: ($thread.path // "<unknown>"),
             line: $thread.line,
-            commentIds: (
+            commentIds: ($thread.comments.nodes | map(.databaseId)),
+            matchingReviewCommentIds: (
               $thread.comments.nodes
               | map(select(.pullRequestReview.databaseId == $reviewId) | .databaseId)
             )
           }
-        | select(.commentIds | length > 0)
+        | select(.matchingReviewCommentIds | length > 0)
         | if $includeResolved == "true" then . else select(.isResolved == false) end
         | if $includeOutdated == "true" then . else select(.isOutdated == false) end
       )
@@ -162,7 +189,7 @@ fi
 echo "Found $TARGET_COUNT matching thread(s):"
 printf '%s\n' "$TARGETS_JSON" | jq -r '
   to_entries[]
-  | "\(.key + 1). \(.value.threadId) \(.value.path)\(if .value.line then ":\(.value.line)" else "" end) comments=\(.value.commentIds|join(","))\(if .value.isResolved then " [resolved]" else "" end)\(if .value.isOutdated then " [outdated]" else "" end)"
+  | "\(.key + 1). \(.value.threadId) \(.value.path)\(if .value.line then ":\(.value.line)" else "" end) comments=\(.value.matchingReviewCommentIds|join(","))\(if .value.isResolved then " [resolved]" else "" end)\(if .value.isOutdated then " [outdated]" else "" end)"
 '
 
 if [[ "$APPLY" != "true" ]]; then
@@ -174,13 +201,32 @@ while IFS= read -r row; do
   THREAD_ID="$(printf '%s\n' "$row" | jq -r '.threadId')"
   REPLY_TO_COMMENT_ID="$(printf '%s\n' "$row" | jq -r '.commentIds[-1]')"
 
+# shellcheck disable=SC2209
   GH_PAGER=cat gh api -X POST "repos/$OWNER/$REPO/pulls/$PR_NUMBER/comments" \
     -F "in_reply_to=$REPLY_TO_COMMENT_ID" \
     -f "body=$MESSAGE" >/dev/null
 
-  GH_PAGER=cat gh api graphql \
-    -f 'query=mutation($threadId:ID!){resolveReviewThread(input:{threadId:$threadId}){thread{id isResolved}}}' \
-    -F "threadId=$THREAD_ID" >/dev/null
+# shellcheck disable=SC2209,SC2016
+  MUTATION_OUTPUT="$({
+    GH_PAGER=cat gh api graphql \
+      -f 'query=mutation($threadId:ID!){resolveReviewThread(input:{threadId:$threadId}){thread{id isResolved}}}' \
+      -F "threadId=$THREAD_ID"
+  } )"
+
+  if [[ -z "$MUTATION_OUTPUT" ]]; then
+    echo "ERROR: Empty mutation response for thread $THREAD_ID." >&2
+    exit 1
+  fi
+
+  if printf '%s\n' "$MUTATION_OUTPUT" | jq -e '.errors | length > 0' >/dev/null 2>&1; then
+    echo "ERROR: GraphQL mutation errors for thread $THREAD_ID: $(printf '%s\n' "$MUTATION_OUTPUT" | jq -c '.errors')" >&2
+    exit 1
+  fi
+
+  if ! printf '%s\n' "$MUTATION_OUTPUT" | jq -e '.data.resolveReviewThread.thread.isResolved == true' >/dev/null 2>&1; then
+    echo "ERROR: Thread $THREAD_ID was not resolved." >&2
+    exit 1
+  fi
 
   echo "Resolved thread $THREAD_ID (reply comment target $REPLY_TO_COMMENT_ID)."
 done < <(printf '%s\n' "$TARGETS_JSON" | jq -c '.[]')
