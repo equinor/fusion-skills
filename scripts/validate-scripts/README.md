@@ -6,7 +6,8 @@ Checks:
 - each function declaration has a TSDoc block,
 - each named parameter has an `@param` tag,
 - functions returning values include `@returns`,
-- control-flow and iterator lines (`if`, `for`, `while`, `map`, `filter`, `reduce`, `forEach`) have intent comments directly above.
+- control-flow and iterator lines (`if`, `for`, `map`, `filter`, `reduce`, `forEach`) have intent comments directly above,
+- disallowed patterns are reported (`while`/`do-while` loops, `let` declarations, multiple exported functions per file).
 
 Excluded paths:
 - `scripts/__tests__/**`
