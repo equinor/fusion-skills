@@ -39,22 +39,37 @@ require_command() {
   fi
 }
 
+require_arg() {
+  local flag="$1"
+  local value="$2"
+  local hint="$3"
+  if [[ -z "$value" || "$value" == -* ]]; then
+    echo "ERROR: $flag requires $hint." >&2
+    usage
+    exit 1
+  fi
+}
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --owner)
-      OWNER="${2:-}"
+      require_arg "--owner" "${2:-}" "an owner value"
+      OWNER="$2"
       shift 2
       ;;
     --repo)
-      REPO="${2:-}"
+      require_arg "--repo" "${2:-}" "a repository value"
+      REPO="$2"
       shift 2
       ;;
     --pr)
-      PR_NUMBER="${2:-}"
+      require_arg "--pr" "${2:-}" "a pull request number"
+      PR_NUMBER="$2"
       shift 2
       ;;
     --review-id)
-      REVIEW_ID="${2:-}"
+      require_arg "--review-id" "${2:-}" "a review id value"
+      REVIEW_ID="$2"
       shift 2
       ;;
     --include-resolved)
