@@ -58,7 +58,7 @@ Execute in order and state assumptions explicitly.
 1. Probe preferred skills and classify drafting mode
    - `orchestrated`: both `fusion-issue-authoring` and `fusion-issue-author-task` available
    - `direct-subordinate`: only `fusion-issue-author-task` available
-   - `inline`: neither available; draft directly from `assets/task-plan-template.md`
+   - `inline`: neither available; draft task issues from `skills/fusion-issue-author-task/assets/issue-templates/task*.md`
    - Never stop due to missing preferred skills; degrade gracefully.
 
 2. Research the user story
@@ -81,7 +81,7 @@ Execute in order and state assumptions explicitly.
 6. Generate task issue drafts
    - `orchestrated`: route through `fusion-issue-authoring` with issue type `Task`
    - `direct-subordinate`: invoke `fusion-issue-author-task` and apply shared gates manually
-   - `inline`: write `.tmp/TASK-<nn>-<slug>.md` drafts using `assets/task-plan-template.md`
+   - `inline`: write `.tmp/TASK-<nn>-<slug>.md` drafts using the closest matching `skills/fusion-issue-author-task/assets/issue-templates/task*.md` template
    - Keep drafts local until explicit publish approval.
 
 7. Generate plan preview

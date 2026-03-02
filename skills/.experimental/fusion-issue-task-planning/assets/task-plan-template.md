@@ -59,7 +59,7 @@ EXPERIMENTAL: This workflow is not yet stable and may change.
   - Depends on: <task refs>
 
 ## Publish plan (requires explicit confirmation)
-- Publish path: <orchestrated via fusion-issue-authoring | direct MCP (orchestrator absent)>
+- Publish path: <orchestrated via fusion-issue-authoring | direct-subordinate via fusion-issue-author-task | direct MCP (orchestrator absent)>
 - Create each child issue with type `Task` (or label fallback if type unavailable)
 - Add each created issue as sub-issue of <owner/repo#number>
 - Apply sub-issue ordering from planned sequence
