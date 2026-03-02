@@ -15,7 +15,7 @@ function main(): void {
   const files = findGraphqlFiles(repoRoot);
 
   if (files.length === 0) {
-    console.log("No GraphQL files found under skills/**/assets/graphql/*.graphql.");
+    console.log("No GraphQL files found under skills/**/assets/graphql/*.github.graphql.");
     return;
   }
 
@@ -62,7 +62,7 @@ function walkDirectory(directoryPath: string, files: string[], repoRoot: string)
     if (!relativeParent.endsWith("/assets/graphql")) {
       continue;
     }
-    if (!entry.name.endsWith(".graphql")) {
+    if (!entry.name.endsWith(".github.graphql")) {
       continue;
     }
 
