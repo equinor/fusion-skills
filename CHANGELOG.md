@@ -2,6 +2,20 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.6.0
+
+### Minor
+
+__🎯 [feat(skills): add experimental fusion-issue-solving skill #35](https://github.com/equinor/fusion-skills/pull/35)<br/>
+🗂️ [73809e4](https://github.com/equinor/fusion-skills/commit/73809e42d8cac011c6ba5e5c06fa321cb82ab9f7)<br/>
+📦 fusion-issue-solving@0.1.0__
+
+Add experimental `fusion-issue-solving` skill under `skills/.experimental/` with a structured workflow for issue intake, planning, implementation, validation, and PR-ready reporting.
+
+Includes a companion execution checklist asset for consistent progress tracking.
+
+resolves equinor/fusion-core-tasks#432
+
 ## v0.5.0
 
 ### Minor
