@@ -85,12 +85,14 @@ function walkDirectory(directoryPath: string, files: string[], repoRoot: string)
     const isUnderSkillsAssets =
       relativeParent.startsWith("skills/") &&
       (relativeParent.includes("/assets/") || relativeParent.endsWith("/assets"));
+    // Skip files outside skill asset folders so validation scope stays intentionally bounded.
     if (!isUnderSkillsAssets) {
       continue;
     }
 
     // Include all GraphQL document files in assets, regardless of endpoint naming suffix.
     const isGraphqlFile = entry.name.endsWith(".graphql") || entry.name.endsWith(".gql");
+    // Skip non-GraphQL files to avoid parsing unrelated asset content.
     if (!isGraphqlFile) {
       continue;
     }
