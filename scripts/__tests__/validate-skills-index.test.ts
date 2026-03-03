@@ -2,11 +2,9 @@ import { afterEach, describe, expect, it } from "bun:test";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import {
-  extractCliSkillIds,
-  findCompanionSkillMetadataEntries,
-  getSkillIdFromDir,
-} from "../validate-skills/index";
+import { extractCliSkillIds } from "../validate-skills/extract-cli-skill-ids";
+import { findCompanionSkillMetadataEntries } from "../validate-skills/find-companion-skill-metadata-entries";
+import { getSkillIdFromDir } from "../validate-skills/get-skill-id-from-dir";
 
 describe("validate-skills index helpers", () => {
   const tempDirs: string[] = [];
