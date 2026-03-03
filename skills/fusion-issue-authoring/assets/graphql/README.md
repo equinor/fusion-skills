@@ -12,4 +12,12 @@ These GraphQL documents are fallback helpers for environments where GitHub MCP w
 - `sub_issue_reprioritize.github.graphql`: reprioritize child issue order.
 - `linkage_verify.github.graphql`: verify parent/child linkage and child type.
 
+## Usage note
+
+When running these files via `gh api graphql`, include:
+
+- `-H "GraphQL-Features: issue_types,sub_issues"`
+
+without this header, issue type and sub-issue fields may fail schema validation.
+
 Prefer MCP tools first when available; use these files as explicit fallback.
