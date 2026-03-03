@@ -1,5 +1,5 @@
-mutation SubIssueWriteRemove($issueId:ID!, $subIssueId:ID!) {
-  removeSubIssue(input: {issueId: $issueId, subIssueId: $subIssueId}) {
+mutation SubIssueWriteRemove($issueId: ID!, $subIssueId: ID!) {
+  removeSubIssue(input: { issueId: $issueId, subIssueId: $subIssueId }) {
     issue {
       id
     }

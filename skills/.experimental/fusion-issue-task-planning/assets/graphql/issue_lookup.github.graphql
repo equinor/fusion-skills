@@ -1,4 +1,4 @@
-query IssueLookup($owner:String!, $repo:String!, $number:Int!) {
+query IssueLookup($owner: String!, $repo: String!, $number: Int!) {
   repository(owner: $owner, name: $repo) {
     issue(number: $number) {
       id

@@ -1,5 +1,5 @@
-mutation SubIssueWriteAdd($issueId:ID!, $subIssueId:ID!) {
-  addSubIssue(input: {issueId: $issueId, subIssueId: $subIssueId}) {
+mutation SubIssueWriteAdd($issueId: ID!, $subIssueId: ID!) {
+  addSubIssue(input: { issueId: $issueId, subIssueId: $subIssueId }) {
     issue {
       id
     }

@@ -1,4 +1,4 @@
-query LinkageVerify($owner:String!, $repo:String!, $parentNumber:Int!, $childNumber:Int!) {
+query LinkageVerify($owner: String!, $repo: String!, $parentNumber: Int!, $childNumber: Int!) {
   repository(owner: $owner, name: $repo) {
     parent: issue(number: $parentNumber) {
       id
