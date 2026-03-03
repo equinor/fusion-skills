@@ -2,6 +2,34 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.7.1
+
+### Patch
+
+__🎯 [fix(skills): smooth task-planning MCP publish flow #40](https://github.com/equinor/fusion-skills/pull/40)<br/>
+🗂️ [cd68535](https://github.com/equinor/fusion-skills/commit/cd685353575cca870a01e255cf1c13ccf6e55290)<br/>
+📦 fusion-github-review-resolution@0.1.1__
+
+Add one-operation-per-file GraphQL assets for review-thread workflows and document the MCP-vs-GraphQL tooling map in the experimental `fusion-github-review-resolution` skill.
+
+---
+
+__🎯 [fix(skills): smooth task-planning MCP publish flow #40](https://github.com/equinor/fusion-skills/pull/40)<br/>
+🗂️ [cd68535](https://github.com/equinor/fusion-skills/commit/cd685353575cca870a01e255cf1c13ccf6e55290)<br/>
+📦 fusion-issue-solving@0.1.1__
+
+Remove deprecated `origin` frontmatter metadata from the experimental `fusion-issue-solving` skill.
+
+---
+
+__🎯 [fix(skills): smooth task-planning MCP publish flow #40](https://github.com/equinor/fusion-skills/pull/40)<br/>
+🗂️ [cd68535](https://github.com/equinor/fusion-skills/commit/cd685353575cca870a01e255cf1c13ccf6e55290)<br/>
+📦 fusion-issue-task-planning@0.1.1__
+
+Refine the experimental `fusion-issue-task-planning` workflow to be MCP-first for issue publishing and repair, clarify parent-linking as a separate sub-issue operation, and add reusable GraphQL fallback query/mutation files under `skills/.experimental/fusion-issue-task-planning/assets/graphql/`.
+
+resolves equinor/fusion-skills#39
+
 ## v0.7.0
 
 ### Minor

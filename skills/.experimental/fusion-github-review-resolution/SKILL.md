@@ -3,7 +3,7 @@ name: fusion-github-review-resolution
 description: Resolve unresolved GitHub pull request review comments by researching each comment, applying fixes with validation, committing per comment, then posting fix replies and resolving threads.
 license: MIT
 metadata:
-   version: "0.1.0"
+   version: "0.1.1"
    tags:
       - github
       - pull-request
