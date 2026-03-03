@@ -107,9 +107,9 @@ Execute in order and state assumptions explicitly.
 9. Repair mode for already-created tasks
    - If tasks were created but are missing `Issue Type` or parent linkage, use repair mode via MCP updates:
        - `issue_write` with `method=update`, `owner`, `repo`, `issue_number`, and `type=Task`.
-     - `sub_issue_write` (when exposed in the runtime) with `method=add`, `owner`, `repo`, `issue_number=<parent-number>`, `sub_issue_id=<child-issue-id>` when parent linkage is missing.
+          - `sub_issue_write` (when exposed in the runtime) with `method=add`, `owner`, `repo`, `issue_number=<parent-number>`, `sub_issue_id=<child-issue-id>` when parent linkage is missing.
        - Verify with `issue_read` using `method=get` (and `method=get_labels` when labels are required).
-     - If `sub_issue_write` is unavailable, perform parent linking via `gh api graphql` and re-run verification.
+          - If `sub_issue_write` is unavailable, perform parent linking via `gh api graphql` and re-run verification.
    - Repair mode must be idempotent: skip already-correct issues and fix only missing metadata.
    - Run post-flight verification after repairs and return actionable failures.
 
