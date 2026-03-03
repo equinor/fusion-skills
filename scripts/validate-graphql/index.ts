@@ -39,6 +39,7 @@ function main(): void {
   console.log("GraphQL syntax validation passed.");
 }
 
+// Keep CLI execution scoped to direct invocation to avoid side effects in imports.
 if (import.meta.main) {
   try {
     main();
