@@ -1,4 +1,4 @@
-import { readdirSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import { join, relative } from "node:path";
 
 /**
@@ -9,6 +9,11 @@ import { join, relative } from "node:path";
 export function findGraphqlFiles(repoRoot: string): string[] {
   const skillsRoot = join(repoRoot, "skills");
   const files: string[] = [];
+
+  // Return empty results so callers can surface a clean skip message when skills root is unavailable.
+  if (!existsSync(skillsRoot)) {
+    return files;
+  }
 
   walkDirectory(skillsRoot, files, repoRoot);
   files.sort();
