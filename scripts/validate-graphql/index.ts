@@ -17,7 +17,7 @@ function main(): void {
   // Exit early so callers get clear feedback when no files match scope.
   if (files.length === 0) {
     console.log(
-      "No GraphQL files found under skills/**/assets/graphql/*.github.graphql; skipping validation.",
+      "No GraphQL files found under skills/**/assets/**/*.graphql|*.gql; skipping validation.",
     );
     return;
   }
@@ -55,7 +55,7 @@ function findGraphqlFiles(repoRoot: string): string[] {
 }
 
 /**
- * Walks directories recursively and collects graphql files in assets/graphql folders.
+ * Walks directories recursively and collects GraphQL files in skills assets folders.
  * @param directoryPath Absolute path for directory traversal root.
  * @param files Mutable collection of discovered GraphQL file paths.
  * @param repoRoot Repository root path used to normalize relative paths.
@@ -81,12 +81,17 @@ function walkDirectory(directoryPath: string, files: string[], repoRoot: string)
     }
 
     const relativeParent = relative(repoRoot, directoryPath).replaceAll("\\", "/");
-    // Restrict scope to skill GraphQL assets folder to avoid unrelated files.
-    if (!relativeParent.endsWith("/assets/graphql")) {
+    // Restrict scope to skill assets folders to avoid unrelated files.
+    const isUnderSkillsAssets =
+      relativeParent.startsWith("skills/") &&
+      (relativeParent.includes("/assets/") || relativeParent.endsWith("/assets"));
+    if (!isUnderSkillsAssets) {
       continue;
     }
-    // Enforce GitHub-targeted GraphQL suffix for explicit API compatibility.
-    if (!entry.name.endsWith(".github.graphql")) {
+
+    // Include all GraphQL document files in assets, regardless of endpoint naming suffix.
+    const isGraphqlFile = entry.name.endsWith(".graphql") || entry.name.endsWith(".gql");
+    if (!isGraphqlFile) {
       continue;
     }
 

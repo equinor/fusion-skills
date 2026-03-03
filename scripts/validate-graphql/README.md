@@ -4,7 +4,8 @@ Validates GraphQL syntax for static skill fallback files.
 
 ## Scope
 
-- `skills/**/assets/graphql/*.github.graphql`
+- `skills/**/assets/**/*.graphql`
+- `skills/**/assets/**/*.gql`
 
 ## Usage
 
