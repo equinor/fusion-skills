@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.1 - 2026-03-03
+
+### patch
+
+- [#42](https://github.com/equinor/fusion-skills/pull/42) [`947c0ab`](https://github.com/equinor/fusion-skills/commit/947c0ab73844f5eb13b80e7cb2f3e5ea8146ea59) - Normalize issue-authoring orchestration/reference docs to canonical MCP tool naming (`mcp_github::tool`) for duplicate checks, ordered mutations, and issue-type lookup guidance.
+
+
+  Maintains MCP-first behavior and adds documented GraphQL fallback query assets for parent/sub-issue and issue-type operations where MCP write coverage is unavailable.
+
+  refs equinor/fusion-skills#40
+  resolves equinor/fusion-core-tasks#446
+
 ## 0.2.0 - 2026-02-20
 
 ### minor

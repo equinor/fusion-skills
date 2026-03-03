@@ -2,6 +2,36 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.7.2
+
+### Patch
+
+__🎯 [fix(skills): normalize MCP contracts and centralize GraphQL fallback assets #42](https://github.com/equinor/fusion-skills/pull/42)<br/>
+🗂️ [947c0ab](https://github.com/equinor/fusion-skills/commit/947c0ab73844f5eb13b80e7cb2f3e5ea8146ea59)<br/>
+📦 fusion-issue-authoring@0.2.1__
+
+Normalize issue-authoring orchestration/reference docs to canonical MCP tool naming (`mcp_github::tool`) for duplicate checks, ordered mutations, and issue-type lookup guidance.
+
+Maintains MCP-first behavior and adds documented GraphQL fallback query assets for parent/sub-issue and issue-type operations where MCP write coverage is unavailable.
+
+refs equinor/fusion-skills#40
+resolves equinor/fusion-core-tasks#446
+
+---
+
+__🎯 [fix(skills): normalize MCP contracts and centralize GraphQL fallback assets #42](https://github.com/equinor/fusion-skills/pull/42)<br/>
+🗂️ [947c0ab](https://github.com/equinor/fusion-skills/commit/947c0ab73844f5eb13b80e7cb2f3e5ea8146ea59)<br/>
+📦 fusion-issue-task-planning@0.1.2__
+
+Shift publish/repair execution in `fusion-issue-task-planning` to delegated handling through `fusion-issue-authoring` (prefer sub-agent invocation), while keeping this skill focused on planning and draft generation.
+
+Clarifies that MCP-first mutation and GraphQL fallback behavior are enforced by the delegated authoring workflow.
+
+Removes local `fusion-issue-task-planning/assets/graphql/` fallback files and points fallback usage to `fusion-issue-authoring/assets/graphql/`.
+
+refs equinor/fusion-skills#40
+resolves equinor/fusion-core-tasks#446
+
 ## v0.7.1
 
 ### Patch

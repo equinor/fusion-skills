@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.2 - 2026-03-03
+
+### patch
+
+- [#42](https://github.com/equinor/fusion-skills/pull/42) [`947c0ab`](https://github.com/equinor/fusion-skills/commit/947c0ab73844f5eb13b80e7cb2f3e5ea8146ea59) - Shift publish/repair execution in `fusion-issue-task-planning` to delegated handling through `fusion-issue-authoring` (prefer sub-agent invocation), while keeping this skill focused on planning and draft generation.
+
+
+  Clarifies that MCP-first mutation and GraphQL fallback behavior are enforced by the delegated authoring workflow.
+
+  Removes local `fusion-issue-task-planning/assets/graphql/` fallback files and points fallback usage to `fusion-issue-authoring/assets/graphql/`.
+
+  refs equinor/fusion-skills#40
+  resolves equinor/fusion-core-tasks#446
+
 ## 0.1.1 - 2026-03-03
 
 ### patch
