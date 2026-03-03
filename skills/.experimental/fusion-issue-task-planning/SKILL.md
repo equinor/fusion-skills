@@ -5,7 +5,7 @@ license: MIT
 metadata:
   version: "0.1.0"
   status: experimental
-   skills:
+  skills:
       - fusion-issue-author-task
       - fusion-issue-authoring
   tags:

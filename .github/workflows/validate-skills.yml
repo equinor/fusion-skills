@@ -5,14 +5,14 @@ on:
     paths:
       - "skills/**"
       - ".changeset/**"
-      - ".github/workflows/validate-skills.yml"
+      - ".github/workflows/validate-skills*.yml"
   push:
     branches:
       - main
     paths:
       - "skills/**"
       - ".changeset/**"
-      - ".github/workflows/validate-skills.yml"
+      - ".github/workflows/validate-skills*.yml"
   workflow_dispatch:
 
 permissions:
@@ -54,7 +54,7 @@ jobs:
               - '.changeset/*.md'
               - '!.changeset/README.md'
             workflow:
-              - '.github/workflows/validate-skills.yml'
+              - '.github/workflows/validate-skills*.yml'
 
   validate_skills:
     name: Validate skills and counts

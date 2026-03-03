@@ -17,7 +17,8 @@ import { sanitizeAnsi } from "./sanitize-ansi";
  * @returns Skill id inferred from path segments.
  */
 function getSkillIdFromDir(skillDir: string): string {
-  const parts = skillDir.split("/");
+  const normalizedSkillDir = skillDir.replaceAll("\\", "/");
+  const parts = normalizedSkillDir.split("/");
   // Hidden skill folders store skill id in segment #3.
   if (parts[1]?.startsWith(".")) {
     return parts[2] ?? "";

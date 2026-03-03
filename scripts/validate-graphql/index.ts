@@ -26,9 +26,14 @@ function main(): void {
 
   // Process files in deterministic order to keep output stable across runs.
   for (const file of files) {
-    const source = readFileSync(file, "utf8");
-    parse(source);
-    console.log(`OK: ${file}`);
+    try {
+      const source = readFileSync(file, "utf8");
+      parse(source);
+      console.log(`OK: ${file}`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(`Failed to parse GraphQL file ${file}: ${message}`);
+    }
   }
 
   console.log("GraphQL syntax validation passed.");
@@ -58,18 +63,23 @@ function findGraphqlFiles(repoRoot: string): string[] {
 function walkDirectory(directoryPath: string, files: string[], repoRoot: string): void {
   const entries = readdirSync(directoryPath, {
     withFileTypes: true,
-    recursive: true,
   });
 
   // Only include files that match the intended GraphQL naming convention.
   for (const entry of entries) {
+    const fullPath = join(directoryPath, entry.name);
+
+    if (entry.isDirectory()) {
+      walkDirectory(fullPath, files, repoRoot);
+      continue;
+    }
+
     // Ignore non-files to avoid directory-specific handling complexity.
     if (!entry.isFile()) {
       continue;
     }
 
-    const parentPath = entry.parentPath;
-    const relativeParent = relative(repoRoot, parentPath).replaceAll("\\", "/");
+    const relativeParent = relative(repoRoot, directoryPath).replaceAll("\\", "/");
     // Restrict scope to skill GraphQL assets folder to avoid unrelated files.
     if (!relativeParent.endsWith("/assets/graphql")) {
       continue;
@@ -79,7 +89,7 @@ function walkDirectory(directoryPath: string, files: string[], repoRoot: string)
       continue;
     }
 
-    files.push(`${relativeParent}/${entry.name}`);
+    files.push(relative(repoRoot, fullPath).replaceAll("\\", "/"));
   }
 }
 
