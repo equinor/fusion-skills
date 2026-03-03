@@ -46,7 +46,7 @@ jobs:
             skills:
               - 'skills/**'
             graphql:
-              - 'skills/**/assets/graphql/*.github.graphql'
+              - 'skills/**/assets/**/*.graphql'
               - 'codegen.github.yml'
             skill_scripts:
               - 'skills/**/scripts/**'

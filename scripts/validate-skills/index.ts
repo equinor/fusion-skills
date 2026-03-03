@@ -16,7 +16,7 @@ import { sanitizeAnsi } from "./sanitize-ansi";
  * @param skillDir - Repository-relative skill directory path.
  * @returns Skill id inferred from path segments.
  */
-function getSkillIdFromDir(skillDir: string): string {
+export function getSkillIdFromDir(skillDir: string): string {
   const normalizedSkillDir = skillDir.replaceAll("\\", "/");
   const parts = normalizedSkillDir.split("/");
   // Hidden skill folders store skill id in segment #3.
@@ -33,7 +33,7 @@ function getSkillIdFromDir(skillDir: string): string {
  * @param cliOutput - Raw skills CLI output text.
  * @returns Skill ids discovered in CLI list output.
  */
-function extractCliSkillIds(cliOutput: string): Set<string> {
+export function extractCliSkillIds(cliOutput: string): Set<string> {
   const skillIds = new Set<string>();
   const cleanOutput = sanitizeAnsi(cliOutput);
 
@@ -61,7 +61,7 @@ function extractCliSkillIds(cliOutput: string): Set<string> {
  * @param cliSkillIds - Skill ids discovered in CLI output.
  * @returns Skill directories expected to be excluded by external CLI listing.
  */
-function findCompanionSkillMetadataEntries(
+export function findCompanionSkillMetadataEntries(
   repoRoot: string,
   localSkills: string[],
   cliSkillIds: Set<string>,
@@ -95,7 +95,7 @@ function findCompanionSkillMetadataEntries(
 /**
  * CLI entrypoint for validating local skill count vs skills CLI output.
  */
-function main(): void {
+export function main(): void {
   const repoRoot = process.cwd();
 
   console.log("Discovering local skill directories from SKILL.md files...");
@@ -150,10 +150,12 @@ function main(): void {
   console.log("Skill count check passed.");
 }
 
-try {
-  main();
-} catch (error) {
-  const message = error instanceof Error ? error.message : String(error);
-  console.error(`ERROR: ${message}`);
-  process.exit(1);
+if (import.meta.main) {
+  try {
+    main();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`ERROR: ${message}`);
+    process.exit(1);
+  }
 }

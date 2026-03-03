@@ -94,20 +94,21 @@ Execute in order and state assumptions explicitly.
 8. Publish only after explicit confirmation
    - Require explicit confirmation in the same turn.
    - Stop if unresolved assumptions remain.
+    - In runtimes following the `fusion-issue-authoring` conventions, these are typically exposed as `issue_write`, `issue_read`, `search_issues`, and `sub_issue_write`. In some MCP bindings they may appear as `mcp_github_issue_write` / `mcp_github2_issue_write`, `mcp_github_issue_read`, and `mcp_github_search_issues` with equivalent behavior.
    - Use GitHub MCP tools as the canonical publish path:
-     - `mcp_github_issue_write` (or `mcp_github2_issue_write`) with `method=create`, `owner`, `repo`, `title`, and optional `body`, `labels`, `type=Task`.
-     - `mcp_github_issue_write` (or `mcp_github2_issue_write`) with `method=update`, `owner`, `repo`, `issue_number`, and `type=Task` to repair type metadata when needed.
+       - `issue_write` with `method=create`, `owner`, `repo`, `title`, and optional `body`, `labels`, `type=Task`.
+       - `issue_write` with `method=update`, `owner`, `repo`, `issue_number`, and `type=Task` to repair type metadata when needed.
        - `sub_issue_write` (when exposed in the runtime) with `method=add`, `owner`, `repo`, `issue_number=<parent-number>`, `sub_issue_id=<child-issue-id>` to link each task to the parent story.
-     - `mcp_github_search_issues` with `query` (+ optional `owner`, `repo`, `perPage`) and `mcp_github_issue_read` with `method=get` to verify created issues exist and have expected metadata.
+       - `search_issues` with `query` (+ optional `owner`, `repo`, `perPage`) and `issue_read` with `method=get` to verify created issues exist and have expected metadata.
    - Parent linkage is not a `create` argument; it is a separate sub-issue link step after child issue creation.
    - If `sub_issue_write` is not exposed in the active MCP binding, use `gh api graphql` fallback for the link step and then re-verify.
    - Hard fail publish mode if any created issue fails verification.
 
 9. Repair mode for already-created tasks
    - If tasks were created but are missing `Issue Type` or parent linkage, use repair mode via MCP updates:
-     - `mcp_github_issue_write` (or `mcp_github2_issue_write`) with `method=update`, `owner`, `repo`, `issue_number`, and `type=Task`.
+   - `issue_write` with `method=update`, `owner`, `repo`, `issue_number`, and `type=Task`.
      - `sub_issue_write` (when exposed in the runtime) with `method=add`, `owner`, `repo`, `issue_number=<parent-number>`, `sub_issue_id=<child-issue-id>` when parent linkage is missing.
-     - Verify with `mcp_github_issue_read` using `method=get` (and `method=get_labels` when labels are required).
+   - Verify with `issue_read` using `method=get` (and `method=get_labels` when labels are required).
      - If `sub_issue_write` is unavailable, perform parent linking via `gh api graphql` and re-run verification.
    - Repair mode must be idempotent: skip already-correct issues and fix only missing metadata.
    - Run post-flight verification after repairs and return actionable failures.

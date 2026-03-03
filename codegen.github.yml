@@ -6,7 +6,7 @@ schema:
         User-Agent: fusion-skills-graphql-codegen
 
 documents:
-  - skills/**/assets/graphql/*.github.graphql
+  - skills/**/assets/**/*.graphql
 
 generates:
   .tmp/graphql-codegen/github-operations.ts:
