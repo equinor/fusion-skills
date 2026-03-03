@@ -69,6 +69,7 @@ function walkDirectory(directoryPath: string, files: string[], repoRoot: string)
   for (const entry of entries) {
     const fullPath = join(directoryPath, entry.name);
 
+    // Recurse into nested folders so discovery is not limited to one directory level.
     if (entry.isDirectory()) {
       walkDirectory(fullPath, files, repoRoot);
       continue;
