@@ -87,7 +87,7 @@ If ambiguous, ask only essential clarifying questions.
 
 ### Step 3 — Check duplicates
 
-Search for likely duplicates with `search_issues` and surface matches before drafting/publishing.
+Search for likely duplicates with `mcp_github::search_issues` and surface matches before drafting/publishing.
 
 ### Step 4 — Draft first
 
@@ -108,10 +108,10 @@ Before mutation, confirm:
 ### Step 7 — Mutate via MCP (ordered)
 
 After explicit confirmation, execute MCP mutations in this order:
-1. `issue_write` create/update (include `type` only when supported)
-2. `issue_write` labels / assignees
-3. `sub_issue_write` relationships and execution ordering
-4. `add_issue_comment` for blocker/status notes when requested
+1. `mcp_github::issue_write` create/update (include `type` only when supported)
+2. `mcp_github::issue_write` labels / assignees
+3. `mcp_github::sub_issue_write` relationships and execution ordering
+4. `mcp_github::add_issue_comment` for blocker/status notes when requested
 
 If mutation fails due to missing MCP server/auth/config:
 - explain the failure clearly
@@ -121,7 +121,7 @@ If mutation fails due to missing MCP server/auth/config:
 `type` rule:
 - Only use `type` if the repository has issue types configured.
 - Use cached issue types per organization when available.
-- Call `list_issue_types` only on cache miss or invalid cache.
+- Call `mcp_github::list_issue_types` only on cache miss or invalid cache.
 - If issue types are not supported, omit `type`.
 
 ### Step 8 — Validate relationships
@@ -149,8 +149,6 @@ Specialist fallback template locations:
 - Task: `skills/fusion-issue-author-task/assets/issue-templates/task*.md`
 
 ## Expected output
-
-Return:
 - Selected specialized skill path
 - Draft issue file path under `.tmp/`
 - Template source used (repository template path or fallback asset path)
@@ -167,7 +165,7 @@ Return:
 ## Safety & constraints
 
 Never:
-- Run `issue_write` create/update without explicit user confirmation
+- Run `mcp_github::issue_write` create/update without explicit user confirmation
 - Publish/update an issue before the user confirms the draft content is correct
 - Assume the user wants to publish to GitHub
 - Request or expose secrets/credentials

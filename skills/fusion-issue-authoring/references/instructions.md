@@ -17,14 +17,14 @@ Goal: create clear GitHub issues fast, with draft-first review and safe mutation
 3. Check template source in order:
 	- repository template (`.github/ISSUE_TEMPLATE/`)
 	- specialist fallback template
-4. Check duplicates with `search_issues`.
+4. Check duplicates with `mcp_github::search_issues`.
 5. Draft in `.tmp/{TYPE}-{CONTEXT}.md`.
 6. Review with user and apply edits.
 7. Ask explicit publish confirmation.
 8. Mutate via MCP in this order:
-	- `issue_write` create/update (labels/assignees included as needed)
-	- `sub_issue_write` for sub-issue ordering/links
-	- `add_issue_comment` for blocker/status notes when requested
+	- `mcp_github::issue_write` create/update (labels/assignees included as needed)
+	- `mcp_github::sub_issue_write` for sub-issue ordering/links
+	- `mcp_github::add_issue_comment` for blocker/status notes when requested
 
 MCP failure handling:
 - If mutation fails due to missing MCP server/auth/config, explain the failure clearly.
@@ -33,7 +33,7 @@ MCP failure handling:
 
 Type parameter rule:
 - Use cached issue types for the organization when available.
-- Call `list_issue_types` only on cache miss (or when cache is invalid).
+- Call `mcp_github::list_issue_types` only on cache miss (or when cache is invalid).
 - Send `type` only when the repository supports issue types.
 - Omit `type` when issue types are unsupported.
 
