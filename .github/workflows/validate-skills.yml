@@ -5,99 +5,86 @@ on:
     paths:
       - "skills/**"
       - ".changeset/**"
-      - ".github/workflows/validate-skills.yml"
+      - ".github/workflows/validate-skills*.yml"
   push:
     branches:
       - main
     paths:
       - "skills/**"
       - ".changeset/**"
-      - ".github/workflows/validate-skills.yml"
+      - ".github/workflows/validate-skills*.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
-  pull-requests: write
+
+concurrency:
+  group: validate-skills-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  validate:
-    name: Validate skill catalog
+  detect_changes:
+    name: Detect changed paths
     runs-on: ubuntu-latest
+    outputs:
+      skills_changed: ${{ steps.filter.outputs.skills }}
+      graphql_changed: ${{ steps.filter.outputs.graphql }}
+      skill_scripts_changed: ${{ steps.filter.outputs.skill_scripts }}
+      changesets_changed: ${{ steps.filter.outputs.changesets }}
+      workflow_changed: ${{ steps.filter.outputs.workflow }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - name: Filter changed paths
+        id: filter
+        uses: dorny/paths-filter@v3
         with:
-          node-version: "24"
+          filters: |
+            skills:
+              - 'skills/**'
+            graphql:
+              - 'skills/**/assets/**/*.graphql'
+              - 'codegen.github.yml'
+            skill_scripts:
+              - 'skills/**/scripts/**'
+            changesets:
+              - '.changeset/*.md'
+              - '!.changeset/README.md'
+            workflow:
+              - '.github/workflows/validate-skills*.yml'
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
+  validate_skills:
+    name: Validate skills and counts
+    needs: detect_changes
+    if: github.event_name == 'workflow_dispatch' || needs.detect_changes.outputs.skills_changed == 'true' || needs.detect_changes.outputs.workflow_changed == 'true'
+    uses: ./.github/workflows/validate-skills-catalog.yml
 
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
+  validate_graphql:
+    name: Validate GraphQL assets and operations
+    needs: detect_changes
+    if: github.event_name == 'workflow_dispatch' || needs.detect_changes.outputs.graphql_changed == 'true' || needs.detect_changes.outputs.workflow_changed == 'true'
+    uses: ./.github/workflows/validate-skills-graphql.yml
 
-      - name: Validate skills and counts
-        run: bun run validate:skills
+  shellcheck_skill_scripts:
+    name: ShellCheck changed skill scripts
+    needs: detect_changes
+    if: github.event_name == 'workflow_dispatch' || needs.detect_changes.outputs.skill_scripts_changed == 'true'
+    uses: ./.github/workflows/validate-skills-shellcheck.yml
 
-      - name: Detect changed skill scripts
-        id: changed_skill_scripts
-        uses: tj-actions/changed-files@v47
-        with:
-          files: |
-            skills/**/scripts/**
+  validate_pr:
+    name: Validate skill version bumps and changesets
+    needs: detect_changes
+    if: github.event_name == 'pull_request' && (needs.detect_changes.outputs.skills_changed == 'true' || needs.detect_changes.outputs.changesets_changed == 'true' || needs.detect_changes.outputs.workflow_changed == 'true')
+    uses: ./.github/workflows/validate-skills-pr.yml
 
-      - name: ShellCheck changed skill scripts
-        if: steps.changed_skill_scripts.outputs.any_changed == 'true'
-        uses: docker://koalaman/shellcheck:stable
-        with:
-          args: ${{ steps.changed_skill_scripts.outputs.all_changed_files }}
-
-      - name: Validate skill version bumps and changesets (PR only)
-        if: github.event_name == 'pull_request'
-        run: bun run validate:pr
-
-      - name: Detect changed changeset files (PR only)
-        if: github.event_name == 'pull_request'
-        id: changed_changesets
-        uses: tj-actions/changed-files@v47
-        with:
-          files: |
-            .changeset/*.md
-            !.changeset/README.md
-
-      - name: Build changeset comment body (PR only)
-        if: github.event_name == 'pull_request'
-        run: |
-          mkdir -p .tmp
-          {
-            echo "## Changeset summary"
-            echo
-
-            if [[ -z "${{ steps.changed_changesets.outputs.all_changed_files }}" ]]; then
-              echo 'No `.changeset/*.md` files were changed in this PR.'
-            else
-              # Use tr to split space-separated file list into lines
-              mapfile -t files < <(echo "${{ steps.changed_changesets.outputs.all_changed_files }}" | tr ' ' '\n' | sed '/^$/d' | sort)
-              echo "Detected ${#files[@]} changeset file(s):"
-              for file in "${files[@]}"; do
-                echo
-                echo "**$file:**"
-                echo '```md'
-                cat "$file"
-                echo '```'
-              done
-            fi
-          } > .tmp/changeset-summary.md
-
-      - name: Comment changeset summary (PR only)
-        if: github.event_name == 'pull_request'
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          path: .tmp/changeset-summary.md
-          header: changeset-summary
+  changeset_summary_comment:
+    name: Comment changeset summary
+    needs: detect_changes
+    if: github.event_name == 'pull_request' && (needs.detect_changes.outputs.changesets_changed == 'true' || needs.detect_changes.outputs.workflow_changed == 'true')
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: ./.github/workflows/validate-skills-changeset-comment.yml

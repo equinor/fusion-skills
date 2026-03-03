@@ -102,6 +102,21 @@ Optional context:
    - Example apply:
       - `skills/.experimental/fusion-github-review-resolution/scripts/resolve-review-comments.sh --owner equinor --repo fusion-skills --pr 27 --review-id 3837647674 --apply --message "Addressed in <commit>: <what changed>."`
 
+## Tooling map (MCP vs GraphQL)
+
+Use GitHub MCP tools for high-level PR operations and GraphQL for thread-level review operations.
+
+| Workflow action | Preferred tool | Notes |
+|---|---|---|
+| Request reviewer / update PR metadata | `mcp_github_update_pull_request` | Works for collaborator reviewers and standard PR updates. |
+| Create or submit PR review | `mcp_github_pull_request_review_write` | Handles pending review lifecycle actions. |
+| Add general PR comment | `mcp_github_add_issue_comment` | Adds issue-style comment to PR conversation, not inline thread reply. |
+| List review threads and comments | `assets/pull-request-review-threads.graphql` | Use with `gh api graphql` for thread-level context. |
+| Count unresolved threads for specific review id | `assets/unresolved-thread-count-for-review.graphql` | Post-process response (for example with `jq`) to filter by review id and unresolved state. |
+| Reply to a review thread | `assets/add-pull-request-review-thread-reply.graphql` | Thread-level reply mutation. |
+| Resolve a review thread | `assets/resolve-review-thread.graphql` | Thread-level resolve mutation. |
+| List PR reviews (review URL/id lookup support) | `assets/pull-request-reviews.graphql` | Useful when starting from review URL context. |
+
 ## Expected output
 
 Return a concise report containing:

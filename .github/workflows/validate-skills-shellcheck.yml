@@ -1,0 +1,48 @@
+name: Validate Skills ShellCheck (Reusable)
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  shellcheck_skill_scripts:
+    name: ShellCheck changed skill scripts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed skill scripts
+        id: changed_skill_scripts
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            skills/**/scripts/**
+
+      - name: ShellCheck changed skill scripts
+        id: shellcheck
+        if: steps.changed_skill_scripts.outputs.any_changed == 'true'
+        uses: docker://koalaman/shellcheck:stable
+        with:
+          args: ${{ steps.changed_skill_scripts.outputs.all_changed_files }}
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "## ShellCheck changed skill scripts"
+            echo
+            echo "- Files changed: ${{ steps.changed_skill_scripts.outputs.any_changed }}"
+            echo "- ShellCheck step: ${{ steps.shellcheck.outcome }}"
+
+            if [[ "${{ steps.changed_skill_scripts.outputs.any_changed }}" == "true" ]]; then
+              echo "- Checked files:"
+              echo '```text'
+              echo "${{ steps.changed_skill_scripts.outputs.all_changed_files }}" | tr ' ' '\n' | sed '/^$/d'
+              echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

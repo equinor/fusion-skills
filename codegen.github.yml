@@ -1,0 +1,17 @@
+schema:
+  - https://api.github.com/graphql:
+      headers:
+        Authorization: Bearer ${GITHUB_TOKEN}
+        GraphQL-Features: issue_types,sub_issues
+        User-Agent: fusion-skills-graphql-codegen
+
+documents:
+  - skills/**/assets/**/*.graphql
+
+generates:
+  .tmp/graphql-codegen/github-operations.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+
+ignoreNoDocuments: true

@@ -36,5 +36,7 @@ Apply this guidance when handling issue and pull request workflows, including is
 - Check current branch changes and summarize staged/unstaged scope.
 - Check code and docs against repository guides (`CONTRIBUTING.md`, `contribute/`, and relevant `.github/instructions/*.instructions.md`).
 - Confirm validation commands run.
+- Keep changesets single-scope: each `.changeset/*.md` file must describe one skill/package change only.
+- If multiple skills/packages changed, split into multiple `.changeset/*.md` files (one entry per file).
 - Use lower-case issue-closing keywords consistently in changeset and PR text when closure is intended.
 - Prefer `resolves owner/repo#123`; use `fixes owner/repo#123` or `closes owner/repo#123` only when those verbs are more accurate.

@@ -17,7 +17,7 @@ Include YAML frontmatter with:
 - `metadata`: primarily string key/value pairs; arrays allowed for explicit relationship fields (for example `metadata.skills`)
 - `metadata.role`: `"orchestrator"` for top-level skills; `"subordinate"` for skills that require their orchestrator to run
 - `metadata.orchestrator`: name of the required orchestrator skill (subordinates only)
-- `metadata.skills`: list of subordinate skill names (orchestrators only)
+- `metadata.skills`: optional list of related/companion skill names for composition and routing hints
 - `metadata.tags`: optional list of free-form lowercase kebab-case strings for discoverability (for example `["github", "issue-authoring"]`)
 - `metadata.mcp`: optional map for MCP server requirements
   - `metadata.mcp.required`: list of required MCP servers

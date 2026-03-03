@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, mock } from "bun:test";
+import { withSuppressedConsoleOutput } from "./test-helpers/with-suppressed-console-output";
 
 const getVersionAtRefMock = mock((ref: string, skillDir: string): string | null => {
   void ref;
@@ -23,9 +24,11 @@ describe("validateNoManualVersionEdits", () => {
       return ref === "HEAD" ? "1.0.0" : "1.0.0";
     });
 
-    expect(() =>
-      validateNoManualVersionEdits(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
-    ).not.toThrow();
+    withSuppressedConsoleOutput(() => {
+      expect(() =>
+        validateNoManualVersionEdits(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
+      ).not.toThrow();
+    });
   });
 
   it("fails when the version increases", () => {
@@ -34,9 +37,11 @@ describe("validateNoManualVersionEdits", () => {
       return ref === "HEAD" ? "1.1.0" : "1.0.0";
     });
 
-    expect(() =>
-      validateNoManualVersionEdits(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
-    ).toThrow("Manual skill metadata.version edits are not allowed in non-release PRs.");
+    withSuppressedConsoleOutput(() => {
+      expect(() =>
+        validateNoManualVersionEdits(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
+      ).toThrow("Manual skill metadata.version edits are not allowed in non-release PRs.");
+    });
   });
 
   it("fails when the version is downgraded", () => {
@@ -45,9 +50,11 @@ describe("validateNoManualVersionEdits", () => {
       return ref === "HEAD" ? "0.9.9" : "1.0.0";
     });
 
-    expect(() =>
-      validateNoManualVersionEdits(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
-    ).toThrow("Manual skill metadata.version edits are not allowed in non-release PRs.");
+    withSuppressedConsoleOutput(() => {
+      expect(() =>
+        validateNoManualVersionEdits(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
+      ).toThrow("Manual skill metadata.version edits are not allowed in non-release PRs.");
+    });
   });
 
   it("passes for newly added skills", () => {
@@ -56,8 +63,10 @@ describe("validateNoManualVersionEdits", () => {
       return ref === "HEAD" ? "1.0.0" : null;
     });
 
-    expect(() =>
-      validateNoManualVersionEdits(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
-    ).not.toThrow();
+    withSuppressedConsoleOutput(() => {
+      expect(() =>
+        validateNoManualVersionEdits(new Set(["skills/fusion-skill-authoring"]), "origin/main"),
+      ).not.toThrow();
+    });
   });
 });

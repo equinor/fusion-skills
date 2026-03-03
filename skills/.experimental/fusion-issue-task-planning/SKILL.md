@@ -5,7 +5,9 @@ license: MIT
 metadata:
   version: "0.1.0"
   status: experimental
-  origin: equinor/fusion-poc-bip-bop:custom-user-story-task-planning
+  skills:
+      - fusion-issue-author-task
+      - fusion-issue-authoring
   tags:
     - github
     - planning
@@ -51,6 +53,10 @@ If missing inputs block planning, ask up to 3 focused follow-up questions from `
 - Run mode: `draft-only`
 - Publish behavior: explicit same-turn confirmation required before any mutation
 
+## Tool format
+
+- Tool names follow `<mcp_server>::<tool>` (example: `mcp_github::sub_issue_write`).
+
 ## Instructions
 
 Execute in order and state assumptions explicitly.
@@ -58,7 +64,8 @@ Execute in order and state assumptions explicitly.
 1. Probe preferred skills and classify drafting mode
    - `orchestrated`: both `fusion-issue-authoring` and `fusion-issue-author-task` available; full workflow with explicit publish gates handled by the orchestrator.
    - `direct-subordinate`: only `fusion-issue-author-task` available; operate in **draft-only** mode using its templates and safeguards, do **not** perform any GitHub mutations, and surface drafts plus clear instructions for how an orchestrator or user should publish them.
-   - `inline`: neither available; behave like draft-only template-based drafting using `skills/fusion-issue-author-task/assets/issue-templates/task*.md` with no direct mutations.
+   - `inline`: neither available; stay in **draft-only** mode, generate task drafts with a minimal built-in structure (`Title`, `Problem`, `Scope`, `Acceptance criteria mapping`, `Verification`, `Dependencies`), and avoid direct references to another skill's `assets/` files.
+   - Prefer `fusion-issue-author-task` whenever it is available; do not bypass it with direct cross-skill file references.
    - Never stop due to missing preferred skills; degrade gracefully.
 
 2. Research the user story
@@ -81,7 +88,7 @@ Execute in order and state assumptions explicitly.
 6. Generate task issue drafts
    - `orchestrated`: route through `fusion-issue-authoring` with issue type `Task`
    - `direct-subordinate`: invoke `fusion-issue-author-task` in draft-only mode and output explicit publish instructions for orchestrator or direct MCP paths
-   - `inline`: write `.tmp/TASK-<nn>-<slug>.md` drafts using the closest matching `skills/fusion-issue-author-task/assets/issue-templates/task*.md` template
+   - `inline`: write `.tmp/TASK-<nn>-<slug>.md` drafts using the minimal built-in structure from step 1
    - Keep drafts local until explicit publish approval.
 
 7. Generate plan preview
@@ -91,7 +98,37 @@ Execute in order and state assumptions explicitly.
 8. Publish only after explicit confirmation
    - Require explicit confirmation in the same turn.
    - Stop if unresolved assumptions remain.
-   - After creation, add created tasks as sub-issues in planned order.
+   - In runtimes following the `fusion-issue-authoring` conventions, these are typically exposed as `mcp_github::issue_write`, `mcp_github::issue_read`, `mcp_github::search_issues`, and `mcp_github::sub_issue_write`.
+   - Use GitHub MCP tools as the canonical publish path:
+       - `mcp_github::issue_write` with `method=create`, `owner`, `repo`, `title`, and optional `body`, `labels`, `type=Task`.
+       - `mcp_github::issue_write` with `method=update`, `owner`, `repo`, `issue_number`, and `type=Task` to repair type metadata when needed.
+       - `mcp_github::sub_issue_write` (when exposed in the runtime) with `method=add`, `owner`, `repo`, `issue_number=<parent-number>`, `mcp_github::sub_issue_id=<child-issue-id>` to link each task to the parent story.
+       - `mcp_github::search_issues` with `query` (+ optional `owner`, `repo`, `perPage`) and `issue_read` with `method=get` to verify created issues exist and have expected metadata.
+   - Parent linkage is not a `create` argument; it is a separate sub-issue link step after child issue creation.
+   - If `mcp_github::sub_issue_write` is not exposed in the active MCP binding, use `gh api graphql` fallback for the link step and then re-verify.
+   - Hard fail publish mode if any created issue fails verification.
+
+9. Repair mode for already-created tasks
+   - If tasks were created but are missing `Issue Type` or parent linkage, use repair mode via MCP updates:
+       - `mcp_github::issue_write` with `method=update`, `owner`, `repo`, `issue_number`, and `type=Task`.
+          - `mcp_github::sub_issue_write` (when exposed in the runtime) with `method=add`, `owner`, `repo`, `issue_number=<parent-number>`, `sub_issue_id=<child-issue-id>` when parent linkage is missing.
+       - Verify with `mcp_github::issue_read` using `method=get` (and `method=get_labels` when labels are required).
+          - If `mcp_github::sub_issue_write` is unavailable, perform parent linking via `gh api graphql` and re-run verification.
+   - Repair mode must be idempotent: skip already-correct issues and fix only missing metadata.
+   - Run post-flight verification after repairs and return actionable failures.
+
+## Common failures and resolution
+
+- `mcp_github::sub_issue_write` is unavailable in the active runtime
+   - Fallback to `gh api graphql` for parent-link creation, then re-run verification with `mcp_github::issue_read`.
+- Tool name format is invalid or ambiguous
+   - Use `<mcp_server>::<tool>` format (for example `mcp_github::issue_write`) and retry with explicit `owner`/`repo`.
+- Task issues are created but not linked to the parent story
+   - Run repair mode and add missing parent links with `mcp_github::sub_issue_write` `method=add`.
+- Task exists but `Issue Type` is missing or incorrect
+   - Run `mcp_github::issue_write` with `method=update` and `type=Task`, then verify with `mcp_github::issue_read`.
+- Post-flight verification reports partial failures
+   - Return per-issue `failed` status with exact reason, stop publish flow, and keep unresolved items for explicit user decision.
 
 ## Expected output
 
@@ -106,6 +143,12 @@ Return in this heading order:
 
 Always include: `Status: Awaiting user approval` until publish is confirmed and completed.
 
+For `publish-now` or `repair` mode, include a per-issue post-flight report with:
+- issue exists
+- issue type equals requested type
+- parent equals expected story number
+- status (`ok`, `fixed`, or `failed`)
+
 ## Assets
 
 - [assets/follow-up-questions.md](assets/follow-up-questions.md)
@@ -117,3 +160,5 @@ Always include: `Status: Awaiting user approval` until publish is confirmed and 
 - Never infer acceptance criteria without flagging assumptions.
 - Always preserve AC traceability in the task plan.
 - Keep drafts in `.tmp/` before any publish action.
+- In publish/repair mode, treat missing `Issue Type` or missing parent linkage as a failure until post-flight checks pass.
+- Prefer GitHub MCP tools for create/update/verify steps and document exact tool arguments used.

@@ -5,7 +5,6 @@ license: MIT
 metadata:
   version: "0.1.0"
   status: experimental
-  origin: equinor/fusion-poc-bip-bop:custom-issue-solving
   tags:
     - github
     - issue-solving
