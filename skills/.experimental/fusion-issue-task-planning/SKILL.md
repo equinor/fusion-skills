@@ -3,21 +3,21 @@ name: fusion-issue-task-planning
 description: Plan and break down user-story issues into ordered, traceable task issue drafts with explicit publish gates.
 license: MIT
 metadata:
-  version: "0.1.1"
-  status: experimental
-  skills:
+   version: "0.1.1"
+   status: experimental
+   skills:
       - fusion-issue-authoring
       - fusion-issue-author-task
-  tags:
-    - github
-    - planning
-    - user-story
-    - task-planning
-  mcp:
-    required:
+   tags:
       - github
-    suggested:
-      - mcp_fusion
+      - planning
+      - user-story
+      - task-planning
+   mcp:
+      required:
+         - github
+      suggested:
+         - mcp_fusion
 ---
 
 # User Story Task Planning
