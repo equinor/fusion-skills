@@ -1,9 +1,4 @@
-query UnresolvedThreadCountForReview(
-  $owner: String!
-  $repo: String!
-  $number: Int!
-  $reviewDatabaseId: Int!
-) {
+query UnresolvedThreadCountForReview($owner: String!, $repo: String!, $number: Int!) {
   repository(owner: $owner, name: $repo) {
     pullRequest(number: $number) {
       reviewThreads(first: 100) {
