@@ -31,6 +31,7 @@ Before requesting review, make sure your PR is:
 - safe by default (no secret handling, no hidden side effects),
 - uses Conventional Commit messages,
 - runs lint/format checks before commit operations (`bun run biome:check`; use `bun run biome:fix` when needed),
+- uses single-scope changesets (`.changeset/*.md`): one skill/package change per file,
 - clear about what changed and why.
 
 If you are unsure about direction, open a draft PR early and ask for feedback.
