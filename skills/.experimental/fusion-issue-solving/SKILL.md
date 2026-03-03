@@ -3,7 +3,7 @@ name: fusion-issue-solving
 description: Solve a GitHub issue end-to-end by researching context, planning executable todos, implementing scoped changes, validating results, and preparing PR updates.
 license: MIT
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
   status: experimental
   tags:
     - github
