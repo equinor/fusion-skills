@@ -5,8 +5,5 @@ mutation SubIssueWriteReprioritize($issueId: ID!, $subIssueId: ID!, $afterId: ID
     issue {
       id
     }
-    subIssue {
-      id
-    }
   }
 }
