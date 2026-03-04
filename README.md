@@ -82,9 +82,13 @@ name: Upgrade Agent Skills
 
 on:
   schedule:
-    # Run every Monday at 2 AM UTC
-    - cron: '0 2 * * 1'
+    # Run weekdays at 8 AM UTC
+    - cron: '0 8 * * 1-5'
   workflow_dispatch:  # Allow manual trigger
+
+permissions:
+  contents: write
+  pull-requests: write
 
 concurrency:
   group: skills-upgrade-${{ github.ref }}
@@ -93,9 +97,6 @@ concurrency:
 jobs:
   upgrade:
     uses: equinor/fusion-skills/.github/workflows/skills-update.yml@main
-    permissions:
-      contents: write
-      pull-requests: write
 ```
 
 ### Configuration notes
