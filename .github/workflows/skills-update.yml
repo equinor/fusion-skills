@@ -94,13 +94,11 @@ jobs:
       # -----------------------------------------------------------------------
       # STEP 2: Setup runtime environment
       # -----------------------------------------------------------------------
-      # Install Node.js 24 and cache npm dependencies to speed up subsequent
-      # skill installation.
-      - name: Setup Node.js + npm cache
+      # Install Node.js 24 for running skill commands.
+      - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
 
       # -----------------------------------------------------------------------
       # STEP 3: Download and refresh agent skills
