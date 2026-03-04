@@ -27,7 +27,7 @@
 #         source: equinor/fusion-skills
 #         ignore-file: .github/skills-ignore.json
 #         draft-prs: false
-#         skip-if-pr-exists: true
+#         skip-if-rejected-pr-exists: true
 #
 #   Notes:
 #   - Replace @main with a release tag to pin behavior.
@@ -49,8 +49,9 @@
 #   5. For each remaining skill:
 #      - Install only that skill
 #      - Update `skills-lock.json` and `.agents/skills/<skill>`
-#      - Optionally skip if a prior PR title already exists
-#      - Create one PR for independent review/merge decision
+#      - If an open PR already exists for that skill branch, update it
+#      - Optionally skip if a previous PR was closed without merge
+#      - Create one PR per skill for independent review/merge decision
 #
 # ============================================================================
 
@@ -74,8 +75,8 @@ on:
         required: false
         type: boolean
         default: false
-      skip-if-pr-exists:
-        description: Skip creating a PR when any previous PR exists for the same skill title
+      skip-if-rejected-pr-exists:
+        description: Skip proposing a skill when a previous PR for that skill branch was closed without merge
         required: false
         type: boolean
         default: true
@@ -227,7 +228,70 @@ jobs:
         with:
           node-version: 24
 
+      - name: Evaluate prior pull request state for skill
+        id: pr_state
+        uses: actions/github-script@v7
+        env:
+          SKILL: ${{ matrix.skill }}
+          SKIP_REJECTED: ${{ inputs.skip-if-rejected-pr-exists }}
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            const skill = process.env.SKILL;
+            const skipRejected = process.env.SKIP_REJECTED === "true";
+            const { owner, repo } = context.repo;
+            const branch = `chore/skills-discovery/${skill}`;
+
+            const outputs = {
+              mode: "create-new",
+              blocked: "false",
+              open_exists: "false",
+              open_url: "",
+              rejected_exists: "false",
+              rejected_url: "",
+            };
+
+            const openPrs = await github.paginate(github.rest.pulls.list, {
+              owner,
+              repo,
+              state: "open",
+              head: `${owner}:${branch}`,
+              per_page: 100,
+            });
+            const openPr = openPrs.find((pr) => pr.head?.ref === branch);
+
+            if (openPr) {
+              outputs.mode = "update-open";
+              outputs.open_exists = "true";
+              outputs.open_url = openPr.html_url;
+              core.notice(`Open PR exists for ${skill}; workflow will update ${openPr.html_url}.`);
+            } else {
+              const closedPrs = await github.paginate(github.rest.pulls.list, {
+                owner,
+                repo,
+                state: "closed",
+                head: `${owner}:${branch}`,
+                per_page: 100,
+              });
+              const rejectedPr = closedPrs.find((pr) => pr.head?.ref === branch && !pr.merged_at);
+
+              if (rejectedPr) {
+                outputs.rejected_exists = "true";
+                outputs.rejected_url = rejectedPr.html_url;
+                if (skipRejected) {
+                  outputs.mode = "blocked-rejected";
+                  outputs.blocked = "true";
+                  core.notice(`Skipping ${skill}; previous PR was closed without merge: ${rejectedPr.html_url}.`);
+                }
+              }
+            }
+
+            for (const [key, value] of Object.entries(outputs)) {
+              core.setOutput(key, value);
+            }
+
       - name: Add detected skill
+        if: steps.pr_state.outputs.blocked != 'true'
         shell: bash
         env:
           SOURCE: ${{ inputs.source }}
@@ -238,6 +302,7 @@ jobs:
 
       - name: Check whether changes were produced
         id: has_changes
+        if: steps.pr_state.outputs.blocked != 'true'
         shell: bash
         env:
           SKILL: ${{ matrix.skill }}
@@ -251,35 +316,8 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Check for previous PR with this skill title
-        id: previous_pr
-        if: steps.has_changes.outputs.changed == 'true' && inputs.skip-if-pr-exists == true
-        uses: actions/github-script@v7
-        env:
-          SKILL: ${{ matrix.skill }}
-        with:
-          github-token: ${{ github.token }}
-          script: |
-            const skill = process.env.SKILL;
-            const expectedTitle = `chore(skills): add skill ${skill}`;
-            const q = `repo:${context.repo.owner}/${context.repo.repo} is:pr in:title "${expectedTitle}"`;
-            const search = await github.rest.search.issuesAndPullRequests({
-              q,
-              per_page: 100,
-            });
-
-            const exact = search.data.items.find((item) => item.title === expectedTitle);
-            if (exact) {
-              core.setOutput("exists", "true");
-              core.setOutput("url", exact.html_url);
-              core.setOutput("state", exact.state);
-              core.notice(`Skipping ${skill}: previous PR exists (${exact.html_url}).`);
-            } else {
-              core.setOutput("exists", "false");
-            }
-
       - name: Build pull request body
-        if: steps.has_changes.outputs.changed == 'true' && (inputs.skip-if-pr-exists == false || steps.previous_pr.outputs.exists != 'true')
+        if: steps.pr_state.outputs.blocked != 'true' && steps.has_changes.outputs.changed == 'true'
         shell: bash
         env:
           SKILL: ${{ matrix.skill }}
@@ -314,7 +352,7 @@ jobs:
           EOF
 
       - name: Create pull request
-        if: steps.has_changes.outputs.changed == 'true' && (inputs.skip-if-pr-exists == false || steps.previous_pr.outputs.exists != 'true')
+        if: steps.pr_state.outputs.blocked != 'true' && steps.has_changes.outputs.changed == 'true'
         id: create_pr
         uses: peter-evans/create-pull-request@v7
         with:
@@ -341,10 +379,16 @@ jobs:
           echo "## Skill PR Summary" >> "$GITHUB_STEP_SUMMARY"
           echo "- Skill: ${{ matrix.skill }}" >> "$GITHUB_STEP_SUMMARY"
 
-          if [ "${{ steps.has_changes.outputs.changed }}" = "true" ] && [ -n "${{ steps.create_pr.outputs.pull-request-url }}" ]; then
-            echo "- Pull request: ${{ steps.create_pr.outputs.pull-request-url }}" >> "$GITHUB_STEP_SUMMARY"
-          elif [ "${{ inputs.skip-if-pr-exists }}" = "true" ] && [ "${{ steps.previous_pr.outputs.exists }}" = "true" ]; then
-            echo "- No PR created (existing PR found: ${{ steps.previous_pr.outputs.url }})." >> "$GITHUB_STEP_SUMMARY"
+          if [ "${{ steps.pr_state.outputs.blocked }}" = "true" ]; then
+            echo "- No PR created (previous PR closed without merge: ${{ steps.pr_state.outputs.rejected_url }})." >> "$GITHUB_STEP_SUMMARY"
+          elif [ "${{ steps.has_changes.outputs.changed }}" = "true" ] && [ -n "${{ steps.create_pr.outputs.pull-request-url }}" ]; then
+            if [ "${{ steps.pr_state.outputs.mode }}" = "update-open" ]; then
+              echo "- Pull request updated: ${{ steps.create_pr.outputs.pull-request-url }}" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "- Pull request created: ${{ steps.create_pr.outputs.pull-request-url }}" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          elif [ "${{ steps.pr_state.outputs.open_exists }}" = "true" ] && [ "${{ steps.has_changes.outputs.changed }}" = "false" ]; then
+            echo "- Existing PR already up to date: ${{ steps.pr_state.outputs.open_url }}" >> "$GITHUB_STEP_SUMMARY"
           elif [ "${{ steps.has_changes.outputs.changed }}" = "false" ]; then
             echo "- No PR created (no changes detected after install)." >> "$GITHUB_STEP_SUMMARY"
           else

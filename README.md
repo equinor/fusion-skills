@@ -153,7 +153,7 @@ jobs:
       source: equinor/fusion-skills
       ignore-file: .github/skills-ignore.json
       draft-prs: false
-      skip-if-pr-exists: true
+      skip-if-rejected-pr-exists: true
 ```
 
 Optional ignore list in your repository at `.github/skills-ignore.json`:
@@ -168,7 +168,9 @@ Optional ignore list in your repository at `.github/skills-ignore.json`:
 
 If the ignore file exists, the workflow validates this shape before continuing.
 
-`skip-if-pr-exists` can suppress repeated PRs for skills that already had a PR with title `chore(skills): add skill <name>`.
+If a skill already has an open PR from branch `chore/skills-discovery/<skill>`, the workflow updates that PR.
+
+`skip-if-rejected-pr-exists` blocks re-proposing skills where a previous PR from that skill branch was closed without merge.
 
 ## 🤌 What you get
 
