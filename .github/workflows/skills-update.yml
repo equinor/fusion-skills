@@ -1,0 +1,283 @@
+# ============================================================================
+# Fusion Skills Update Workflow
+# ============================================================================
+#
+# PURPOSE:
+#   Automatically refresh GitHub Copilot Agent Skills from upstream
+#   repositories using `npx skills add` and create a pull request with
+#   detected changes and their changelogs.
+#
+# HOW TO USE THIS WORKFLOW:
+#   In your repository, create `.github/workflows/skills-update.yml`:
+#
+#   name: Upgrade Agent Skills
+#   on:
+#     schedule:
+#       # Every Monday at 2 AM UTC
+#       - cron: '0 2 * * 1'
+#     workflow_dispatch:  # Also allow manual trigger
+#   
+#   concurrency:
+#     # Ensure only one skills-upgrade runs per branch at a time
+#     group: skills-upgrade-${{ github.ref }}
+#     cancel-in-progress: false  # Queue subsequent runs, don't cancel them
+#   
+#   jobs:
+#     upgrade:
+#       uses: equinor/fusion-skills/.github/workflows/skills-update.yml@main
+#       permissions:
+#         contents: write      # Commit skill changes to repository
+#         pull-requests: write # Create and manage pull requests
+#
+#   Notes:
+#   - Replace @main with a specific version tag to pin to a release
+#   - Adjust cron schedule to your preferred update frequency
+#   - Use workflow_dispatch for manual-only updates if preferred
+#
+# REQUIRED REPOSITORY SETUP:
+#   Repositories using this workflow must:
+#   1. Have `.agents/skills/` directory (will be created if missing)
+#   2. Grant workflow write access to contents and pull requests
+#      (configured in the calling workflow's permissions block)
+#   3. The workflow uses github.token automatically — no secrets setup needed
+#
+# HOW IT WORKS:
+#   1. Checkout repository with full git history (for accurate diffs)
+#   2. Install Node.js 24 and cache npm dependencies
+#   3. Run `npx skills add` to download latest skills from source repos
+#   4. Detect which skills changed/were added
+#   5. Build a detailed PR body with CHANGELOG excerpts for each skill
+#   6. Create a PR with one commit containing all skill updates
+#   7. Report summary to workflow run (GitHub Actions UI)
+#
+# ============================================================================
+
+name: Fusion Skills Update
+
+on:
+  schedule:
+    # Every Monday at 2 AM UTC
+    - cron: "0 8 * * 1-5"  # Weekdays at 8 AM UTC
+  workflow_dispatch:  # Also allow manual trigger
+
+concurrency:
+  # Ensure only one skills-upgrade runs per branch at a time
+  # (prevents duplicate/conflicting PRs)
+  group: skills-upgrade-${{ github.ref }}
+  cancel-in-progress: false  # Queue subsequent runs, don't cancel them
+
+permissions:
+  # Write permissions required to:
+  # - Commit skill changes to repository
+  # - Create and manage pull requests
+  contents: write
+  pull-requests: write
+
+jobs:
+  upgrade:
+    name: Upgrade Agent Skills
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      # -----------------------------------------------------------------------
+      # STEP 1: Prepare repository checkout
+      # -----------------------------------------------------------------------
+      # Fetch full git history to support accurate diff detection of changes
+      # (needed to calculate which skills were added/modified)
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0  # Full history for accurate git diff
+
+      # -----------------------------------------------------------------------
+      # STEP 2: Setup runtime environment
+      # -----------------------------------------------------------------------
+      # Install Node.js 24 and cache npm dependencies to speed up subsequent
+      # skill installation.
+      - name: Setup Node.js + npm cache
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      # -----------------------------------------------------------------------
+      # STEP 3: Download and refresh agent skills
+      # -----------------------------------------------------------------------
+      # Run `npx skills add` to fetch latest versions from upstream skill
+      # repositories. This command:
+      #   - Clones/symlinks remote skill repos into .agents/skills/
+      #   - Overwrites existing skills with latest versions
+      #   - Creates .agents/skills if it doesn't exist
+      #
+      # OUTPUT:
+      #   - skipped: Set to 'true' if npx CLI unavailable (warning logged)
+      #   - Other steps will detect and skip PR creation if skipped=true
+      - name: Upgrade skills (re-install to refresh)
+        id: install_skills
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "Running skills upgrade..."
+
+          # Verify npx/Node.js setup is working; gracefully skip if not available
+          if ! npx skills --version >/dev/null 2>&1; then
+            echo "Warning: npx skills CLI not accessible — skipping upgrade."
+            echo "skipped=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Install/update skills from source repositories
+          # Refresh already-installed skills to their latest versions
+          npx skills refresh || {
+            echo "::warning::npx skills refresh failed — continuing to check for changes anyway"
+          }
+
+      # -----------------------------------------------------------------------
+      # STEP 4: Detect what changed
+      # -----------------------------------------------------------------------
+      # Compare working directory against HEAD to find which skills were
+      # added/modified. Results are stored as outputs for later steps:
+      #   - clean: true if no changes detected
+      #   - changed_count: number of unique skills that changed
+      #   - changed_skills: JSON array of skill directory names
+      - name: Check for changes in .agents/skills
+        id: changes
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Check if .agents/skills/ has any unstaged changes
+          if git diff --quiet --exit-code HEAD -- .agents/skills/; then
+            echo "clean=true" >> "$GITHUB_OUTPUT"
+            echo "changed_count=0" >> "$GITHUB_OUTPUT"
+            echo "No changes detected after upgrade."
+          else
+            echo "clean=false" >> "$GITHUB_OUTPUT"
+            
+            # Count unique skill directories that changed
+            # (git diff lists files; we need skill root dirs)
+            changed_files=$(git diff --name-only HEAD -- .agents/skills/ | awk -F/ '{print $3}' | sort -u | wc -l)
+            echo "changed_count=$changed_files" >> "$GITHUB_OUTPUT"
+
+            # Extract unique skill directory names and format as JSON array
+            # Example output: ["skill-1", "skill-2"]
+            mapfile -t changed_skills < <(git diff --name-only HEAD -- .agents/skills/ | awk -F/ '/^\.agents\/skills\// {print $3}' | sort -u)
+            skills_json=$(jq -nc '$ARGS.positional' --args "${changed_skills[@]}")
+            echo "changed_skills=$skills_json" >> "$GITHUB_OUTPUT"
+
+            echo "Detected changes in $changed_files skill(s)."
+          fi
+
+      # -----------------------------------------------------------------------
+      # STEP 5: Build detailed pull request body
+      # -----------------------------------------------------------------------
+      # For each changed skill, extract CHANGELOG entries and build a formatted
+      # markdown PR body that summarizes:
+      #   - What skills changed
+      #   - New/updated changelog entries for transparency
+      #
+      # This step only runs if changes were detected (skips if clean=true)
+      - name: Build detailed PR body
+        if: steps.changes.outputs.clean == 'false' && steps.changes.outputs.changed_count != '0'
+        id: pr_body
+        shell: bash
+        env:
+          CHANGED_SKILLS: ${{ steps.changes.outputs.changed_skills }}
+        run: |
+          set -euo pipefail
+
+          # Initialize PR body with header and summary
+          cat << EOF > pr-body.md
+          ## Skills Upgrade
+
+          Automated run of \`npx skills refresh\` to update agent skills to their latest versions.
+
+          **Date:** $(date -u +"%Y-%m-%d %H:%M UTC")
+          **Node version:** 24
+
+          ## Summary
+          - Changed / added skills: ${{ steps.changes.outputs.changed_count }}
+
+          ## Updated Skills
+          EOF
+
+          # For each changed skill, append its name and CHANGELOG details
+          jq -r '.[]' <<< "$CHANGED_SKILLS" | while read -r skill; do
+            echo "- **$skill**" >> pr-body.md
+
+            changelog=".agents/skills/$skill/CHANGELOG.md"
+            if [ -f "$changelog" ]; then
+              echo "  <details><summary>CHANGELOG additions for $skill</summary>" >> pr-body.md
+              echo "" >> pr-body.md
+
+              # Two modes depending on whether this is a new or existing file:
+              if git ls-files --error-unmatch "$changelog" >/dev/null 2>&1; then
+                # Existing file: show only new additions (lines starting with +)
+                git diff -U0 -- "$changelog" | sed -n '/^+[^+]/p' | sed 's/^+//' | sed '/^# Changelog$/d' >> pr-body.md 2>/dev/null || true
+              else
+                # New file: show full content (minus header)
+                sed '/^# Changelog$/d' "$changelog" >> pr-body.md
+              fi
+
+              echo "" >> pr-body.md
+              echo "</details>" >> pr-body.md
+            else
+              echo "  _No changelog updates found_" >> pr-body.md
+            fi
+            echo "" >> pr-body.md
+          done
+
+      # -----------------------------------------------------------------------
+      # STEP 6: Create pull request with skill updates
+      # -----------------------------------------------------------------------
+      # Commit all skill changes in one shot and create a PR for review.
+      # The PR links to this workflow run for audit trail.
+      #
+      # This step only runs if changes were detected (skips if clean=true)
+      - name: Create Pull Request
+        if: steps.changes.outputs.clean == 'false' && steps.changes.outputs.changed_count != '0'
+        id: cpr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ github.token }}
+          commit-message: "chore(skills): upgrade agent skills"
+          branch: chore/skills-upgrade
+          delete-branch: true  # Clean up branch after PR merge
+          title: "chore(skills): upgrade agent skills"
+          body-path: pr-body.md
+          labels: |
+            chore
+            skills
+            dependencies
+          draft: false  # Create as ready for review
+
+      # -----------------------------------------------------------------------
+      # STEP 7: Report workflow summary to GitHub Actions UI
+      # -----------------------------------------------------------------------
+      # Log final status to the workflow run summary (visible in GitHub Actions).
+      # Includes:
+      #   - Whether changes were detected
+      #   - Count of changed skills
+      #   - Link to created PR (if any)
+      #   - Warning if skills CLI was unavailable
+      - name: Workflow Summary
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "## Skills Upgrade Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Status: ${{ steps.changes.outputs.clean == 'true' && 'No changes' || 'Changes detected' }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Skills changed: ${{ steps.changes.outputs.changed_count || '0' }}" >> "$GITHUB_STEP_SUMMARY"
+
+          if [ -n "${{ steps.cpr.outputs.pull-request-url }}" ]; then
+            echo "- Pull request: ${{ steps.cpr.outputs.pull-request-url }}" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "- No PR created (no changes or skipped)" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+          if [ "${{ steps.install_skills.outputs.skipped }}" = "true" ]; then
+            echo "- Warning: Skills CLI step was skipped — check Node/npx setup." >> "$GITHUB_STEP_SUMMARY"
+          fi
