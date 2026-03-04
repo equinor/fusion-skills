@@ -59,6 +59,7 @@ on:
     # Every Monday at 2 AM UTC
     - cron: "0 8 * * 1-5"  # Weekdays at 8 AM UTC
   workflow_dispatch:  # Also allow manual trigger
+  workflow_call:  # Allow calling as reusable workflow
 
 concurrency:
   # Ensure only one skills-upgrade runs per branch at a time
@@ -193,7 +194,6 @@ jobs:
           ## Skills Upgrade
 
           Automated run of \`npx skills refresh\` to update agent skills to their latest versions.
-
           **Date:** $(date -u +"%Y-%m-%d %H:%M UTC")
           **Node version:** 24
 
@@ -271,7 +271,6 @@ jobs:
           echo "## Skills Upgrade Summary" >> "$GITHUB_STEP_SUMMARY"
           echo "- Status: ${{ steps.changes.outputs.clean == 'true' && 'No changes' || 'Changes detected' }}" >> "$GITHUB_STEP_SUMMARY"
           echo "- Skills changed: ${{ steps.changes.outputs.changed_count || '0' }}" >> "$GITHUB_STEP_SUMMARY"
-
           if [ -n "${{ steps.cpr.outputs.pull-request-url }}" ]; then
             echo "- Pull request: ${{ steps.cpr.outputs.pull-request-url }}" >> "$GITHUB_STEP_SUMMARY"
           else
