@@ -21,11 +21,6 @@
 #     contents: write      # Commit skill changes to repository
 #     pull-requests: write # Create and manage pull requests
 #   
-#   concurrency:
-#     # Ensure only one skills-upgrade runs per branch at a time
-#     group: skills-upgrade-${{ github.ref }}
-#     cancel-in-progress: false  # Queue subsequent runs, don't cancel them
-#   
 #   jobs:
 #     upgrade:
 #       uses: equinor/fusion-skills/.github/workflows/skills-update.yml@main
@@ -61,12 +56,6 @@ on:
     - cron: "0 8 * * 1-5"  # Weekdays at 8 AM UTC
   workflow_dispatch:  # Also allow manual trigger
   workflow_call:  # Allow calling as reusable workflow
-
-concurrency:
-  # Ensure only one skills-upgrade runs per branch at a time
-  # (prevents duplicate/conflicting PRs)
-  group: skills-upgrade-${{ github.ref }}
-  cancel-in-progress: false  # Queue subsequent runs, don't cancel them
 
 permissions:
   # Write permissions required to:
