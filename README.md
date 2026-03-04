@@ -63,6 +63,59 @@ Remove skills:
 npx skills remove
 ```
 
+## 🔄 Automated skill updates
+
+This repository provides a **reusable GitHub Actions workflow** for automated skill updates — like Dependabot for GitHub Copilot Agent Skills.
+
+The workflow automatically:
+- Detects available skill updates from your configured sources
+- Creates a pull request only when skills actually change
+- Includes per-skill changelog summaries in the PR description
+- Respects concurrency settings to avoid duplicate PRs
+
+### Setup in your repository
+
+In your repository's `.github/workflows/` directory, create a workflow file (e.g., `skills-update.yml`):
+
+```yaml
+name: Upgrade Agent Skills
+
+on:
+  schedule:
+    # Run every Monday at 2 AM UTC
+    - cron: '0 2 * * 1'
+  workflow_dispatch:  # Allow manual trigger
+
+concurrency:
+  group: skills-upgrade-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  upgrade:
+    uses: equinor/fusion-skills/.github/workflows/skills-update.yml@main
+    permissions:
+      contents: write
+      pull-requests: write
+```
+
+### Configuration notes
+
+- **Schedule**: Adjust the cron expression to your preferred frequency. Examples:
+  - `0 2 * * 1` — Every Monday at 2 AM UTC
+  - `0 0 * * 0` — Every Sunday at midnight UTC
+  - `0 9 * * 1-5` — Every weekday at 9 AM UTC
+
+- **Version pinning**: Replace `@main` with a specific release tag to pin to a version:
+  ```yaml
+  uses: equinor/fusion-skills/.github/workflows/skills-update.yml@v1.0.0
+  ```
+
+- **Manual-only updates**: If you prefer manual-only triggers, remove the `schedule:` section and keep only `workflow_dispatch:`.
+
+- **Permissions**: The workflow requires write access to:
+  - `contents` — to commit skill updates
+  - `pull-requests` — to create and manage pull requests
+
 ## 🤌 What you get
 
 This repo contains reusable skills for common workflows (planning, triage, reviews, runbooks, etc.).
