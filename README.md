@@ -112,6 +112,13 @@ jobs:
   - `contents` — to commit skill updates
   - `pull-requests` — to create and manage pull requests
 
+- **Concurrency**: This workflow does not use concurrency limits. If you run multiple concurrent updates (e.g., from both scheduled and manual triggers), they may update the same PR. This is safe—later commits will overwrite earlier ones on the branch. If you prefer stricter control, add a concurrency block at the job level:
+  ```yaml
+  concurrency:
+    group: skills-upgrade
+    cancel-in-progress: true
+  ```
+
 ## 🆕 Automated new-skill discovery (one PR per skill)
 
 This repository also provides a separate reusable workflow for discovering **new** skills and creating **one PR per skill**.
