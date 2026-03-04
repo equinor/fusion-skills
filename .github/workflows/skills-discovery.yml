@@ -116,7 +116,7 @@ jobs:
           }
 
           extract_skill_ids() {
-            sed -nE 's/^[[:space:]]*│[[:space:]]+((fusion|custom)-[a-z0-9-]+)[[:space:]]*$/\1/p' | sort -u
+            sed -nE 's/.*((fusion|custom)-[a-z0-9-]+)[[:space:]]*$/\1/p' | sort -u
           }
 
           remote_output="$(mktemp)"
