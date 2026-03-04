@@ -86,7 +86,7 @@ jobs:
       # Fetch full git history to support accurate diff detection of changes
       # (needed to calculate which skills were added/modified)
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0  # Full history for accurate git diff
 
@@ -96,7 +96,7 @@ jobs:
       # Install Node.js 24 and cache npm dependencies to speed up subsequent
       # skill installation.
       - name: Setup Node.js + npm cache
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: 'npm'
@@ -129,13 +129,10 @@ jobs:
           fi
 
           # Install/update skills from source repositories
-          # Note: 'npx skills add' with known repo will force-refresh to latest
-          npx skills add vercel-labs/agent-skills || {
-            echo "::warning::npx skills add failed — continuing to check for changes anyway"
+          # Refresh already-installed skills to their latest versions
+          npx skills refresh || {
+            echo "::warning::npx skills refresh failed — continuing to check for changes anyway"
           }
-
-          # For repos with multiple skill sources, you can extend this:
-          # while read -r repo; do npx skills add "$repo"; done < .github/skills.list
 
       # -----------------------------------------------------------------------
       # STEP 4: Detect what changed
@@ -192,13 +189,13 @@ jobs:
           set -euo pipefail
 
           # Initialize PR body with header and summary
-          cat << 'EOF' > pr-body.md
+          cat << EOF > pr-body.md
           ## Skills Upgrade
 
-          Automated run of `npx skills add` to refresh agent skills from source repositories.
+          Automated run of \`npx skills refresh\` to update agent skills to their latest versions.
 
           **Date:** $(date -u +"%Y-%m-%d %H:%M UTC")
-          **Node version:** ${{ matrix.node || '24' }}
+          **Node version:** 24
 
           ## Summary
           - Changed / added skills: ${{ steps.changes.outputs.changed_count }}
@@ -245,7 +242,7 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ github.token }}
-          commit-message: "chore(skills): upgrade agent skills via npx skills"
+          commit-message: "chore(skills): upgrade agent skills"
           branch: chore/skills-upgrade
           delete-branch: true  # Clean up branch after PR merge
           title: "chore(skills): upgrade agent skills"
