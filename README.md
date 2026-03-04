@@ -71,7 +71,6 @@ The workflow automatically:
 - Detects available skill updates from this skills catalog (`equinor/fusion-skills`)
 - Creates a pull request only when skills actually change
 - Includes per-skill changelog summaries in the PR description
-- Respects concurrency settings to avoid duplicate PRs
 
 ### Setup in your repository
 
@@ -89,10 +88,6 @@ on:
 permissions:
   contents: write
   pull-requests: write
-
-concurrency:
-  group: skills-upgrade-${{ github.ref }}
-  cancel-in-progress: false
 
 jobs:
   upgrade:
@@ -116,6 +111,73 @@ jobs:
 - **Permissions**: The workflow requires write access to:
   - `contents` — to commit skill updates
   - `pull-requests` — to create and manage pull requests
+
+- **Concurrency**: This workflow does not use concurrency limits. If you run multiple concurrent updates (e.g., from both scheduled and manual triggers), they may update the same PR. This is safe—later commits will overwrite earlier ones on the branch. If you prefer stricter control, add a concurrency block at the job level:
+  ```yaml
+  concurrency:
+    group: skills-upgrade
+    cancel-in-progress: true
+  ```
+
+## 🆕 Automated new-skill discovery (one PR per skill)
+
+This repository also provides a separate reusable workflow for discovering **new** skills and creating **one PR per skill**.
+
+The workflow compares:
+- `npx skills add --list equinor/fusion-skills`
+- `npx skills add --list .`
+
+Then it filters ignored skills from `.github/skills-ignore.json`, and opens one branch/PR per remaining skill.
+
+### Setup in your repository
+
+Create `.github/workflows/skills-discovery.yml`:
+
+```yaml
+name: Discover New Agent Skills
+
+on:
+  schedule:
+    - cron: '0 8 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  discover:
+    uses: equinor/fusion-skills/.github/workflows/skills-discovery.yml@main
+```
+
+Optional inputs:
+
+```yaml
+jobs:
+  discover:
+    uses: equinor/fusion-skills/.github/workflows/skills-discovery.yml@main
+    with:
+      source: equinor/fusion-skills
+      ignore-file: .github/skills-ignore.json
+      draft-prs: false
+      skip-if-rejected-pr-exists: true
+```
+
+Optional ignore list in your repository at `.github/skills-ignore.json`:
+
+```json
+{
+  "ignored": [
+    "fusion-example-skill"
+  ]
+}
+```
+
+If the ignore file exists, the workflow validates this shape before continuing.
+
+If a skill already has an open PR from branch `chore/skills-discovery/<skill>`, the workflow updates that PR.
+
+`skip-if-rejected-pr-exists` blocks re-proposing skills where a previous PR from that skill branch was closed without merge.
 
 ## 🤌 What you get
 
