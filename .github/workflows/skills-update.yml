@@ -94,14 +94,12 @@ jobs:
       # STEP 2: Setup runtime environment
       # -----------------------------------------------------------------------
       # Install Node.js 24 and cache npm dependencies to speed up subsequent
-      # skill installation. Cache key is based on this workflow file since
-      # there's no package-lock.json to define dependencies.
+      # skill installation.
       - name: Setup Node.js + npm cache
         uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: 'npm'
-          cache-dependency-path: .github/workflows/${{ github.workflow }}.yml
 
       # -----------------------------------------------------------------------
       # STEP 3: Download and refresh agent skills
@@ -248,7 +246,7 @@ jobs:
         with:
           token: ${{ github.token }}
           commit-message: "chore(skills): upgrade agent skills via npx skills"
-          branch: chore/skills-upgrade-${{ github.run_id }}
+          branch: chore/skills-upgrade
           delete-branch: true  # Clean up branch after PR merge
           title: "chore(skills): upgrade agent skills"
           body-path: pr-body.md
@@ -284,5 +282,5 @@ jobs:
           fi
 
           if [ "${{ steps.install_skills.outputs.skipped }}" = "true" ]; then
-            echo "::warning::Skills CLI step was skipped — check Node/npx setup." >> "$GITHUB_STEP_SUMMARY"
+            echo "- Warning: Skills CLI step was skipped — check Node/npx setup." >> "$GITHUB_STEP_SUMMARY"
           fi

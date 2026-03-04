@@ -65,10 +65,10 @@ npx skills remove
 
 ## 🔄 Automated skill updates
 
-This repository provides a **reusable GitHub Actions workflow** for automated skill updates — like Dependabot for GitHub Copilot Agent Skills.
+This repository provides a **GitHub Actions workflow** you can copy into your repo for automated skill updates — like Dependabot for GitHub Copilot Agent Skills.
 
 The workflow automatically:
-- Detects available skill updates from your configured sources
+- Detects available skill updates from this skills catalog (`equinor/fusion-skills`)
 - Creates a pull request only when skills actually change
 - Includes per-skill changelog summaries in the PR description
 - Respects concurrency settings to avoid duplicate PRs
