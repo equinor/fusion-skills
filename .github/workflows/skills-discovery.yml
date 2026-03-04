@@ -107,7 +107,7 @@ jobs:
         shell: bash
         env:
           SOURCE: ${{ inputs.source }}
-          IGNORE_FILE: ${{ inputs.ignore-file }}
+          IGNORE_FILE: ${{ inputs['ignore-file'] }}
         run: |
           set -euo pipefail
 
@@ -233,7 +233,7 @@ jobs:
         uses: actions/github-script@v7
         env:
           SKILL: ${{ matrix.skill }}
-          SKIP_REJECTED: ${{ inputs.skip-if-rejected-pr-exists }}
+          SKIP_REJECTED: ${{ inputs['skip-if-rejected-pr-exists'] }}
         with:
           github-token: ${{ github.token }}
           script: |
@@ -362,7 +362,7 @@ jobs:
           body-path: pr-body-${{ matrix.skill }}.md
           branch: chore/skills-discovery/${{ matrix.skill }}
           base: ${{ github.event.repository.default_branch }}
-          draft: ${{ inputs.draft-prs }}
+          draft: ${{ inputs['draft-prs'] }}
           delete-branch: true
           add-paths: |
             .agents/skills/${{ matrix.skill }}
