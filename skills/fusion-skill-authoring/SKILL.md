@@ -1,7 +1,8 @@
 ---
 name: fusion-skill-authoring
-description: Create or scaffold a new skill in a repository with valid metadata, clear activation cues, standard resource folders, safety boundaries, and validation evidence.
+description: 'Creates or scaffolds a new skill in a repository with valid metadata, activation cues, resource folders, safety boundaries, and validation evidence. USE FOR: create a skill, scaffold SKILL.md, add a new skill, new agent skill, set up skill metadata and guardrails. DO NOT USE FOR: editing existing product code, large refactors of existing skills, or non-skill repository changes.'
 license: MIT
+compatibility: Works best with a GitHub MCP server for issue creation and skill discovery.
 metadata:
    version: "0.2.1"
    tags:
@@ -18,11 +19,19 @@ metadata:
 
 Use this skill when you need to create a new skill under `skills/` and want a valid, maintainable `SKILL.md`.
 
-Typical triggers:
+Typical triggers (skill should activate on all of these):
+
+**Explicit user requests:**
 - "Create a skill for ..."
 - "Scaffold `skills/<name>/SKILL.md`"
 - "Add a new skill with proper metadata and guardrails"
-- "Help me create a skill that helps create other skills"
+- "Help me create a skill that does X"
+- "Set up a new agent skill"
+- "I need a skill for ..."
+
+**Implicit / agent-detected:**
+- A capability is missing and the user or agent concludes a new skill would provide it
+- The user asks to package a workflow or process into a reusable, installable skill
 
 ## When not to use
 
@@ -47,6 +56,8 @@ Collect before writing files:
 Validate metadata constraints:
 - `name`: <= 64 chars, lowercase letters/numbers/hyphens only, no XML tags, and no platform-reserved words
 - `description`: non-empty, <= 1024 chars, no XML tags, includes both what it does and when to use it
+  - **Best practice**: use a single-quoted YAML string with inline `USE FOR:` and `DO NOT USE FOR:` keywords — this maximises agent discovery and skill routing accuracy
+  - Example: `description: 'Does X and Y. USE FOR: case A, case B. DO NOT USE FOR: case C.'`
 - `metadata.version`: semantic version string (`MAJOR.MINOR.PATCH`) in quoted YAML format
 - `metadata`: primarily string key/value map; arrays allowed for explicit relationship fields, avoid nested objects
   - `metadata.role`: `"orchestrator"` or `"subordinate"` (subordinates cannot run without their orchestrator)
@@ -54,7 +65,8 @@ Validate metadata constraints:
   - `metadata.skills`: list of subordinate skill names (orchestrators only)
   - `metadata.tags`: optional list of lowercase kebab-case strings for discoverability
    - `metadata.mcp`: optional map for MCP server needs (`required` and `suggested` lists)
-- `license` and `compatibility`: optional top-level frontmatter fields (not inside `metadata`)
+- `license`: optional top-level field (not inside `metadata`)
+- `compatibility`: optional top-level field (not inside `metadata`); include when the skill has specific environment requirements (tools, MCP servers, network access); adding it raises skill quality score to High tier
 
 If required inputs are missing, ask concise targeted questions first.
 Use `assets/follow-up-questions.md` as the default question bank.
@@ -73,7 +85,10 @@ Use `assets/follow-up-questions.md` as the default question bank.
    - `references/` for longer guidance and detailed docs
    - `assets/` for templates/checklists/static resources
    - `scripts/` only when deterministic automation is required
-6. Write frontmatter (`name`, `description`) that satisfies constraints.
+6. Write frontmatter that satisfies constraints:
+   - Use a single-quoted YAML string for `description` to avoid escaping issues
+   - Include `USE FOR:` and `DO NOT USE FOR:` inline in the description for High-tier discoverability
+   - Add `compatibility` if the skill has specific tool or environment requirements
 7. Add the core sections:
    - When to use
    - When not to use
@@ -110,10 +125,13 @@ Use this baseline for generated `SKILL.md` files:
 ```markdown
 ---
 name: <final-skill-name>
-description: <what it does + when to use it>
+description: '<what it does>. USE FOR: <trigger phrases>. DO NOT USE FOR: <anti-triggers>.'
 license: MIT
+compatibility: <optional: required tools or MCP servers>
 metadata:
    version: "<initial-version>"
+   tags:
+      - <tag>
 ---
 
 # <Skill Title>
