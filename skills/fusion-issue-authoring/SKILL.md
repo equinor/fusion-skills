@@ -4,6 +4,9 @@ description: Orchestrate GitHub issue authoring by classifying request type, rou
 license: MIT
 metadata:
   version: "0.2.1"
+  status: active
+  owner: "@equinor/fusion-core"
+
   role: "orchestrator"
   skills:
     - fusion-issue-author-bug

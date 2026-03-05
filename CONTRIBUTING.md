@@ -24,6 +24,20 @@ Contributions must follow applicable Equinor policies, internal governance, and 
 
 If a contribution could have legal, compliance, data handling, or operational impact, align early with the relevant owner before merging.
 
+## Skills greenkeeping
+
+All skills must maintain clear ownership and current metadata. See [Greenkeeping Guide](contribute/greenkeeping.md) for:
+- Ownership and lifecycle requirements (`metadata.owner`, `metadata.status`)
+- When greenkeeping is triggered (every PR, periodic audits)
+- Currency checks (versions, dependencies, MCP compatibility)
+- Security audits (anti-patterns, secrets, unsafe scripts)
+- Deprecation workflow (timeline, replacement, communication)
+
+All skills are validated automatically in CI — ensure your changes pass:
+- `bun run validate:skills` — skill inventory and structure
+- `bun run validate:ownership` — ownership metadata completeness
+- `bun run validate:scripts` — script safety and intent comments
+
 ## Pull request expectations
 
 Before requesting review, make sure your PR is:
@@ -32,6 +46,7 @@ Before requesting review, make sure your PR is:
 - uses Conventional Commit messages,
 - runs lint/format checks before commit operations (`bun run biome:check`; use `bun run biome:fix` when needed),
 - uses single-scope changesets (`.changeset/*.md`): one skill/package change per file,
+- includes greenkeeping metadata if adding/updating skills (owner, status, tags),
 - clear about what changed and why.
 
 If you are unsure about direction, open a draft PR early and ask for feedback.

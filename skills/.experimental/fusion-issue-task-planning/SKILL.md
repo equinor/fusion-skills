@@ -5,6 +5,8 @@ license: MIT
 metadata:
    version: "0.1.2"
    status: experimental
+   owner: "@equinor/fusion-core"
+
    skills:
       - fusion-issue-authoring
       - fusion-issue-author-task

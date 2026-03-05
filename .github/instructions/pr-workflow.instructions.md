@@ -40,3 +40,40 @@ Apply this guidance when handling issue and pull request workflows, including is
 - If multiple skills/packages changed, split into multiple `.changeset/*.md` files (one entry per file).
 - Use lower-case issue-closing keywords consistently in changeset and PR text when closure is intended.
 - Prefer `resolves owner/repo#123`; use `fixes owner/repo#123` or `closes owner/repo#123` only when those verbs are more accurate.
+
+## Issue closure vs reference guidance
+
+GitHub automatically closes issues when a PR body or commit message includes closure keywords targeting that issue.
+
+**Close an issue:**
+- Use in PR body when this PR directly resolves/fixes/closes the issue it's linked to.
+- Use closure keywords: `resolves`, `fixes`, or `closes` (lowercase).
+- Example: `Resolves equinor/fusion-core-tasks#123`
+- Result: GitHub closes the issue when PR merges.
+- Use when: The PR implements the complete solution to the issue's acceptance criteria.
+
+**Reference an issue without closing:**
+- Use in PR body when the PR is related to or contributes to an issue but does not fully resolve it (e.g., part of a multi-step plan, planning phase, sub-task phase).
+- Use plain text: `Related to:`, `Refs:`, or `See:` (no closure keyword).
+- Example: `Related to: equinor/fusion-core-tasks#123` or `Refs: equinor/fusion-core-tasks#123`
+- Result: GitHub links the PR to the issue but does not auto-close.
+- Use when: The issue is a parent/planning task with multiple PRs or sub-issues, or when closure is explicitly not intended.
+
+**Changesets and issue references:**
+- Changesets document version bumps and are released independently from issue closure.
+- Include issue references in changeset bodies to document why the change was made.
+- Use `resolves` (lowercase) in changeset body when the change directly resolves that issue.
+- Example changeset format:
+  ```markdown
+  ---
+  "skill-name": patch
+  ---
+  
+  Fix missing validation rule in skill metadata
+  
+  - Add required owner field validation
+  - Improve error messaging for missing fields
+  
+  Resolves equinor/fusion-core-tasks#123
+  ```
+- Changeset closure references do not auto-close issues; only PR body references do (when PR merges).
