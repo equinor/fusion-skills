@@ -67,13 +67,14 @@ export function validateSkillOwnership(
  * @param identity - The GitHub identity string to validate.
  * @returns True if the identity is in a valid format, false otherwise.
  */
-export function isValidGitHubIdentity(identity: string): boolean {
+function isValidGitHubIdentity(identity: string): boolean {
   // regex explanation:
   // - ^@                                    => must start with "@"
   // - ([a-z\d](?:[a-z\d-]{0,38}[a-z\d])?) => user/org: 1–39 chars, alnum with internal hyphens
   // - (?:/([a-z\d](?:[a-z\d-]*[a-z\d])?))? => optional "/team" with same character rules
   // - $                                     => no extra characters allowed
   const identityPattern =
+    // regex explanation: Enforces @user or @org/team with exactly one optional team segment.
     /^@([a-z\d](?:[a-z\d-]{0,38}[a-z\d])?)(?:\/([a-z\d](?:[a-z\d-]*[a-z\d])?))?$/i;
   return identityPattern.test(identity);
 }

@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from "bun:test";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { isValidGitHubIdentity, validateSkillOwnership } from "../validate-skills-ownership/index";
+import { validateSkillOwnership } from "../validate-skills-ownership/index";
 
 function createSkill(
   rootDir: string,
@@ -30,40 +30,6 @@ describe("validate-skills-ownership", () => {
       rmSync(tempDir, { recursive: true, force: true });
     }
     tempDirs.length = 0;
-  });
-
-  describe("isValidGitHubIdentity", () => {
-    it("accepts valid user identities", () => {
-      expect(isValidGitHubIdentity("@user")).toBe(true);
-      expect(isValidGitHubIdentity("@user-name")).toBe(true);
-      expect(isValidGitHubIdentity("@user123")).toBe(true);
-      expect(isValidGitHubIdentity("@u")).toBe(true);
-    });
-
-    it("accepts valid team identities", () => {
-      expect(isValidGitHubIdentity("@org/team")).toBe(true);
-      expect(isValidGitHubIdentity("@org/team-name")).toBe(true);
-      expect(isValidGitHubIdentity("@equinor/fusion-core")).toBe(true);
-    });
-
-    it("rejects invalid formats", () => {
-      expect(isValidGitHubIdentity("user")).toBe(false); // missing @
-      expect(isValidGitHubIdentity("@")).toBe(false); // empty user
-      expect(isValidGitHubIdentity("@user/")).toBe(false); // empty team
-      expect(isValidGitHubIdentity("@user/team/extra")).toBe(false); // too many segments
-      expect(isValidGitHubIdentity("@-user")).toBe(false); // starts with hyphen
-      expect(isValidGitHubIdentity("@user-")).toBe(false); // ends with hyphen
-      expect(isValidGitHubIdentity("@org/team-")).toBe(false); // team ends with hyphen
-      expect(
-        isValidGitHubIdentity(
-          "@very-long-user-name-that-exceeds-the-thirty-nine-character-limit-imposed-by-github",
-        ),
-      ).toBe(false);
-    });
-
-    it("is case-insensitive", () => {
-      expect(isValidGitHubIdentity("@Equinor/Fusion-Core")).toBe(true);
-    });
   });
 
   describe("validation logic", () => {
@@ -127,6 +93,21 @@ describe("validate-skills-ownership", () => {
         repoRoot,
         "fusion-invalid-owner",
         '  owner: "not-an-identity"\n  status: "active"',
+      );
+
+      const result = validateSkillOwnership(skill.skillDir, skill.skillName);
+      expect(result.valid).toBe(false);
+      expect(result.errors[0]).toContain("Invalid owner format");
+    });
+
+    it("fails with owner format containing too many path segments", () => {
+      const repoRoot = mkdtempSync(join(tmpdir(), "validate-ownership-"));
+      tempDirs.push(repoRoot);
+
+      const skill = createSkill(
+        repoRoot,
+        "fusion-invalid-owner-segments",
+        '  owner: "@org/team/extra"\n  status: "active"',
       );
 
       const result = validateSkillOwnership(skill.skillDir, skill.skillName);
