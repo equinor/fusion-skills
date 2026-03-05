@@ -3,7 +3,7 @@ name: fusion-issue-authoring
 description: Orchestrate GitHub issue authoring by classifying request type, routing to a type-specific issue-author skill, and enforcing shared safety gates before mutation.
 license: MIT
 metadata:
-  version: "0.2.1"
+  version: "0.2.2"
   status: active
   owner: "@equinor/fusion-core"
 
