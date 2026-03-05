@@ -5,6 +5,8 @@ license: MIT
 compatibility: Requires GitHub MCP server or gh CLI, and git.
 metadata:
    version: "0.1.1"
+   status: experimental
+   owner: "@equinor/fusion-core"
    tags:
       - github
       - pull-request

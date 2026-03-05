@@ -4,6 +4,8 @@ description: Draft and update user-story issues with role-action-value framing, 
 license: MIT
 metadata:
   version: "0.1.1"
+  status: active
+  owner: "@equinor/fusion-core"
   orchestrator: "fusion-issue-authoring"
   role: "subordinate"
   tags:

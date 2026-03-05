@@ -5,6 +5,8 @@ license: MIT
 metadata:
   version: "0.1.1"
   status: experimental
+  owner: "@equinor/fusion-core"
+
   tags:
     - github
     - issue-solving

@@ -4,6 +4,8 @@ description: Draft and update bug issues using a bug-focused structure, reposito
 license: MIT
 metadata:
   version: "0.1.1"
+  status: active
+  owner: "@equinor/fusion-core"
   orchestrator: "fusion-issue-authoring"
   role: "subordinate"
   tags:

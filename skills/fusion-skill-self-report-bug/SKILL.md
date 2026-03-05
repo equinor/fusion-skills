@@ -4,6 +4,8 @@ description: Capture Fusion skill workflow failure context and guide a draft-fir
 license: MIT
 metadata:
   version: "0.1.0"
+  status: active
+  owner: "@equinor/fusion-core"
   tags:
     - github
     - issue-authoring

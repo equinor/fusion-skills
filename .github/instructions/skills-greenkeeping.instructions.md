@@ -41,7 +41,7 @@ Greenkeeping additionally requires ownership metadata:
 - `metadata.owner` (required): primary accountable maintainer.
   - Use a stable GitHub identity (`@user` or `@org/team`).
   - Avoid personal names without GitHub identity.
-- `metadata.sponsor` (recommended): backup accountability owner (team or maintainer).
+- `metadata.sponsor` (optional): backup accountability owner (team or maintainer).
 
 Discovery and currency checks:
 

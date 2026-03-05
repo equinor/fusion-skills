@@ -4,6 +4,8 @@ description: Explain what Fusion MCP is and guide users through setting it up wh
 license: MIT
 metadata:
   version: "0.1.0"
+  status: experimental
+  owner: "@equinor/fusion-core"
   tags:
     - fusion
     - mcp

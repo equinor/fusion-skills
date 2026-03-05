@@ -5,6 +5,8 @@ license: MIT
 compatibility: Works best with a GitHub MCP server for issue creation and skill discovery.
 metadata:
    version: "0.2.1"
+   status: active
+   owner: "@equinor/fusion-core"
    tags:
       - skill-authoring
       - scaffolding
