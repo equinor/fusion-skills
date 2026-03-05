@@ -1,6 +1,6 @@
 ---
 name: fusion-issue-solving
-description: Work on a GitHub issue end-to-end: research, plan, implement, validate, and prepare PR-ready output for issue resolution and sub-issue coordination.
+description: Work on a GitHub issue end-to-end — research, plan, implement, validate, and prepare PR-ready output for issue resolution and sub-issue coordination.
 license: MIT
 metadata:
   version: "0.1.1"
