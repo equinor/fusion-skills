@@ -14,7 +14,7 @@ Validates that all skills have required ownership and lifecycle metadata.
 ### From workspace root
 
 ```bash
-npx tsx scripts/validate-skills-ownership/index.ts
+bun run scripts/validate-skills-ownership/index.ts
 # or
 bun run validate:ownership
 ```

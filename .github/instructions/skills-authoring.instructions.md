@@ -21,7 +21,7 @@ Use `skills/fusion-skill-authoring/SKILL.md` as the canonical authoring workflow
 - Initial version default for new skills in this repository: `"0.0.0"`.
 - **Ownership metadata (required):**
   - `metadata.owner`: Primary accountable maintainer (GitHub identity: `@user` or `@org/team`). Use repository team `@equinor/fusion-core` as default.
-  - `metadata.status`: Lifecycle state of the skill. Must be one of: `active`, `experimental`, `deprecated`, `archived`. Use `active` for stable productions skills, `experimental` for new/unstable skills.
+  - `metadata.status`: Lifecycle state of the skill. Must be one of: `active`, `experimental`, `deprecated`, `archived`. Use `active` for stable production skills, `experimental` for new/unstable skills.
   - `metadata.sponsor` (optional): Secondary owner or team providing backup accountability.
 - Generated release artifacts must not be edited manually in skill authoring/update work:
   - root `README.md`

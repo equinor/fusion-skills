@@ -68,6 +68,7 @@ Run validation commands from repository root:
 ```bash
 npx -y skills add . --list
 bun run validate:skills
+bun run validate:ownership
 ```
 
 Conditional validation when relevant files changed:

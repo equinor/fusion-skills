@@ -1,6 +1,6 @@
 ---
 name: fusion-skill-authoring
-description: 'Creates or scaffolds a new skill in a repository with valid metadata, activation cues, resource folders, safety boundaries, and validation evidence. USE FOR: create a skill, scaffold SKILL.md, add a new skill, new agent skill, set up skill metadata and guardrails. DO NOT USE FOR: editing existing product code, large refactors of existing skills, or non-skill repository changes.'
+description: "Creates or scaffolds a new skill in a repository with valid metadata, activation cues, resource folders, safety boundaries, and validation evidence. USE FOR: create a skill, scaffold SKILL.md, add a new skill, new agent skill, set up skill metadata and guardrails. DO NOT USE FOR: editing existing product code, large refactors of existing skills, or non-skill repository changes."
 license: MIT
 compatibility: Works best with a GitHub MCP server for issue creation and skill discovery.
 metadata:

@@ -53,7 +53,7 @@ Every skill must declare:
 - Status: `deprecated`
 - Maintenance: Security fixes only; no new features
 - Replacement: Must document successor skill(s)
-- Timeline: Remove within 2-3 releases after deprecation notice
+- Timeline: Remove after 2-3 releases from deprecation notice
 - Communication: Issue + PR + release notes
 
 ### Archived skills
@@ -130,7 +130,7 @@ When deprecating a skill:
 3. **Update description**: Add deprecation notice with successor link
 4. **Notify contributors**: Comment on related PRs/issues
 5. **Release notes**: Include in changelog with migration guidance
-6. **Timeline**: Remove after 1-2 releases (allow transition period)
+6. **Timeline**: Remove after 2-3 releases (allow transition period)
 
 **Example deprecation notice:**
 ```
@@ -183,7 +183,7 @@ A: Check git history for recent contributors, or reach out to `@equinor/fusion-c
 A: Exceptional cases (security, compliance, critical bug): yes, document in PR. Otherwise, seek owner alignment first.
 
 **Q: How long before a deprecated skill is removed?**
-A: Minimum 1-2 release cycles to allow transition. Check the issue for specific timeline.
+A: Minimum 2-3 release cycles to allow transition. Check the issue for specific timeline.
 
 **Q: What counts as a breaking change?**
 A: Changes to activation cues, required inputs, output format, or MCP dependencies. Document in PR and release notes.

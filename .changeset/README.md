@@ -26,7 +26,7 @@ Clear description of what changed and why
 - Additional context or migration notes
 
 [Optional issue reference below]
-Resolves equinor/fusion-core-tasks#123
+resolves equinor/fusion-core-tasks#123
 ```
 
 ## Naming and scope
@@ -58,7 +58,7 @@ Resolves equinor/fusion-core-tasks#123
 
 **Important notes:**
 - Changesets themselves do NOT auto-close issues; the PR body does
-- When the release PR merges, both the issue closure keyword in the PR AND any in merged changesets will trigger closure
+- Issue auto-closure is triggered by commit messages and PR descriptions, not by text inside changeset files
 - Use `resolves` when the issue fully resolves with this change (preferred)
 - Use `fixes` when fixing a bug described in an issue
 - Use `closes` if neither `resolves` nor `fixes` is appropriate

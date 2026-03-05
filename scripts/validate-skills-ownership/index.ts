@@ -3,20 +3,9 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import process from "node:process";
+import { extractFrontmatter } from "../list-skills/extract-frontmatter";
 import { findSkillFiles } from "../list-skills/find-skill-files";
 import { parseFrontmatter } from "../list-skills/parse-frontmatter";
-
-/**
- * Parses YAML frontmatter (content between --- delimiters) from SKILL.md.
- *
- * @param content - The raw content of the SKILL.md file.
- * @returns The YAML frontmatter string, or null if not found.
- */
-function extractFrontmatter(content: string): string | null {
-  // regex explanation: This regex matches the YAML frontmatter block at the start of a file.
-  const match = content.match(/^---\n([\s\S]*?)\n---/);
-  return match ? match[1] : null;
-}
 
 /**
  * Validates that a skill has required ownership metadata.
@@ -25,7 +14,7 @@ function extractFrontmatter(content: string): string | null {
  * @param skillName - The name of the skill for reporting purposes.
  * @returns An object indicating if the skill is valid and any errors found.
  */
-function validateSkillOwnership(
+export function validateSkillOwnership(
   skillPath: string,
   skillName: string,
 ): { valid: boolean; errors: string[] } {
@@ -78,9 +67,14 @@ function validateSkillOwnership(
  * @param identity - The GitHub identity string to validate.
  * @returns True if the identity is in a valid format, false otherwise.
  */
-function isValidGitHubIdentity(identity: string): boolean {
-  // regex explanation: This regex validates the GitHub identity format (@user or @org/team).
-  const identityPattern = /^@[\w\-./]+$/;
+export function isValidGitHubIdentity(identity: string): boolean {
+  // regex explanation:
+  // - ^@                                    => must start with "@"
+  // - ([a-z\d](?:[a-z\d-]{0,38}[a-z\d])?) => user/org: 1–39 chars, alnum with internal hyphens
+  // - (?:/([a-z\d](?:[a-z\d-]*[a-z\d])?))? => optional "/team" with same character rules
+  // - $                                     => no extra characters allowed
+  const identityPattern =
+    /^@([a-z\d](?:[a-z\d-]{0,38}[a-z\d])?)(?:\/([a-z\d](?:[a-z\d-]*[a-z\d])?))?$/i;
   return identityPattern.test(identity);
 }
 
