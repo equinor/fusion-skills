@@ -1,12 +1,11 @@
 ---
 name: fusion-issue-solving
-description: Work on a GitHub issue from start to finish: research context, plan executable steps, implement scoped changes, validate results, and prepare a PR-ready output. Handles issue continuation, sub-issue coordination, and end-to-end issue solving workflows.
+description: Work on a GitHub issue end-to-end: research, plan, implement, validate, and prepare PR-ready output for issue resolution and sub-issue coordination.
 license: MIT
 metadata:
   version: "0.1.1"
   status: experimental
   owner: "@equinor/fusion-core"
-
   tags:
     - github
     - github-issue
