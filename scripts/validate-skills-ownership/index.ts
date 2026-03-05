@@ -1,7 +1,7 @@
 /// <reference types="node" />
 
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { basename, dirname, join } from "node:path";
 import process from "node:process";
 import { extractFrontmatter } from "../list-skills/extract-frontmatter";
 import { findSkillFiles } from "../list-skills/find-skill-files";
@@ -89,13 +89,11 @@ function main(): void {
 
   console.log("Validating skill ownership metadata...");
 
-  // regex explanation: This regex strips the /SKILL.md suffix from file paths to get the skill directory.
-  const extensionSuffix = /\/SKILL\.md$/;
   const rawSkillFiles = findSkillFiles(skillsRoot);
-  // Remove trailing /SKILL.md to get the base skill folder path.
+  // Convert each discovered SKILL.md path into its parent skill directory.
   const mappedPaths = rawSkillFiles.map((skillFile) => {
-    // Strip file name to get directory.
-    return skillFile.replace(extensionSuffix, "");
+    // Use dirname for cross-platform path handling on POSIX and Windows separators.
+    return dirname(skillFile);
   });
 
   const skillDirs = mappedPaths.sort();
@@ -104,8 +102,7 @@ function main(): void {
 
   // Iterate through all discovered skill directories and perform ownership validation.
   const validCount = skillDirs.reduce((count, skillDir) => {
-    const parts = skillDir.split("/");
-    const skillName = parts[parts.length - 1];
+    const skillName = basename(skillDir);
 
     const result = validateSkillOwnership(skillDir, skillName);
 
