@@ -61,14 +61,19 @@ Validate metadata constraints:
   - **Best practice**: use a single-quoted YAML string with inline `USE FOR:` and `DO NOT USE FOR:` keywords — this maximises agent discovery and skill routing accuracy
   - Example: `description: 'Does X and Y. USE FOR: case A, case B. DO NOT USE FOR: case C.'`
 - `metadata.version`: semantic version string (`MAJOR.MINOR.PATCH`) in quoted YAML format
+- `metadata.owner`: **required** for greenkeeping: GitHub user (`@username`) or team (`@org/team-name`); default for this repository: `@equinor/fusion-core`
+- `metadata.status`: **required** for greenkeeping: `active`, `experimental`, `deprecated`, or `archived`; default: `active` for new skills
 - `metadata`: primarily string key/value map; arrays allowed for explicit relationship fields, avoid nested objects
   - `metadata.role`: `"orchestrator"` or `"subordinate"` (subordinates cannot run without their orchestrator)
   - `metadata.orchestrator`: required orchestrator skill name (subordinates only)
   - `metadata.skills`: list of subordinate skill names (orchestrators only)
   - `metadata.tags`: optional list of lowercase kebab-case strings for discoverability
-   - `metadata.mcp`: optional map for MCP server needs (`required` and `suggested` lists)
+  - `metadata.sponsor`: optional secondary owner/team providing backup accountability
+  - `metadata.mcp`: optional map for MCP server needs (`required` and `suggested` lists)
 - `license`: optional top-level field (not inside `metadata`)
 - `compatibility`: optional top-level field (not inside `metadata`); include when the skill has specific environment requirements (tools, MCP servers, network access); adding it raises skill quality score to High tier
+
+**Note**: All skills must include `metadata.owner` and `metadata.status` for greenkeeping validation. See [Greenkeeping Guide](../../contribute/greenkeeping.md) for details.
 
 If required inputs are missing, ask concise targeted questions first.
 Use `assets/follow-up-questions.md` as the default question bank.
@@ -132,6 +137,8 @@ license: MIT
 compatibility: <optional: required tools or MCP servers>
 metadata:
    version: "<initial-version>"
+   status: active
+   owner: <owner-github-identity>
    tags:
       - <tag>
 ---
