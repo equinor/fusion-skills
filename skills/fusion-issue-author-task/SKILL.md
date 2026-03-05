@@ -3,7 +3,7 @@ name: fusion-issue-author-task
 description: Draft and update task issues with checklist-first decomposition, dependency-aware sequencing, repository-valid labels, and explicit publish confirmation.
 license: MIT
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
   status: active
   owner: "@equinor/fusion-core"
   orchestrator: "fusion-issue-authoring"

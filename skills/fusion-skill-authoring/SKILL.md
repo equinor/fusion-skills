@@ -4,7 +4,7 @@ description: "Creates or scaffolds a new skill in a repository with valid metada
 license: MIT
 compatibility: Works best with a GitHub MCP server for issue creation and skill discovery.
 metadata:
-   version: "0.2.1"
+   version: "0.2.2"
    status: active
    owner: "@equinor/fusion-core"
    tags:

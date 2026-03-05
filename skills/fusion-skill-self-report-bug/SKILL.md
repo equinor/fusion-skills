@@ -3,7 +3,7 @@ name: fusion-skill-self-report-bug
 description: Capture Fusion skill workflow failure context and guide a draft-first bug reporting flow with explicit confirmation before any GitHub mutation.
 license: MIT
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
   status: active
   owner: "@equinor/fusion-core"
   tags:
