@@ -193,7 +193,9 @@ if ! gh auth status >/dev/null 2>&1; then
   exit 1
 fi
 
-VIEWER_LOGIN="$(GH_PAGER=cat gh api user --jq '.login')"
+export GH_PAGER=cat
+
+VIEWER_LOGIN="$(gh api user --jq '.login')"
 if [[ -z "$VIEWER_LOGIN" ]]; then
   echo "ERROR: Failed to determine the authenticated GitHub user." >&2
   exit 1
