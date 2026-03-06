@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.3 - 2026-03-06
+
+### patch
+
+- [#58](https://github.com/equinor/fusion-skills/pull/58) [`22b4d66`](https://github.com/equinor/fusion-skills/commit/22b4d6655c01edd338aff61ece97f4f6cfe7d245) - Tighten the experimental review-resolution workflow so agents follow a deterministic fetch → analyze → fix → validate → push → reply → resolve sequence and avoid ad hoc mutation scripts.
+
+
+  - Prefer structured review-thread tools when the client exposes them, otherwise use the bundled GraphQL assets or shell helper.
+  - Guard `resolve-review-comments.sh` against duplicate authenticated-user replies by default and use the thread-scoped GraphQL reply mutation.
+  - Track mutation baselines and retry checks in the skill checklist so retries re-fetch state before posting again.
+  - Require the skill to judge whether review feedback is actually correct, reply with rationale when it is not, and ask the user when the comment remains ambiguous.
+
+  resolves equinor/fusion-skills#57
+
 ## 0.1.2 - 2026-03-05
 
 ### patch
