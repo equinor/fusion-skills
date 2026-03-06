@@ -6,7 +6,8 @@ usage() {
 Usage:
   skills/.experimental/fusion-github-review-resolution/scripts/resolve-review-comments.sh \
     --owner <owner> --repo <repo> --pr <number> --review-id <number> \
-    [--message <text> | --message-file <path>] [--apply] [--include-resolved] [--include-outdated]
+    [--message <text> | --message-file <path>] [--apply] [--include-resolved] [--include-outdated] \
+    [--allow-additional-reply]
 
 Description:
   Resolves matching review threads for a given pull request review id.
@@ -17,6 +18,8 @@ Safety:
   - Default mode is dry-run and performs no GitHub mutations.
   - --apply is required to post replies and resolve threads.
   - --message or --message-file is required with --apply.
+  - By default the script fails closed when the authenticated user already replied on a target thread.
+    Use --allow-additional-reply only after manual inspection.
 
 Examples:
   Dry-run:
@@ -40,6 +43,8 @@ INCLUDE_RESOLVED="false"
 INCLUDE_OUTDATED="false"
 MESSAGE_FROM_INLINE="false"
 MESSAGE_FROM_FILE="false"
+ALLOW_ADDITIONAL_REPLY="false"
+VIEWER_LOGIN=""
 
 require_command() {
   local name="$1"
@@ -136,6 +141,10 @@ while [[ $# -gt 0 ]]; do
       INCLUDE_OUTDATED="true"
       shift
       ;;
+    --allow-additional-reply)
+      ALLOW_ADDITIONAL_REPLY="true"
+      shift
+      ;;
     --help|-h)
       usage
       exit 0
@@ -184,8 +193,14 @@ if ! gh auth status >/dev/null 2>&1; then
   exit 1
 fi
 
+VIEWER_LOGIN="$(GH_PAGER=cat gh api user --jq '.login')"
+if [[ -z "$VIEWER_LOGIN" ]]; then
+  echo "ERROR: Failed to determine the authenticated GitHub user." >&2
+  exit 1
+fi
+
 # shellcheck disable=SC2016
-QUERY='query($owner:String!,$repo:String!,$number:Int!){repository(owner:$owner,name:$repo){pullRequest(number:$number){reviewThreads(first:100){nodes{id isResolved isOutdated path line comments(first:100){nodes{databaseId url body pullRequestReview{databaseId}}}}}}}}'
+QUERY='query($owner:String!,$repo:String!,$number:Int!){repository(owner:$owner,name:$repo){pullRequest(number:$number){reviewThreads(first:100){nodes{id isResolved isOutdated path line comments(first:100){nodes{databaseId url body author{login} pullRequestReview{databaseId}}}}}}}}'
 
 # shellcheck disable=SC2209
 JSON_OUTPUT="$({
@@ -214,7 +229,9 @@ fi
 TARGETS_JSON="$(printf '%s\n' "$JSON_OUTPUT" | jq -c \
   --argjson reviewId "$REVIEW_ID" \
   --arg includeResolved "$INCLUDE_RESOLVED" \
-  --arg includeOutdated "$INCLUDE_OUTDATED" '
+  --arg includeOutdated "$INCLUDE_OUTDATED" \
+  --arg viewerLogin "$VIEWER_LOGIN" \
+  --arg message "$MESSAGE" '
     .data.repository.pullRequest.reviewThreads.nodes
     | map(
         . as $thread
@@ -228,6 +245,27 @@ TARGETS_JSON="$(printf '%s\n' "$JSON_OUTPUT" | jq -c \
             matchingReviewCommentIds: (
               $thread.comments.nodes
               | map(select(.pullRequestReview.databaseId == $reviewId) | .databaseId)
+            ),
+            viewerReplyIds: (
+              $thread.comments.nodes
+              | map(
+                  select(
+                    (.author.login // "") == $viewerLogin
+                    and ((.pullRequestReview.databaseId // 0) != $reviewId)
+                  )
+                  | .databaseId
+                )
+            ),
+            hasMatchingViewerReply: (
+              $thread.comments.nodes
+              | map(
+                  select(
+                    (.author.login // "") == $viewerLogin
+                    and ((.pullRequestReview.databaseId // 0) != $reviewId)
+                    and ((.body // "") == $message)
+                  )
+                )
+              | length > 0
             )
           }
         | select(.matchingReviewCommentIds | length > 0)
@@ -245,7 +283,7 @@ fi
 echo "Found $TARGET_COUNT matching thread(s):"
 printf '%s\n' "$TARGETS_JSON" | jq -r '
   to_entries[]
-  | "\(.key + 1). \(.value.threadId) \(.value.path)\(if .value.line then ":\(.value.line)" else "" end) comments=\(.value.matchingReviewCommentIds | map(tostring) | join(","))\(if .value.isResolved then " [resolved]" else "" end)\(if .value.isOutdated then " [outdated]" else "" end)"
+  | "\(.key + 1). \(.value.threadId) \(.value.path)\(if .value.line then ":\(.value.line)" else "" end) comments=\(.value.matchingReviewCommentIds | map(tostring) | join(",")) viewerReplies=\(.value.viewerReplyIds | length)\(if .value.hasMatchingViewerReply then " [matching-reply]" else "" end)\(if .value.isResolved then " [resolved]" else "" end)\(if .value.isOutdated then " [outdated]" else "" end)"
 '
 
 if [[ "$APPLY" != "true" ]]; then
@@ -255,12 +293,50 @@ fi
 
 while IFS= read -r row; do
   THREAD_ID="$(printf '%s\n' "$row" | jq -r '.threadId')"
-  REPLY_TO_COMMENT_ID="$(printf '%s\n' "$row" | jq -r '.commentIds[-1]')"
+  IS_RESOLVED="$(printf '%s\n' "$row" | jq -r '.isResolved')"
+  VIEWER_REPLY_COUNT="$(printf '%s\n' "$row" | jq -r '.viewerReplyIds | length')"
+  HAS_MATCHING_VIEWER_REPLY="$(printf '%s\n' "$row" | jq -r '.hasMatchingViewerReply')"
 
-# shellcheck disable=SC2209
-  GH_PAGER=cat gh api -X POST "repos/$OWNER/$REPO/pulls/$PR_NUMBER/comments" \
-    -F "in_reply_to=$REPLY_TO_COMMENT_ID" \
-    -f "body=$MESSAGE" >/dev/null
+  if [[ "$IS_RESOLVED" == "true" ]]; then
+    echo "Thread $THREAD_ID is already resolved; skipping reply and resolve mutations."
+    continue
+  fi
+
+  # Guard against duplicate thread replies on retries. If the authenticated user already
+  # replied, fail closed unless the exact message is already present or the operator opts in.
+  if [[ "$HAS_MATCHING_VIEWER_REPLY" == "true" ]]; then
+    echo "Skipping reply for thread $THREAD_ID; identical reply already exists from $VIEWER_LOGIN."
+  elif [[ "$VIEWER_REPLY_COUNT" != "0" && "$ALLOW_ADDITIONAL_REPLY" != "true" ]]; then
+    echo "ERROR: Thread $THREAD_ID already has $VIEWER_REPLY_COUNT reply/replies from $VIEWER_LOGIN. Re-run with --allow-additional-reply only after manual inspection." >&2
+    exit 1
+  else
+    # Use the thread-scoped GraphQL mutation so replies stay attached to the review thread.
+    # shellcheck disable=SC2209,SC2016
+    ADD_REPLY_OUTPUT="$({
+      GH_PAGER=cat gh api graphql \
+        -f 'query=mutation($threadId:ID!,$body:String!){addPullRequestReviewThreadReply(input:{pullRequestReviewThreadId:$threadId,body:$body}){comment{url}}}' \
+        -F "threadId=$THREAD_ID" \
+        -f "body=$MESSAGE"
+    } )"
+
+    if [[ -z "$ADD_REPLY_OUTPUT" ]]; then
+      echo "ERROR: Empty reply mutation response for thread $THREAD_ID." >&2
+      exit 1
+    fi
+
+    if printf '%s\n' "$ADD_REPLY_OUTPUT" | jq -e '.errors | length > 0' >/dev/null 2>&1; then
+      echo "ERROR: Reply mutation errors for thread $THREAD_ID: $(printf '%s\n' "$ADD_REPLY_OUTPUT" | jq -c '.errors')" >&2
+      exit 1
+    fi
+
+    REPLY_URL="$(printf '%s\n' "$ADD_REPLY_OUTPUT" | jq -r '.data.addPullRequestReviewThreadReply.comment.url // empty')"
+    if [[ -z "$REPLY_URL" ]]; then
+      echo "ERROR: Reply mutation for thread $THREAD_ID did not return a comment URL." >&2
+      exit 1
+    fi
+
+    echo "Posted reply for thread $THREAD_ID: $REPLY_URL"
+  fi
 
 # shellcheck disable=SC2209,SC2016
   MUTATION_OUTPUT="$({
@@ -284,7 +360,7 @@ while IFS= read -r row; do
     exit 1
   fi
 
-  echo "Resolved thread $THREAD_ID (reply comment target $REPLY_TO_COMMENT_ID)."
+  echo "Resolved thread $THREAD_ID."
 done < <(printf '%s\n' "$TARGETS_JSON" | jq -c '.[]')
 
-echo "Completed: resolved $TARGET_COUNT thread(s)."
+echo "Completed: processed $TARGET_COUNT matching thread(s)."
