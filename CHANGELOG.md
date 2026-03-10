@@ -2,6 +2,18 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.9.1
+
+### Patch
+
+__🎯 [feat: add dev-time skill evaluation harness #64](https://github.com/equinor/fusion-skills/pull/64)<br/>
+🗂️ [01ce2c7](https://github.com/equinor/fusion-skills/commit/01ce2c748ddf31518deb8f8b75122cbe1fcc9586)<br/>
+📦 fusion-discover-skills@0.1.1__
+
+Fix missing trailing newlines in SKILL.md and follow-up-questions.md
+
+Resolves equinor/fusion-core-tasks#521
+
 ## v0.9.0
 
 ### Minor

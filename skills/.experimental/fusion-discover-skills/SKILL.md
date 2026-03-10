@@ -4,7 +4,7 @@ description: 'Discovers relevant Fusion skills through Fusion MCP first, falls b
 license: MIT
 compatibility: Works best with Fusion MCP access via `mcp_fusion_skills`. When Fusion MCP is unavailable, this skill can fall back to GitHub MCP or read-only `gh` and GraphQL catalog inspection.
 metadata:
-   version: "0.1.0"
+   version: "0.1.1"
    status: experimental
    owner: "@equinor/fusion-core"
    tags:
