@@ -50,7 +50,7 @@ Do not use this skill for:
 Collect before starting the review:
 
 - **Repository** owner and name
-- **PR number or URL** for the dependency update
+- **PR number or URL** for the dependency update, or a copied PR summary that includes package name, version change, changed files, and CI status
 - Optional: specific review concerns or areas of focus from the maintainer
 
 Auto-extract from the PR when available:
@@ -58,6 +58,7 @@ Auto-extract from the PR when available:
 - Package(s) being updated and version range (from → to)
 - Changelog/release notes URL
 - CI status
+- Changed files and dependency ecosystem
 
 ## Instructions
 
@@ -67,6 +68,7 @@ Auto-extract from the PR when available:
 2. Identify the dependency being updated: package name, ecosystem, current version, target version.
 3. Determine the update type: patch, minor, or major (based on semver).
 4. Pull the diff to understand what files changed (typically lockfiles and/or manifest files).
+5. If live PR access is unavailable, normalize the user-provided summary into the same fields and continue with the review.
 
 ### Step 2 — Research the update
 
@@ -77,11 +79,12 @@ Investigate the dependency update using available sources:
 3. **Known issues**: check for reported regressions or issues with the target version.
 4. **Transitive dependency changes**: note significant sub-dependency shifts when visible in the diff.
 
-Draft findings into `assets/research-template.md` structure (either in `.tmp/` or as a PR comment draft).
+Start from `assets/review-tracker.md` and fill the context, validation plan, and source inventory first.
+Draft detailed findings into `assets/research-template.md` (either in `.tmp/` or as a PR comment draft).
 
 ### Step 3 — Analyze through review lenses
 
-Evaluate the update through three structured lenses. Each lens produces a short assessment.
+Evaluate the update through three structured lenses. Each lens produces a short assessment, and the final verdict must reflect any disagreement between lenses instead of averaging concerns away.
 
 #### Security lens
 
@@ -116,6 +119,12 @@ Combine the three lens assessments into a single verdict using `assets/verdict-t
 
 If any lens has a `blocking` assessment, the recommendation must not be `merge` without addressing the blocker first.
 
+Use this confidence model:
+
+- `high`: CI is green, sources are consistent, no lens is `blocking`, and the blast radius is low or well understood.
+- `medium`: no blocker exists, but one or more concerns remain, source coverage is partial, or impact is moderate.
+- `low`: the update is major or ambiguous, CI is failing or unknown, release notes are incomplete, or lens findings conflict materially.
+
 ### Step 5 — Present findings to maintainer
 
 Present the complete review as a structured comment or summary:
@@ -132,9 +141,21 @@ After the maintainer reviews the findings:
 - **If maintainer approves merge**: ask for explicit confirmation, then approve and/or merge the PR via MCP.
 - **If maintainer requests hold**: add a comment noting the hold reason and any follow-up criteria.
 - **If maintainer declines**: add a comment with the rationale and close if requested.
-- **If follow-up work is identified**: propose creating a tracking issue for migration/remediation tasks.
+- **If follow-up work is identified**: propose a handoff through `fusion-issue-authoring` so the follow-up becomes an explicit `Task`, `Bug`, or `User Story` instead of an informal note.
 
 Never merge or approve without explicit user confirmation, even when confidence is high.
+
+## Assets
+
+- `assets/research-template.md`: research-comment structure for change summary, breaking changes, known issues, and sources
+- `assets/verdict-template.md`: verdict structure for lens assessments, recommendation, confidence, and follow-up items
+- `assets/review-tracker.md`: working checklist and tracker for context, validation, lens outcomes, and handoff decisions
+
+## References
+
+- `references/review-lenses.md`: detailed criteria and assessment scales for the security, code quality, and impact lenses
+- `references/source-inventory.md`: reusable source patterns from Fusion Framework and public Dependabot guidance, including portable vs non-portable boundaries
+- `references/v1-contract.md`: explicit v1 contract decisions, confidence model, handoff rules, and evaluation strategy
 
 ## Expected output
 
@@ -146,6 +167,7 @@ Return a structured review containing:
 - Code quality assessment with evidence
 - Impact assessment with evidence
 - Verdict: recommendation, rationale, confidence, and follow-up items
+- Handoff recommendation when follow-up work should become a tracked issue
 - Explicit action prompt for the maintainer
 
 ## Safety & constraints
