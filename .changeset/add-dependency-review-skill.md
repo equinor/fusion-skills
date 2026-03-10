@@ -9,6 +9,7 @@ Rename and expand the dependency review skill (experimental)
 - Multi-lens review analysis: security, code quality, impact
 - Reusable verdict template with recommendation, rationale, confidence, and follow-up
 - Review tracker/checklist asset for consistent dependency PR triage
+- GitHub MCP retrieval of existing PR comments and review threads before analysis
 - Advisor-driven source guidance, confidence rules, remediation handoff, and safe PR patching flow
 - Mandatory PR research checkpoint comments before mutation and final verdict comments before merge or decision
 - Evaluation prompt for dependency review validation

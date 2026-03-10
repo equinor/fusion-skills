@@ -14,6 +14,16 @@ Post this filled template to the PR as the research checkpoint comment before an
 | Branch health | `<current / behind base / conflicted / needs rebase>` |
 | Consumer role | `<runtime / build / test / dev-tooling / mixed>` |
 
+## Existing PR Discussion
+
+| Signal | Notes |
+| ------ | ----- |
+| Top-level PR comments | `<count and key themes>` |
+| Review threads | `<count total>; <count unresolved>; <count outdated if relevant>` |
+| Maintainer requests | `<none / summary>` |
+| Reviewer concerns to carry forward | `<none / summary>` |
+| Already-answered or outdated discussion | `<none / summary>` |
+
 ## Upstream Delta
 
 <!-- What changed upstream, the release character, and the changelog or release-note source. -->
@@ -43,6 +53,8 @@ Post this filled template to the PR as the research checkpoint comment before an
 
 ## Sources Checked
 
+- [ ] Existing PR comments: `<link or note>`
+- [ ] Review threads / review comments: `<link or note>`
 - [ ] Upstream changelog or release notes: `<link or note>`
 - [ ] Security advisories: `<link or note>`
 - [ ] Issue tracker or regressions: `<link or note>`

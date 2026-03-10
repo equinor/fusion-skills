@@ -1,6 +1,6 @@
 ---
 name: fusion-dependency-review
-description: 'Review dependency PRs with structured research, multi-lens analysis (security, code quality, impact), and a repeatable verdict template. USE FOR: dependency update PRs, Renovate/Dependabot PRs, library upgrade reviews, "review this dependency PR", "should we merge this update". DO NOT USE FOR: feature PRs, application code reviews, dependency automation/bot configuration, or unattended merge without confirmation.'
+description: 'Review dependency PRs with structured research, existing-PR-discussion capture, multi-lens analysis (security, code quality, impact), and a repeatable verdict template. USE FOR: dependency update PRs, Renovate/Dependabot PRs, library upgrade reviews, "review this dependency PR", "should we merge this update". DO NOT USE FOR: feature PRs, application code reviews, dependency automation/bot configuration, or unattended merge without confirmation.'
 license: MIT
 compatibility: Requires GitHub MCP server for PR context. Uses fusion-issue-authoring for follow-up handoff when post-merge work is identified.
 metadata:
@@ -20,7 +20,7 @@ metadata:
 
 # Dependency Review
 
-Structured review workflow for dependency update PRs. Produces consistent research notes, multi-lens analysis, and an actionable verdict with explicit maintainer confirmation before any merge action.
+Structured review workflow for dependency update PRs. Produces consistent research notes that incorporate existing PR discussion, multi-lens analysis, and an actionable verdict with explicit maintainer confirmation before any merge action.
 
 ## When to use
 
@@ -59,6 +59,7 @@ Auto-extract from the PR when available:
 - Changelog/release notes URL
 - CI status
 - Changed files and dependency ecosystem
+- Existing top-level PR comments, review comments, and unresolved thread state
 
 ## Instructions
 
@@ -66,7 +67,7 @@ Auto-extract from the PR when available:
 
 When the runtime supports skill-local advisors, prefer this execution shape instead of a single long linear pass:
 
-1. Run `agents/research-advisor.md` first to normalize the PR context, source list, and research notes.
+1. Run `agents/research-advisor.md` first to normalize the PR context, existing discussion, source list, and research notes.
 2. Fan out the lens advisors in parallel with the same normalized inputs:
   - `agents/security-advisor.md`
   - `agents/code-quality-advisor.md`
@@ -79,23 +80,26 @@ Keep the lens advisors narrow and independent. They should not overwrite each ot
 ### Step 1 — Gather PR context
 
 1. Fetch PR metadata: title, description, changed files, CI status, labels.
-2. Identify the dependency being updated: package name, ecosystem, current version, target version.
-3. Determine the update type: patch, minor, or major (based on semver).
-4. Pull the diff to understand what files changed (typically lockfiles and/or manifest files).
-5. Determine whether the PR branch is current, mergeable, or likely to require rebase before patching or revalidation.
-6. If live PR access is unavailable, normalize the user-provided summary into the same fields and continue with the review.
+2. Fetch existing top-level PR comments and review threads through GitHub MCP before any analysis. Use the PR read operations for `get_comments` and `get_review_comments` so both timeline comments and threaded review feedback are captured.
+3. Summarize the current PR discussion: maintainer requests, reviewer concerns, unresolved threads, prior agent comments, and decisions already made. If live comment or review-thread retrieval fails, stop before analysis and tell the maintainer that the required PR discussion context could not be loaded.
+4. Identify the dependency being updated: package name, ecosystem, current version, target version.
+5. Determine the update type: patch, minor, or major (based on semver).
+6. Pull the diff to understand what files changed (typically lockfiles and/or manifest files).
+7. Determine whether the PR branch is current, mergeable, or likely to require rebase before patching or revalidation.
+8. If live PR access is unavailable, normalize the user-provided summary into the same fields and continue with the review.
 
 ### Step 2 — Research the update
 
 Investigate the dependency update using available sources:
 
-1. **Release notes / changelog**: summarize what changed between the old and new version.
-2. **Breaking changes**: flag any breaking changes, deprecations, or migration steps.
-3. **Known issues**: check for reported regressions or issues with the target version.
-4. **Transitive dependency changes**: note significant sub-dependency shifts when visible in the diff.
-5. **Ecosystem audit tooling**: when the ecosystem provides audit commands (for example `npm audit`, `cargo audit`, `pip-audit`), include their output as an additional evidence source.
+1. **Existing PR discussion**: summarize maintainer instructions, prior reviewer findings, unanswered questions, and unresolved review threads. Distinguish open concerns from resolved or outdated discussion.
+2. **Release notes / changelog**: summarize what changed between the old and new version.
+3. **Breaking changes**: flag any breaking changes, deprecations, or migration steps.
+4. **Known issues**: check for reported regressions or issues with the target version.
+5. **Transitive dependency changes**: note significant sub-dependency shifts when visible in the diff.
+6. **Ecosystem audit tooling**: when the ecosystem provides audit commands (for example `npm audit`, `cargo audit`, `pip-audit`), include their output as an additional evidence source.
 
-Start from `assets/review-tracker.md` and fill the context, validation plan, and source inventory first.
+Start from `assets/review-tracker.md` and fill the context, discussion inventory, validation plan, and source inventory first.
 If the runtime supports skill-local advisors, use `agents/research-advisor.md` first and treat its output as the shared input contract for every later advisor.
 Draft detailed findings into `assets/research-template.md` (either in `.tmp/` or as a PR comment draft).
 For a live PR review, publish the filled research template as a top-level PR comment before any source-control mutation, rebase, push, approval, or merge. If the runtime cannot post the comment, stop before mutation and tell the maintainer that the research checkpoint could not be recorded on the PR.
@@ -111,6 +115,7 @@ If the runtime supports skill-local advisors, run these focused advisors in para
 - `agents/impact-advisor.md`
 
 Pass the same normalized research summary, PR context, and diff facts to each advisor so the comparison is about interpretation, not missing inputs.
+Pass the same normalized research summary, PR context, existing discussion summary, and diff facts to each advisor so the comparison is about interpretation, not missing inputs.
 
 These advisors contribute evidence and a lens assessment only. They should not decide the final recommendation independently. The parent skill still owns the unified review.
 
@@ -134,6 +139,7 @@ These advisors contribute evidence and a lens assessment only. They should not d
 - Does the CI pass with the update?
 - Are there downstream consumers that would be affected?
 - Does the update require follow-up work (config changes, migration steps, code adaptation)?
+- Are there unresolved reviewer concerns that still require code changes or a written rebuttal?
 - Assessment: `clear` / `concern` / `blocking`
 
 ### Step 4 — Synthesize verdict
@@ -148,6 +154,7 @@ If the runtime supports skill-local advisors, chain the completed research outpu
 - **Follow-up items**: explicit list of any required actions after merge (migrations, config changes, monitoring)
 
 If any lens has a `blocking` assessment, the recommendation must not be `merge` without addressing the blocker first.
+Unresolved reviewer concerns or open review threads without an evidence-based resolution should reduce confidence and usually prevent a straight `merge` recommendation.
 
 Use this confidence model:
 
@@ -163,7 +170,7 @@ Present the complete review through explicit PR checkpoints:
 
 1. Research checkpoint comment: post the step 2 output to the PR before any branch mutation, rebase, push, approval, or merge.
 2. Final verdict comment: post the final verdict comment to the PR before any approval, hold, decline, or merge action. Refresh it with any patching or validation results before posting.
-3. Include the lens assessments, recommendation, confidence, follow-up items, and explicit confirmation prompt in the final verdict comment.
+3. Include the existing discussion summary, unresolved reviewer concerns or rationale for treating them as resolved/outdated, lens assessments, recommendation, confidence, follow-up items, and explicit confirmation prompt in the final verdict comment.
 4. If live PR comment posting is unavailable, stop before mutation or merge and tell the maintainer that the PR record could not be updated.
 
 ### Step 6 — Act on maintainer decision
@@ -203,6 +210,7 @@ If helper advisors are unavailable, follow the same orchestration inline: resear
 Return a structured review containing:
 
 - Package name, version change, and update type
+- Existing PR discussion summary (top-level comments, review-thread themes, unresolved concerns)
 - Research summary (changelog highlights, breaking changes, known issues)
 - Security assessment with evidence
 - Code quality assessment with evidence
@@ -218,6 +226,7 @@ Never:
 - Merge or approve a dependency PR without explicit user confirmation
 - Create a merge commit by merging the base branch into a Dependabot or Renovate PR branch
 - Skip the research checkpoint comment or final verdict comment on a live PR
+- Ignore existing reviewer concerns because they are inconvenient or duplicative
 - Claim CI passed or security is clear without checking actual status
 - Expose secrets or tokens in comments or logs
 - Dismiss security concerns for convenience
@@ -226,6 +235,7 @@ Never:
 Always:
 
 - Present evidence for each assessment (link to changelog, CVE, CI status)
+- Fetch existing PR comments and review threads via GitHub MCP before analysis on a live PR
 - Reuse one shared research packet across advisors instead of rediscovering the same facts in each pass
 - Prefer parallel lens analysis when the runtime supports it, then chain synthesis after all lens outputs are ready
 - Post the research checkpoint comment to the PR before any branch mutation on a live PR

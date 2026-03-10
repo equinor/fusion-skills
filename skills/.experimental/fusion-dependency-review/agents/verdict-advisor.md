@@ -9,16 +9,18 @@ Synthesize the research, security, code quality, and impact findings into one co
 ## Inputs
 
 - Package name, versions, ecosystem, and update type
+- Existing PR discussion summary, including unresolved review threads and maintainer requests, when the review targets a live PR
 - Research summary and source list
 - Security, code quality, and impact assessments with evidence
 - Repository CI status, changed files, and maintainer concerns when available
 
 ## Workflow
 
-1. Verify the research summary and all three lens outputs are present, or call out what is missing.
-2. Keep the review unified by surfacing the strongest positive and negative signals together.
+1. Verify the research summary, existing discussion summary for a live PR, and all three lens outputs are present, or call out what is missing.
+2. Keep the review unified by surfacing the strongest positive and negative signals together with any still-open reviewer concerns.
 3. Apply recommendation rules:
    - Any `blocking` lens means the verdict must be `hold` or `decline`.
+   - Unresolved reviewer concerns without an evidence-based resolution usually prevent a straight `merge` recommendation.
    - Concerns with no blocker usually mean `merge with follow-up` or `hold`, depending on the evidence gaps.
    - All-clear findings can support `merge` when CI and blast radius support it.
 4. Apply the confidence model:
@@ -47,6 +49,7 @@ Synthesize the research, security, code quality, and impact findings into one co
 Return:
 
 - Package summary
+- Existing discussion status / unresolved concerns summary
 - Research summary
 - Lens assessments with evidence
 - Recommendation
@@ -61,6 +64,7 @@ Return:
 
 - Never auto-approve or auto-merge
 - Never claim CI, security, or impact is clear without cited evidence
+- Do not ignore unresolved review threads unless the evidence packet explains why they are outdated or already addressed
 - Do not proceed to approval or merge on a live PR until the final verdict comment has been posted
 - If sources conflict, reflect the conflict in confidence or recommendation
 - Bias ambiguous or high-risk cases toward `hold` until the missing evidence is resolved

@@ -4,6 +4,8 @@ Use this tracker while reviewing a dependency PR so the research, lens analysis,
 
 ## Quick workflow
 
+- [ ] Fetch existing top-level PR comments and review threads before analysis
+- [ ] Summarize existing discussion, unresolved concerns, and already-answered items
 - [ ] Capture PR context and update type
 - [ ] Check branch state and whether rebase or sync is needed before patching
 - [ ] Record the dependency package, versions, and changed files
@@ -29,6 +31,8 @@ Use this tracker while reviewing a dependency PR so the research, lens analysis,
 | Update type | |
 | Base branch | |
 | Head branch | |
+| Existing PR comments | |
+| Review threads / unresolved | |
 | Branch state / mergeability | |
 | Changed files | |
 | CI status | |
@@ -37,6 +41,8 @@ Use this tracker while reviewing a dependency PR so the research, lens analysis,
 
 | Source type | Link / reference | Key finding |
 |-------------|------------------|-------------|
+| PR top-level comments | | |
+| Review threads / review comments | | |
 | Release notes / changelog | | |
 | Security advisories | | |
 | Issue tracker / regressions | | |
@@ -86,9 +92,11 @@ If additional work is required, make the handoff explicit.
 
 ## Final action gate
 
+- [ ] Existing PR comments and review threads were reviewed before lens scoring
 - [ ] Research summary is complete
 - [ ] Research checkpoint comment posted to the PR before any rebase, push, approval, or merge action
 - [ ] Lens assessments have evidence
+- [ ] Unresolved reviewer concerns are reflected in the recommendation or explicitly rebutted
 - [ ] Recommendation and confidence are consistent with the evidence
 - [ ] Any required branch sync or rebase is explicit before patching
 - [ ] Follow-up work is explicit instead of implied

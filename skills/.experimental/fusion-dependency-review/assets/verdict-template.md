@@ -13,6 +13,13 @@
 - Validation rerun: `<commands and outcome>`
 - PR state now: `<mergeable / conflicted / waiting on CI / ready for maintainer decision>`
 
+## Existing Discussion Status
+
+- Top-level PR comments reviewed: `<yes / no>`
+- Review threads reviewed: `<yes / no>`
+- Open reviewer concerns: `<!-- summarize unresolved threads or ongoing objections, or "None" -->`
+- Items judged outdated or already answered: `<!-- summarize briefly, or "None" -->`
+
 ## Lens Calls
 
 ### Security
