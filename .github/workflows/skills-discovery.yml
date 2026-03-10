@@ -230,7 +230,7 @@ jobs:
 
       - name: Evaluate prior pull request state for skill
         id: pr_state
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         env:
           SKILL: ${{ matrix.skill }}
           SKIP_REJECTED: ${{ inputs['skip-if-rejected-pr-exists'] }}
