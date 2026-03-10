@@ -1,34 +1,48 @@
 # Dependency Update Research
 
-## Context
+## PR Snapshot
 
-| Field              | Value        |
-| ------------------ | ------------ |
-| Repository         | `<owner/repo>` |
-| PR                 | #`<number>` |
-| Package            | `<name>` |
-| Ecosystem          | `<npm/pip/cargo/etc>` |
-| Current version    | `<from>` |
-| Target version     | `<to>` |
-| Update type        | `<patch/minor/major>` |
-| CI status          | `<passing/failing/pending>` |
+| Signal | Notes |
+| ------ | ----- |
+| Dependency | `<name>` (`<npm/pip/cargo/etc>`) |
+| Version jump | `<from>` -> `<to>` |
+| Update lane | `<patch/minor/major>` |
+| Change scope | `<lockfile-only / manifest + lockfile / code changes>` |
+| CI snapshot | `<passing/failing/pending/unknown>` |
+| Branch health | `<current / behind base / conflicted / needs rebase>` |
+| Consumer role | `<runtime / build / test / dev-tooling / mixed>` |
 
-## Release notes summary
+## Upstream Delta
 
-<!-- Summarize key changes between the old and new version. Link to the upstream changelog or release page. -->
+<!-- What changed upstream, the release character, and the changelog or release-note source. -->
 
-## Breaking changes
+## Breaking Changes And Migration Work
 
-<!-- List any breaking changes, deprecations, or required migration steps. "None identified" if clean. -->
+<!-- Concrete breakage, deprecations, peer shifts, or migration work. Use "None identified" if clean. -->
 
-## Known issues
+## Known Issues And Stability Signals
 
-<!-- Any reported regressions or open issues with the target version. "None found" if clean. -->
+<!-- Regressions, rollback chatter, issue warnings, or "None found." Note if the release is too fresh for strong signal. -->
 
-## Transitive dependency changes
+## Dependency Graph And Transitive Changes
 
-<!-- Notable sub-dependency additions, removals, or version shifts visible in the diff. "No significant changes" if lockfile-only. -->
+<!-- New or removed packages, peer changes, install-script changes, or unusual lockfile churn. -->
 
-## Sources
+## Branch And Validation Notes
 
-<!-- Links to changelogs, release pages, advisories, or discussions consulted during research. -->
+<!-- Branch state, likely rebase need before patching, and focused validations to rerun after sync. -->
+
+## Early Read
+
+- Security signal: `<clear / concern / blocking>`
+- Quality signal: `<clear / concern / blocking>`
+- Impact signal: `<clear / concern / blocking>`
+- Likely verdict direction: `<merge / merge with follow-up / hold / decline>`
+
+## Sources Checked
+
+- [ ] Upstream changelog or release notes: `<link or note>`
+- [ ] Security advisories: `<link or note>`
+- [ ] Issue tracker or regressions: `<link or note>`
+- [ ] PR diff and changed files: `<link or note>`
+- [ ] CI or validation evidence: `<link or note>`

@@ -5,12 +5,12 @@
 Rename and expand the dependency review skill (experimental)
 
 - Structured research template for dependency update PRs
+- Helper advisors for research, security, code quality, impact, source control, and verdict synthesis
 - Multi-lens review analysis: security, code quality, impact
 - Reusable verdict template with recommendation, rationale, confidence, and follow-up
 - Review tracker/checklist asset for consistent dependency PR triage
-- Source inventory and v1 contract notes to document portable boundaries and evaluation strategy
-- Evaluation prompt for an ambiguous dependency PR case
+- Advisor-driven source guidance, confidence rules, remediation handoff, and safe PR patching flow
+- Evaluation prompt for dependency review validation
 - Explicit maintainer confirmation before any merge action
-- Reference documentation for review lens criteria, source patterns, and remediation handoff
 
 Resolves equinor/fusion-core-tasks#523

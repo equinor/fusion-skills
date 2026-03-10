@@ -1,41 +1,61 @@
 # Dependency Update Verdict
 
-## Package
+## Decision Snapshot
 
-`<name>`: `<from>` → `<to>` (`<patch/minor/major>`)
+| Signal | Notes |
+| ------ | ----- |
+| Recommendation | `<merge / merge with follow-up / hold / decline>` |
+| Confidence | `<high / medium / low>` |
 
-## Lens assessments
+## Lens Calls
 
 ### Security
 
-- **Assessment**: `<clear / concern / blocking>`
-- **Evidence**: <!-- CVE references, advisory links, or "no advisories found" -->
+- Call: `<clear / concern / blocking>`
+- Why it matters: `<!-- CVE fix, target-version advisory, attack-surface change, or "no material security issue found" -->`
+- Evidence:
+	- `<!-- advisory link, changelog note, or diff signal -->`
+	- `<!-- optional second supporting point -->`
 
 ### Code quality
 
-- **Assessment**: `<clear / concern / blocking>`
-- **Evidence**: <!-- upstream CI status, test coverage, stability signals -->
+- Call: `<clear / concern / blocking>`
+- Why it matters: `<!-- release stability, API breakage, regression chatter, or "routine maintenance release" -->`
+- Evidence:
+	- `<!-- upstream CI, changelog, migration note, or issue link -->`
+	- `<!-- optional second supporting point -->`
 
 ### Impact
 
-- **Assessment**: `<clear / concern / blocking>`
-- **Evidence**: <!-- blast radius, CI status in this repo, downstream effects -->
+- Call: `<clear / concern / blocking>`
+- Why it matters: `<!-- blast radius, CI effect, downstream consumer risk, or follow-up need -->`
+- Evidence:
+	- `<!-- repo CI, changed-file scope, or dependency usage note -->`
+	- `<!-- optional second supporting point -->`
 
-## Verdict
+## Rationale
 
-| Field          | Value |
-| -------------- | ----- |
-| Recommendation | `<merge / merge with follow-up / hold / decline>` |
-| Rationale      | <!-- concise summary --> |
-| Confidence     | `<high / medium / low>` |
+`<!-- Short explanation that reflects the strongest positive and negative signals without repeating the research snapshot. -->`
 
-## Follow-up items
+## Blockers And Follow-Up
 
-<!-- Explicit list of required actions after merge, or "None" if clean. Each item should be actionable. -->
+### Blockers to clear before merge
 
-- [ ] <!-- e.g. Update configuration for new API -->
-- [ ] <!-- e.g. Monitor for regressions in affected area -->
+<!-- Use "None" if nothing blocks merge. Include branch sync or rebase need here when relevant. -->
 
-## Decision
+### Follow-up after merge
 
-<!-- Maintainer records final decision here -->
+<!-- Use "None" if clean. Keep every item explicit and actionable. -->
+
+- [ ] `<!-- e.g. Update configuration for new API -->`
+- [ ] `<!-- e.g. Monitor for regressions in affected area -->`
+
+### Issue handoff
+
+`<none / Task / Bug / User Story via fusion-issue-authoring>`
+
+## Maintainer Confirmation
+
+- Requested action: `<approve / hold / decline / create follow-up issue>`
+- Confirmation prompt: `Please confirm the next action before any rebase, push, approval, or merge.`
+- Decision note: `<!-- maintainer records the final decision or PR comment summary here -->`

@@ -5,6 +5,7 @@ Use this tracker while reviewing a dependency PR so the research, lens analysis,
 ## Quick workflow
 
 - [ ] Capture PR context and update type
+- [ ] Check branch state and whether rebase or sync is needed before patching
 - [ ] Record the dependency package, versions, and changed files
 - [ ] Gather release notes, changelog, advisories, and known-issue sources
 - [ ] Summarize research findings
@@ -24,6 +25,9 @@ Use this tracker while reviewing a dependency PR so the research, lens analysis,
 | Current version | |
 | Target version | |
 | Update type | |
+| Base branch | |
+| Head branch | |
+| Branch state / mergeability | |
 | Changed files | |
 | CI status | |
 
@@ -42,6 +46,11 @@ Use this tracker while reviewing a dependency PR so the research, lens analysis,
 **Repository-specific checks**
 ```
 (paste relevant commands here)
+```
+
+**Source-control plan**
+```
+(note whether branch refresh, rebase, conflict resolution, or push confirmation is needed)
 ```
 
 **PR / package-specific checks**
@@ -78,5 +87,6 @@ If additional work is required, make the handoff explicit.
 - [ ] Research summary is complete
 - [ ] Lens assessments have evidence
 - [ ] Recommendation and confidence are consistent with the evidence
+- [ ] Any required branch sync or rebase is explicit before patching
 - [ ] Follow-up work is explicit instead of implied
-- [ ] Maintainer confirmation requested before any approve/merge action
+- [ ] Maintainer confirmation requested before any rebase, push, force-push, approve, or merge action
