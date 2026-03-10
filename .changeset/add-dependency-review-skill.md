@@ -18,4 +18,4 @@ Rename and expand the dependency review skill (experimental)
 - Evaluation prompt for dependency review validation
 - Explicit maintainer confirmation before any merge action
 
-Resolves equinor/fusion-core-tasks#523
+resolves equinor/fusion-core-tasks#523

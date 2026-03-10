@@ -25,7 +25,7 @@ Use this reference for the expanded execution contract. Keep `SKILL.md` focused 
 
 ## Step 2 — Research and prepare the evidence packet
 
-1. Summarize the existing PR discussion: maintainer instructions, prior reviewer findings, unanswered questions, and unresolved review threads. Distinguish open concerns from resolved or outdated discussion.
+1. Start from the PR discussion summary created in Step 1 and refine it to highlight maintainer instructions, prior reviewer findings, unanswered questions, and unresolved review threads, clearly distinguishing open concerns from resolved or outdated discussion.
 2. Summarize release notes or changelog changes between the old and new version.
 3. Flag breaking changes, deprecations, peer shifts, or migration steps.
 4. Check for known regressions or open issues against the target version.
