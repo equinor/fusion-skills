@@ -1,6 +1,6 @@
 # Source inventory and scope boundaries
 
-This note records the source workflows reviewed while shaping `fusion-dependency-pr-greenkeeper` and separates portable guidance from repository-specific automation.
+This note records the source workflows reviewed while shaping `fusion-dependency-review` and separates portable guidance from repository-specific automation.
 
 ## Fusion Framework sources reviewed
 

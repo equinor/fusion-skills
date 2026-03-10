@@ -1,8 +1,8 @@
 ---
-"fusion-dependency-pr-greenkeeper": minor
+"fusion-dependency-review": minor
 ---
 
-Add dependency PR greenkeeper skill (experimental)
+Rename and expand the dependency review skill (experimental)
 
 - Structured research template for dependency update PRs
 - Multi-lens review analysis: security, code quality, impact

@@ -1,10 +1,10 @@
 # V1 contract
 
-This document records the explicit contract for the first release of `fusion-dependency-pr-greenkeeper`.
+This document records the explicit contract for the first release of `fusion-dependency-review`.
 
 ## Identity and placement
 
-- Skill name: `fusion-dependency-pr-greenkeeper`
+- Skill name: `fusion-dependency-review`
 - Initial placement: `skills/.experimental/`
 - Scope: maintainers reviewing dependency update PRs with a repeatable research and verdict structure
 

@@ -1,7 +1,7 @@
 ---
 allow_mcp: true
 skills:
-  - fusion-dependency-pr-greenkeeper
+  - fusion-dependency-review
 ---
 
 ## User

@@ -1,5 +1,5 @@
 ---
-name: fusion-dependency-pr-greenkeeper
+name: fusion-dependency-review
 description: 'Review dependency PRs with structured research, multi-lens analysis (security, code quality, impact), and a repeatable verdict template. USE FOR: dependency update PRs, Renovate/Dependabot PRs, library upgrade reviews, "review this dependency PR", "should we merge this update". DO NOT USE FOR: feature PRs, application code reviews, dependency automation/bot configuration, or unattended merge without confirmation.'
 license: MIT
 compatibility: Requires GitHub MCP server for PR context.
@@ -11,14 +11,14 @@ metadata:
     - github
     - pull-request
     - dependency-review
-    - greenkeeping
+    - dependency-updates
     - security
   mcp:
     required:
       - github
 ---
 
-# Dependency PR Greenkeeper
+# Dependency Review
 
 Structured review workflow for dependency update PRs. Produces consistent research notes, multi-lens analysis, and an actionable verdict with explicit maintainer confirmation before any merge action.
 
