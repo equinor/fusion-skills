@@ -227,7 +227,7 @@ jobs:
       - name: Create Pull Request
         if: steps.changes.outputs.clean == 'false' && steps.changes.outputs.changed_count != '0'
         id: cpr
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ github.token }}
           commit-message: "chore(skills): upgrade agent skills"
