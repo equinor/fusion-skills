@@ -2,6 +2,25 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.9.0
+
+### Minor
+
+__🎯 [Add fusion-discover-skills experimental skill for MCP-backed discovery #62](https://github.com/equinor/fusion-skills/pull/62)<br/>
+🗂️ [1f7d4f9](https://github.com/equinor/fusion-skills/commit/1f7d4f99e32dcd0c15cb964888a0cdbb9fc58541)<br/>
+📦 fusion-discover-skills@0.1.0__
+
+Add an experimental MCP-backed skills discovery skill that routes user requests through the Fusion skills index and returns actionable next-step guidance.
+
+- Detect query, install, update, and remove intent before calling the skills MCP tool
+- Preserve advisory lifecycle commands exactly when MCP returns them
+- Allow GitHub MCP, shell listing, and GraphQL-backed discovery fallback when Fusion MCP is unavailable
+- Add a follow-up question bank for vague requests so discovery can narrow to the right skill before searching
+- Place the first iteration in the experimental skill lane
+- Require explicit low-confidence handling instead of guessed matches
+
+resolves equinor/fusion-core-tasks#412
+
 ## v0.8.0
 
 ### Minor
