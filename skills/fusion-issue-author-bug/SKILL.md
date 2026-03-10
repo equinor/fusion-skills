@@ -3,7 +3,9 @@ name: fusion-issue-author-bug
 description: Draft and update bug issues using a bug-focused structure, repository-valid labels, and explicit publish confirmation before GitHub mutation.
 license: MIT
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
+  status: active
+  owner: "@equinor/fusion-core"
   orchestrator: "fusion-issue-authoring"
   role: "subordinate"
   tags:

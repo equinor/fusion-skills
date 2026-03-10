@@ -2,44 +2,81 @@
 
 Use this checklist while processing unresolved review comments on a pull request.
 
+## Quick workflow
+
+- [ ] Gather unresolved threads and map context
+- [ ] Capture targeted unresolved-thread baseline
+- [ ] Research and understand each comment
+- [ ] Classify each comment (valid, partial, incorrect/outdated, uncertain)
+- [ ] Apply focused fixes per comment
+- [ ] Run validation checks
+- [ ] Push all commits once
+- [ ] Reply and resolve each thread
+- [ ] Verify no unresolved threads remain
+- [ ] Request re-review (optional)
+
 ## Context
 
-- Repository: 
-- Pull request: 
-- Review ID (optional): 
-- Linked issue (optional): 
-- Base branch: 
-- Working branch: 
+| Field | Value |
+|-------|-------|
+| Repository | |
+| Pull request # | |
+| Review ID (optional) | |
+| Linked issue (optional) | |
+| Base branch | |
+| Working branch/worktree | |
 
 ## Validation commands
 
-- Targeted checks: 
-- Required full checks: 
+**Targeted checks** (run early, per-fix):
+```
+(paste commands here)
+```
+
+**Required full checks** (run before push):
+```
+(paste commands here)
+```
 
 ## Comment tracking
 
-| # | Thread ID | Comment ID | File | Summary of feedback | Research notes | Fix summary | Checks run | Commit hash | Reply posted | Thread resolved |
-|---|-----------|------------|------|----------------------|----------------|-------------|------------|-------------|--------------|-----------------|
-| 1 |           |            |      |                      |                |             |            |             | no           | no              |
-| 2 |           |            |      |                      |                |             |            |             | no           | no              |
-| 3 |           |            |      |                      |                |             |            |             | no           | no              |
+> **Note:** Add more rows as needed. Each row = one review thread to resolve.
 
-## Push gate
+| Thread ID | File | Line(s) | Summary of feedback | Research notes | Disposition | Fix summary / rationale | Commit hash | Reply posted | Resolved |
+|-----------|------|---------|---------------------|----------------|-------------|-------------------------|-------------|--------------|----------|
+|           |      |         |                     |                |             |                         |             | ☐            | ☐        |
+|           |      |         |                     |                |             |                         |             | ☐            | ☐        |
+|           |      |         |                     |                |             |                         |             | ☐            | ☐        |
 
-- [ ] Every tracked comment has a corresponding fix entry.
-- [ ] Required checks are passing.
-- [ ] Commits are created and mapped to comments.
-- [ ] Branch was pushed once after all fixes.
+## Pre-mutation checks
 
-## Reply + resolve gate
+- [ ] Baseline unresolved thread count captured
+- [ ] Each targeted thread checked for existing agent replies
+- [ ] Any uncertain comments escalated to the user before reply/resolve
+- [ ] Reply text drafted once per thread before mutation
+- [ ] Any failed/uncertain mutation attempts re-checked before retrying
 
-- [ ] Every comment has a concrete fix reply with commit reference.
-- [ ] Every targeted review thread is resolved.
-- [ ] Remaining unresolved threads (if any) are documented with reason.
+## Pre-push checklist
+
+- [ ] Every tracked comment has a corresponding fix
+- [ ] All fixes run and pass targeted checks
+- [ ] Required full repository checks complete and pass
+- [ ] Each fix has a commit with clear message
+- [ ] Branch ready to push (no uncommitted changes)
+
+## Post-push / reply + resolve checklist
+
+- [ ] Every comment has a reply with commit reference(s)
+- [ ] Declined comments have evidence-based rationale replies
+- [ ] Every reply is followed immediately by thread resolution
+- [ ] No duplicate agent replies were posted during this run
+- [ ] No unresolved threads remain (verify with GraphQL query)
+- [ ] Any outdated threads addressed or documented
 
 ## Final summary
 
-- Processed comments: 
-- Commits: 
-- Remaining blockers: 
-- Follow-up needed: 
+**Processed:** ___ comments / ___ threads
+
+**Commits created:** 
+
+**Any remaining blockers:**

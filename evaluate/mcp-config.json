@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "mcp_fusion": {
+      "type": "http",
+      "url": "http://host.docker.internal:8080/mcp",
+      "tools": ["*"]
+    }
+  }
+}

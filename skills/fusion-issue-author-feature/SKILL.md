@@ -3,7 +3,9 @@ name: fusion-issue-author-feature
 description: Draft and update feature issues with clear problem framing, scoped requirements, repository-valid labels, and explicit confirmation before publishing.
 license: MIT
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
+  status: active
+  owner: "@equinor/fusion-core"
   orchestrator: "fusion-issue-authoring"
   role: "subordinate"
   tags:

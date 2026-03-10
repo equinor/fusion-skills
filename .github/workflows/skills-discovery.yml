@@ -1,0 +1,396 @@
+## ============================================================================
+# Fusion Skills Discovery Workflow
+# ============================================================================
+#
+# PURPOSE:
+#   Discover newly released skills from a source repository and create
+#   one pull request per newly detected skill in the consumer repository.
+#
+# HOW TO USE THIS WORKFLOW:
+#   In your repository, create `.github/workflows/skills-discovery.yml`:
+#
+#   name: Discover New Agent Skills
+#   on:
+#     schedule:
+#       # Weekdays at 8 AM UTC
+#       - cron: '0 8 * * 1-5'
+#     workflow_dispatch:
+#
+#   permissions:
+#     contents: write
+#     pull-requests: write
+#
+#   jobs:
+#     discover:
+#       uses: equinor/fusion-skills/.github/workflows/skills-discovery.yml@main
+#       with:
+#         source: equinor/fusion-skills
+#         ignore-file: .github/skills-ignore.json
+#         draft-prs: false
+#         skip-if-rejected-pr-exists: true
+#
+#   Notes:
+#   - Replace @main with a release tag to pin behavior.
+#   - Keep `workflow_dispatch` if you want manual trigger support.
+#   - `ignore-file` is optional; if present it must be valid JSON.
+#
+# REQUIRED REPOSITORY SETUP:
+#   Repositories using this workflow should:
+#   1. Grant workflow write access to contents and pull requests.
+#   2. Use a token with permission to open PRs in the same repository.
+#   3. Optionally provide `.github/skills-ignore.json` with shape:
+#      { "ignored": ["fusion-example-skill"] }
+#
+# HOW IT WORKS:
+#   1. List source skills with: `npx -y skills add --list <source>`
+#   2. List local installed skills with: `npx -y skills add --list .`
+#   3. Compute remote - local difference (new skills only)
+#   4. Filter ignored skill ids from `.github/skills-ignore.json`
+#   5. For each remaining skill:
+#      - Install only that skill
+#      - Update `skills-lock.json` and `.agents/skills/<skill>`
+#      - If an open PR already exists for that skill branch, update it
+#      - Optionally skip if a previous PR was closed without merge
+#      - Create one PR per skill for independent review/merge decision
+#
+# ============================================================================
+
+name: Fusion Skills Discovery
+
+on:
+  workflow_call:
+    inputs:
+      source:
+        description: Skills source passed to `npx skills add --list`
+        required: false
+        type: string
+        default: equinor/fusion-skills
+      ignore-file:
+        description: Ignore list path in target repository
+        required: false
+        type: string
+        default: .github/skills-ignore.json
+      draft-prs:
+        description: Create draft PRs instead of ready-for-review
+        required: false
+        type: boolean
+        default: false
+      skip-if-rejected-pr-exists:
+        description: Skip proposing a skill when a previous PR for that skill branch was closed without merge
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  discover:
+    name: Discover new skills
+    runs-on: ubuntu-latest
+    outputs:
+      has_new_skills: ${{ steps.detect.outputs.has_new_skills }}
+      new_count: ${{ steps.detect.outputs.new_count }}
+      new_skills: ${{ steps.detect.outputs.new_skills }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Detect newly released skills
+        id: detect
+        shell: bash
+        env:
+          SOURCE: ${{ inputs.source }}
+          IGNORE_FILE: ${{ inputs['ignore-file'] }}
+        run: |
+          set -euo pipefail
+
+          strip_ansi() {
+            sed -E 's/\x1B\[[0-9;]*[A-Za-z]//g'
+          }
+
+          extract_skill_ids() {
+            sed -nE 's/.*((fusion|custom)-[a-z0-9-]+)[[:space:]]*$/\1/p' | sort -u
+          }
+
+          remote_output="$(mktemp)"
+          local_output="$(mktemp)"
+          remote_file="$(mktemp)"
+          local_file="$(mktemp)"
+          ignored_file="$(mktemp)"
+          new_file="$(mktemp)"
+
+          echo "Discovering available skills from source: $SOURCE"
+          if ! npx -y skills add --list "$SOURCE" >"$remote_output" 2>&1; then
+            echo "::error::Failed to list source skills from '$SOURCE'."
+            cat "$remote_output"
+            exit 1
+          fi
+
+          remote_skills="$(strip_ansi <"$remote_output" | extract_skill_ids)"
+          if [ -z "$remote_skills" ]; then
+            echo "::error::No skills matching (fusion|custom)-* found in source '$SOURCE'."
+            cat "$remote_output"
+            exit 1
+          fi
+
+          printf '%s\n' "$remote_skills" | sed '/^[[:space:]]*$/d' | sort -u > "$remote_file"
+
+          echo "Discovering currently installed local skills from '.'"
+          set +e
+          npx -y skills add --list . >"$local_output" 2>&1
+          local_status=$?
+          set -e
+
+          if [ "$local_status" -eq 0 ]; then
+            local_skills="$(strip_ansi <"$local_output" | extract_skill_ids)"
+            printf '%s\n' "$local_skills" | sed '/^[[:space:]]*$/d' | sort -u > "$local_file"
+          elif strip_ansi <"$local_output" | grep -qi "No skills found"; then
+            : > "$local_file"
+            echo "No local skills found yet."
+          else
+            echo "::error::Failed to list local skills from current repository."
+            cat "$local_output"
+            exit "$local_status"
+          fi
+
+          if [ -f "$IGNORE_FILE" ]; then
+            if ! jq -e '.ignored | type == "array" and all(.[]; type == "string")' "$IGNORE_FILE" >/dev/null; then
+              echo "::error::Invalid ignore list '$IGNORE_FILE'. Expected JSON: {\"ignored\": [\"fusion-example\"]}."
+              exit 1
+            fi
+
+            jq -r '.ignored[]' "$IGNORE_FILE" | sed '/^[[:space:]]*$/d' | sort -u > "$ignored_file"
+          else
+            : > "$ignored_file"
+          fi
+
+          comm -23 "$remote_file" "$local_file" > "$new_file"
+
+          if [ -s "$ignored_file" ]; then
+            grep -vxFf "$ignored_file" "$new_file" > "${new_file}.filtered" || true
+            mv "${new_file}.filtered" "$new_file"
+          fi
+
+          mapfile -t new_skills < "$new_file"
+
+          if [ ${#new_skills[@]} -eq 0 ]; then
+            echo "has_new_skills=false" >> "$GITHUB_OUTPUT"
+            echo "new_count=0" >> "$GITHUB_OUTPUT"
+            echo "new_skills=[]" >> "$GITHUB_OUTPUT"
+          else
+            new_skills_json=$(jq -nc '$ARGS.positional' --args "${new_skills[@]}")
+            echo "has_new_skills=true" >> "$GITHUB_OUTPUT"
+            echo "new_count=${#new_skills[@]}" >> "$GITHUB_OUTPUT"
+            echo "new_skills=$new_skills_json" >> "$GITHUB_OUTPUT"
+          fi
+
+          {
+            echo "## Skills Discovery Summary"
+            echo "- Source: \`$SOURCE\`"
+            echo "- Remote skills discovered: $(wc -l < "$remote_file" | tr -d ' ')"
+            echo "- Local skills discovered: $(wc -l < "$local_file" | tr -d ' ')"
+            echo "- Ignored skills: $(wc -l < "$ignored_file" | tr -d ' ')"
+            echo "- New skills to propose: ${#new_skills[@]}"
+            if [ ${#new_skills[@]} -gt 0 ]; then
+              echo ""
+              echo "### New skills"
+              printf '%s\n' "${new_skills[@]}" | sed 's/^/- /'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  create_prs:
+    name: Create one PR per skill
+    needs: discover
+    if: needs.discover.outputs.has_new_skills == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        skill: ${{ fromJson(needs.discover.outputs.new_skills) }}
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Evaluate prior pull request state for skill
+        id: pr_state
+        uses: actions/github-script@v7
+        env:
+          SKILL: ${{ matrix.skill }}
+          SKIP_REJECTED: ${{ inputs['skip-if-rejected-pr-exists'] }}
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            const skill = process.env.SKILL;
+            const skipRejected = process.env.SKIP_REJECTED === "true";
+            const { owner, repo } = context.repo;
+            const branch = `chore/skills-discovery/${skill}`;
+
+            const outputs = {
+              mode: "create-new",
+              blocked: "false",
+              open_exists: "false",
+              open_url: "",
+              rejected_exists: "false",
+              rejected_url: "",
+            };
+
+            const openPrs = await github.paginate(github.rest.pulls.list, {
+              owner,
+              repo,
+              state: "open",
+              head: `${owner}:${branch}`,
+              per_page: 100,
+            });
+            const openPr = openPrs.find((pr) => pr.head?.ref === branch);
+
+            if (openPr) {
+              outputs.mode = "update-open";
+              outputs.open_exists = "true";
+              outputs.open_url = openPr.html_url;
+              core.notice(`Open PR exists for ${skill}; workflow will update ${openPr.html_url}.`);
+            } else {
+              const closedPrs = await github.paginate(github.rest.pulls.list, {
+                owner,
+                repo,
+                state: "closed",
+                head: `${owner}:${branch}`,
+                per_page: 100,
+              });
+              const rejectedPr = closedPrs.find((pr) => pr.head?.ref === branch && !pr.merged_at);
+
+              if (rejectedPr) {
+                outputs.rejected_exists = "true";
+                outputs.rejected_url = rejectedPr.html_url;
+                if (skipRejected) {
+                  outputs.mode = "blocked-rejected";
+                  outputs.blocked = "true";
+                  core.notice(`Skipping ${skill}; previous PR was closed without merge: ${rejectedPr.html_url}.`);
+                }
+              }
+            }
+
+            for (const [key, value] of Object.entries(outputs)) {
+              core.setOutput(key, value);
+            }
+
+      - name: Add detected skill
+        if: steps.pr_state.outputs.blocked != 'true'
+        shell: bash
+        env:
+          SOURCE: ${{ inputs.source }}
+          SKILL: ${{ matrix.skill }}
+        run: |
+          set -euo pipefail
+          npx -y skills add "$SOURCE" --skill "$SKILL" -y
+
+      - name: Check whether changes were produced
+        id: has_changes
+        if: steps.pr_state.outputs.blocked != 'true'
+        shell: bash
+        env:
+          SKILL: ${{ matrix.skill }}
+        run: |
+          set -euo pipefail
+
+          if git diff --quiet --exit-code HEAD -- ".agents/skills/$SKILL" skills-lock.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No new changes for $SKILL."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build pull request body
+        if: steps.pr_state.outputs.blocked != 'true' && steps.has_changes.outputs.changed == 'true'
+        shell: bash
+        env:
+          SKILL: ${{ matrix.skill }}
+          SOURCE: ${{ inputs.source }}
+        run: |
+          set -euo pipefail
+          cat > "pr-body-$SKILL.md" << EOF
+          ## Why
+
+          Automated skill discovery found a newly available skill in \`$SOURCE\`.
+
+          ## Current behavior
+
+          This repository does not include \`$SKILL\` yet.
+
+          ## New behavior
+
+          - Adds \`$SKILL\` under \`.agents/skills/\`
+          - Updates \`skills-lock.json\` with the new skill entry
+          - Keeps the change scoped to a single skill for independent review and merge
+
+          ## References
+
+          - Source: \`$SOURCE\`
+          - Discovery workflow run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          ## Reviewer focus
+
+          - Verify the added skill content in \`.agents/skills/$SKILL\`
+          - Verify \`skills-lock.json\` update is add-only for \`$SKILL\`
+          - Confirm this skill is not intended to be ignored
+          EOF
+
+      - name: Create pull request
+        if: steps.pr_state.outputs.blocked != 'true' && steps.has_changes.outputs.changed == 'true'
+        id: create_pr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ github.token }}
+          commit-message: "chore(skills): add skill ${{ matrix.skill }}"
+          title: "chore(skills): add skill ${{ matrix.skill }}"
+          body-path: pr-body-${{ matrix.skill }}.md
+          branch: chore/skills-discovery/${{ matrix.skill }}
+          base: ${{ github.event.repository.default_branch }}
+          draft: ${{ inputs['draft-prs'] }}
+          delete-branch: true
+          add-paths: |
+            .agents/skills/${{ matrix.skill }}
+            skills-lock.json
+          labels: |
+            skills
+            automation
+
+      - name: Job summary
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "## Skill PR Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Skill: ${{ matrix.skill }}" >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "${{ steps.pr_state.outputs.blocked }}" = "true" ]; then
+            echo "- No PR created (previous PR closed without merge: ${{ steps.pr_state.outputs.rejected_url }})." >> "$GITHUB_STEP_SUMMARY"
+          elif [ "${{ steps.has_changes.outputs.changed }}" = "true" ] && [ -n "${{ steps.create_pr.outputs.pull-request-url }}" ]; then
+            if [ "${{ steps.pr_state.outputs.mode }}" = "update-open" ]; then
+              echo "- Pull request updated: ${{ steps.create_pr.outputs.pull-request-url }}" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "- Pull request created: ${{ steps.create_pr.outputs.pull-request-url }}" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          elif [ "${{ steps.pr_state.outputs.open_exists }}" = "true" ] && [ "${{ steps.has_changes.outputs.changed }}" = "false" ]; then
+            echo "- Existing PR already up to date: ${{ steps.pr_state.outputs.open_url }}" >> "$GITHUB_STEP_SUMMARY"
+          elif [ "${{ steps.has_changes.outputs.changed }}" = "false" ]; then
+            echo "- No PR created (no changes detected after install)." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "- PR creation did not produce a URL." >> "$GITHUB_STEP_SUMMARY"
+          fi

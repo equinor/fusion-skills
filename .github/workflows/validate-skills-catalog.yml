@@ -27,7 +27,7 @@ jobs:
           bun-version: latest
 
       - name: Cache Bun dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.bun/install/cache
@@ -43,12 +43,20 @@ jobs:
         id: validate_skills
         run: bun run validate:skills
 
+      - name: Validate skill ownership metadata
+        id: validate_ownership
+        run: bun run validate:ownership
+
       - name: Job summary
         if: always()
         run: |
           {
             echo "## Validate skills and counts"
             echo
-            echo "- Result: ${{ steps.validate_skills.outcome }}"
-            echo "- Command: \\`bun run validate:skills\\`"
+            echo "- Skills validation result: ${{ steps.validate_skills.outcome }}"
+            echo "- Ownership validation result: ${{ steps.validate_ownership.outcome }}"
+            echo
+            echo "### Commands run"
+            echo "- \\`bun run validate:skills\\`"
+            echo "- \\`bun run validate:ownership\\`"
           } >> "$GITHUB_STEP_SUMMARY"
