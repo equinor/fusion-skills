@@ -98,6 +98,7 @@ Investigate the dependency update using available sources:
 Start from `assets/review-tracker.md` and fill the context, validation plan, and source inventory first.
 If the runtime supports skill-local advisors, use `agents/research-advisor.md` first and treat its output as the shared input contract for every later advisor.
 Draft detailed findings into `assets/research-template.md` (either in `.tmp/` or as a PR comment draft).
+For a live PR review, publish the filled research template as a top-level PR comment before any source-control mutation, rebase, push, approval, or merge. If the runtime cannot post the comment, stop before mutation and tell the maintainer that the research checkpoint could not be recorded on the PR.
 
 ### Step 3 — Analyze through review lenses
 
@@ -154,14 +155,16 @@ Use this confidence model:
 - `medium`: no blocker exists, but one or more concerns remain, source coverage is partial, or impact is moderate.
 - `low`: the update is major or ambiguous, CI is failing or unknown, release notes are incomplete, or lens findings conflict materially.
 
+Treat the verdict as a comment-ready artifact. If patching, rebasing, or focused validation changes the branch state, fold those results into the final verdict before posting it to the PR.
+
 ### Step 5 — Present findings to maintainer
 
-Present the complete review as a structured comment or summary:
+Present the complete review through explicit PR checkpoints:
 
-1. Research notes (step 2 output)
-2. Lens assessments (step 3 output)
-3. Verdict (step 4 output)
-4. Suggested action with explicit confirmation prompt
+1. Research checkpoint comment: post the step 2 output to the PR before any branch mutation, rebase, push, approval, or merge.
+2. Final verdict comment: post the final verdict comment to the PR before any approval, hold, decline, or merge action. Refresh it with any patching or validation results before posting.
+3. Include the lens assessments, recommendation, confidence, follow-up items, and explicit confirmation prompt in the final verdict comment.
+4. If live PR comment posting is unavailable, stop before mutation or merge and tell the maintainer that the PR record could not be updated.
 
 ### Step 6 — Act on maintainer decision
 
@@ -169,7 +172,8 @@ After the maintainer reviews the findings:
 
 If the runtime supports skill-local advisors and the review will patch the PR branch before approval or merge, chain into `agents/source-control-advisor.md` only after the verdict is accepted so the branch-sync plan, rebase need, validation reruns, and push confirmation stay tied to the chosen next action.
 
-- **If branch patching is required before approval or merge**: confirm whether the head branch is behind or conflicted, prefer the smallest safe sync step, rerun focused validation after rebase or conflict resolution, and ask for explicit confirmation before any push or force-push.
+- **If branch patching is required before approval or merge**: confirm whether the head branch is behind or conflicted, do not start this step until the research checkpoint comment has been posted to the live PR, use a rebase-only refresh strategy for dependency PR branches, rerun focused validation after rebase or conflict resolution, and ask for explicit confirmation before any push or force-push.
+- **Before any approval, hold, decline, or merge action on a live PR**: post the final verdict comment to the PR with the research summary, lens calls, branch work performed, validation results, recommendation, confidence, follow-up items, and explicit requested action.
 - **If maintainer approves merge**: ask for explicit confirmation, then approve and/or merge the PR via MCP.
 - **If maintainer requests hold**: add a comment noting the hold reason and any follow-up criteria.
 - **If maintainer declines**: add a comment with the rationale and close if requested.
@@ -212,6 +216,8 @@ Return a structured review containing:
 Never:
 
 - Merge or approve a dependency PR without explicit user confirmation
+- Create a merge commit by merging the base branch into a Dependabot or Renovate PR branch
+- Skip the research checkpoint comment or final verdict comment on a live PR
 - Claim CI passed or security is clear without checking actual status
 - Expose secrets or tokens in comments or logs
 - Dismiss security concerns for convenience
@@ -222,7 +228,10 @@ Always:
 - Present evidence for each assessment (link to changelog, CVE, CI status)
 - Reuse one shared research packet across advisors instead of rediscovering the same facts in each pass
 - Prefer parallel lens analysis when the runtime supports it, then chain synthesis after all lens outputs are ready
+- Post the research checkpoint comment to the PR before any branch mutation on a live PR
+- Post the final verdict comment to the PR before any approval or merge on a live PR
 - Make branch-sync or rebase needs explicit before patching the PR
+- Rebase dependency PR branches onto the latest base branch when refresh is required; do not merge the base branch into the PR branch
 - Make follow-up work explicit rather than burying it in review notes
 - Respect the maintainer as the final decision-maker
 - Keep review output in a consistent, repeatable structure

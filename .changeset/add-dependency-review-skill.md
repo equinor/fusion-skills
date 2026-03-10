@@ -10,6 +10,7 @@ Rename and expand the dependency review skill (experimental)
 - Reusable verdict template with recommendation, rationale, confidence, and follow-up
 - Review tracker/checklist asset for consistent dependency PR triage
 - Advisor-driven source guidance, confidence rules, remediation handoff, and safe PR patching flow
+- Mandatory PR research checkpoint comments before mutation and final verdict comments before merge or decision
 - Evaluation prompt for dependency review validation
 - Explicit maintainer confirmation before any merge action
 

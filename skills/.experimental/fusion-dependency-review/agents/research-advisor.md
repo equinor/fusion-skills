@@ -30,7 +30,7 @@ Prefer portable, source-backed signals in this order:
 3. Record breaking changes, deprecations, and migration steps.
 4. Look for known regressions or open issues against the target version.
 5. Capture notable transitive dependency changes visible in the diff.
-6. Draft findings into the research template with explicit sources and unknowns.
+6. Draft findings into the research template with explicit sources and unknowns, then prepare the same content as a PR-comment-ready research checkpoint.
 
 ## Portable boundaries
 
@@ -38,6 +38,7 @@ Carry forward the reusable patterns only:
 
 - Research first, then lens scoring, then verdict
 - Structured notes instead of ad hoc comments
+- For a live PR, the completed research packet must be posted as a research checkpoint comment before any rebase, push, approval, or merge.
 - Explicit consent gate before any approval, merge, or PR mutation
 
 Do not import repository-specific branch, rebase, push, or package-manager automation into the review contract unless the current repository explicitly requires it.
@@ -49,10 +50,12 @@ Return:
 - Normalized context: package, versions, ecosystem, update type, changed files, CI status
 - Research summary: changelog highlights, breaking changes, known issues, transitive changes
 - Source list with enough detail to re-check the evidence
+- PR-comment-ready research checkpoint body
 - Explicit unknowns or missing evidence
 
 ## Guardrails
 
 - Do not fabricate changelog entries or issue reports
 - Do not claim a source was checked if it was not
+- Do not proceed into mutation planning for a live PR if the research checkpoint comment has not been posted or explicitly escalated as blocked
 - Stay read-only until the maintainer asks for a mutation step

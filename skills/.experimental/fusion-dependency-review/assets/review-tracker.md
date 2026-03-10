@@ -9,9 +9,11 @@ Use this tracker while reviewing a dependency PR so the research, lens analysis,
 - [ ] Record the dependency package, versions, and changed files
 - [ ] Gather release notes, changelog, advisories, and known-issue sources
 - [ ] Summarize research findings
+- [ ] Post the research checkpoint comment to the PR before any branch mutation
 - [ ] Score security, code quality, and impact lenses
 - [ ] Determine recommendation and confidence
 - [ ] Identify required follow-up work
+- [ ] Post the final verdict comment to the PR before any approval or merge action
 - [ ] Ask for explicit maintainer confirmation before any approve/merge action
 
 ## Context
@@ -85,8 +87,10 @@ If additional work is required, make the handoff explicit.
 ## Final action gate
 
 - [ ] Research summary is complete
+- [ ] Research checkpoint comment posted to the PR before any rebase, push, approval, or merge action
 - [ ] Lens assessments have evidence
 - [ ] Recommendation and confidence are consistent with the evidence
 - [ ] Any required branch sync or rebase is explicit before patching
 - [ ] Follow-up work is explicit instead of implied
+- [ ] Final verdict comment posted to the PR before any approval or merge action
 - [ ] Maintainer confirmation requested before any rebase, push, force-push, approve, or merge action

@@ -7,6 +7,12 @@
 | Recommendation | `<merge / merge with follow-up / hold / decline>` |
 | Confidence | `<high / medium / low>` |
 
+## Work Done Since Research Checkpoint
+
+- Branch action: `<none / rebased onto <base> / conflict resolved / validation-only>`
+- Validation rerun: `<commands and outcome>`
+- PR state now: `<mergeable / conflicted / waiting on CI / ready for maintainer decision>`
+
 ## Lens Calls
 
 ### Security
@@ -56,6 +62,7 @@
 
 ## Maintainer Confirmation
 
+- Posting gate: `Post this verdict summary to the PR before any approval or merge.`
 - Requested action: `<approve / hold / decline / create follow-up issue>`
 - Confirmation prompt: `Please confirm the next action before any rebase, push, approval, or merge.`
 - Decision note: `<!-- maintainer records the final decision or PR comment summary here -->`
