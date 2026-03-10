@@ -10,6 +10,8 @@ Rename and expand the dependency review skill (experimental)
 - Reusable verdict template with recommendation, rationale, confidence, and follow-up
 - Review tracker/checklist asset for consistent dependency PR triage
 - GitHub MCP retrieval of existing PR comments and review threads before analysis
+- Minimal follow-up questions and candidate dependency PR listing when the target PR is unclear
+- Focused advisor/reference files for target-PR selection and detailed workflow sequencing
 - Advisor-driven source guidance, confidence rules, remediation handoff, and safe PR patching flow
 - Mandatory PR research checkpoint comments before mutation and final verdict comments before merge or decision
 - Evaluation prompt for dependency review validation
