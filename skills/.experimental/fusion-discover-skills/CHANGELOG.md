@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.1 - 2026-03-10
+
+### patch
+
+- [#64](https://github.com/equinor/fusion-skills/pull/64) [`01ce2c7`](https://github.com/equinor/fusion-skills/commit/01ce2c748ddf31518deb8f8b75122cbe1fcc9586) - Fix missing trailing newlines in SKILL.md and follow-up-questions.md
+
+
+  Resolves equinor/fusion-core-tasks#521
+
 ## 0.1.0 - 2026-03-10
 
 ### minor
@@ -15,4 +24,3 @@
   - Require explicit low-confidence handling instead of guessed matches
 
   resolves equinor/fusion-core-tasks#412
-
