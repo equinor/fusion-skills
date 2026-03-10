@@ -2,6 +2,106 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.9.1
+
+### Patch
+
+__🎯 [feat: add dev-time skill evaluation harness #64](https://github.com/equinor/fusion-skills/pull/64)<br/>
+🗂️ [01ce2c7](https://github.com/equinor/fusion-skills/commit/01ce2c748ddf31518deb8f8b75122cbe1fcc9586)<br/>
+📦 fusion-discover-skills@0.1.1__
+
+Fix missing trailing newlines in SKILL.md and follow-up-questions.md
+
+Resolves equinor/fusion-core-tasks#521
+
+## v0.9.0
+
+### Minor
+
+__🎯 [Add fusion-discover-skills experimental skill for MCP-backed discovery #62](https://github.com/equinor/fusion-skills/pull/62)<br/>
+🗂️ [1f7d4f9](https://github.com/equinor/fusion-skills/commit/1f7d4f99e32dcd0c15cb964888a0cdbb9fc58541)<br/>
+📦 fusion-discover-skills@0.1.0__
+
+Add an experimental MCP-backed skills discovery skill that routes user requests through the Fusion skills index and returns actionable next-step guidance.
+
+- Detect query, install, update, and remove intent before calling the skills MCP tool
+- Preserve advisory lifecycle commands exactly when MCP returns them
+- Allow GitHub MCP, shell listing, and GraphQL-backed discovery fallback when Fusion MCP is unavailable
+- Add a follow-up question bank for vague requests so discovery can narrow to the right skill before searching
+- Place the first iteration in the experimental skill lane
+- Require explicit low-confidence handling instead of guessed matches
+
+resolves equinor/fusion-core-tasks#412
+
+## v0.8.0
+
+### Minor
+
+__🎯 [feat: refresh fusion skill authoring guidance #60](https://github.com/equinor/fusion-skills/pull/60)<br/>
+🗂️ [0e7d702](https://github.com/equinor/fusion-skills/commit/0e7d702f01d8a768f6295fc6d08d8732768edbf4)<br/>
+📦 fusion-skill-authoring@0.3.0__
+
+Refresh `fusion-skill-authoring` with clearer discovery cues, decision-gated authoring guidance, and a Fusion-flavored helper-agent layer inspired by Anthropic's `skill-creator`.
+
+- modernize the main skill around reuse-first, evaluation-first, and progressive-disclosure patterns
+- default portable scaffold naming to `custom-<name>` unless the target repository defines a stronger convention
+- strengthen the follow-up questions and skill-readiness checklist for real skill authoring work
+- keep the shipped package portable while restoring Fusion-specific overlays for `fusion-`, reserved skill lanes, and local validation in repo-local instructions
+- bundle installable helper agents for scoping, review, and trigger tuning inside the skill package
+
+resolves equinor/fusion-core-tasks#499
+
+## v0.7.4
+
+### Patch
+
+__🎯 [fix: harden fusion-github-review-resolution workflow #58](https://github.com/equinor/fusion-skills/pull/58)<br/>
+🗂️ [22b4d66](https://github.com/equinor/fusion-skills/commit/22b4d6655c01edd338aff61ece97f4f6cfe7d245)<br/>
+📦 fusion-github-review-resolution@0.1.3__
+
+Tighten the experimental review-resolution workflow so agents follow a deterministic fetch → analyze → fix → validate → push → reply → resolve sequence and avoid ad hoc mutation scripts.
+
+- Prefer structured review-thread tools when the client exposes them, otherwise use the bundled GraphQL assets or shell helper.
+- Guard `resolve-review-comments.sh` against duplicate authenticated-user replies by default and use the thread-scoped GraphQL reply mutation.
+- Track mutation baselines and retry checks in the skill checklist so retries re-fetch state before posting again.
+- Require the skill to judge whether review feedback is actually correct, reply with rationale when it is not, and ask the user when the comment remains ambiguous.
+
+resolves equinor/fusion-skills#57
+
+## v0.7.3
+
+### Patch
+
+__🎯 [feat: establish skills greenkeeping standards and automation #55](https://github.com/equinor/fusion-skills/pull/55)<br/>
+🗂️ [2d346c8](https://github.com/equinor/fusion-skills/commit/2d346c812b4927ed1fdf17c92d51856d1fdc09c3)<br/>
+📦 fusion-github-review-resolution@0.1.2<br/>
+📦 fusion-issue-author-bug@0.1.2<br/>
+📦 fusion-issue-author-feature@0.1.2<br/>
+📦 fusion-issue-author-task@0.1.2<br/>
+📦 fusion-issue-author-user-story@0.1.2<br/>
+📦 fusion-issue-authoring@0.2.2<br/>
+📦 fusion-issue-solving@0.1.2<br/>
+📦 fusion-issue-task-planning@0.1.3<br/>
+📦 fusion-mcp@0.1.1<br/>
+📦 fusion-skill-authoring@0.2.2<br/>
+📦 fusion-skill-self-report-bug@0.1.1__
+
+Add required ownership metadata (`metadata.owner`, `metadata.status`) to all skills. Owner is set to `@equinor/fusion-core` (repository default) and status is set according to skill lifecycle (`active` for production skills, `experimental` for early-stage skills). Sponsor metadata was considered but is not required for MVP.
+
+resolves equinor/fusion-core-tasks#474
+
+---
+
+__🎯 [feat: establish skills greenkeeping standards and automation #55](https://github.com/equinor/fusion-skills/pull/55)<br/>
+🗂️ [2d346c8](https://github.com/equinor/fusion-skills/commit/2d346c812b4927ed1fdf17c92d51856d1fdc09c3)<br/>
+📦 fusion-issue-solving@0.1.2__
+
+Improve skill activation and discoverability cues
+
+- Enhance description with explicit activation keywords: "continue on", "GitHub issue workflow"
+- Reorganize "When to use" section to lead with "continue work on" pattern as primary trigger
+- Add discoverable trigger examples matching common issue-solving requests
+
 ## v0.7.2
 
 ### Patch

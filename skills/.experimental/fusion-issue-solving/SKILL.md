@@ -1,15 +1,19 @@
 ---
 name: fusion-issue-solving
-description: Solve a GitHub issue end-to-end by researching context, planning executable todos, implementing scoped changes, validating results, and preparing PR updates.
+description: Work on a GitHub issue end-to-end — research, plan, implement, validate, and prepare PR-ready output for issue resolution and sub-issue coordination.
 license: MIT
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
   status: experimental
+  owner: "@equinor/fusion-core"
   tags:
     - github
+    - github-issue
     - issue-solving
+    - issue-workflow
     - implementation
     - workflow
+    - continue
   mcp:
     suggested:
       - github
@@ -20,13 +24,14 @@ metadata:
 
 ## When to use
 
-Use this skill when you need to solve a GitHub issue from intake to PR-ready output in one structured flow.
+Use this skill when you have a GitHub issue to work on end-to-end.
 
 Typical triggers:
-- "solve this issue"
-- "implement issue #123"
-- "take this ticket end-to-end"
-- "research, implement, validate, and prepare PR"
+- "continue work on issue #123"
+- "solve this GitHub issue"
+- "implement issue #123 end-to-end"
+- "work on this ticket: [issue URL]"
+- "research, implement, and prepare a PR for this issue"
 
 ## When not to use
 

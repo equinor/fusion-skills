@@ -3,8 +3,10 @@ name: fusion-issue-task-planning
 description: Plan and break down user-story issues into ordered, traceable task issue drafts with explicit publish gates.
 license: MIT
 metadata:
-   version: "0.1.2"
+   version: "0.1.3"
    status: experimental
+   owner: "@equinor/fusion-core"
+
    skills:
       - fusion-issue-authoring
       - fusion-issue-author-task

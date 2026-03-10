@@ -1,7 +1,7 @@
 {
   "name": "fusion-skills",
   "private": true,
-  "version": "0.7.2",
+  "version": "0.9.1",
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.7",
     "@graphql-codegen/typescript": "^4.1.6",
@@ -24,6 +24,7 @@
     "validate:graphql:codegen": "graphql-codegen --config codegen.github.yml --errors-only",
     "validate:scripts": "bun run scripts/validate-scripts/index.ts",
     "validate:skills": "bun run scripts/validate-skills/index.ts",
+    "validate:ownership": "bun run scripts/validate-skills-ownership/index.ts",
     "validate:pr": "bun run scripts/validate-pr/index.ts",
     "release:prepare": "bun run scripts/release-prepare/index.ts",
     "release:finalize": "bun run scripts/release-finalize/index.ts"

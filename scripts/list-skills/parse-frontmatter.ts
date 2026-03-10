@@ -35,7 +35,7 @@ export function parseFrontmatter(frontmatter: string): Record<string, string> {
       }
 
       // This regex matches the expected text format for this step.
-      output[key] = value.replace(/^"|"$/g, "");
+      output[key] = value.replace(/^["']|["']$/g, "");
       continue;
     }
 
@@ -45,7 +45,7 @@ export function parseFrontmatter(frontmatter: string): Record<string, string> {
     if (nested && state.currentMapKey) {
       const nestedKey = `${state.currentMapKey}.${nested[1]}`;
       // This regex matches the expected text format for this step.
-      const nestedValue = nested[2].trim().replace(/^"|"$/g, "");
+      const nestedValue = nested[2].trim().replace(/^["']|["']$/g, "");
       output[nestedKey] = nestedValue;
       state.currentListKey = nestedValue ? "" : nestedKey;
       continue;
@@ -57,7 +57,7 @@ export function parseFrontmatter(frontmatter: string): Record<string, string> {
     if (listItem && (state.currentListKey || state.currentMapKey)) {
       const listKey = state.currentListKey || state.currentMapKey;
       // This regex matches the expected text format for this step.
-      const itemValue = listItem[1].trim().replace(/^"|"$/g, "");
+      const itemValue = listItem[1].trim().replace(/^["']|["']$/g, "");
       // Fail fast here so the remaining logic can assume valid input.
       if (output[listKey]) {
         output[listKey] = `${output[listKey]},${itemValue}`;

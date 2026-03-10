@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.3.0 - 2026-03-09
+
+### minor
+
+- [#60](https://github.com/equinor/fusion-skills/pull/60) [`0e7d702`](https://github.com/equinor/fusion-skills/commit/0e7d702f01d8a768f6295fc6d08d8732768edbf4) - Refresh `fusion-skill-authoring` with clearer discovery cues, decision-gated authoring guidance, and a Fusion-flavored helper-agent layer inspired by Anthropic's `skill-creator`.
+
+
+  - modernize the main skill around reuse-first, evaluation-first, and progressive-disclosure patterns
+  - default portable scaffold naming to `custom-<name>` unless the target repository defines a stronger convention
+  - strengthen the follow-up questions and skill-readiness checklist for real skill authoring work
+  - keep the shipped package portable while restoring Fusion-specific overlays for `fusion-`, reserved skill lanes, and local validation in repo-local instructions
+  - bundle installable helper agents for scoping, review, and trigger tuning inside the skill package
+
+  resolves equinor/fusion-core-tasks#499
+
+## 0.2.2 - 2026-03-05
+
+### patch
+
+- [#55](https://github.com/equinor/fusion-skills/pull/55) [`2d346c8`](https://github.com/equinor/fusion-skills/commit/2d346c812b4927ed1fdf17c92d51856d1fdc09c3) - Add required ownership metadata (`metadata.owner`, `metadata.status`) to all skills. Owner is set to `@equinor/fusion-core` (repository default) and status is set according to skill lifecycle (`active` for production skills, `experimental` for early-stage skills). Sponsor metadata was considered but is not required for MVP.
+
+
+  resolves equinor/fusion-core-tasks#474
+
 ## 0.2.1 - 2026-02-20
 
 ### patch
