@@ -14,7 +14,7 @@ Use this reference for the expanded execution contract. Keep `SKILL.md` focused 
 ## Step 1 — Gather PR context
 
 1. After a single target PR is selected, fetch PR metadata: title, description, changed files, CI status, labels.
-2. Fetch existing top-level PR comments and review threads through GitHub MCP before any analysis. Use the PR read operations for `get_comments` and `get_review_comments` so both timeline comments and threaded review feedback are captured.
+2. Fetch existing top-level PR comments and review threads through GitHub MCP before any analysis, using PR tools that list both timeline comments and threaded review feedback so everything is captured.
 3. Summarize the current PR discussion: maintainer requests, reviewer concerns, unresolved threads, prior agent comments, and decisions already made.
 4. If live comment or review-thread retrieval fails, stop before analysis and tell the maintainer that the required PR discussion context could not be loaded.
 5. Identify the dependency being updated: package name, ecosystem, current version, target version.

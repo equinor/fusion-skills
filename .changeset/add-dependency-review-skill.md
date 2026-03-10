@@ -2,7 +2,7 @@
 "fusion-dependency-review": minor
 ---
 
-Rename and expand the dependency review skill (experimental)
+Add experimental dependency review skill
 
 - Structured research template for dependency update PRs
 - Helper advisors for research, security, code quality, impact, source control, and verdict synthesis
