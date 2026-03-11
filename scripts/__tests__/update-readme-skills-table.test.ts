@@ -58,18 +58,49 @@ describe("updateReadmeSkillsTable", () => {
         "1.2.3",
       );
       writeSkill(repoRoot, "fusion-a-skill", "fusion-a-skill", "Handles A flow.", "0.2.0");
+      writeSkill(
+        repoRoot,
+        ".experimental/fusion-preview-skill",
+        "fusion-preview-skill",
+        "Preview flow.",
+        "0.1.0",
+      );
+      writeSkill(
+        repoRoot,
+        ".curated/fusion-curated-skill",
+        "fusion-curated-skill",
+        "Curated flow.",
+        "0.1.0",
+      );
+      writeSkill(
+        repoRoot,
+        ".system/fusion-system-skill",
+        "fusion-system-skill",
+        "System flow.",
+        "0.1.0",
+      );
 
       const count = updateReadmeSkillsTable(repoRoot);
       const readme = readFileSync(join(repoRoot, "README.md"), "utf8");
 
-      expect(count).toBe(2);
-      expect(readme).toContain("| Skill | Description | Version |");
+      expect(count).toBe(5);
+      expect(readme).not.toContain("| Skill | Description |");
       expect(readme).toContain(
-        "| [`fusion-a-skill`](skills/fusion-a-skill/SKILL.md) | Handles A flow. | `0.2.0` |",
+        "**👍 [`fusion-a-skill@0.2.0`](skills/fusion-a-skill/SKILL.md)**\n\nHandles A flow.",
       );
       expect(readme).toContain(
-        "| [`fusion-z-skill`](skills/fusion-z-skill/SKILL.md) | Handles Z flow \\\\ with pipe \\| carefully. | `1.2.3` |",
+        "**👌 [`fusion-curated-skill@0.1.0`](skills/.curated/fusion-curated-skill/SKILL.md)**\n\nCurated flow.",
       );
+      expect(readme).toContain(
+        "**🧪 [`fusion-preview-skill@0.1.0`](skills/.experimental/fusion-preview-skill/SKILL.md)**\n\nPreview flow.",
+      );
+      expect(readme).toContain(
+        "**⚙️ [`fusion-system-skill@0.1.0`](skills/.system/fusion-system-skill/SKILL.md)**\n\nSystem flow.",
+      );
+      expect(readme).toContain(
+        "**👍 [`fusion-z-skill@1.2.3`](skills/fusion-z-skill/SKILL.md)**\n\nHandles Z flow \\\\ with pipe \\| carefully.",
+      );
+      expect(readme).toContain("\n\n---\n\n");
 
       const aIndex = readme.indexOf("fusion-a-skill");
       const zIndex = readme.indexOf("fusion-z-skill");

@@ -8,11 +8,34 @@ const SKILLS_TABLE_START = "<!-- skills-table:start -->";
 const SKILLS_TABLE_END = "<!-- skills-table:end -->";
 
 type SkillRow = {
+  typeIcon: string;
   name: string;
   description: string;
   version: string;
   relativePath: string;
 };
+
+/**
+ * Derives skill type icon from a discovered SKILL.md relative path.
+ *
+ * @param relativePath - Repository-relative path using POSIX separators.
+ * @returns Type icon for the README table.
+ */
+function getSkillTypeIcon(relativePath: string): string {
+  if (relativePath.startsWith("skills/.experimental/")) {
+    return "🧪";
+  }
+
+  if (relativePath.startsWith("skills/.curated/")) {
+    return "👌";
+  }
+
+  if (relativePath.startsWith("skills/.system/")) {
+    return "⚙️";
+  }
+
+  return "👍";
+}
 
 /**
  * Escapes markdown table cell content.
@@ -29,18 +52,16 @@ function escapeTableCell(value: string): string {
  * Renders the README skills markdown table.
  *
  * @param rows - Sorted skill table rows.
- * @returns Markdown table string.
+ * @returns Markdown skill list string.
  */
 function buildSkillsTable(rows: SkillRow[]): string {
-  const header = ["| Skill | Description | Version |", "| --- | --- | --- |"];
-
   // Convert each value into the shape expected by downstream code.
-  const body = rows.map((row) => {
+  const entries = rows.map((row) => {
     const safeDescription = escapeTableCell(row.description);
-    return `| [\`${row.name}\`](${row.relativePath}) | ${safeDescription} | \`${row.version}\` |`;
+    return `**${row.typeIcon} [\`${row.name}@${row.version}\`](${row.relativePath})**\n\n${safeDescription}`;
   });
 
-  return [...header, ...body].join("\n");
+  return entries.join("\n\n---\n\n");
 }
 
 /**
@@ -72,6 +93,7 @@ export function updateReadmeSkillsTable(repoRoot: string): number {
     const name = frontmatter.name?.trim();
     const description = frontmatter.description?.trim();
     const version = frontmatter["metadata.version"]?.trim();
+    const relativePath = relative(repoRoot, skillFile).replace(/\\/g, "/");
 
     // Fail fast here so the remaining logic can assume valid input.
     if (!name || !description || !version) {
@@ -79,11 +101,11 @@ export function updateReadmeSkillsTable(repoRoot: string): number {
     }
 
     return {
+      typeIcon: getSkillTypeIcon(relativePath),
       name,
       description,
       version,
-      // This regex matches the expected text format for this step.
-      relativePath: relative(repoRoot, skillFile).replace(/\\/g, "/"),
+      relativePath,
     };
   });
 
