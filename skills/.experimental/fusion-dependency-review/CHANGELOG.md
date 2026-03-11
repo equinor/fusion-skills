@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.1 - 2026-03-11
+
+### patch
+
+- [#73](https://github.com/equinor/fusion-skills/pull/73) [`c0070d2`](https://github.com/equinor/fusion-skills/commit/c0070d26e874e01aeef3d79f35fb2c3fb0198dcc) - Require the dependency review research and verdict outputs to use the Bip Bop title prefix.
+
+
+  - align the advisor guidance with the required PR comment title format
+  - update the research and verdict templates to start with the Bip Bop heading prefix
+
 ## 0.1.0 - 2026-03-10
 
 ### minor
@@ -22,4 +32,3 @@
   - Explicit maintainer confirmation before any merge action
 
   resolves equinor/fusion-core-tasks#523
-
