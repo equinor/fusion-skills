@@ -2,6 +2,19 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.10.2
+
+### Patch
+
+__🎯 [fix(skills): require Bip Bop title prefix in dependency review output #73](https://github.com/equinor/fusion-skills/pull/73)<br/>
+🗂️ [c0070d2](https://github.com/equinor/fusion-skills/commit/c0070d26e874e01aeef3d79f35fb2c3fb0198dcc)<br/>
+📦 fusion-dependency-review@0.1.1__
+
+Require the dependency review research and verdict outputs to use the Bip Bop title prefix.
+
+- align the advisor guidance with the required PR comment title format
+- update the research and verdict templates to start with the Bip Bop heading prefix
+
 ## v0.10.1
 
 ### Patch
