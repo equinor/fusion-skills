@@ -1,6 +1,6 @@
 ---
 name: fusion-dependency-review
-description: 'Review dependency PRs with structured research, existing-PR-discussion capture, multi-lens analysis (security, code quality, impact), and a repeatable verdict template. USE FOR: dependency update PRs, Renovate/Dependabot PRs, library upgrade reviews, "review this dependency PR", "should we merge this update". DO NOT USE FOR: feature PRs, application code reviews, dependency automation/bot configuration, or unattended merge without confirmation.'
+description: 'Review dependency PRs with structured research, existing-PR-discussion capture, multi-lens analysis (security, code quality, impact), and repeatable Bip Bop-titled research and verdict templates. USE FOR: dependency update PRs, Renovate/Dependabot PRs, library upgrade reviews, "review this dependency PR", "should we merge this update". DO NOT USE FOR: feature PRs, application code reviews, dependency automation/bot configuration, or unattended merge without confirmation.'
 license: MIT
 compatibility: Requires GitHub MCP server for PR context. Uses fusion-issue-authoring for follow-up handoff when post-merge work is identified.
 metadata:
@@ -20,7 +20,7 @@ metadata:
 
 # Dependency Review
 
-Structured review workflow for dependency update PRs. Produces consistent research notes that incorporate existing PR discussion, multi-lens analysis, and an actionable verdict with explicit maintainer confirmation before any merge action.
+Structured review workflow for dependency update PRs. Produces consistent research notes that incorporate existing PR discussion, multi-lens analysis, and PR-comment-ready checkpoint and verdict outputs that use the exact heading prefix `# 🤖 Bip Bop - <title>` before any merge action.
 
 ## When to use
 
@@ -90,16 +90,16 @@ Keep the lens advisors narrow and independent. The parent skill owns the unified
 ### Workflow summary
 
 1. Resolve the target PR with `agents/target-pr-advisor.md` and the concise prompts in `references/questions.md`.
-2. Gather context and build the shared evidence packet with `agents/research-advisor.md`, `assets/review-tracker.md`, and `assets/research-template.md`.
+2. Gather context and build the shared evidence packet with `agents/research-advisor.md`, `assets/review-tracker.md`, and `assets/research-template.md`, keeping the PR-comment-ready research checkpoint title in the format `# 🤖 Bip Bop - <title>`.
 3. Run `agents/security-advisor.md`, `agents/code-quality-advisor.md`, and `agents/impact-advisor.md` in parallel with the same normalized research packet.
-4. Use `agents/verdict-advisor.md` to produce the recommendation, confidence, follow-up, and explicit maintainer prompt.
+4. Use `agents/verdict-advisor.md` to produce the recommendation, confidence, follow-up, and explicit maintainer prompt, keeping the PR-comment-ready final verdict title in the format `# 🤖 Bip Bop - <title>`.
 5. Use `agents/source-control-advisor.md` only after the verdict is accepted and only when branch work is required.
 6. Follow `references/instructions.md` for the detailed live-PR contract: target selection, checkpoint comments, decision gates, and handoff timing.
 
 ## Assets
 
-- `assets/research-template.md`: research-comment structure for change summary, breaking changes, known issues, and sources
-- `assets/verdict-template.md`: verdict structure for lens assessments, recommendation, confidence, and follow-up items
+- `assets/research-template.md`: research-comment structure for change summary, breaking changes, known issues, and sources, starting with `# 🤖 Bip Bop - <title>`
+- `assets/verdict-template.md`: verdict structure for lens assessments, recommendation, confidence, and follow-up items, starting with `# 🤖 Bip Bop - <title>`
 - `assets/review-tracker.md`: working checklist and tracker for context, validation, lens outcomes, and handoff decisions
 
 ## References
@@ -132,10 +132,12 @@ If the PR target is resolved, return a structured review containing:
 - Package name, version change, and update type
 - Existing PR discussion summary (top-level comments, review-thread themes, unresolved concerns)
 - Research summary (changelog highlights, breaking changes, known issues)
+- PR-comment-ready research checkpoint body using the exact title prefix `# 🤖 Bip Bop - <title>`
 - Security assessment with evidence
 - Code quality assessment with evidence
 - Impact assessment with evidence
 - Verdict: recommendation, rationale, confidence, and follow-up items
+- PR-comment-ready final verdict comment body using the exact title prefix `# 🤖 Bip Bop - <title>`
 - Handoff recommendation when follow-up work should become a tracked issue
 - Explicit action prompt for the maintainer
 
