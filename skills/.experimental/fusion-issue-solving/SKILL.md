@@ -66,32 +66,41 @@ Optional inputs:
    - If yes, use/create the worktree and continue there.
 
 2. Confirm issue context and success criteria
-   - Read the issue body, labels, and linked discussions.
+   - Read the issue body, labels, and linked discussions once, then reuse that context instead of refetching.
    - Restate the implementable scope and explicitly list out-of-scope items.
 
 3. Confirm assignee intent for issue closure work
    - Check whether the current user is assigned to the primary issue.
    - If the current user is not assigned, ask whether they want to assign themselves before continuing.
-   - For each sub-issue that will be resolved or closed by this workflow, check assignee status.
+   - For each sub-issue that will be resolved or closed by this workflow, check assignee status once and reuse the result for closure decisions.
    - If the current user is not assigned on a sub-issue, ask whether they want to assign themselves before resolving/closing it.
 
-4. Build and track a concrete plan
+4. Apply low-token GitHub strategy
+   - Prefer MCP-backed tools over ad hoc `gh api` or GraphQL calls when equivalent tools exist.
+   - Avoid duplicate lookups for labels, issue types, and duplicate detection.
+   - Cache per-run context (issue metadata, duplicate matches, issue-type support) and reuse it.
+   - Use GraphQL fallback only when MCP coverage is unavailable and do not loop retries.
+   - GraphQL mutations cost 5 secondary-limit points each (vs 1 for queries); batch fields into single calls and pause at least 1 second between mutation calls.
+   - Respect `retry-after` and `x-ratelimit-reset` headers; do not retry before the indicated wait.
+   - If rate limits are hit, stop non-essential operations and continue with local implementation/PR preparation when possible.
+
+5. Build and track a concrete plan
    - Create actionable todos ordered by dependencies.
    - Keep exactly one step in progress and update status as work completes.
 
-5. Research before edits
+6. Research before edits
    - Inspect relevant files, tests, and adjacent usage.
    - Prefer root-cause fixes over surface patches.
 
-6. Implement in small scoped changes
+7. Implement in small scoped changes
    - Keep each change aligned to issue acceptance criteria.
    - Avoid unrelated refactors and generated release artifacts.
 
-7. Validate incrementally
+8. Validate incrementally
    - Run targeted checks first, then required project checks.
    - If checks fail, fix relevant issues and re-run before proceeding.
 
-8. Prepare PR-ready output
+9. Prepare PR-ready output
    - Summarize what changed and why.
    - Include validation evidence and known follow-ups.
    - Draft the PR body in a `.tmp/` file with an issue/context-specific name (for example, `.tmp/pr-body-issue-123-scope-summary.md`), not a shared `.tmp/pr-body.md`.
@@ -100,9 +109,11 @@ Optional inputs:
    - Ask whether the PR should be opened as draft or ready for review.
    - Ask whether the PR should be assigned to the user and whether related issues should be linked.
 
-9. Optional GitHub mutation steps
+10. Optional GitHub mutation steps
    - Before any GitHub mutation (create/edit/comment/close), ask for explicit user confirmation.
    - If requested, update issue status/comments with objective progress.
+   - Prefer MCP tool mutations over ad hoc API calls when equivalent operations exist.
+   - If GitHub API rate limits block mutation, report the failure clearly, stop retry loops, and propose a safe retry sequence.
    - If requested, create or update the PR using the repository PR template and the `.tmp/` PR body draft file, using the confirmed base branch, draft/ready state, assignee choice, and related issue links.
 
 ## Expected output
@@ -112,6 +123,7 @@ Return a concise delivery report with:
 - files changed,
 - validation commands and outcomes,
 - assignment decisions for primary issue and affected sub-issues,
+- API usage strategy used (MCP-first/cache reuse/fallbacks),
 - open risks/blockers,
 - PR body summary (or `.tmp/` draft file path when created).
 
