@@ -32,7 +32,7 @@ Use this reference for the expanded execution contract. Keep `SKILL.md` focused 
 5. Capture notable transitive dependency changes visible in the diff.
 6. When the ecosystem provides audit tooling such as `npm audit`, `cargo audit`, or `pip-audit`, include that output as an additional evidence source.
 7. Start from `assets/review-tracker.md` and fill the context, discussion inventory, validation plan, and source inventory first.
-8. Draft detailed findings into `assets/research-template.md` either in `.tmp/` or as a PR comment draft.
+8. Draft detailed findings into `assets/research-template.md` either in `.tmp/` or as a PR comment draft, keeping the exact title prefix format `# 🤖 Bip Bop - <title>`.
 
 ## Step 3 — Run lens analysis and synthesize the verdict
 
@@ -48,7 +48,7 @@ Use this reference for the expanded execution contract. Keep `SKILL.md` focused 
 1. Post the research checkpoint comment before any source-control mutation, rebase, push, approval, or merge.
 2. If the runtime cannot post the research checkpoint comment, stop before mutation and tell the maintainer that the PR record could not be updated.
 3. Post the final verdict comment before any approval, hold, decline, or merge action. Refresh it with any patching or validation results before posting.
-4. Include the existing discussion summary, unresolved reviewer concerns or rationale for treating them as resolved or outdated, lens assessments, recommendation, confidence, follow-up items, and explicit confirmation prompt in the final verdict comment.
+4. Include the existing discussion summary, unresolved reviewer concerns or rationale for treating them as resolved or outdated, lens assessments, recommendation, confidence, follow-up items, and explicit confirmation prompt in the final verdict comment, and keep the exact title prefix format `# 🤖 Bip Bop - <title>`.
 5. If the runtime cannot post the final verdict comment, stop before approval or merge and tell the maintainer that the PR record could not be updated.
 6. If branch patching is required before approval or merge, use `agents/source-control-advisor.md` only after the verdict is accepted so branch-sync planning, rebase need, validation reruns, and push confirmation stay tied to the chosen next action.
 7. Before any rebase, push, force-push, approval, or merge, ask for explicit maintainer confirmation.

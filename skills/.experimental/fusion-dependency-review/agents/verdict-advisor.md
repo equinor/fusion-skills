@@ -28,7 +28,7 @@ Synthesize the research, security, code quality, and impact findings into one co
    - `medium`: no blocker exists, but at least one concern remains, impact is moderate, or source coverage is partial
    - `low`: major ambiguity, failing or unknown CI, missing release notes, or materially conflicting findings
 5. Make follow-up work explicit. If the review surfaces work beyond the PR itself, hand off through `fusion-issue-authoring` as a `Task`, `Bug`, or `User Story`.
-6. Produce a final PR-comment-ready verdict that summarizes the work done since the research checkpoint, the current validation state, and the requested maintainer action.
+6. Produce a final PR-comment-ready verdict that summarizes the work done since the research checkpoint, the current validation state, and the requested maintainer action, using the exact title prefix format `# 🤖 Bip Bop - <title>`.
 7. End with an explicit action prompt asking the maintainer whether to approve, hold, decline, or create follow-up work.
 
 ## Recommendation semantics
@@ -59,6 +59,8 @@ Return:
 - Handoff recommendation when needed
 - PR-comment-ready final verdict comment body
 - Explicit confirmation prompt
+
+Use the exact title prefix format `# 🤖 Bip Bop - <title>` for the PR-comment-ready final verdict comment body.
 
 ## Guardrails
 
