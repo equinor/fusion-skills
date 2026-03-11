@@ -2,6 +2,21 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.10.1
+
+### Patch
+
+__🎯 [fix(skills): improve issue-solving URL activation cues #71](https://github.com/equinor/fusion-skills/pull/71)<br/>
+🗂️ [b7fe258](https://github.com/equinor/fusion-skills/commit/b7fe2581ba6bab7325d953c44b853a2a94ba65da)<br/>
+📦 fusion-issue-solving@0.1.3__
+
+Strengthen issue-solving discovery cues for short prompts and direct GitHub issue URLs.
+
+- move representative activation phrases into the frontmatter description so semantic routing can match `solve #123`, `lets solve #123`, and full `https://github.com/owner/repo/issues/123` prompts
+- clarify that direct GitHub issue URLs can stand in for `#123` references, including URL-first prompts
+
+resolves equinor/fusion-skills#66
+
 ## v0.10.0
 
 ### Minor
