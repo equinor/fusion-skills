@@ -62,7 +62,7 @@ Collect before publishing:
 - Issue intent/context
 - Issue type (Bug, Feature, User Story, Task)
 - Existing issue number/url when updating
-- Repository label set (or confirmation that labels are intentionally skipped)
+- Repository label set (or confirmation that labels are intentionally skipped). Reuse cached label results per repository within the same session.
 - Parent/related issue links and dependency direction (sub-issue vs blocking)
 - Assignee preference (assign to user, specific person, or leave unassigned)
 
@@ -90,7 +90,8 @@ If ambiguous, ask only essential clarifying questions.
 
 ### Step 3 — Check duplicates
 
-Search for likely duplicates with `mcp_github::search_issues` and surface matches before drafting/publishing.
+Run one focused duplicate search with `mcp_github::search_issues` and surface matches before drafting/publishing.
+Do not run repeated broad duplicate scans unless the user changes scope/title materially.
 
 ### Step 4 — Draft first
 
@@ -111,21 +112,29 @@ Before mutation, confirm:
 ### Step 7 — Mutate via MCP (ordered)
 
 After explicit confirmation, execute MCP mutations in this order:
-1. `mcp_github::issue_write` create/update (include `type` only when supported)
-2. `mcp_github::issue_write` labels / assignees
-3. `mcp_github::sub_issue_write` relationships and execution ordering
-4. `mcp_github::add_issue_comment` for blocker/status notes when requested
+1. `mcp_github::issue_write` create/update with the full known payload (`title`, `body`, and include `labels`, `assignees`, `type` only when supported)
+2. Optional single follow-up `mcp_github::issue_write` only when required fields were unknown in step 1 and become available later
+3. `mcp_github::sub_issue_write` only when relationship/order changes are requested
+4. `mcp_github::add_issue_comment` only when blocker/status notes are explicitly requested
 
 If mutation fails due to missing MCP server/auth/config:
 - explain the failure clearly
 - guide user to setup steps in `references/mcp-server.md`
 - retry after user confirms setup is complete
 
+Rate-limit behavior:
+- Detect and report rate-limit failures clearly (`API rate limit exceeded`, `secondary rate limit`, GraphQL quota exhaustion).
+- Stop non-essential lookups and skip optional enrichments when rate limits are hit.
+- Keep draft artifacts and return a safe retry plan instead of looping retries.
+- Prefer MCP tools over ad hoc `gh api`/GraphQL retries when equivalent MCP capability exists.
+- When using GraphQL fallback: mutations cost 5 secondary-limit points each (vs 1 for queries), so batch fields into a single mutation call and pause at least 1 second between mutation calls.
+- Respect `retry-after` and `x-ratelimit-reset` headers before retrying any request.
+
 `type` rule:
 - Only use `type` if the repository has issue types configured.
 - Use cached issue types per organization when available.
 - Call `mcp_github::list_issue_types` only on cache miss or invalid cache.
-- If issue types are not supported, omit `type`.
+- If issue types are not supported, omit `type` for the rest of the session.
 
 ### Step 8 — Validate relationships
 

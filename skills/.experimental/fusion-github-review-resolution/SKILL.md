@@ -165,6 +165,16 @@ Use GitHub MCP tools for high-level PR operations and any dedicated review-threa
 
 > **Pro tip:** See each `.graphql` file in assets for complete mutation/query syntax and parameter names.
 
+### GraphQL cost awareness
+
+Review-resolution workflows make multiple GraphQL mutation calls (reply + resolve per thread). Be conservative:
+
+- Mutations cost 5 secondary-limit points each (vs 1 for read queries). Budget accordingly when processing many threads.
+- Pause at least 1 second between consecutive mutation calls to avoid secondary rate limits.
+- Keep `first`/`last` connection arguments small (prefer `first: 100` only when you need all threads in a single page).
+- If a secondary rate-limit error or `retry-after` header is returned, stop processing and respect the indicated wait before retrying.
+- Always prefer a dedicated MCP review-thread tool over raw GraphQL when the client exposes one.
+
 ## Expected output
 
 Return a concise report containing:

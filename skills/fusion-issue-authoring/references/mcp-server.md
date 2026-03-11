@@ -13,6 +13,22 @@ Use this file for GitHub MCP-specific tools and payload examples.
 - `mcp_github::add_issue_comment`: add comment to issue.
 - `mcp_github::list_issue_types`: list available issue types.
 
+## High-cost operations and mitigation
+
+Common expensive paths in issue workflows:
+
+- repeated `list_issue_types` calls per issue,
+- repeated duplicate searches with broad queries,
+- unnecessary second-pass issue updates for labels/assignees,
+- GraphQL fallback retries that loop on rate-limit errors.
+
+Mitigation policy:
+
+- cache issue types per owner for the active session,
+- run one focused duplicate search unless scope materially changes,
+- send full known issue payload in the first `issue_write` call,
+- run GraphQL fallback only when MCP coverage is missing and without retry loops.
+
 ## MCP readiness check
 
 Run a read-only probe before issue authoring:
@@ -81,6 +97,12 @@ Optional local cache file for longer runs:
 - `.tmp/issue-type-cache.json` (never committed)
 - refresh when owner changes or validation fails.
 
+## Duplicate search minimization
+
+- Prefer one focused query that combines key title terms and repository scope.
+- Reuse the same duplicate search result set throughout draft review unless the problem statement changes.
+- Avoid broad repeated searches after mutation failures; resolve auth/config first.
+
 ## Example props
 
 ### Create a Task issue
@@ -145,7 +167,28 @@ Use either `after_id` or `before_id` for reprioritization.
 
 ## Minimal task-batch order
 
-1. `mcp_github::issue_write` create
-2. `mcp_github::issue_write` set labels/type/assignee
-3. `mcp_github::sub_issue_write` add/reprioritize children in execution order
-4. Optional: `mcp_github::add_issue_comment` to record blocker context
+1. `mcp_github::issue_write` create/update with full known fields (`title`, `body`, `labels`, `assignees`, optional `type`)
+2. Optional single follow-up `mcp_github::issue_write` only for fields that were unavailable in step 1
+3. `mcp_github::sub_issue_write` add/reprioritize children in execution order only when linkage changed
+4. Optional: `mcp_github::add_issue_comment` to record blocker context when requested
+
+## Rate-limit fallback behavior
+
+GitHub GraphQL limits (summary from https://docs.github.com/en/graphql/overview/rate-limits-and-query-limits-for-the-graphql-api):
+
+| Limit | Value |
+|---|---|
+| Primary budget | 5,000 pts/hour per user (1,000 for `GITHUB_TOKEN` in Actions) |
+| Mutation secondary cost | 5 pts per GraphQL mutation, 1 pt per read query |
+| Secondary throughput | max 2,000 pts/minute; max 80 content-creating requests/minute |
+| Concurrency | max 100 concurrent requests (shared REST + GraphQL) |
+| Timeout | 10 s per request; timeout deducts extra points |
+
+Behavior when limits are approached or hit:
+
+- Check `x-ratelimit-remaining` and `retry-after` headers; respect the reset window.
+- Stop optional enrichments and avoid automatic retry loops.
+- Pause at least 1 second between consecutive mutation calls.
+- Preserve draft state and return a clear retry sequence to the user.
+- Prefer MCP calls over ad hoc GraphQL retries when equivalent MCP tools are available.
+- Never retry a request that returned a secondary rate-limit error without waiting for the `retry-after` period.
