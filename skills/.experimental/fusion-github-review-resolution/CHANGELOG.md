@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.4 - 2026-03-11
+
+### patch
+
+- [#76](https://github.com/equinor/fusion-skills/pull/76) [`3efc478`](https://github.com/equinor/fusion-skills/commit/3efc47886871a14b18eb9f68abd562a10c6cf277) - Add GraphQL cost awareness section to review-resolution skill to enforce conservative mutation pacing and secondary rate-limit handling.
+
+
+  - Document per-mutation secondary cost (5 points) and per-query cost (1 point)
+  - Require at least 1-second pause between consecutive GraphQL mutation calls
+  - Require respect for `retry-after` headers before retrying on rate-limit errors
+
+  resolves equinor/fusion-core-tasks#535
+
 ## 0.1.3 - 2026-03-06
 
 ### patch

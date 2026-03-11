@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.2 - 2026-03-11
+
+### patch
+
+- [#76](https://github.com/equinor/fusion-skills/pull/76) [`3efc478`](https://github.com/equinor/fusion-skills/commit/3efc47886871a14b18eb9f68abd562a10c6cf277) - Tighten GraphQL fallback guidance in discover-skills to minimize point cost and avoid retries on rate-limit errors.
+
+
+  - Require small `first`/`last` values and shallow connections for catalog queries
+  - Do not retry on rate-limit errors; surface the failure and suggest retrying later
+
+  resolves equinor/fusion-core-tasks#535
+
 ## 0.1.1 - 2026-03-10
 
 ### patch

@@ -2,6 +2,65 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.10.3
+
+### Patch
+
+__🎯 [fix(skills): reduce GitHub GraphQL usage in workflows #76](https://github.com/equinor/fusion-skills/pull/76)<br/>
+🗂️ [3efc478](https://github.com/equinor/fusion-skills/commit/3efc47886871a14b18eb9f68abd562a10c6cf277)<br/>
+📦 fusion-discover-skills@0.1.2__
+
+Tighten GraphQL fallback guidance in discover-skills to minimize point cost and avoid retries on rate-limit errors.
+
+- Require small `first`/`last` values and shallow connections for catalog queries
+- Do not retry on rate-limit errors; surface the failure and suggest retrying later
+
+resolves equinor/fusion-core-tasks#535
+
+---
+
+__🎯 [fix(skills): reduce GitHub GraphQL usage in workflows #76](https://github.com/equinor/fusion-skills/pull/76)<br/>
+🗂️ [3efc478](https://github.com/equinor/fusion-skills/commit/3efc47886871a14b18eb9f68abd562a10c6cf277)<br/>
+📦 fusion-issue-authoring@0.2.3__
+
+Reduce token-heavy issue authoring behaviors by tightening MCP-first mutation sequencing and fallback guidance.
+
+- Replace redundant two-pass issue update guidance with single-call-first `issue_write` sequencing
+- Clarify cache-first behavior for labels and issue types to avoid repeated lookups
+- Add explicit rate-limit handling guidance that avoids retry loops and preserves local draft state
+- Tighten duplicate-search guidance to one focused pass unless scope changes
+
+resolves equinor/fusion-core-tasks#535
+
+---
+
+__🎯 [fix(skills): reduce GitHub GraphQL usage in workflows #76](https://github.com/equinor/fusion-skills/pull/76)<br/>
+🗂️ [3efc478](https://github.com/equinor/fusion-skills/commit/3efc47886871a14b18eb9f68abd562a10c6cf277)<br/>
+📦 fusion-issue-solving@0.1.4__
+
+Improve issue-solving workflow reliability under GitHub API limits by documenting a low-token execution strategy.
+
+- Require reuse of fetched issue context instead of repeated reads
+- Add MCP-first guidance for issue workflow mutations and lookups
+- Add explicit no-retry-loop behavior for rate-limit failures
+- Extend the workflow checklist with token-usage and fallback controls
+
+resolves equinor/fusion-core-tasks#535
+
+---
+
+__🎯 [fix(skills): reduce GitHub GraphQL usage in workflows #76](https://github.com/equinor/fusion-skills/pull/76)<br/>
+🗂️ [3efc478](https://github.com/equinor/fusion-skills/commit/3efc47886871a14b18eb9f68abd562a10c6cf277)<br/>
+📦 fusion-github-review-resolution@0.1.4__
+
+Add GraphQL cost awareness section to review-resolution skill to enforce conservative mutation pacing and secondary rate-limit handling.
+
+- Document per-mutation secondary cost (5 points) and per-query cost (1 point)
+- Require at least 1-second pause between consecutive GraphQL mutation calls
+- Require respect for `retry-after` headers before retrying on rate-limit errors
+
+resolves equinor/fusion-core-tasks#535
+
 ## v0.10.2
 
 ### Patch
