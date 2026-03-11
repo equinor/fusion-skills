@@ -1,6 +1,6 @@
 ---
 name: fusion-issue-solving
-description: Work on a GitHub issue end-to-end — research, plan, implement, validate, and prepare PR-ready output for issue resolution and sub-issue coordination.
+description: 'Handles GitHub issue resolution end-to-end for prompts like "solve #123", "lets solve #123", "work on #123", "work on https://github.com/owner/repo/issues/123", or by pasting a direct GitHub issue URL as the request. USE FOR: solve #123, continue work on issue #123, work on https://github.com/owner/repo/issues/123, paste a GitHub issue URL for implementation work. DO NOT USE FOR: issue drafting only, PR review only, or non-implementation research.'
 license: MIT
 metadata:
   version: "0.1.2"
@@ -24,14 +24,20 @@ metadata:
 
 ## When to use
 
-Use this skill when you have a GitHub issue to work on end-to-end.
+Use this skill when the user wants to solve or continue a GitHub issue end-to-end, including short current-repo prompts like `solve #123`, direct GitHub issue URLs, or requests like `lets work on https://github.com/owner/repo/issues/123`.
 
 Typical triggers:
+- "lets solve #123"
+- "solve #123"
+- "work on #123"
+- "lets work on https://github.com/owner/repo/issues/123"
+- "https://github.com/owner/repo/issues/123"
 - "continue work on issue #123"
-- "solve this GitHub issue"
 - "implement issue #123 end-to-end"
 - "work on this ticket: [issue URL]"
 - "research, implement, and prepare a PR for this issue"
+
+Treat GitHub issue URLs as interchangeable with `#123` references for verbs like `solve`, `fix`, `implement`, `continue`, `finish`, or `work on`. A direct GitHub issue URL can also serve as the main request payload for this workflow when no competing intent is stated.
 
 ## When not to use
 
