@@ -1,4 +1,4 @@
-# Dependency Update Verdict
+# 🤖 Bip Bop - Dependency Update Verdict
 
 ## Decision Snapshot
 

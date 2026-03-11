@@ -1,4 +1,4 @@
-# Dependency Update Research
+# 🤖 Bip Bop - Dependency Update Research
 
 Post this filled template to the PR as the research checkpoint comment before any branch mutation, rebase, push, approval, or merge.
 

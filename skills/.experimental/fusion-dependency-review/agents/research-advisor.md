@@ -37,7 +37,7 @@ Prefer portable, source-backed signals in this order:
 6. Record breaking changes, deprecations, and migration steps.
 7. Look for known regressions or open issues against the target version.
 8. Capture notable transitive dependency changes visible in the diff.
-9. Draft findings into the research template with explicit sources, discussion context, and unknowns, then prepare the same content as a PR-comment-ready research checkpoint.
+9. Draft findings into the research template with explicit sources, discussion context, and unknowns, then prepare the same content as a PR-comment-ready research checkpoint that keeps the exact title prefix format `# 🤖 Bip Bop - <title>`.
 
 ## Portable boundaries
 
@@ -62,6 +62,8 @@ Return:
 - Source list with enough detail to re-check the evidence
 - PR-comment-ready research checkpoint body
 - Explicit unknowns or missing evidence
+
+Use the exact title prefix format `# 🤖 Bip Bop - <title>` for the PR-comment-ready research checkpoint body.
 
 ## Guardrails
 
