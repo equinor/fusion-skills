@@ -12,10 +12,65 @@ export function parseFrontmatter(frontmatter: string): Record<string, string> {
   const output: Record<string, string> = {};
   const state = { currentMapKey: "", currentListKey: "" };
 
+  /**
+   * Removes YAML inline comments while preserving # characters inside quoted strings.
+   *
+   * @param line - Raw frontmatter line.
+   * @returns Line with YAML inline comment removed when applicable.
+   */
+  function stripInlineComment(line: string): string {
+    const quoteState = { inSingleQuote: false, inDoubleQuote: false, escaped: false };
+    const characters = Array.from(line);
+
+    /**
+     * Determines whether a single-character token should count as whitespace.
+     *
+     * @param value - Single-character token.
+     * @returns True when the token is whitespace.
+     */
+    function isWhitespace(value: string): boolean {
+      return value.trim().length === 0;
+    }
+
+    // Walk the line left-to-right so we can stop at the first valid inline comment marker.
+    for (const [index, char] of characters.entries()) {
+      const previous = index > 0 ? characters[index - 1] : "";
+
+      // Track escapes only inside double-quoted strings so escaped quotes do not toggle quote state.
+      if (char === "\\" && quoteState.inDoubleQuote && !quoteState.escaped) {
+        quoteState.escaped = true;
+        continue;
+      }
+
+      // Toggle quote tracking so # inside quoted text is preserved as literal content.
+      if (char === "'" && !quoteState.inDoubleQuote) {
+        quoteState.inSingleQuote = !quoteState.inSingleQuote;
+      }
+
+      // Toggle double-quote tracking so escaped quotes do not prematurely end quoted text.
+      if (char === '"' && !quoteState.inSingleQuote && !quoteState.escaped) {
+        quoteState.inDoubleQuote = !quoteState.inDoubleQuote;
+      }
+
+      // Treat # as an inline comment marker only when it appears outside quotes after whitespace.
+      if (
+        char === "#" &&
+        !quoteState.inSingleQuote &&
+        !quoteState.inDoubleQuote &&
+        (!previous || isWhitespace(previous))
+      ) {
+        return line.slice(0, index).trimEnd();
+      }
+
+      quoteState.escaped = false;
+    }
+
+    return line;
+  }
+
   // Process entries in order so behavior stays predictable.
   for (const rawLine of lines) {
-    // This regex matches the expected text format for this step.
-    const line = rawLine.replace(/\s+#.*$/, "");
+    const line = stripInlineComment(rawLine);
     // Fail fast here so the remaining logic can assume valid input.
     if (!line.trim()) continue;
 

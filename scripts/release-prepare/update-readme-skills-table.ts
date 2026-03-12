@@ -8,6 +8,7 @@ const SKILLS_TABLE_START = "<!-- skills-table:start -->";
 const SKILLS_TABLE_END = "<!-- skills-table:end -->";
 
 type SkillRow = {
+  typeIcon: string;
   name: string;
   description: string;
   version: string;
@@ -15,36 +16,59 @@ type SkillRow = {
 };
 
 /**
- * Escapes markdown table cell content.
+ * Derives skill type icon from a discovered SKILL.md relative path.
  *
- * @param value - Raw cell text.
- * @returns Escaped single-line markdown-safe text.
+ * @param relativePath - Repository-relative path using POSIX separators.
+ * @returns Type icon for the README skills list.
  */
-function escapeTableCell(value: string): string {
+function getSkillTypeIcon(relativePath: string): string {
+  // Match experimental skill paths first so preview entries get the dedicated icon.
+  if (relativePath.startsWith("skills/.experimental/")) {
+    return "🧪";
+  }
+
+  // Match curated skill paths to keep curated content visually distinct.
+  if (relativePath.startsWith("skills/.curated/")) {
+    return "👌";
+  }
+
+  // Match system skill paths to separate platform/internal skills from defaults.
+  if (relativePath.startsWith("skills/.system/")) {
+    return "⚙️";
+  }
+
+  return "👍";
+}
+
+/**
+ * Normalizes markdown text for generated README list entries.
+ *
+ * @param value - Raw text.
+ * @returns Normalized single-line markdown-safe text.
+ */
+function normalizeListText(value: string): string {
   // This regex matches the expected text format for this step.
   return value.replace(/\\/g, "\\\\").replace(/\|/g, "\\|").replace(/\s+/g, " ").trim();
 }
 
 /**
- * Renders the README skills markdown table.
+ * Renders the README skills markdown list.
  *
- * @param rows - Sorted skill table rows.
- * @returns Markdown table string.
+ * @param rows - Sorted skill rows.
+ * @returns Markdown skill list string.
  */
-function buildSkillsTable(rows: SkillRow[]): string {
-  const header = ["| Skill | Description | Version |", "| --- | --- | --- |"];
-
+function buildSkillsList(rows: SkillRow[]): string {
   // Convert each value into the shape expected by downstream code.
-  const body = rows.map((row) => {
-    const safeDescription = escapeTableCell(row.description);
-    return `| [\`${row.name}\`](${row.relativePath}) | ${safeDescription} | \`${row.version}\` |`;
+  const entries = rows.map((row) => {
+    const safeDescription = normalizeListText(row.description);
+    return `**${row.typeIcon} [\`${row.name}@${row.version}\`](${row.relativePath})**\n\n${safeDescription}`;
   });
 
-  return [...header, ...body].join("\n");
+  return entries.join("\n\n---\n\n");
 }
 
 /**
- * Updates README skills table from discovered skill frontmatter files.
+ * Updates README skills list from discovered skill frontmatter files.
  *
  * The README must contain skills table start/end HTML comment markers.
  *
@@ -72,6 +96,8 @@ export function updateReadmeSkillsTable(repoRoot: string): number {
     const name = frontmatter.name?.trim();
     const description = frontmatter.description?.trim();
     const version = frontmatter["metadata.version"]?.trim();
+    // This regex normalizes Windows separators to POSIX separators for markdown links.
+    const relativePath = relative(repoRoot, skillFile).replace(/\\/g, "/");
 
     // Fail fast here so the remaining logic can assume valid input.
     if (!name || !description || !version) {
@@ -79,21 +105,21 @@ export function updateReadmeSkillsTable(repoRoot: string): number {
     }
 
     return {
+      typeIcon: getSkillTypeIcon(relativePath),
       name,
       description,
       version,
-      // This regex matches the expected text format for this step.
-      relativePath: relative(repoRoot, skillFile).replace(/\\/g, "/"),
+      relativePath,
     };
   });
 
   rows.sort((left, right) => left.name.localeCompare(right.name));
 
-  const table = buildSkillsTable(rows);
+  const list = buildSkillsList(rows);
   const updatedContent =
     readmeContent.slice(0, startIndex + SKILLS_TABLE_START.length) +
     "\n" +
-    table +
+    list +
     "\n" +
     readmeContent.slice(endIndex);
 

@@ -27,17 +27,20 @@ npx skills add equinor/fusion-skills \
 For GitHub Copilot project installs, skills are placed in `.agents/skills`.
 See https://skills.sh for CLI behavior and agent support details.
 
-List what’s available:
+### Project-first workflow (recommended)
 
-```bash
-npx skills add equinor/fusion-skills --list
-```
+> [!TIP]
+> Use project installs as the default for team sharing and reproducible onboarding.
 
-Install into a repo (team sharing):
+| Step | Command | Scope | Typical use |
+| --- | --- | --- | --- |
+| Discover | `npx skills add equinor/fusion-skills --list` | Project | See available skills |
+| Install | `npx skills add equinor/fusion-skills` | Project | Add skills to the repo |
+| Restore | `npx skills experimental_install` | Project | Rehydrate from `skills-lock.json` (fresh clones/CI) |
+| Remove | `npx skills remove` | Project | Remove installed skills |
 
-```bash
-npx skills add equinor/fusion-skills
-```
+<details>
+<summary><strong>Optional: global install and global update checks</strong></summary>
 
 Install for your user (local experimentation):
 
@@ -45,27 +48,31 @@ Install for your user (local experimentation):
 npx skills add equinor/fusion-skills -g
 ```
 
-Update installed skills:
-
-```bash
-npx skills update
-```
-
-Check if updates are available before updating:
+Check if global updates are available:
 
 ```bash
 npx skills check
 ```
 
-Remove skills:
+Update globally installed skills:
 
 ```bash
-npx skills remove
+npx skills update
 ```
+
+</details>
+
+> [!NOTE]
+> `npx skills check` and `npx skills update` currently read the global lock file (`~/.agents/.skill-lock.json`).
 
 ## 🔄 Automated skill updates
 
 This repository provides a **GitHub Actions workflow** you can copy into your repo for automated skill updates — like Dependabot for GitHub Copilot Agent Skills.
+
+> [!IMPORTANT]
+> Current CLI lock scope differs by command:
+> - `npx skills experimental_install` restores from project `skills-lock.json`
+> - `npx skills check` and `npx skills update` read the global lock file (`~/.agents/.skill-lock.json`)
 
 The workflow automatically:
 - Detects available skill updates from this skills catalog (`equinor/fusion-skills`)
@@ -198,28 +205,89 @@ Skills live under `skills/`. The structure inside a skill is intentionally flexi
 ### Available skills
 
 <!-- skills-table:start -->
-| Skill | Description | Version |
-| --- | --- | --- |
-| [`fusion-dependency-review`](skills/.experimental/fusion-dependency-review/SKILL.md) | Review dependency PRs with structured research, existing-PR-discussion capture, multi-lens analysis (security, code quality, impact), and a repeatable verdict template. USE FOR: dependency update PRs, Renovate/Dependabot PRs, library upgrade reviews, "review this dependency PR", "should we merge this update". DO NOT USE FOR: feature PRs, application code reviews, dependency automation/bot configuration, or unattended merge without confirmation. | `0.1.1` |
-| [`fusion-discover-skills`](skills/.experimental/fusion-discover-skills/SKILL.md) | Discovers relevant Fusion skills through Fusion MCP first, falls back to GitHub-backed catalog inspection when needed, returns concise matches with purpose and next-step guidance, and handles install, update, or remove intent without guesswork. USE FOR: finding a skill for a task, asking what to install, checking update or remove guidance, discovering available Fusion skills. DO NOT USE FOR: creating new skills, performing the task itself, or inventing results when discovery signals are unavailable. | `0.1.2` |
-| [`fusion-github-review-resolution`](skills/.experimental/fusion-github-review-resolution/SKILL.md) | Resolves unresolved GitHub PR review threads end-to-end: evaluates whether each review comment is correct, applies a targeted fix when valid, replies with rationale when not, commits, and resolves the thread. USE FOR: unresolved review threads, PR review feedback, changes requested PRs, PR review URLs (#pullrequestreview-...), fix the review comments, close the open threads, address PR feedback. DO NOT USE FOR: summarizing feedback without code changes, creating new PRs, or read-only branches. | `0.1.4` |
-| [`fusion-issue-author-bug`](skills/fusion-issue-author-bug/SKILL.md) | Draft and update bug issues using a bug-focused structure, repository-valid labels, and explicit publish confirmation before GitHub mutation. | `0.1.2` |
-| [`fusion-issue-author-feature`](skills/fusion-issue-author-feature/SKILL.md) | Draft and update feature issues with clear problem framing, scoped requirements, repository-valid labels, and explicit confirmation before publishing. | `0.1.2` |
-| [`fusion-issue-author-task`](skills/fusion-issue-author-task/SKILL.md) | Draft and update task issues with checklist-first decomposition, dependency-aware sequencing, repository-valid labels, and explicit publish confirmation. | `0.1.2` |
-| [`fusion-issue-author-user-story`](skills/fusion-issue-author-user-story/SKILL.md) | Draft and update user-story issues with role-action-value framing, workflow scenarios, repository-valid labels, and explicit publish confirmation. | `0.1.2` |
-| [`fusion-issue-authoring`](skills/fusion-issue-authoring/SKILL.md) | Orchestrate GitHub issue authoring by classifying request type, routing to a type-specific issue-author skill, and enforcing shared safety gates before mutation. | `0.2.3` |
-| [`fusion-issue-solving`](skills/.experimental/fusion-issue-solving/SKILL.md) | Handles GitHub issue resolution end-to-end for prompts like "solve | `0.1.4` |
-| [`fusion-issue-task-planning`](skills/.experimental/fusion-issue-task-planning/SKILL.md) | Plan and break down user-story issues into ordered, traceable task issue drafts with explicit publish gates. | `0.1.3` |
-| [`fusion-mcp`](skills/.experimental/fusion-mcp/SKILL.md) | Explain what Fusion MCP is and guide users through setting it up when they need Fusion-aware MCP capabilities in Copilot workflows. | `0.1.1` |
-| [`fusion-skill-authoring`](skills/fusion-skill-authoring/SKILL.md) | Creates or modernizes repository skills with clear activation cues, purposeful support files, and practical review loops. USE FOR: creating a new skill, tightening an existing skill, improving discovery wording, and structuring references/assets/optional helper agents when they genuinely add value. DO NOT USE FOR: product-code changes, routine copy edits outside skills/, or documentation that should not become an installable skill. | `0.3.0` |
-| [`fusion-skill-self-report-bug`](skills/fusion-skill-self-report-bug/SKILL.md) | Capture Fusion skill workflow failure context and guide a draft-first bug reporting flow with explicit confirmation before any GitHub mutation. | `0.1.1` |
+**🧪 [`fusion-dependency-review@0.1.1`](skills/.experimental/fusion-dependency-review/SKILL.md)**
+
+Review dependency PRs with structured research, existing-PR-discussion capture, multi-lens analysis (security, code quality, impact), and a repeatable verdict template. USE FOR: dependency update PRs, Renovate/Dependabot PRs, library upgrade reviews, "review this dependency PR", "should we merge this update". DO NOT USE FOR: feature PRs, application code reviews, dependency automation/bot configuration, or unattended merge without confirmation.
+
+---
+
+**🧪 [`fusion-discover-skills@0.1.2`](skills/.experimental/fusion-discover-skills/SKILL.md)**
+
+Discovers relevant Fusion skills through Fusion MCP first, falls back to GitHub-backed catalog inspection when needed, returns concise matches with purpose and next-step guidance, and handles install, update, or remove intent without guesswork. USE FOR: finding a skill for a task, asking what to install, checking update or remove guidance, discovering available Fusion skills. DO NOT USE FOR: creating new skills, performing the task itself, or inventing results when discovery signals are unavailable.
+
+---
+
+**🧪 [`fusion-github-review-resolution@0.1.4`](skills/.experimental/fusion-github-review-resolution/SKILL.md)**
+
+Resolves unresolved GitHub PR review threads end-to-end: evaluates whether each review comment is correct, applies a targeted fix when valid, replies with rationale when not, commits, and resolves the thread. USE FOR: unresolved review threads, PR review feedback, changes requested PRs, PR review URLs (#pullrequestreview-...), fix the review comments, close the open threads, address PR feedback. DO NOT USE FOR: summarizing feedback without code changes, creating new PRs, or read-only branches.
+
+---
+
+**👍 [`fusion-issue-author-bug@0.1.2`](skills/fusion-issue-author-bug/SKILL.md)**
+
+Draft and update bug issues using a bug-focused structure, repository-valid labels, and explicit publish confirmation before GitHub mutation.
+
+---
+
+**👍 [`fusion-issue-author-feature@0.1.2`](skills/fusion-issue-author-feature/SKILL.md)**
+
+Draft and update feature issues with clear problem framing, scoped requirements, repository-valid labels, and explicit confirmation before publishing.
+
+---
+
+**👍 [`fusion-issue-author-task@0.1.2`](skills/fusion-issue-author-task/SKILL.md)**
+
+Draft and update task issues with checklist-first decomposition, dependency-aware sequencing, repository-valid labels, and explicit publish confirmation.
+
+---
+
+**👍 [`fusion-issue-author-user-story@0.1.2`](skills/fusion-issue-author-user-story/SKILL.md)**
+
+Draft and update user-story issues with role-action-value framing, workflow scenarios, repository-valid labels, and explicit publish confirmation.
+
+---
+
+**👍 [`fusion-issue-authoring@0.2.3`](skills/fusion-issue-authoring/SKILL.md)**
+
+Orchestrate GitHub issue authoring by classifying request type, routing to a type-specific issue-author skill, and enforcing shared safety gates before mutation.
+
+---
+
+**🧪 [`fusion-issue-solving@0.1.4`](skills/.experimental/fusion-issue-solving/SKILL.md)**
+
+Handles GitHub issue resolution end-to-end for prompts like "solve #123", "lets solve #123", "work on #123", "work on https://github.com/owner/repo/issues/123", or by pasting a direct GitHub issue URL as the request. USE FOR: solve #123, continue work on issue #123, work on https://github.com/owner/repo/issues/123, paste a GitHub issue URL for implementation work. DO NOT USE FOR: issue drafting only, PR review only, or non-implementation research.
+
+---
+
+**🧪 [`fusion-issue-task-planning@0.1.3`](skills/.experimental/fusion-issue-task-planning/SKILL.md)**
+
+Plan and break down user-story issues into ordered, traceable task issue drafts with explicit publish gates.
+
+---
+
+**🧪 [`fusion-mcp@0.1.1`](skills/.experimental/fusion-mcp/SKILL.md)**
+
+Explain what Fusion MCP is and guide users through setting it up when they need Fusion-aware MCP capabilities in Copilot workflows.
+
+---
+
+**👍 [`fusion-skill-authoring@0.3.0`](skills/fusion-skill-authoring/SKILL.md)**
+
+Creates or modernizes repository skills with clear activation cues, purposeful support files, and practical review loops. USE FOR: creating a new skill, tightening an existing skill, improving discovery wording, and structuring references/assets/optional helper agents when they genuinely add value. DO NOT USE FOR: product-code changes, routine copy edits outside skills/, or documentation that should not become an installable skill.
+
+---
+
+**👍 [`fusion-skill-self-report-bug@0.1.1`](skills/fusion-skill-self-report-bug/SKILL.md)**
+
+Capture Fusion skill workflow failure context and guide a draft-first bug reporting flow with explicit confirmation before any GitHub mutation.
 <!-- skills-table:end -->
 
 In this repository, use `fusion-<skill-name>` as the default skill naming convention.
 
 Some conventions you may see:
+- `skills/` 👍 default, generally available skills
 - `skills/.experimental/` 🧪 preview / in-development skills
-- `skills/.curated/` ✅ curated, broadly reusable skills
+- `skills/.curated/` 👌 curated, broadly reusable skills
 - `skills/.system/` ⚙️ internal/system skills and shared building blocks
 
 ## 🔖 Versioning

@@ -5,7 +5,7 @@ Applies changesets into release artifacts.
 Outputs:
 - bumps affected skill `metadata.version`
 - updates per-skill `skills/<skill>/CHANGELOG.md`
-- updates root `README.md` skills table from discovered `skills/**/SKILL.md`
+- updates root `README.md` skills list from discovered `skills/**/SKILL.md` (including type/icon from directory prefixes, for example 🧪 for `skills/.experimental/`)
 - bumps root `package.json` version
 - updates root `CHANGELOG.md` under latest `## v<package_version>` using grouped `### Major|Minor|Patch` sections with entry separators and package lists
 - removes processed `.changeset/*.md`
