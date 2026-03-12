@@ -204,6 +204,13 @@ Skills live under `skills/`. The structure inside a skill is intentionally flexi
 
 ### Available skills
 
+In this repository, use `fusion-<skill-name>` as the default skill naming convention.
+
+- `skills/` 👍 default, generally available skills
+- `skills/.experimental/` 🧪 preview / in-development skills
+- `skills/.curated/` 👌 curated, broadly reusable skills
+- `skills/.system/` ⚙️ internal/system skills and shared building blocks
+
 <!-- skills-table:start -->
 **🧪 [`fusion-dependency-review@0.1.1`](skills/.experimental/fusion-dependency-review/SKILL.md)**
 
@@ -281,14 +288,6 @@ Creates or modernizes repository skills with clear activation cues, purposeful s
 
 Capture Fusion skill workflow failure context and guide a draft-first bug reporting flow with explicit confirmation before any GitHub mutation.
 <!-- skills-table:end -->
-
-In this repository, use `fusion-<skill-name>` as the default skill naming convention.
-
-Some conventions you may see:
-- `skills/` 👍 default, generally available skills
-- `skills/.experimental/` 🧪 preview / in-development skills
-- `skills/.curated/` 👌 curated, broadly reusable skills
-- `skills/.system/` ⚙️ internal/system skills and shared building blocks
 
 ## 🔖 Versioning
 
