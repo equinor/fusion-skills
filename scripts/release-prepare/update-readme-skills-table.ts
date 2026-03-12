@@ -22,14 +22,17 @@ type SkillRow = {
  * @returns Type icon for the README skills list.
  */
 function getSkillTypeIcon(relativePath: string): string {
+  // Match experimental skill paths first so preview entries get the dedicated icon.
   if (relativePath.startsWith("skills/.experimental/")) {
     return "🧪";
   }
 
+  // Match curated skill paths to keep curated content visually distinct.
   if (relativePath.startsWith("skills/.curated/")) {
     return "👌";
   }
 
+  // Match system skill paths to separate platform/internal skills from defaults.
   if (relativePath.startsWith("skills/.system/")) {
     return "⚙️";
   }
@@ -93,6 +96,7 @@ export function updateReadmeSkillsTable(repoRoot: string): number {
     const name = frontmatter.name?.trim();
     const description = frontmatter.description?.trim();
     const version = frontmatter["metadata.version"]?.trim();
+    // This regex normalizes Windows separators to POSIX separators for markdown links.
     const relativePath = relative(repoRoot, skillFile).replace(/\\/g, "/");
 
     // Fail fast here so the remaining logic can assume valid input.

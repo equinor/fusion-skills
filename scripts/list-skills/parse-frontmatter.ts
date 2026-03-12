@@ -19,30 +19,50 @@ export function parseFrontmatter(frontmatter: string): Record<string, string> {
    * @returns Line with YAML inline comment removed when applicable.
    */
   function stripInlineComment(line: string): string {
-    let inSingleQuote = false;
-    let inDoubleQuote = false;
-    let escaped = false;
+    const quoteState = { inSingleQuote: false, inDoubleQuote: false, escaped: false };
+    const characters = Array.from(line);
 
-    for (let index = 0; index < line.length; index += 1) {
-      const char = line[index];
-      const previous = index > 0 ? line[index - 1] : "";
+    /**
+     * Determines whether a single-character token should count as whitespace.
+     *
+     * @param value - Single-character token.
+     * @returns True when the token is whitespace.
+     */
+    function isWhitespace(value: string): boolean {
+      return value.trim().length === 0;
+    }
 
-      if (char === "\\" && inDoubleQuote && !escaped) {
-        escaped = true;
+    // Walk the line left-to-right so we can stop at the first valid inline comment marker.
+    for (const [index, char] of characters.entries()) {
+      const previous = index > 0 ? characters[index - 1] : "";
+
+      // Track escapes only inside double-quoted strings so escaped quotes do not toggle quote state.
+      if (char === "\\" && quoteState.inDoubleQuote && !quoteState.escaped) {
+        quoteState.escaped = true;
         continue;
       }
 
-      if (char === "'" && !inDoubleQuote) {
-        inSingleQuote = !inSingleQuote;
-      } else if (char === '"' && !inSingleQuote && !escaped) {
-        inDoubleQuote = !inDoubleQuote;
+      // Toggle quote tracking so # inside quoted text is preserved as literal content.
+      if (char === "'" && !quoteState.inDoubleQuote) {
+        quoteState.inSingleQuote = !quoteState.inSingleQuote;
       }
 
-      if (char === "#" && !inSingleQuote && !inDoubleQuote && (!previous || /\s/.test(previous))) {
+      // Toggle double-quote tracking so escaped quotes do not prematurely end quoted text.
+      if (char === '"' && !quoteState.inSingleQuote && !quoteState.escaped) {
+        quoteState.inDoubleQuote = !quoteState.inDoubleQuote;
+      }
+
+      // Treat # as an inline comment marker only when it appears outside quotes after whitespace.
+      if (
+        char === "#" &&
+        !quoteState.inSingleQuote &&
+        !quoteState.inDoubleQuote &&
+        (!previous || isWhitespace(previous))
+      ) {
         return line.slice(0, index).trimEnd();
       }
 
-      escaped = false;
+      quoteState.escaped = false;
     }
 
     return line;

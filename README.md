@@ -285,8 +285,9 @@ Capture Fusion skill workflow failure context and guide a draft-first bug report
 In this repository, use `fusion-<skill-name>` as the default skill naming convention.
 
 Some conventions you may see:
+- `skills/` 👍 default, generally available skills
 - `skills/.experimental/` 🧪 preview / in-development skills
-- `skills/.curated/` ✅ curated, broadly reusable skills
+- `skills/.curated/` 👌 curated, broadly reusable skills
 - `skills/.system/` ⚙️ internal/system skills and shared building blocks
 
 ## 🔖 Versioning
