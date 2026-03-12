@@ -12,10 +12,45 @@ export function parseFrontmatter(frontmatter: string): Record<string, string> {
   const output: Record<string, string> = {};
   const state = { currentMapKey: "", currentListKey: "" };
 
+  /**
+   * Removes YAML inline comments while preserving # characters inside quoted strings.
+   *
+   * @param line - Raw frontmatter line.
+   * @returns Line with YAML inline comment removed when applicable.
+   */
+  function stripInlineComment(line: string): string {
+    let inSingleQuote = false;
+    let inDoubleQuote = false;
+    let escaped = false;
+
+    for (let index = 0; index < line.length; index += 1) {
+      const char = line[index];
+      const previous = index > 0 ? line[index - 1] : "";
+
+      if (char === "\\" && inDoubleQuote && !escaped) {
+        escaped = true;
+        continue;
+      }
+
+      if (char === "'" && !inDoubleQuote) {
+        inSingleQuote = !inSingleQuote;
+      } else if (char === '"' && !inSingleQuote && !escaped) {
+        inDoubleQuote = !inDoubleQuote;
+      }
+
+      if (char === "#" && !inSingleQuote && !inDoubleQuote && (!previous || /\s/.test(previous))) {
+        return line.slice(0, index).trimEnd();
+      }
+
+      escaped = false;
+    }
+
+    return line;
+  }
+
   // Process entries in order so behavior stays predictable.
   for (const rawLine of lines) {
-    // This regex matches the expected text format for this step.
-    const line = rawLine.replace(/\s+#.*$/, "");
+    const line = stripInlineComment(rawLine);
     // Fail fast here so the remaining logic can assume valid input.
     if (!line.trim()) continue;
 

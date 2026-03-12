@@ -31,7 +31,7 @@ function writeSkill(
 }
 
 describe("updateReadmeSkillsTable", () => {
-  it("rebuilds README skills table from discovered SKILL.md files", () => {
+  it("rebuilds README skills list from discovered SKILL.md files", () => {
     const repoRoot = mkdtempSync(join(tmpdir(), "fusion-skills-"));
 
     try {

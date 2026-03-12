@@ -255,7 +255,7 @@ Orchestrate GitHub issue authoring by classifying request type, routing to a typ
 
 **🧪 [`fusion-issue-solving@0.1.4`](skills/.experimental/fusion-issue-solving/SKILL.md)**
 
-Handles GitHub issue resolution end-to-end for prompts like "solve
+Handles GitHub issue resolution end-to-end for prompts like "solve #123", "lets solve #123", "work on #123", "work on https://github.com/owner/repo/issues/123", or by pasting a direct GitHub issue URL as the request. USE FOR: solve #123, continue work on issue #123, work on https://github.com/owner/repo/issues/123, paste a GitHub issue URL for implementation work. DO NOT USE FOR: issue drafting only, PR review only, or non-implementation research.
 
 ---
 

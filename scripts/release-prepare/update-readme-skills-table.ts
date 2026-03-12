@@ -19,7 +19,7 @@ type SkillRow = {
  * Derives skill type icon from a discovered SKILL.md relative path.
  *
  * @param relativePath - Repository-relative path using POSIX separators.
- * @returns Type icon for the README table.
+ * @returns Type icon for the README skills list.
  */
 function getSkillTypeIcon(relativePath: string): string {
   if (relativePath.startsWith("skills/.experimental/")) {
@@ -38,26 +38,26 @@ function getSkillTypeIcon(relativePath: string): string {
 }
 
 /**
- * Escapes markdown table cell content.
+ * Normalizes markdown text for generated README list entries.
  *
- * @param value - Raw cell text.
- * @returns Escaped single-line markdown-safe text.
+ * @param value - Raw text.
+ * @returns Normalized single-line markdown-safe text.
  */
-function escapeTableCell(value: string): string {
+function normalizeListText(value: string): string {
   // This regex matches the expected text format for this step.
   return value.replace(/\\/g, "\\\\").replace(/\|/g, "\\|").replace(/\s+/g, " ").trim();
 }
 
 /**
- * Renders the README skills markdown table.
+ * Renders the README skills markdown list.
  *
- * @param rows - Sorted skill table rows.
+ * @param rows - Sorted skill rows.
  * @returns Markdown skill list string.
  */
-function buildSkillsTable(rows: SkillRow[]): string {
+function buildSkillsList(rows: SkillRow[]): string {
   // Convert each value into the shape expected by downstream code.
   const entries = rows.map((row) => {
-    const safeDescription = escapeTableCell(row.description);
+    const safeDescription = normalizeListText(row.description);
     return `**${row.typeIcon} [\`${row.name}@${row.version}\`](${row.relativePath})**\n\n${safeDescription}`;
   });
 
@@ -65,7 +65,7 @@ function buildSkillsTable(rows: SkillRow[]): string {
 }
 
 /**
- * Updates README skills table from discovered skill frontmatter files.
+ * Updates README skills list from discovered skill frontmatter files.
  *
  * The README must contain skills table start/end HTML comment markers.
  *
@@ -111,11 +111,11 @@ export function updateReadmeSkillsTable(repoRoot: string): number {
 
   rows.sort((left, right) => left.name.localeCompare(right.name));
 
-  const table = buildSkillsTable(rows);
+  const list = buildSkillsList(rows);
   const updatedContent =
     readmeContent.slice(0, startIndex + SKILLS_TABLE_START.length) +
     "\n" +
-    table +
+    list +
     "\n" +
     readmeContent.slice(endIndex);
 
