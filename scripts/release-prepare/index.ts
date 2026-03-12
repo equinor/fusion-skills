@@ -89,8 +89,9 @@ function main(): void {
 
     // Iterate skill bump declarations inside a single changeset.
     for (const [skillName, bumpType] of Object.entries(parsed.skills)) {
-      // Fail fast if a changeset references a skill not present in this checkout.
-      if (!skillByName.has(skillName)) {
+      // Allow "fusion-skills" as special keyword for root package version bumps.
+      // All other skill names must exist in the skills directory.
+      if (skillName !== "fusion-skills" && !skillByName.has(skillName)) {
         throw new Error(`Changeset references unknown skill: ${skillName}`);
       }
 
@@ -136,6 +137,10 @@ function main(): void {
 
   // Iterate affected skills in stable order for deterministic output.
   for (const skillName of Array.from(aggregateBumps.keys()).sort()) {
+    // Skip "fusion-skills" special keyword used for root package bumps only.
+    if (skillName === "fusion-skills") {
+      continue;
+    }
     // Stable sort keeps release output deterministic across environments.
     const skillFile = skillByName.get(skillName);
     // Guard against stale discovery maps before touching filesystem.
@@ -193,14 +198,16 @@ function main(): void {
     // parse time, so this mapping is intentionally deferred until after skill
     // versions are computed and persisted.
     // Map touched skill names to their final post-bump skill@version strings.
-    packages: entry.skillNames.map((skillName) => {
-      const nextVersion = nextVersionBySkill.get(skillName);
-      // Abort if any referenced skill failed to compute a final version.
-      if (!nextVersion) {
-        throw new Error(`Missing computed version for root changelog package: ${skillName}`);
-      }
-      return `${skillName}@${nextVersion}`;
-    }),
+    packages: entry.skillNames
+      .filter((skillName) => skillName !== "fusion-skills")
+      .map((skillName) => {
+        const nextVersion = nextVersionBySkill.get(skillName);
+        // Abort if any referenced skill failed to compute a final version.
+        if (!nextVersion) {
+          throw new Error(`Missing computed version for root changelog package: ${skillName}`);
+        }
+        return `${skillName}@${nextVersion}`;
+      }),
   }));
   const groupedRootReleaseNotes = {
     // Group once here so renderer stays presentation-only.

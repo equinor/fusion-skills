@@ -2,6 +2,15 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.10.4
+
+### Patch
+
+__🎯 Update root documentation<br/>
+🗂️ n/a__
+
+- Update root documentation
+
 ## v0.10.3
 
 ### Patch
