@@ -2,6 +2,25 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.11.0
+
+### Minor
+
+__🎯 [feat(skill): add fusion framework feature toggling skill #80](https://github.com/equinor/fusion-skills/pull/80)<br/>
+🗂️ [112f6ae](https://github.com/equinor/fusion-skills/commit/112f6aee1bf3b972c51fc78008856c29cb3186e8)<br/>
+📦 fusion-framework-feature-toggling@0.1.0__
+
+Add the experimental `fusion-framework-feature-toggling` skill for Fusion Framework feature-flag guidance.
+
+- prefer Fusion MCP retrieval when the local framework index is available
+- fall back to bundled public-source references when Fusion MCP is unavailable or weak
+- add offline assets for implementation prompts and review checklists when users do not have the server
+- anchor the guidance to current public Fusion Framework surfaces such as `enableFeatureFlag`, `enableFeatureFlagging`, `useFeature`, and the feature-flag plugins
+- call out current public-source ambiguity like `readonly` vs `readOnly` instead of inventing API details
+
+Related to: equinor/fusion-core-tasks#362
+resolves equinor/fusion-core-tasks#740
+
 ## v0.10.4
 
 ### Patch
