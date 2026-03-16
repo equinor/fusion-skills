@@ -224,6 +224,12 @@ Discovers relevant Fusion skills through Fusion MCP first, falls back to GitHub-
 
 ---
 
+**🧪 [`fusion-framework-feature-toggling@0.1.0`](skills/.experimental/fusion-framework-feature-toggling/SKILL.md)**
+
+Guides developers using Fusion Framework feature flags with MCP-backed framework retrieval first and bundled public-source fallback assets when MCP is unavailable. USE FOR: helping with `enableFeatureFlag`, `enableFeatureFlagging`, `useFeature`, rollout/cleanup guidance, and finding Fusion Framework feature-flag examples. DO NOT USE FOR: generic SaaS flag platforms, backend-only rollout systems, or inventing framework APIs.
+
+---
+
 **🧪 [`fusion-github-review-resolution@0.1.4`](skills/.experimental/fusion-github-review-resolution/SKILL.md)**
 
 Resolves unresolved GitHub PR review threads end-to-end: evaluates whether each review comment is correct, applies a targeted fix when valid, replies with rationale when not, commits, and resolves the thread. USE FOR: unresolved review threads, PR review feedback, changes requested PRs, PR review URLs (#pullrequestreview-...), fix the review comments, close the open threads, address PR feedback. DO NOT USE FOR: summarizing feedback without code changes, creating new PRs, or read-only branches.

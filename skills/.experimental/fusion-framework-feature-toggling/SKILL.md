@@ -4,7 +4,7 @@ description: 'Guides developers using Fusion Framework feature flags with MCP-ba
 license: MIT
 compatibility: Works best with Fusion MCP access via `mcp_fusion_search_framework` or `mcp_fusion_search_docs`. When Fusion MCP is unavailable, this skill falls back to bundled public-source references and offline assets.
 metadata:
-  version: "0.0.0"
+  version: "0.1.0"
   status: experimental
   owner: "@equinor/fusion-core"
   tags:
