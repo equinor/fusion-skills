@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.1.4 - 2026-03-17
+
+### patch
+
+- [#85](https://github.com/equinor/fusion-skills/pull/85) [`c8ba3df`](https://github.com/equinor/fusion-skills/commit/c8ba3df924c5a712c835cdb9f4de44bac03b7ad4) - Make all GitHub-API-consuming skills more conservative with token usage.
+
+
+  - `fusion-issue-authoring`: concrete session-cache flow for labels and assignee candidates; per-session budget table
+  - `fusion-issue-solving`: expanded low-token strategy with session-cache references and budget awareness
+  - `fusion-github-review-resolution`: token budget guidance for thread-heavy reviews; cache PR metadata once
+  - `fusion-issue-task-planning`: session-cache delegation rules and batch-size warning for large task plans
+  - `fusion-dependency-review`: explicit data-reuse rules across parallel advisor fan-out
+  - `fusion-discover-skills`: tighter GraphQL budget and call-count cap for discovery sessions
+
+  resolves equinor/fusion-core-tasks#797
+
 ## 0.1.3 - 2026-03-05
 
 ### patch

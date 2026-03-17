@@ -3,7 +3,7 @@ name: fusion-help-docs
 description: 'Guides app teams through authoring, structuring, and publishing help documentation (articles, release notes, FAQs) using the fusion-help-cli. USE FOR: write help articles, create release notes, set up help docs, publish documentation, sync articles, configure help config file, maintain app help content. DO NOT USE FOR: building the CLI itself, modifying Fusion.Services.Help internals, or non-documentation tasks.'
 license: MIT
 metadata:
-  version: "0.0.0"
+  version: "0.0.1"
   status: active
   owner: "@equinor/fusion-core"
   tags:

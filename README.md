@@ -212,13 +212,13 @@ In this repository, use `fusion-<skill-name>` as the default skill naming conven
 - `skills/.system/` ⚙️ internal/system skills and shared building blocks
 
 <!-- skills-table:start -->
-**🧪 [`fusion-dependency-review@0.1.1`](skills/.experimental/fusion-dependency-review/SKILL.md)**
+**🧪 [`fusion-dependency-review@0.1.2`](skills/.experimental/fusion-dependency-review/SKILL.md)**
 
 Review dependency PRs with structured research, existing-PR-discussion capture, multi-lens analysis (security, code quality, impact), and a repeatable verdict template. USE FOR: dependency update PRs, Renovate/Dependabot PRs, library upgrade reviews, "review this dependency PR", "should we merge this update". DO NOT USE FOR: feature PRs, application code reviews, dependency automation/bot configuration, or unattended merge without confirmation.
 
 ---
 
-**🧪 [`fusion-discover-skills@0.1.2`](skills/.experimental/fusion-discover-skills/SKILL.md)**
+**🧪 [`fusion-discover-skills@0.1.3`](skills/.experimental/fusion-discover-skills/SKILL.md)**
 
 Discovers relevant Fusion skills through Fusion MCP first, falls back to GitHub-backed catalog inspection when needed, returns concise matches with purpose and next-step guidance, and handles install, update, or remove intent without guesswork. USE FOR: finding a skill for a task, asking what to install, checking update or remove guidance, discovering available Fusion skills. DO NOT USE FOR: creating new skills, performing the task itself, or inventing results when discovery signals are unavailable.
 
@@ -230,9 +230,27 @@ Guides developers using Fusion Framework feature flags with MCP-backed framework
 
 ---
 
-**🧪 [`fusion-github-review-resolution@0.1.4`](skills/.experimental/fusion-github-review-resolution/SKILL.md)**
+**🧪 [`fusion-github-review-resolution@0.1.5`](skills/.experimental/fusion-github-review-resolution/SKILL.md)**
 
 Resolves unresolved GitHub PR review threads end-to-end: evaluates whether each review comment is correct, applies a targeted fix when valid, replies with rationale when not, commits, and resolves the thread. USE FOR: unresolved review threads, PR review feedback, changes requested PRs, PR review URLs (#pullrequestreview-...), fix the review comments, close the open threads, address PR feedback. DO NOT USE FOR: summarizing feedback without code changes, creating new PRs, or read-only branches.
+
+---
+
+**👍 [`fusion-help-api@0.0.1`](skills/fusion-help-api/SKILL.md)**
+
+Guides developers and admins through direct interaction with the Fusion Help REST API — reading articles, FAQs, release notes, searching content, and managing help documentation programmatically. USE FOR: fetch help articles from API, integrate help content in app, search help content, manage help documentation via API, automate help content, build help tooling. DO NOT USE FOR: using the fhelp CLI tool (use fusion-help-docs skill), modifying Fusion.Services.Help backend code, or non-help-API tasks.
+
+---
+
+**👍 [`fusion-help-docs@0.0.1`](skills/fusion-help-docs/SKILL.md)**
+
+Guides app teams through authoring, structuring, and publishing help documentation (articles, release notes, FAQs) using the fusion-help-cli. USE FOR: write help articles, create release notes, set up help docs, publish documentation, sync articles, configure help config file, maintain app help content. DO NOT USE FOR: building the CLI itself, modifying Fusion.Services.Help internals, or non-documentation tasks.
+
+---
+
+**👍 [`fusion-help-integration@0.0.1`](skills/fusion-help-integration/SKILL.md)**
+
+Wires Fusion Help Center into app pages — creates article slug constants, adds useHelpCenter hook, and connects PageLayout props so users can open contextual help articles. USE FOR: add help button to page, wire useHelpCenter, create helpArticles constants, integrate Fusion Help in app, connect PageLayout to help center, add openHelpArticle to page. DO NOT USE FOR: authoring markdown help articles (use fusion-help-docs), direct Help REST API calls (use fusion-help-api), modifying @fra/ui shared components.
 
 ---
 
@@ -260,19 +278,19 @@ Draft and update user-story issues with role-action-value framing, workflow scen
 
 ---
 
-**👍 [`fusion-issue-authoring@0.2.3`](skills/fusion-issue-authoring/SKILL.md)**
+**👍 [`fusion-issue-authoring@0.2.4`](skills/fusion-issue-authoring/SKILL.md)**
 
 Orchestrate GitHub issue authoring by classifying request type, routing to a type-specific issue-author skill, and enforcing shared safety gates before mutation.
 
 ---
 
-**🧪 [`fusion-issue-solving@0.1.4`](skills/.experimental/fusion-issue-solving/SKILL.md)**
+**🧪 [`fusion-issue-solving@0.1.5`](skills/.experimental/fusion-issue-solving/SKILL.md)**
 
 Handles GitHub issue resolution end-to-end for prompts like "solve #123", "lets solve #123", "work on #123", "work on https://github.com/owner/repo/issues/123", or by pasting a direct GitHub issue URL as the request. USE FOR: solve #123, continue work on issue #123, work on https://github.com/owner/repo/issues/123, paste a GitHub issue URL for implementation work. DO NOT USE FOR: issue drafting only, PR review only, or non-implementation research.
 
 ---
 
-**🧪 [`fusion-issue-task-planning@0.1.3`](skills/.experimental/fusion-issue-task-planning/SKILL.md)**
+**🧪 [`fusion-issue-task-planning@0.1.4`](skills/.experimental/fusion-issue-task-planning/SKILL.md)**
 
 Plan and break down user-story issues into ordered, traceable task issue drafts with explicit publish gates.
 

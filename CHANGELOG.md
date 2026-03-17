@@ -2,6 +2,74 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.11.1
+
+### Patch
+
+__🎯 [feat: add fusion-help skills and fix Windows validation scripts #83](https://github.com/equinor/fusion-skills/pull/83)<br/>
+🗂️ [f776146](https://github.com/equinor/fusion-skills/commit/f776146b536cba9fe9c068ed07bad23abf4c2bcc)<br/>
+📦 fusion-help-api@0.0.1__
+
+Add fusion-help-api skill
+
+- Guides developers through direct Fusion Help REST API interaction
+- Covers articles, FAQs, release notes, search, and content management
+
+---
+
+__🎯 [feat: add fusion-help skills and fix Windows validation scripts #83](https://github.com/equinor/fusion-skills/pull/83)<br/>
+🗂️ [f776146](https://github.com/equinor/fusion-skills/commit/f776146b536cba9fe9c068ed07bad23abf4c2bcc)<br/>
+📦 fusion-help-docs@0.0.1__
+
+Add fusion-help-docs skill
+
+- Guides app teams through authoring and publishing help documentation using fusion-help-cli
+- Covers articles, release notes, and FAQs
+
+---
+
+__🎯 [feat: add fusion-help skills and fix Windows validation scripts #83](https://github.com/equinor/fusion-skills/pull/83)<br/>
+🗂️ [f776146](https://github.com/equinor/fusion-skills/commit/f776146b536cba9fe9c068ed07bad23abf4c2bcc)<br/>
+📦 fusion-help-integration@0.0.1__
+
+Add fusion-help-integration skill
+
+- Wires Fusion Help Center into app pages via useHelpCenter hook and PageLayout props
+- Creates article slug constants and connects contextual help articles
+
+---
+
+__🎯 [fix(skills): harden GitHub API token conservation across issue-authoring and related skills #85](https://github.com/equinor/fusion-skills/pull/85)<br/>
+🗂️ [c8ba3df](https://github.com/equinor/fusion-skills/commit/c8ba3df924c5a712c835cdb9f4de44bac03b7ad4)<br/>
+📦 fusion-dependency-review@0.1.2<br/>
+📦 fusion-discover-skills@0.1.3<br/>
+📦 fusion-github-review-resolution@0.1.5<br/>
+📦 fusion-issue-authoring@0.2.4<br/>
+📦 fusion-issue-solving@0.1.5<br/>
+📦 fusion-issue-task-planning@0.1.4__
+
+Make all GitHub-API-consuming skills more conservative with token usage.
+
+- `fusion-issue-authoring`: concrete session-cache flow for labels and assignee candidates; per-session budget table
+- `fusion-issue-solving`: expanded low-token strategy with session-cache references and budget awareness
+- `fusion-github-review-resolution`: token budget guidance for thread-heavy reviews; cache PR metadata once
+- `fusion-issue-task-planning`: session-cache delegation rules and batch-size warning for large task plans
+- `fusion-dependency-review`: explicit data-reuse rules across parallel advisor fan-out
+- `fusion-discover-skills`: tighter GraphQL budget and call-count cap for discovery sessions
+
+resolves equinor/fusion-core-tasks#797
+
+---
+
+__🎯 [feat: add fusion-help skills and fix Windows validation scripts #83](https://github.com/equinor/fusion-skills/pull/83)<br/>
+🗂️ [f776146](https://github.com/equinor/fusion-skills/commit/f776146b536cba9fe9c068ed07bad23abf4c2bcc)__
+
+Fix Windows compatibility in validation scripts
+
+- Fix extractFrontmatter regex to handle \r\n line endings
+- Fix parseFrontmatter split to normalize \r\n line endings
+- Fix discoverLocalSkills regex to strip both / and \ path separators
+
 ## v0.11.0
 
 ### Minor
