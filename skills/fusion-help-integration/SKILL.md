@@ -4,7 +4,7 @@ description: 'Wires Fusion Help Center into app pages — creates article slug c
 license: MIT
 compatibility: Requires @equinor/fusion-framework-react-app with help-center subpath export. Requires @fra/ui PageLayout component.
 metadata:
-  version: "0.0.0"
+  version: "0.0.1"
   status: active
   owner: "@equinor/fusion-core"
   tags:
