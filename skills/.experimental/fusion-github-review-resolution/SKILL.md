@@ -175,6 +175,14 @@ Review-resolution workflows make multiple GraphQL mutation calls (reply + resolv
 - If a secondary rate-limit error or `retry-after` header is returned, stop processing and respect the indicated wait before retrying.
 - Always prefer a dedicated MCP review-thread tool over raw GraphQL when the client exposes one.
 
+### Token budget guidance
+
+- Fetch the full thread list once and reuse it for all per-thread work; do not re-fetch threads between reply and resolve.
+- Budget estimate: for N unresolved threads expect ~1 list call + N reply mutations + N resolve mutations = 1 + 2N calls. A 10-thread review costs ~21 calls.
+- If the thread count exceeds 15, warn the user about rate-limit risk before starting mutations and offer to batch in smaller groups.
+- Cache PR metadata (title, branch, CI status, changed files) from the first fetch and reuse it for commit messages and replies.
+- Avoid redundant PR-level reads between steps; the data does not change within a single resolution run.
+
 ## Expected output
 
 Return a concise report containing:

@@ -78,9 +78,11 @@ Optional inputs:
 4. Apply low-token GitHub strategy
    - Prefer MCP-backed tools over ad hoc `gh api` or GraphQL calls when equivalent tools exist.
    - Avoid duplicate lookups for labels, issue types, and duplicate detection.
-   - Cache per-run context (issue metadata, duplicate matches, issue-type support) and reuse it.
+   - Cache per-run context (issue metadata, duplicate matches, issue-type support, label sets, assignee candidates) and reuse it — do not re-fetch data that was already retrieved in this session.
+   - When delegating to `fusion-issue-authoring` or its subordinate skills, the orchestrator's session-cache rules apply: labels and assignee candidates are fetched once per repository, issue types once per organization.
    - Use GraphQL fallback only when MCP coverage is unavailable and do not loop retries.
    - GraphQL mutations cost 5 secondary-limit points each (vs 1 for queries); batch fields into single calls and pause at least 1 second between mutation calls.
+   - Budget awareness: a typical implementation session (read issue + duplicate check + 1–2 mutations + sub-issue links) should stay under ~20 MCP read calls and ~5 mutations. If the running total approaches 30+ calls, pause optional enrichment and proceed with local work.
    - Respect `retry-after` and `x-ratelimit-reset` headers; do not retry before the indicated wait.
    - If rate limits are hit, stop non-essential operations and continue with local implementation/PR preparation when possible.
 
