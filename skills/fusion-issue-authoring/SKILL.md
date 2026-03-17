@@ -62,9 +62,9 @@ Collect before publishing:
 - Issue intent/context
 - Issue type (Bug, Feature, User Story, Task)
 - Existing issue number/url when updating
-- Repository label set (or confirmation that labels are intentionally skipped). Reuse cached label results per repository within the same session.
+- Repository label set (or confirmation that labels are intentionally skipped). Cache the full label set per repository for the active session and filter locally instead of validating labels one by one. Prefer host session memory when available; otherwise use a `.tmp/` cache file that is never committed.
 - Parent/related issue links and dependency direction (sub-issue vs blocking)
-- Assignee preference (assign to user, specific person, or leave unassigned)
+- Assignee preference (assign to user, specific person, or leave unassigned). Reuse cached assignee-candidate results for the active session and skip candidate searches when the user already gave `@me` or an exact login.
 
 If required details are missing, ask concise clarifying questions from `references/questions.md`.
 If issue destination is unclear, ask explicitly where the issue should be created/updated before drafting mutation commands.
@@ -108,6 +108,14 @@ Draft in `.tmp/{TYPE}-{CONTEXT}.md` using GitHub Flavored Markdown.
 Before mutation, confirm:
 - labels (only labels that exist in the target repo)
 - assignee intent (`@me`, specific login, or unassigned)
+
+Shared gate cache policy:
+- On the first label lookup for `owner/repo`, fetch the repository label set once and cache it for the active session. Prefer `/memories/session/<owner>-<repo>-labels.json` when the host exposes session memory; otherwise use `.tmp/issue-authoring-labels-<owner>-<repo>.json`.
+- On cache hit, validate requested labels locally. Do not repeat point lookups for each requested label.
+- If the host only exposes point label lookups and no cached label set exists yet, do not loop through labels one by one. Ask whether to skip optional labels or include only user-confirmed labels in the first `mcp_github::issue_write` call and handle a single rejection path.
+- Skip `mcp_github::search_users` when the user already gave `@me` or an exact GitHub login.
+- When assignee lookup is needed, cache candidate results for the active session keyed by owner/repo (or owner) and query. Prefer `/memories/session/<owner>-<repo>-assignee-candidates.json` or `/memories/session/<owner>-assignee-candidates.json`; otherwise use `.tmp/issue-authoring-assignee-candidates-<owner>-<repo>.json`.
+- If rate limits block optional label or assignee enrichment, ask whether to continue without them instead of looping retries.
 
 ### Step 7 — Mutate via MCP (ordered)
 

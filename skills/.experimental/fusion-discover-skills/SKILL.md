@@ -85,7 +85,8 @@ Main workflow:
    - Prefer GitHub MCP repository or search tools when they are available in the current client.
    - Otherwise use read-only shell-based inspection against trusted sources only, such as `npx skills add --list <source>`, local `skills/**/SKILL.md` searches, `gh search code`, or `gh api graphql` against the catalog repository.
    - Use GraphQL only when structured repository data is needed and the higher-level MCP or search tools do not expose it cleanly.
-   - GraphQL read queries cost at least 1 point; keep `first`/`last` small and avoid nested connections to minimize point cost. Do not retry on rate-limit errors; surface the failure and suggest retrying later.
+   - GraphQL read queries cost at least 1 point; keep `first`/`last` small (≤ 30) and avoid nested connections to minimize point cost. Do not retry on rate-limit errors; surface the failure and suggest retrying later.
+   - Budget awareness: a typical skill-discovery session should need at most 2–3 GitHub API calls (one search + one or two content reads). If the first search returns weak results, do one refinement pass and stop — do not loop.
    - Treat GitHub-derived lifecycle guidance as fallback guidance unless Fusion MCP returned an explicit advisory command.
    - Never use remote-script execution patterns or shell pipelines that execute fetched content.
 6. Do one refinement pass when the first result set is weak.
