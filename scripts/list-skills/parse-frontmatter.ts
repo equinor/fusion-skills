@@ -8,7 +8,8 @@
  * @returns Flat record of parsed frontmatter keys and values.
  */
 export function parseFrontmatter(frontmatter: string): Record<string, string> {
-  const lines = frontmatter.split("\n");
+  // Split on \r?\n to normalize Windows (\r\n) and Unix (\n) line endings.
+  const lines = frontmatter.split(/\r?\n/);
   const output: Record<string, string> = {};
   const state = { currentMapKey: "", currentListKey: "" };
 
