@@ -51,7 +51,7 @@
 - Starter shape:
 
 ```ts
-export interface PagedResponse<T> {
+export interface ApiPagedCollection<T> {
 	totalCount: number;
 	count: number;
 	value: T[];
@@ -68,7 +68,7 @@ export interface AppSummary {
 export async function getApps(baseUrl: string, init?: RequestInit) {
 	const response = await fetch(`${baseUrl}/apps`, init);
 	if (!response.ok) throw new Error(`Apps API failed: ${response.status}`);
-	return (await response.json()) as PagedResponse<AppSummary>;
+	return (await response.json()) as ApiPagedCollection<AppSummary>;
 }
 ```
 

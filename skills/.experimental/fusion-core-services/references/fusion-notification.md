@@ -31,6 +31,14 @@
 - Starter shape:
 
 ```ts
+export interface ApiPagedCollection<T> {
+	totalCount: number;
+	count: number;
+	value: T[];
+	'@nextPage'?: string | null;
+	'@prevPage'?: string | null;
+}
+
 export interface NotificationSourceSystem {
 	name?: string | null;
 	subSystem?: string | null;
@@ -43,15 +51,10 @@ export interface NotificationItem {
 	sourceSystem?: NotificationSourceSystem | null;
 }
 
-export async function createNotification(baseUrl: string, personIdentifier: string, payload: unknown, init?: RequestInit) {
-	const response = await fetch(`${baseUrl}/persons/${personIdentifier}/notifications`, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify(payload),
-		...init,
-	});
+export async function listNotifications(baseUrl: string, personIdentifier: string, init?: RequestInit) {
+	const response = await fetch(`${baseUrl}/persons/${personIdentifier}/notifications`, init);
 	if (!response.ok) throw new Error(`Notification API failed: ${response.status}`);
-	return (await response.json()) as NotificationItem;
+	return (await response.json()) as ApiPagedCollection<NotificationItem>;
 }
 ```
 
