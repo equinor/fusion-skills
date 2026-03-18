@@ -1,10 +1,11 @@
 ---
 name: fusion-issue-author-bug
-description: Draft and update bug issues using a bug-focused structure, repository-valid labels, and explicit publish confirmation before GitHub mutation.
+description: "DEPRECATED: Use fusion-issue-authoring instead. Previously: Draft and update bug issues using a bug-focused structure."
 license: MIT
 metadata:
   version: "0.1.2"
-  status: active
+  status: deprecated
+  successor: fusion-issue-authoring
   owner: "@equinor/fusion-core"
   orchestrator: "fusion-issue-authoring"
   role: "subordinate"
@@ -12,10 +13,13 @@ metadata:
     - github
     - issue-authoring
     - bug
+    - deprecated
   mcp:
     required:
       - github
 ---
+
+> **DEPRECATED**: This skill has been consolidated into [`fusion-issue-authoring`](../../fusion-issue-authoring/SKILL.md). Install only `fusion-issue-authoring` for full bug/feature/user-story/task authoring capability. See [equinor/fusion-core-tasks#802](https://github.com/equinor/fusion-core-tasks/issues/802) for details.
 
 # Author Bug Issue
 

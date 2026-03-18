@@ -51,8 +51,9 @@ Every skill must declare:
 
 ### Deprecated skills
 - Status: `deprecated`
+- Placement: `skills/.deprecated/` (moved from `skills/` on deprecation)
 - Maintenance: Security fixes only; no new features
-- Replacement: Must document successor skill(s)
+- Replacement: Must document successor skill(s) via `metadata.successor`
 - Timeline: Remove after 2-3 releases from deprecation notice
 - Communication: Issue + PR + release notes
 
@@ -127,10 +128,13 @@ When deprecating a skill:
      status: deprecated
      successor: successor-skill-name
    ```
-3. **Update description**: Add deprecation notice with successor link
-4. **Notify contributors**: Comment on related PRs/issues
-5. **Release notes**: Include in changelog with migration guidance
-6. **Timeline**: Remove after 2-3 releases (allow transition period)
+3. **Add `deprecated` to `metadata.tags`**
+4. **Add deprecation notice**: Add a prominent blockquote at the top of the SKILL.md body pointing to the successor and the tracking issue
+5. **Move to `skills/.deprecated/`**: Use `git mv skills/<skill-name> skills/.deprecated/<skill-name>` to preserve history
+6. **Update description**: Prefix with `DEPRECATED: Use <successor> instead.`
+7. **Notify contributors**: Comment on related PRs/issues
+8. **Release notes**: Include in changelog with migration guidance
+9. **Timeline**: Remove after 2-3 releases (allow transition period)
 
 **Example deprecation notice:**
 ```

@@ -87,14 +87,14 @@ Quick check:
 
 ## MCP reference
 
-Use `skills/fusion-issue-authoring/references/mcp-server.md` for:
+Use `references/mcp-server.md` for:
 - GitHub MCP server link
 - preferred issue-authoring tools
 - payload examples (issue create/update, type, sub-issues)
 
 ## Template fallbacks
 
-- Feature: `skills/fusion-issue-author-feature/assets/issue-templates/feature.md`
-- User Story: `skills/fusion-issue-author-user-story/assets/issue-templates/user-story.md`
-- Bug: `skills/fusion-issue-author-bug/assets/issue-templates/bug.md`
-- Task: `skills/fusion-issue-author-task/assets/issue-templates/task*.md`
+- Feature: `assets/issue-templates/feature.md`
+- User Story: `assets/issue-templates/user-story.md`
+- Bug: `assets/issue-templates/bug.md`
+- Task: `assets/issue-templates/task*.md`

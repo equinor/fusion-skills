@@ -1,18 +1,11 @@
 ---
 name: fusion-issue-authoring
-description: Orchestrate GitHub issue authoring by classifying request type, routing to a type-specific issue-author skill, and enforcing shared safety gates before mutation.
+description: Classify issue type, activate the matching agent mode for type-specific drafting, and enforce shared safety gates before GitHub mutation.
 license: MIT
 metadata:
   version: "0.2.4"
   status: active
   owner: "@equinor/fusion-core"
-
-  role: "orchestrator"
-  skills:
-    - fusion-issue-author-bug
-    - fusion-issue-author-feature
-    - fusion-issue-author-user-story
-    - fusion-issue-author-task
   tags:
     - github
     - issue-authoring
@@ -21,18 +14,18 @@ metadata:
       - github
 ---
 
-# Issue Authoring Orchestrator
+# Issue Authoring
 
-## Subordinates
+## Agent modes
 
-This skill routes to the following subordinate skills:
+This skill uses internal agent modes for type-specific drafting logic:
 
-- `fusion-issue-author-bug` (`skills/fusion-issue-author-bug/SKILL.md`): bug-focused issue drafting and triage structure
-- `fusion-issue-author-feature` (`skills/fusion-issue-author-feature/SKILL.md`): feature-focused scope and acceptance structure
-- `fusion-issue-author-user-story` (`skills/fusion-issue-author-user-story/SKILL.md`): role/workflow/scenario-driven story structure
-- `fusion-issue-author-task` (`skills/fusion-issue-author-task/SKILL.md`): checklist-first task decomposition and dependency planning
+- `agents/bug.agent.md`: bug-focused issue drafting and triage structure
+- `agents/feature.agent.md`: feature-focused scope and acceptance structure
+- `agents/user-story.agent.md`: role/workflow/scenario-driven story structure
+- `agents/task.agent.md`: checklist-first task decomposition and dependency planning
 
-All subordinates require this orchestrator for shared gates (labels, assignee confirmation, draft review, publish confirmation, and mutation sequencing).
+Agent modes are activated internally based on issue type classification. Users never reference agent files directly. Shared gates (labels, assignee confirmation, draft review, publish confirmation, and mutation sequencing) remain in this skill.
 
 ## When to use
 
@@ -73,11 +66,11 @@ If issue destination is unclear, ask explicitly where the issue should be create
 
 ### Step 1 — Classify and route
 
-Classify request as `Bug`, `Feature`, `User Story`, or `Task`, then route to:
-- Bug -> `skills/fusion-issue-author-bug/SKILL.md`
-- Feature -> `skills/fusion-issue-author-feature/SKILL.md`
-- User Story -> `skills/fusion-issue-author-user-story/SKILL.md`
-- Task -> `skills/fusion-issue-author-task/SKILL.md`
+Classify request as `Bug`, `Feature`, `User Story`, or `Task`, then activate the matching agent mode:
+- Bug -> `agents/bug.agent.md`
+- Feature -> `agents/feature.agent.md`
+- User Story -> `agents/user-story.agent.md`
+- Task -> `agents/task.agent.md`
 
 If ambiguous, ask only essential clarifying questions.
 
@@ -156,20 +149,20 @@ Use detailed behavior and payload examples in `references/instructions.md` and `
 ## Core behavior to preserve
 
 - Classification-first workflow
-- Route-to-specialized-skill workflow
+- Route-to-agent-mode workflow
 - Draft-first workflow
 - Clarifying questions for missing critical context
 - Explicit confirmation before any GitHub mutation
 
 Use detailed authoring guidance in `references/instructions.md`.
-Specialist fallback template locations:
-- Bug: `skills/fusion-issue-author-bug/assets/issue-templates/bug.md`
-- Feature: `skills/fusion-issue-author-feature/assets/issue-templates/feature.md`
-- User Story: `skills/fusion-issue-author-user-story/assets/issue-templates/user-story.md`
-- Task: `skills/fusion-issue-author-task/assets/issue-templates/task*.md`
+Fallback template locations:
+- Bug: `assets/issue-templates/bug.md`
+- Feature: `assets/issue-templates/feature.md`
+- User Story: `assets/issue-templates/user-story.md`
+- Task: `assets/issue-templates/task*.md`
 
 ## Expected output
-- Selected specialized skill path
+- Selected agent mode path
 - Draft issue file path under `.tmp/`
 - Template source used (repository template path or fallback asset path)
 - Proposed title, body summary, and labels

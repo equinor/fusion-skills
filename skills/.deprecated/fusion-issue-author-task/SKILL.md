@@ -1,10 +1,11 @@
 ---
 name: fusion-issue-author-task
-description: Draft and update task issues with checklist-first decomposition, dependency-aware sequencing, repository-valid labels, and explicit publish confirmation.
+description: "DEPRECATED: Use fusion-issue-authoring instead. Previously: Draft and update task issues with checklist-first decomposition and dependency-aware sequencing."
 license: MIT
 metadata:
   version: "0.1.2"
-  status: active
+  status: deprecated
+  successor: fusion-issue-authoring
   owner: "@equinor/fusion-core"
   orchestrator: "fusion-issue-authoring"
   role: "subordinate"
@@ -12,10 +13,13 @@ metadata:
     - github
     - issue-authoring
     - task
+    - deprecated
   mcp:
     required:
       - github
 ---
+
+> **DEPRECATED**: This skill has been consolidated into [`fusion-issue-authoring`](../../fusion-issue-authoring/SKILL.md). Install only `fusion-issue-authoring` for full bug/feature/user-story/task authoring capability. See [equinor/fusion-core-tasks#802](https://github.com/equinor/fusion-core-tasks/issues/802) for details.
 
 # Author Task Issue
 
