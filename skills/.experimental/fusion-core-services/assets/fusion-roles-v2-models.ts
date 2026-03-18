@@ -660,6 +660,24 @@ export interface AccessRoleMappingRequest {
   reason: string;
 }
 
+/**
+ * POST /roles/{roleIdentifier}/access-roles — attach an access role mapping to a role.
+ */
+export interface AddRoleAccessRoleRequest {
+  accessRoleIdentifier: AccessRoleIdentifierRequest;
+  /** @maxLength 500 */
+  reason: string;
+}
+
+/**
+ * POST /claimable-roles/{claimableRoleIdentifier}/access-roles — attach an access role mapping to a claimable role.
+ */
+export interface AddClaimableRoleAccessRoleRequest {
+  accessRoleIdentifier: AccessRoleIdentifierRequest;
+  /** @maxLength 500 */
+  reason: string;
+}
+
 export interface AccessRoleIdentifierRequest {
   systemName: string;
   accessRoleName: string;

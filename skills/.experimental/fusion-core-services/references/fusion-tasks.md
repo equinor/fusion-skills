@@ -50,7 +50,7 @@ export interface FusionTaskItem {
 }
 
 export async function listFusionTasks(baseUrl: string, init?: RequestInit) {
-	const response = await fetch(`${baseUrl}/tasks`, init);
+	const response = await fetch(`${baseUrl}/persons/me/tasks`, init);
 	if (!response.ok) throw new Error(`Tasks API failed: ${response.status}`);
 	return (await response.json()) as FusionTaskItem[];
 }
@@ -70,7 +70,7 @@ export async function listFusionTasks(baseUrl: string, init?: RequestInit) {
 public sealed class FusionTasksApiClient(HttpClient httpClient)
 {
 		public async Task<IReadOnlyList<FusionTaskItem>?> GetTasksAsync(CancellationToken cancellationToken)
-				=> await httpClient.GetFromJsonAsync<IReadOnlyList<FusionTaskItem>>("tasks", cancellationToken);
+				=> await httpClient.GetFromJsonAsync<IReadOnlyList<FusionTaskItem>>("persons/me/tasks", cancellationToken);
 }
 
 public sealed record FusionTaskItem(string Id, string? Title, string? Status);

@@ -4,7 +4,7 @@
  * Source of truth: Fusion.Services.People.ApiModels (NuGet package, multi-target net8.0/net9.0/net10.0)
  * and Fusion.Services.People controller view-models.
  *
- * Version scope: V3 (latest non-obsolete). V1 and V2 are obsolete and excluded.
+ * Version scope: V3/V4 are the primary target, but legacy V1/V2 DTOs are included for compatibility with still-exposed routes.
  * All property names use camelCase to match the JSON serialization output.
  */
 
@@ -96,7 +96,6 @@ export interface ApiPersonV1 {
   azureUniqueId?: string | null;
   mail?: string | null;
   name: string;
-  preferredContactMail: string | null;
   department?: string | null;
   fullDepartment?: string | null;
   mobilePhone?: string | null;
@@ -118,9 +117,8 @@ export interface ApiPersonV1 {
   linkedAccounts?: ApiProfileAccountLink[] | null;
 }
 
-/** Returned by GET /persons/{id} (API v2.0). Extends V1. OBSOLETE - use v3 or v4. */
+/** Returned by GET /persons/{id} (API v2.0). Legacy alias of the V1-compatible shape. */
 export interface ApiPersonV2 extends ApiPersonV1 {
-  // Same as V1 but with FusionPersonId as nullable
 }
 
 /** Returned by GET /persons/{id} (API version 3.0). */

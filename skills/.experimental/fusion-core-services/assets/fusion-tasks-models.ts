@@ -25,7 +25,7 @@ export type ApiMetadataValueType = "String" | "Number" | "Date" | "DateTimeOffse
 // Response models
 // ---------------------------------------------------------------------------
 
-/** Returned by GET /tasks and GET /tasks/{id}. */
+/** Returned by GET /tasks/{id} and person-scoped collection routes such as GET /persons/me/tasks. */
 export interface ApiFusionTask {
   id: string;
   title: string;

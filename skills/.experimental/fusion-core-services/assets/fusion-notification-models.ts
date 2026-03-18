@@ -17,7 +17,7 @@ export type ApiEmailPriorityV1 = "Unknown" | "High" | "Default" | "Low";
 // Response models
 // ---------------------------------------------------------------------------
 
-/** Returned by GET /persons/{id}/notifications and GET /persons/{id}/notifications/{notificationId}. */
+/** Returned by GET /persons/{personIdentifier}/notifications and GET /notifications/{id}. */
 export interface ApiNotificationV1 {
   id: string;
   /** Omitted when null. */
