@@ -5,10 +5,12 @@ import { parseFrontmatter } from "../list-skills/parse-frontmatter";
 import { getSkillIdFromDir } from "./get-skill-id-from-dir";
 
 /**
- * Finds missing local skills that declare `metadata.skills`.
+ * Finds missing local skills that declare `metadata.skills` or are deprecated.
  *
  * Maintainer note: the external skills CLI currently excludes these from `--list`
- * output, so we treat them as known/explicit companion-skill metadata usage.
+ * output, so we treat them as known/explicit exclusions:
+ * - companion-skill metadata (`metadata.skills`) usage
+ * - deprecated skills (`metadata.status: deprecated`) in `skills/.deprecated/`
  *
  * @param repoRoot - Absolute repository root path.
  * @param localSkills - Repository-relative skill directory paths.
@@ -37,8 +39,14 @@ export function findCompanionSkillMetadataEntries(
     // Treat metadata.skills as companion metadata regardless of role hint.
     const hasMetadataSkills = Boolean(frontmatter["metadata.skills"]);
 
-    // Collect only skills that use metadata.skills as companion metadata.
-    if (hasMetadataSkills) {
+    // Treat deprecated skills in the skills/.deprecated/ lane as expected CLI
+    // exclusions (the external CLI does not discover skills under this lane).
+    const isDeprecatedInDeprecatedLane =
+      frontmatter["metadata.status"] === "deprecated" &&
+      (skillDir === "skills/.deprecated" || skillDir.startsWith("skills/.deprecated/"));
+
+    // Collect skills that are expected to be absent from external CLI output.
+    if (hasMetadataSkills || isDeprecatedInDeprecatedLane) {
       excluded.push(skillDir);
     }
   }

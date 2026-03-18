@@ -42,6 +42,7 @@ Greenkeeping additionally requires ownership metadata:
   - Use a stable GitHub identity (`@user` or `@org/team`).
   - Avoid personal names without GitHub identity.
 - `metadata.sponsor` (optional): backup accountability owner (team or maintainer).
+- `metadata.deprecated_at` (required for skills in `skills/.deprecated/`): date the skill was deprecated in `YYYY-MM-DD` format. Validated by CI.
 
 Discovery and currency checks:
 
@@ -103,6 +104,10 @@ Use this lifecycle for every skill:
    - Record scope with changeset entries when required by PR policy.
 3. **Deprecate**
    - Mark status as deprecated (`metadata.status: deprecated`).
+   - Set `metadata.successor` to the replacement skill name.
+   - Add `deprecated` to `metadata.tags`.
+   - Add a prominent deprecation notice at the top of the SKILL.md body.
+   - Move the skill from `skills/` to `skills/.deprecated/`.
    - Add clear replacement/migration guidance and expected removal window.
    - Retain owner accountability until removal completes.
 4. **Remove**

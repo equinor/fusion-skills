@@ -25,7 +25,8 @@ Use `skills/fusion-skill-authoring/SKILL.md` as the canonical authoring workflow
   - use `skills/.experimental/` for preview, in-development, or not-yet-curated skills
   - use `skills/.curated/` only when a skill is intentionally being placed in the curated lane
   - use `skills/.system/` only for internal/system skills and shared building blocks
-- Local discovery and reuse checks should inspect `skills/`, `skills/.experimental/`, and `skills/.curated/` before creating a new skill; inspect `skills/.system/` as well when looking for internal building blocks or shared foundations.
+  - use `skills/.deprecated/` for skills that have been superseded and are pending removal
+- Local discovery and reuse checks should inspect `skills/`, `skills/.experimental/`, and `skills/.curated/` before creating a new skill; inspect `skills/.system/` as well when looking for internal building blocks or shared foundations. `skills/.deprecated/` is scanned by CI but should not be used for new work.
 - Initial version default for new skills in this repository: `"0.0.0"`.
 - **Ownership metadata (required):**
   - `metadata.owner`: Primary accountable maintainer (GitHub identity: `@user` or `@org/team`). Use repository team `@equinor/fusion-core` as default.
@@ -77,9 +78,8 @@ Before considering a skill change PR ready in this repository, verify:
 
 Use these repository-local skill examples when you need richer patterns that should not ship as dependencies of the installed skill package:
 
-- `skills/fusion-issue-authoring/SKILL.md` for orchestrator routing, shared safety gates, and draft-first mutation flow
+- `skills/fusion-issue-authoring/SKILL.md` for agent-mode routing, shared safety gates, and draft-first mutation flow
 - `skills/fusion-skill-self-report-bug/SKILL.md` for concise conditional flow and clear confirmation boundaries
-- focused issue-author subskills for narrow scope and strong anti-triggers
 
 ## Related instructions
 

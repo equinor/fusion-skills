@@ -1,7 +1,7 @@
 /// <reference types="node" />
 
 import { readFileSync } from "node:fs";
-import { basename, dirname, join } from "node:path";
+import { basename, dirname, join, sep } from "node:path";
 import process from "node:process";
 import { extractFrontmatter } from "../list-skills/extract-frontmatter";
 import { findSkillFiles } from "../list-skills/find-skill-files";
@@ -51,6 +51,31 @@ export function validateSkillOwnership(
     if (!validStatuses.includes(metadata["metadata.status"])) {
       errors.push(
         `${skillName}: Invalid status "${metadata["metadata.status"]}". Must be one of: ${validStatuses.join(", ")}`,
+      );
+    }
+  }
+
+  // Skills in .deprecated/ with deprecated or archived status must declare deprecated_at.
+  const isDeprecatedPath =
+    skillPath.includes(`${sep}.deprecated${sep}`) || skillPath.includes("/.deprecated/");
+  const isDeprecatedStatus =
+    metadata["metadata.status"] === "deprecated" || metadata["metadata.status"] === "archived";
+  // Only enforce deprecated_at when the skill lives in .deprecated/ AND has a matching status.
+  if (isDeprecatedPath && isDeprecatedStatus) {
+    const deprecatedAt = metadata["metadata.deprecated_at"]?.trim();
+    // Require the field to be present.
+    if (!deprecatedAt) {
+      errors.push(
+        `${skillName}: Missing required metadata.deprecated_at for deprecated skill in .deprecated/. Use YYYY-MM-DD format.`,
+      );
+      // Validate the format and parse-ability of the deprecated_at value.
+    } else if (
+      // Regex: match exactly a YYYY-MM-DD date string (four digits, dash, two digits, dash, two digits).
+      !/^\d{4}-\d{2}-\d{2}$/.test(deprecatedAt) ||
+      Number.isNaN(Date.parse(deprecatedAt))
+    ) {
+      errors.push(
+        `${skillName}: Invalid metadata.deprecated_at "${deprecatedAt}". Must be a valid YYYY-MM-DD date.`,
       );
     }
   }
