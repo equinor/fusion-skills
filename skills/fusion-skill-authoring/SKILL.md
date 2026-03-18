@@ -153,6 +153,8 @@ Write the smallest useful main document first:
 - `Expected output`
 - `Safety & constraints`
 
+Keep the draft under 300 lines. Different agent runtimes have different context window limits — SKILL.md files over 300 lines risk degradation on smaller-window runtimes and trigger CI warnings. Files over 500 lines fail CI. Move overflow to `references/` early rather than trimming later.
+
 Prefer concise, specific instructions over background explanation. Assume the agent is already capable and only add context it would not reliably infer.
 
 Set the degree of freedom intentionally:
@@ -323,6 +325,7 @@ Success signals:
 Common failure signals:
 - `name` does not match the folder name or violates naming rules
 - `description` is too vague, missing use cues, or contains invalid markup
+- `SKILL.md` exceeds 300 lines (warning) or 500 lines (error) — split content into `references/`
 - repository- or catalog-required metadata is missing or inconsistent
 - the skill still depends on repo-local docs, sibling skills, or hidden conventions that will not ship with the installed package
 - references or structure are inconsistent with the declared role / MCP needs

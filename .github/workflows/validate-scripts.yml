@@ -23,6 +23,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
   validate:
@@ -58,10 +59,13 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Validate script TSDoc coverage (diff)
+        id: validate-diff
         if: github.event_name == 'pull_request'
-        run: bun run validate:scripts --only-diff --base-ref origin/${{ github.base_ref }}
+        continue-on-error: true
+        run: bun run validate:scripts --only-diff --base-ref origin/${{ github.base_ref }} --json-output .tmp/validate-scripts-diagnostics.json
 
       - name: Validate script TSDoc coverage (full)
+        id: validate-full
         if: github.event_name != 'pull_request'
         run: bun run validate:scripts
 
@@ -73,3 +77,97 @@ jobs:
 
       - name: TypeScript check
         run: bunx tsc --noEmit -p tsconfig.json
+
+      - name: Post or update PR review comments
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = '.tmp/validate-scripts-diagnostics.json';
+            const marker = '<!-- validate-scripts-review -->';
+            const { owner, repo } = context.repo;
+            const pull_number = context.payload.pull_request.number;
+            const commit_id = context.payload.pull_request.head.sha;
+
+            // Read diagnostics (empty array if file missing = no issues).
+            let diagnostics = [];
+            if (fs.existsSync(path)) {
+              diagnostics = JSON.parse(fs.readFileSync(path, 'utf8'));
+            }
+
+            // Find existing bot reviews tagged with our marker.
+            const reviews = await github.rest.pulls.listReviews({ owner, repo, pull_number });
+            const botReviews = reviews.data.filter(
+              r => r.user?.type === 'Bot' && r.body?.includes(marker)
+            );
+
+            // Dismiss stale bot reviews so resolved issues don't linger.
+            for (const review of botReviews) {
+              try {
+                await github.rest.pulls.dismissReview({
+                  owner, repo, pull_number,
+                  review_id: review.id,
+                  message: 'Superseded by newer validation run.',
+                });
+              } catch (e) {
+                core.info(`Could not dismiss review ${review.id}: ${e.message}`);
+              }
+            }
+
+            if (diagnostics.length === 0) {
+              core.info('No inline diagnostics for intent/regex/disallowed checks — skipping review.');
+              return;
+            }
+
+            // Build inline review comments from diff-filtered diagnostics.
+            const comments = diagnostics.map(d => ({
+              path: d.path,
+              line: d.line,
+              body: `${marker}\n**\`${d.code}\`**: ${d.message}`,
+            }));
+
+            // GitHub limits inline comments per review; chunk to avoid API failures.
+            const MAX_COMMENTS_PER_REVIEW = 50;
+            const commentChunks = [];
+            for (let i = 0; i < comments.length; i += MAX_COMMENTS_PER_REVIEW) {
+              commentChunks.push(comments.slice(i, i + MAX_COMMENTS_PER_REVIEW));
+            }
+
+            // Post one or more reviews with inline comments.
+            for (const [index, chunk] of commentChunks.entries()) {
+              const bodyLines = [
+                marker,
+                `**validate-scripts** found ${diagnostics.length} intent/regex/disallowed issue(s).`,
+              ];
+
+              if (commentChunks.length > 1) {
+                bodyLines.push(`Review chunk ${index + 1}/${commentChunks.length}.`);
+              }
+
+              if (index === commentChunks.length - 1) {
+                bodyLines.push('Fix them to pass CI.');
+              }
+
+              try {
+                await github.rest.pulls.createReview({
+                  owner,
+                  repo,
+                  pull_number,
+                  commit_id,
+                  event: 'COMMENT',
+                  body: bodyLines.join('\n'),
+                  comments: chunk,
+                });
+              } catch (error) {
+                const message = error instanceof Error ? error.message : String(error);
+                core.warning(
+                  `Failed to create validate-scripts review chunk ${index + 1}/${commentChunks.length}: ${message}`,
+                );
+                break;
+              }
+            }
+
+      - name: Fail if validation failed
+        if: github.event_name == 'pull_request' && steps.validate-diff.outcome == 'failure'
+        run: exit 1

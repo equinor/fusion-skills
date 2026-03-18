@@ -74,6 +74,28 @@ Keep `SKILL.md` lean. Prefer:
 
 Guideline: if a section exceeds roughly one page, move it to `references/` and link to it.
 
+## SKILL.md size limits
+
+SKILL.md files are loaded into agent context windows. Oversized files cause token exhaustion, instruction dilution, and unreliable behavior across runtimes. These limits are enforced by CI (`validate:skill-sizes`).
+
+| Feature | Grok (custom agents) | Claude Skills (SKILL.md) | GitHub Copilot (custom agents/skills) |
+|---|---|---|---|
+| Hard max (chars) | ~4,000–5,000 (observed truncation) | None strict; soft ~500 lines | 30,000 chars (custom agents prompt); skills softer |
+| Recommended lines | 30–70 (sweet spot 40–60) | <500 (ideal); 150–400 common | 100–500+ possible, but aim <300–400 for reliability |
+| Preferred / safe zone | 800–2,500 tokens | 2k–5k tokens | 5k–15k tokens per agent/skill (test heavily) |
+| Risk at high end | Forgetting/dilution >3k tokens | Degradation >500 lines | Token exhaustion in 64k window; quality drop |
+| Best for complex skills | Split or chain via reminders | Progressive disclosure / refs | Split skills; use refs/scripts; explicit agent selection |
+
+### Repository thresholds
+
+- **Warning at 300 lines**: SKILL.md is getting large. Consider moving content to `references/`.
+- **Error at 500 lines**: SKILL.md is too large for reliable cross-platform behavior. Must split.
+
+When a skill needs more than 300 lines of guidance, use progressive disclosure:
+- Keep core activation, workflow steps, and safety in `SKILL.md`
+- Move detailed examples, platform notes, and checklists to `references/`
+- Move templates and reusable artifacts to `assets/`
+
 ## Format background
 
 - https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview

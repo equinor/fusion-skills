@@ -19,6 +19,12 @@ Repository-wide guidance for Copilot in this repository.
 - For local skill discovery in this repository, search `skills/` first.
 - Include `skills/` and `skills/.experimental/` in local `.agents/skills` lookup paths for this workspace.
 
+## SKILL.md size limits
+
+- SKILL.md files must stay under 500 lines (CI error threshold).
+- SKILL.md files above 300 lines trigger a CI warning — consider moving content to `references/`.
+- See `contribute/02-skill-structure-and-content.md` for the cross-platform size rationale and progressive disclosure guidance.
+
 ## Maintainer docs
 
 - For maintainer workflow and policy context, use `contribute/README.md` and the topic files in `contribute/`.

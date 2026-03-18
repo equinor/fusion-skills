@@ -1,12 +1,15 @@
 import { execFileSync } from "node:child_process";
-import { join } from "node:path";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { dirname, join, relative } from "node:path";
 import process from "node:process";
 import { collectIntentCommentIssues } from "./collect-intent-comment-issues";
 import { collectIntentCommentIssuesForFiles } from "./collect-intent-comment-issues-for-files";
 import { collectTSDocCoverageIssues } from "./collect-tsdoc-coverage-issues";
 import { collectTSDocCoverageIssuesForFiles } from "./collect-tsdoc-coverage-issues-for-files";
+import { computeDiffLineMap } from "./compute-diff-lines";
 import { formatCoverageIssues } from "./format-coverage-issues";
-import { formatIntentCommentIssues } from "./format-intent-comment-issues";
+import { FIX_HINTS, formatIntentCommentIssues } from "./format-intent-comment-issues";
+import type { IntentCommentIssue } from "./types";
 
 /**
  * Parsed CLI options for the validate-scripts command.
@@ -14,6 +17,7 @@ import { formatIntentCommentIssues } from "./format-intent-comment-issues";
 interface ValidateScriptsOptions {
   onlyDiff: boolean;
   baseRef: string;
+  jsonOutput: string | null;
 }
 
 /**
@@ -34,6 +38,7 @@ function parseArgs(argv: string[]): ValidateScriptsOptions {
   const options: ValidateScriptsOptions = {
     onlyDiff: false,
     baseRef: process.env.GITHUB_BASE_REF ? `origin/${process.env.GITHUB_BASE_REF}` : "origin/main",
+    jsonOutput: null,
   };
   const state = { skipNext: false };
 
@@ -59,6 +64,18 @@ function parseArgs(argv: string[]): ValidateScriptsOptions {
         throw new Error("Missing value for --base-ref");
       }
       options.baseRef = value;
+      state.skipNext = true;
+      continue;
+    }
+
+    // Write structured diagnostics to a JSON file for CI review comment integration.
+    if (arg === "--json-output") {
+      const value = argv[index + 1]?.trim();
+      // Fail fast when a flag expects a value but none is provided.
+      if (!value) {
+        throw new Error("Missing value for --json-output");
+      }
+      options.jsonOutput = value;
       state.skipNext = true;
       continue;
     }
@@ -131,6 +148,68 @@ function listDiffScriptSourceFiles(repoRoot: string, baseRef: string): DiffScrip
 }
 
 /**
+ * Filters issues to only those reported on changed diff lines.
+ *
+ * @param issues - Candidate issues to include in JSON diagnostics.
+ * @param repoRoot - Absolute repository root for relative path display.
+ * @param diffLineMap - Map of file paths to changed line ranges.
+ * @returns Issues that map to changed lines in the current diff.
+ */
+function filterIssuesToDiffLines(
+  issues: IntentCommentIssue[],
+  repoRoot: string,
+  diffLineMap: Record<string, Array<{ start: number; end: number }>>,
+): IntentCommentIssue[] {
+  const lineIsInRanges = (line: number, ranges: Array<{ start: number; end: number }>): boolean =>
+    // Check each changed range so only diagnostics on touched lines are kept.
+    ranges.some((range) => line >= range.start && line <= range.end);
+
+  // Iterate each issue so PR review comments only target changed diff hunks.
+  return issues.filter((issue) => {
+    // This regex normalizes Windows path separators to POSIX for diff-map key lookup.
+    const relPath = relative(repoRoot, issue.filePath).replace(/\\/g, "/");
+    const ranges = diffLineMap[relPath];
+    return ranges ? lineIsInRanges(issue.line, ranges) : false;
+  });
+}
+
+/**
+ * Writes structured diagnostics to a JSON file for CI review comment integration.
+ *
+ * @param outputPath - File path to write, or `null` to skip.
+ * @param issues - Intent-comment issues to serialize.
+ * @param repoRoot - Absolute repository root for relative path display.
+ * @param diffLineMap - Map of file paths to changed line ranges (used to filter for diff-only context).
+ */
+function writeDiagnosticsJson(
+  outputPath: string | null,
+  issues: IntentCommentIssue[],
+  repoRoot: string,
+  diffLineMap?: Record<string, Array<{ start: number; end: number }>>,
+): void {
+  // Skip when no output path was requested (local development runs).
+  if (!outputPath) {
+    return;
+  }
+
+  // Filter issues to only those on lines that exist in the diff (when in diff-only mode).
+  const filteredIssues = diffLineMap
+    ? filterIssuesToDiffLines(issues, repoRoot, diffLineMap)
+    : issues;
+
+  // Transform each issue into a JSON-serializable diagnostic object.
+  const diagnostics = filteredIssues.map((issue) => ({
+    // This regex normalizes path separators for cross-platform JSON output.
+    path: relative(repoRoot, issue.filePath).replace(/\\/g, "/"),
+    line: issue.line,
+    code: issue.code,
+    message: `${issue.code}: ${issue.statement}\nFix: ${FIX_HINTS[issue.code]}`,
+  }));
+  mkdirSync(dirname(outputPath), { recursive: true });
+  writeFileSync(outputPath, JSON.stringify(diagnostics, null, 2), "utf8");
+}
+
+/**
  * CLI entrypoint for validating script quality checks.
  *
  * @returns Nothing.
@@ -142,6 +221,9 @@ function main(): void {
   const diffResult = options.onlyDiff
     ? listDiffScriptSourceFiles(repoRoot, options.baseRef)
     : { files: [], resolvedBaseRef: options.baseRef };
+  const diffLineMap = options.onlyDiff
+    ? computeDiffLineMap(repoRoot, diffResult.resolvedBaseRef)
+    : undefined;
   const diffFiles = diffResult.files;
   const tsdocIssues = options.onlyDiff
     ? collectTSDocCoverageIssuesForFiles(diffFiles)
@@ -157,9 +239,13 @@ function main(): void {
   ]);
   // Keep only issues that represent explicitly banned syntax patterns.
   const disallowedIssues = intentIssues.filter((issue) => disallowedIssueCodes.has(issue.code));
-  // Keep intent-check findings focused on comment and regex-explanation coverage.
-  const nonDisallowedIntentIssues = intentIssues.filter(
-    (issue) => !disallowedIssueCodes.has(issue.code),
+  // Separate regex-explanation issues from general intent-comment issues for distinct headings.
+  const regexExplanationIssues = intentIssues.filter(
+    (issue) => issue.code === "missing-regex-explanation",
+  );
+  // Keep intent-check findings focused on control-flow comment coverage only.
+  const intentCommentIssues = intentIssues.filter(
+    (issue) => issue.code === "missing-intent-comment",
   );
 
   // In diff mode, print scope details so CI output explains what was checked.
@@ -174,10 +260,15 @@ function main(): void {
   // Exit early on success to keep failure output reserved for actionable issues.
   if (
     tsdocIssues.length === 0 &&
-    nonDisallowedIntentIssues.length === 0 &&
+    intentCommentIssues.length === 0 &&
+    regexExplanationIssues.length === 0 &&
     disallowedIssues.length === 0
   ) {
-    console.log("TSDoc, intent-comment, and disallowed-pattern checks passed for scripts/**.");
+    // Write empty diagnostics so CI can post a clean review and resolve stale comments.
+    writeDiagnosticsJson(options.jsonOutput, [], repoRoot, diffLineMap);
+    console.log(
+      "TSDoc, intent-comment, regex-explanation, and disallowed-pattern checks passed for scripts/**.",
+    );
     return;
   }
 
@@ -191,10 +282,19 @@ function main(): void {
   }
 
   // Fail fast here so the remaining logic can assume valid input.
-  if (nonDisallowedIntentIssues.length > 0) {
+  if (intentCommentIssues.length > 0) {
     console.error("ERROR: Intent-comment check failed for scripts/**.");
     // Emit one line per issue so missing control-flow intent comments are actionable.
-    for (const line of formatIntentCommentIssues(nonDisallowedIntentIssues, repoRoot)) {
+    for (const line of formatIntentCommentIssues(intentCommentIssues, repoRoot)) {
+      console.error(`- ${line}`);
+    }
+  }
+
+  // Report regex-explanation issues under a distinct heading.
+  if (regexExplanationIssues.length > 0) {
+    console.error("ERROR: Regex-explanation check failed for scripts/**.");
+    // Emit one line per issue so missing regex explanation comments are actionable.
+    for (const line of formatIntentCommentIssues(regexExplanationIssues, repoRoot)) {
       console.error(`- ${line}`);
     }
   }
@@ -208,8 +308,12 @@ function main(): void {
     }
   }
 
+  // Write all diagnostics to JSON so CI can post inline PR review comments.
+  const allIntentIssues = [...intentCommentIssues, ...regexExplanationIssues, ...disallowedIssues];
+  writeDiagnosticsJson(options.jsonOutput, allIntentIssues, repoRoot, diffLineMap);
+
   throw new Error(
-    `Script quality checks failed (tsdoc=${tsdocIssues.length}, intent=${nonDisallowedIntentIssues.length}, disallowed=${disallowedIssues.length}).`,
+    `Script quality checks failed (tsdoc=${tsdocIssues.length}, intent=${intentCommentIssues.length}, regex=${regexExplanationIssues.length}, disallowed=${disallowedIssues.length}).`,
   );
 }
 

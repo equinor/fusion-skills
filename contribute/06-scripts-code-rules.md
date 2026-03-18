@@ -72,6 +72,7 @@ Note: One primary responsibility does not mean exactly one function per file.
 - Add proper TSDoc for all exported interfaces, types, functions, and modules.
 - Add inline maintainer comments for non-obvious behavior, constraints, and tradeoffs.
 - Inline comments should explain why, not repeat obvious code behavior.
+- Add a `//` comment containing the word "regex" directly above every regex literal to explain what the pattern matches. The `validate:scripts` check enforces this.
 
 ### 4.5 Error handling and contracts
 
