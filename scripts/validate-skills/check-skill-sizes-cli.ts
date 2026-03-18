@@ -156,5 +156,11 @@ function main(): void {
 
 // Keep CLI execution scoped to direct invocation to avoid side effects in imports.
 if (import.meta.main) {
-  main();
+  try {
+    main();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`ERROR: ${message}`);
+    process.exit(1);
+  }
 }
