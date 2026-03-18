@@ -144,6 +144,8 @@ if (error) return <Banner variant="warning">Failed to load items</Banner>;
 Or set a global error handler on the `QueryClient`:
 
 ```typescript
+import { QueryClient, QueryCache } from '@tanstack/react-query';
+
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error) => {

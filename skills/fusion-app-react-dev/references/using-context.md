@@ -160,7 +160,9 @@ The exact types available depend on the Fusion environment and service discovery
 ### Guard a page that requires context
 
 ```typescript
-const ContextGuard = ({ children }: { children: React.ReactNode }) => {
+import type { ReactNode } from 'react';
+
+const ContextGuard = ({ children }: { children: ReactNode }) => {
   const context = useCurrentContext();
   if (!context) {
     return <Banner variant="info">Select a project to continue</Banner>;
