@@ -93,4 +93,3 @@ export function computeDiffLineMap(repoRoot: string, baseRef: string): DiffLineM
     return {};
   }
 }
-

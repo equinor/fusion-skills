@@ -116,24 +116,57 @@ jobs:
             }
 
             if (diagnostics.length === 0) {
-              core.info('No diagnostics — skipping review.');
+              core.info('No inline diagnostics for intent/regex/disallowed checks — skipping review.');
               return;
             }
 
-            // Build inline review comments from diagnostics.
+            // Build inline review comments from diff-filtered diagnostics.
             const comments = diagnostics.map(d => ({
               path: d.path,
               line: d.line,
               body: `${marker}\n**\`${d.code}\`**: ${d.message}`,
             }));
 
-            // Post a new review with inline comments.
-            await github.rest.pulls.createReview({
-              owner, repo, pull_number, commit_id,
-              event: 'COMMENT',
-              body: `${marker}\n**validate-scripts** found ${diagnostics.length} issue(s). Fix them to pass CI.`,
-              comments,
-            });
+            // GitHub limits inline comments per review; chunk to avoid API failures.
+            const MAX_COMMENTS_PER_REVIEW = 50;
+            const commentChunks = [];
+            for (let i = 0; i < comments.length; i += MAX_COMMENTS_PER_REVIEW) {
+              commentChunks.push(comments.slice(i, i + MAX_COMMENTS_PER_REVIEW));
+            }
+
+            // Post one or more reviews with inline comments.
+            for (const [index, chunk] of commentChunks.entries()) {
+              const bodyLines = [
+                marker,
+                `**validate-scripts** found ${diagnostics.length} intent/regex/disallowed issue(s).`,
+              ];
+
+              if (commentChunks.length > 1) {
+                bodyLines.push(`Review chunk ${index + 1}/${commentChunks.length}.`);
+              }
+
+              if (index === commentChunks.length - 1) {
+                bodyLines.push('Fix them to pass CI.');
+              }
+
+              try {
+                await github.rest.pulls.createReview({
+                  owner,
+                  repo,
+                  pull_number,
+                  commit_id,
+                  event: 'COMMENT',
+                  body: bodyLines.join('\n'),
+                  comments: chunk,
+                });
+              } catch (error) {
+                const message = error instanceof Error ? error.message : String(error);
+                core.warning(
+                  `Failed to create validate-scripts review chunk ${index + 1}/${commentChunks.length}: ${message}`,
+                );
+                break;
+              }
+            }
 
       - name: Fail if validation failed
         if: github.event_name == 'pull_request' && steps.validate-diff.outcome == 'failure'

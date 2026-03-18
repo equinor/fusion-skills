@@ -18,6 +18,32 @@ export interface SkillSizeFinding {
 }
 
 /**
+ * Counts logical lines in file content.
+ *
+ * - Supports Unix (`\n`) and Windows (`\r\n`) line endings.
+ * - Ignores a trailing empty segment caused by a final newline at EOF.
+ *
+ * @param content - Raw UTF-8 file content.
+ * @returns Logical line count used for threshold checks.
+ */
+function getNormalizedLineCount(content: string): number {
+  // Return early so empty files are counted as zero logical lines.
+  if (content.length === 0) {
+    return 0;
+  }
+
+  // This regex splits content on either LF or CRLF line endings.
+  const lines = content.split(/\r?\n/);
+
+  // Drop one trailing empty segment when the file ends with a newline.
+  if (lines.length > 0 && lines[lines.length - 1] === "") {
+    lines.pop();
+  }
+
+  return lines.length;
+}
+
+/**
  * Checks SKILL.md files for excessive line counts.
  *
  * @param repoRoot - Absolute repository root path.
@@ -31,7 +57,7 @@ export function checkSkillSizes(repoRoot: string, filePaths?: string[]): SkillSi
   // Check each SKILL.md file against size thresholds.
   for (const filePath of skillFiles) {
     const content = readFileSync(filePath, "utf8");
-    const lineCount = content.split("\n").length;
+    const lineCount = getNormalizedLineCount(content);
     const skillPath = relative(repoRoot, filePath);
 
     // Report errors for files exceeding the hard limit.
