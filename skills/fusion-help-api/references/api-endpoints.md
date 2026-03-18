@@ -53,7 +53,7 @@ GET /articles/{articleIdentifier}?$expand=content,sections&api-version=1.0
 ### Create an article (admin)
 
 ```
-POST /apps/{appKey}/articles
+POST /apps/{appKey}/articles?api-version=1.0
 Content-Type: application/json
 
 {
@@ -76,7 +76,7 @@ Returns `201 Created` with the full article object (including `content` and `sec
 Uses JSON Patch semantics — only send fields you want to change:
 
 ```
-PATCH /apps/{appKey}/articles/{articleIdentifier}
+PATCH /apps/{appKey}/articles/{articleIdentifier}?api-version=1.0
 Content-Type: application/json
 
 {
@@ -91,7 +91,7 @@ Returns `200 OK` with the updated article.
 ### Delete an article (admin)
 
 ```
-DELETE /apps/{appKey}/articles/{articleIdentifier}
+DELETE /apps/{appKey}/articles/{articleIdentifier}?api-version=1.0
 ```
 
 Returns `204 No Content`. Note: deleted articles are soft-deleted — the slug cannot be reused.
@@ -127,7 +127,7 @@ GET /faqs/{faqIdentifier}?$expand=answer,linkedArticle&api-version=1.0
 ### Create a FAQ (admin)
 
 ```
-POST /apps/{appKey}/faqs
+POST /apps/{appKey}/faqs?api-version=1.0
 Content-Type: application/json
 
 {
@@ -143,7 +143,7 @@ Content-Type: application/json
 ### Update a FAQ (admin)
 
 ```
-PATCH /apps/{appKey}/faqs/{faqIdentifier}
+PATCH /apps/{appKey}/faqs/{faqIdentifier}?api-version=1.0
 Content-Type: application/json
 
 {
@@ -155,7 +155,7 @@ Content-Type: application/json
 ### Delete a FAQ (admin)
 
 ```
-DELETE /apps/{appKey}/faqs/{faqIdentifier}
+DELETE /apps/{appKey}/faqs/{faqIdentifier}?api-version=1.0
 ```
 
 ---
@@ -203,7 +203,7 @@ GET /release-notes/{releaseNoteIdentifier}?$expand=content,sections,linkedArticl
 ### Create a release note (admin)
 
 ```
-POST /apps/{appKey}/release-notes
+POST /apps/{appKey}/release-notes?api-version=1.0
 Content-Type: application/json
 
 {
@@ -222,7 +222,7 @@ Content-Type: application/json
 ### Update a release note (admin)
 
 ```
-PATCH /apps/{appKey}/release-notes/{releaseNoteIdentifier}
+PATCH /apps/{appKey}/release-notes/{releaseNoteIdentifier}?api-version=1.0
 Content-Type: application/json
 
 {
@@ -234,7 +234,7 @@ Content-Type: application/json
 ### Delete a release note (admin)
 
 ```
-DELETE /apps/{appKey}/release-notes/{releaseNoteIdentifier}
+DELETE /apps/{appKey}/release-notes/{releaseNoteIdentifier}?api-version=1.0
 ```
 
 ---

@@ -12,6 +12,7 @@ Fetch articles for your app key and render them in a side panel or help section.
 
 ```typescript
 // React component using Fusion Framework HTTP client
+import { useEffect, useState } from "react";
 import { useHttpClient } from "@equinor/fusion-framework-react/hooks";
 
 function HelpArticles({ appKey }: { appKey: string }) {
@@ -100,16 +101,16 @@ var newArticle = new
     tags = new[] { "automated" }
 };
 
-var response = await client.PostAsJsonAsync("/apps/my-app/articles", newArticle);
+var response = await client.PostAsJsonAsync("/apps/my-app/articles?api-version=1.0", newArticle);
 response.EnsureSuccessStatusCode();
 
 // Update an existing article
 var patch = new { content = "## Updated\n\nNew content." };
 var patchResponse = await client.PatchAsJsonAsync(
-    "/apps/my-app/articles/my-app-automated-article", patch);
+    "/apps/my-app/articles/my-app-automated-article?api-version=1.0", patch);
 
 // Delete an article
-await client.DeleteAsync("/apps/my-app/articles/my-app-automated-article");
+await client.DeleteAsync("/apps/my-app/articles/my-app-automated-article?api-version=1.0");
 ```
 
 ## Pattern 5: Python automation script
@@ -144,5 +145,10 @@ new_article = {
     "sourceSystem": "python-script",
     "tags": ["automated", "python"]
 }
-resp = requests.post(f"{base_url}/apps/my-app/articles", json=new_article, headers=headers)
+resp = requests.post(
+    f"{base_url}/apps/my-app/articles",
+    params={"api-version": "1.0"},
+    json=new_article,
+    headers=headers
+)
 ```

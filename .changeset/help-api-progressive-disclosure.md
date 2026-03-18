@@ -10,4 +10,4 @@ Trim SKILL.md from 716 to 121 lines with progressive disclosure
 - Keep activation guidance, base URLs, auth summary, and safety in SKILL.md
 - Link to all five reference files for on-demand loading
 
-Resolves equinor/fusion-core-tasks#800
+resolves equinor/fusion-core-tasks#800

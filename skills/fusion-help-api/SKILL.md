@@ -88,7 +88,7 @@ Quick reference — token audiences:
 
 ### 4. Call the API
 
-All endpoints use `?api-version=1.0`. Resources: **Articles**, **FAQs**, **Release Notes**, **Assets**, **Search/Suggest**, **Changelog**.
+Endpoints are versioned — include `?api-version=1.0` in requests. Resources: **Articles**, **FAQs**, **Release Notes**, **Assets**, **Search/Suggest**, **Changelog**.
 
 For full CRUD details, request/response bodies, OData filters, and validation rules see [references/api-endpoints.md](references/api-endpoints.md).
 

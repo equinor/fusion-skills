@@ -14,14 +14,20 @@ All Help API endpoints require a valid Azure AD bearer token.
 Use the Fusion Framework module's HTTP client, which handles token acquisition automatically. The help service is registered as `"help"` in the Fusion service discovery.
 
 ```typescript
+import { useHttpClient } from "@equinor/fusion-framework-react/hooks";
+
 // Fusion Framework React example
 const httpClient = useHttpClient("help");
-const response = await httpClient.fetchAsync("/articles?$expand=content&$filter=appKey eq 'my-app'");
+const response = await httpClient.fetchAsync("/articles?$expand=content&$filter=appKey eq 'my-app'&api-version=1.0");
 ```
 
 ## From a backend service or script
 
 ```csharp
+using Azure.Core;
+using Azure.Identity;
+using System.Net.Http.Headers;
+
 // Using Azure.Identity
 var credential = new DefaultAzureCredential();
 var token = await credential.GetTokenAsync(
