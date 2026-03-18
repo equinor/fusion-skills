@@ -2,6 +2,55 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.12.0
+
+### Minor
+
+__🎯 [feat: add fusion-app-react-dev skill #97](https://github.com/equinor/fusion-skills/pull/97)<br/>
+🗂️ [da1c011](https://github.com/equinor/fusion-skills/commit/da1c011b803f79ba159313d54b531ab9dbcc6708)<br/>
+📦 fusion-app-react-dev@0.1.0__
+
+Add fusion-app-react-dev skill to the catalog
+
+Guides feature development in Fusion Framework React apps — scaffolding
+components, hooks, services, and types that follow EDS conventions and
+Fusion Framework patterns. Includes helper agents for framework review,
+styling review, and code-quality review, plus reference docs and asset
+checklists.
+
+resolves equinor/fusion-core-tasks#799
+
+### Patch
+
+__🎯 [trim(fusion-help-api): progressive disclosure — 716 → 121 lines #90](https://github.com/equinor/fusion-skills/pull/90)<br/>
+🗂️ [25f8dcd](https://github.com/equinor/fusion-skills/commit/25f8dcd9e6a3931db836949aded52bc47a3f6139)<br/>
+📦 fusion-help-api@0.0.2__
+
+Trim SKILL.md from 716 to 121 lines with progressive disclosure
+
+- Move detailed auth code samples to references/authentication.md
+- Move full CRUD endpoint docs to references/api-endpoints.md
+- Move integration pattern examples to references/integration-patterns.md
+- Keep activation guidance, base URLs, auth summary, and safety in SKILL.md
+- Link to all five reference files for on-demand loading
+
+resolves equinor/fusion-core-tasks#800
+
+---
+
+__🎯 [fix: actionable diagnostics, PR review comments, and SKILL.md size check #88](https://github.com/equinor/fusion-skills/pull/88)<br/>
+🗂️ [8cd7d9d](https://github.com/equinor/fusion-skills/commit/8cd7d9d3a878b27425eb8a3e7be8398278e337e3)<br/>
+📦 fusion-skill-authoring@0.3.1__
+
+Document SKILL.md size limits and CI guardrails
+
+- Document 300-line recommended limit (triggers CI warning)
+- Document 500-line hard limit (fails CI)
+- Clarify expectation to move overflow to references/ early
+- Add failure signal for exceeding size thresholds
+
+Relates to: equinor/fusion-core-tasks#84
+
 ## v0.11.1
 
 ### Patch

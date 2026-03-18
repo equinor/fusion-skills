@@ -119,8 +119,8 @@ jobs:
 
           # Install/update skills from source repositories
           # Refresh already-installed skills to their latest versions
-          npx skills refresh || {
-            echo "::warning::npx skills refresh failed — continuing to check for changes anyway"
+          npx skills experimental_install || {
+            echo "::warning::npx skills experimental_install failed — continuing to check for changes anyway"
           }
 
       # -----------------------------------------------------------------------
@@ -181,7 +181,7 @@ jobs:
           cat << EOF > pr-body.md
           ## Skills Upgrade
 
-          Automated run of \`npx skills refresh\` to update agent skills to their latest versions.
+          Automated run of \`npx skills update\` to update agent skills to their latest versions.
           **Date:** $(date -u +"%Y-%m-%d %H:%M UTC")
           **Node version:** 24
 

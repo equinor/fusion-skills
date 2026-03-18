@@ -7,6 +7,7 @@ Checks:
 - each named parameter has an `@param` tag,
 - functions returning values include `@returns`,
 - control-flow and iterator lines (`if`, `for`, `map`, `filter`, `reduce`, `forEach`) have intent comments directly above,
+- regex literals have an explanation comment containing the word "regex" directly above,
 - disallowed patterns are reported (`while`/`do-while` loops, `let` declarations, multiple exported functions per file).
 
 Excluded paths:
@@ -30,7 +31,8 @@ flowchart TD
   C --> D[Parse source with TypeScript AST]
   D --> E[Validate doc + @param + @returns]
   E --> F[Validate intent comments on control-flow and iterators]
-  F --> G{Any issues?}
+  F --> F2[Validate regex literals have explanation comments]
+  F2 --> G{Any issues?}
   G -- No --> H[Pass]
   G -- Yes --> I[Print actionable diagnostics and fail]
 ```
