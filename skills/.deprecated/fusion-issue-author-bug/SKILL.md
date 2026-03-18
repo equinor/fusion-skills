@@ -3,7 +3,7 @@ name: fusion-issue-author-bug
 description: "DEPRECATED: Use fusion-issue-authoring instead. Previously: Draft and update bug issues using a bug-focused structure."
 license: MIT
 metadata:
-  version: "0.1.2"
+  version: "0.1.3"
   status: deprecated
   deprecated_at: "2026-03-18"
   successor: fusion-issue-authoring

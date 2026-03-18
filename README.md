@@ -282,7 +282,7 @@ Wires Fusion Help Center into app pages — creates article slug constants, adds
 
 ---
 
-**👍 [`fusion-issue-authoring@0.2.4`](skills/fusion-issue-authoring/SKILL.md)**
+**👍 [`fusion-issue-authoring@0.3.0`](skills/fusion-issue-authoring/SKILL.md)**
 
 Classify issue type, activate the matching agent mode for type-specific drafting, and enforce shared safety gates before GitHub mutation.
 
@@ -306,7 +306,7 @@ Explain what Fusion MCP is and guide users through setting it up when they need 
 
 ---
 
-**👍 [`fusion-skill-authoring@0.3.1`](skills/fusion-skill-authoring/SKILL.md)**
+**👍 [`fusion-skill-authoring@0.3.2`](skills/fusion-skill-authoring/SKILL.md)**
 
 Creates or modernizes repository skills with clear activation cues, purposeful support files, and practical review loops. USE FOR: creating a new skill, tightening an existing skill, improving discovery wording, and structuring references/assets/optional helper agents when they genuinely add value. DO NOT USE FOR: product-code changes, routine copy edits outside skills/, or documentation that should not become an installable skill.
 

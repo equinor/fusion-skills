@@ -2,6 +2,91 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.13.0
+
+### Minor
+
+__🎯 [feat: consolidate issue-authoring skills into single skill with agent modes #98](https://github.com/equinor/fusion-skills/pull/98)<br/>
+🗂️ [6bb9cdc](https://github.com/equinor/fusion-skills/commit/6bb9cdcc1e2e0ed25d562bfd5db4dfab52559c0f)<br/>
+📦 fusion-issue-authoring@0.3.0__
+
+Consolidate issue-authoring capability into a single skill with agent modes
+
+- Merge type-specific drafting logic from 4 subordinate skills into agent mode files (`agents/*.agent.md`)
+- Move all 10 issue templates into `assets/issue-templates/` within this skill
+- Update orchestrator to route to internal agent modes instead of external subordinate skills
+- Retain full 8-step workflow, shared gates, caching strategy, and MCP mutation sequencing
+
+Resolves equinor/fusion-core-tasks#802
+
+### Patch
+
+__🎯 [feat: consolidate issue-authoring skills into single skill with agent modes #98](https://github.com/equinor/fusion-skills/pull/98)<br/>
+🗂️ [6bb9cdc](https://github.com/equinor/fusion-skills/commit/6bb9cdcc1e2e0ed25d562bfd5db4dfab52559c0f)<br/>
+📦 fusion-issue-author-bug@0.1.3__
+
+Deprecate in favor of consolidated `fusion-issue-authoring` skill
+
+- Set `metadata.status: deprecated` and `metadata.successor: fusion-issue-authoring`
+- Move to `skills/.deprecated/` placement lane
+- Add deprecation notice pointing to the consolidated skill
+
+Resolves equinor/fusion-core-tasks#802
+
+---
+
+__🎯 [feat: consolidate issue-authoring skills into single skill with agent modes #98](https://github.com/equinor/fusion-skills/pull/98)<br/>
+🗂️ [6bb9cdc](https://github.com/equinor/fusion-skills/commit/6bb9cdcc1e2e0ed25d562bfd5db4dfab52559c0f)<br/>
+📦 fusion-issue-author-feature@0.1.3__
+
+Deprecate in favor of consolidated `fusion-issue-authoring` skill
+
+- Set `metadata.status: deprecated` and `metadata.successor: fusion-issue-authoring`
+- Move to `skills/.deprecated/` placement lane
+- Add deprecation notice pointing to the consolidated skill
+
+Resolves equinor/fusion-core-tasks#802
+
+---
+
+__🎯 [feat: consolidate issue-authoring skills into single skill with agent modes #98](https://github.com/equinor/fusion-skills/pull/98)<br/>
+🗂️ [6bb9cdc](https://github.com/equinor/fusion-skills/commit/6bb9cdcc1e2e0ed25d562bfd5db4dfab52559c0f)<br/>
+📦 fusion-issue-author-task@0.1.3__
+
+Deprecate in favor of consolidated `fusion-issue-authoring` skill
+
+- Set `metadata.status: deprecated` and `metadata.successor: fusion-issue-authoring`
+- Move to `skills/.deprecated/` placement lane
+- Add deprecation notice pointing to the consolidated skill
+
+Resolves equinor/fusion-core-tasks#802
+
+---
+
+__🎯 [feat: consolidate issue-authoring skills into single skill with agent modes #98](https://github.com/equinor/fusion-skills/pull/98)<br/>
+🗂️ [6bb9cdc](https://github.com/equinor/fusion-skills/commit/6bb9cdcc1e2e0ed25d562bfd5db4dfab52559c0f)<br/>
+📦 fusion-issue-author-user-story@0.1.3__
+
+Deprecate in favor of consolidated `fusion-issue-authoring` skill
+
+- Set `metadata.status: deprecated` and `metadata.successor: fusion-issue-authoring`
+- Move to `skills/.deprecated/` placement lane
+- Add deprecation notice pointing to the consolidated skill
+
+Resolves equinor/fusion-core-tasks#802
+
+---
+
+__🎯 [feat: consolidate issue-authoring skills into single skill with agent modes #98](https://github.com/equinor/fusion-skills/pull/98)<br/>
+🗂️ [6bb9cdc](https://github.com/equinor/fusion-skills/commit/6bb9cdcc1e2e0ed25d562bfd5db4dfab52559c0f)<br/>
+📦 fusion-skill-authoring@0.3.2__
+
+Extract template baseline and validation signals to references/
+
+- Move folder structure and SKILL.md baseline template to `references/skill-template-baseline.md`
+- Move success/failure signals and recovery steps to `references/validation-signals.md`
+- Reduce SKILL.md from 356 to 286 lines (below 300-line CI warning threshold)
+
 ## v0.12.1
 
 ### Patch

@@ -3,7 +3,7 @@ name: fusion-issue-author-feature
 description: "DEPRECATED: Use fusion-issue-authoring instead. Previously: Draft and update feature issues with clear problem framing and scoped requirements."
 license: MIT
 metadata:
-  version: "0.1.2"
+  version: "0.1.3"
   status: deprecated
   deprecated_at: "2026-03-18"
   successor: fusion-issue-authoring
