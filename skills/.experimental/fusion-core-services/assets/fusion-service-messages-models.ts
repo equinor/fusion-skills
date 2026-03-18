@@ -48,7 +48,7 @@ export interface ApiPersonRef {
   upn: string;
 }
 
-/** Active messages returned by GET /active-service-messages. */
+/** Active messages returned by GET /service-messages/active. */
 export interface ApiActiveServiceMessage {
   id: string;
   type: string;
