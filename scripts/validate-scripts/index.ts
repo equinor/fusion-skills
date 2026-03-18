@@ -6,6 +6,7 @@ import { collectIntentCommentIssues } from "./collect-intent-comment-issues";
 import { collectIntentCommentIssuesForFiles } from "./collect-intent-comment-issues-for-files";
 import { collectTSDocCoverageIssues } from "./collect-tsdoc-coverage-issues";
 import { collectTSDocCoverageIssuesForFiles } from "./collect-tsdoc-coverage-issues-for-files";
+import { computeDiffLineMap, isLineInDiff } from "./compute-diff-lines";
 import { formatCoverageIssues } from "./format-coverage-issues";
 import { FIX_HINTS, formatIntentCommentIssues } from "./format-intent-comment-issues";
 import type { IntentCommentIssue } from "./types";
@@ -147,23 +148,53 @@ function listDiffScriptSourceFiles(repoRoot: string, baseRef: string): DiffScrip
 }
 
 /**
+ * Filters issues to only those reported on changed diff lines.
+ *
+ * @param issues - Candidate issues to include in JSON diagnostics.
+ * @param repoRoot - Absolute repository root for relative path display.
+ * @param diffLineMap - Map of file paths to changed line ranges.
+ * @returns Issues that map to changed lines in the current diff.
+ */
+function filterIssuesToDiffLines(
+  issues: IntentCommentIssue[],
+  repoRoot: string,
+  diffLineMap: Record<string, Array<{ start: number; end: number }>>,
+): IntentCommentIssue[] {
+  // Iterate each issue so PR review comments only target changed diff hunks.
+  return issues.filter((issue) => {
+    // This regex normalizes Windows path separators to POSIX for diff-map key lookup.
+    const relPath = relative(repoRoot, issue.filePath).replace(/\\/g, "/");
+    const ranges = diffLineMap[relPath];
+    return ranges ? isLineInDiff(issue.line, ranges) : false;
+  });
+}
+
+/**
  * Writes structured diagnostics to a JSON file for CI review comment integration.
  *
  * @param outputPath - File path to write, or `null` to skip.
  * @param issues - Intent-comment issues to serialize.
  * @param repoRoot - Absolute repository root for relative path display.
+ * @param diffLineMap - Map of file paths to changed line ranges (used to filter for diff-only context).
  */
 function writeDiagnosticsJson(
   outputPath: string | null,
   issues: IntentCommentIssue[],
   repoRoot: string,
+  diffLineMap?: Record<string, Array<{ start: number; end: number }>>,
 ): void {
   // Skip when no output path was requested (local development runs).
   if (!outputPath) {
     return;
   }
+
+  // Filter issues to only those on lines that exist in the diff (when in diff-only mode).
+  const filteredIssues = diffLineMap
+    ? filterIssuesToDiffLines(issues, repoRoot, diffLineMap)
+    : issues;
+
   // Transform each issue into a JSON-serializable diagnostic object.
-  const diagnostics = issues.map((issue) => ({
+  const diagnostics = filteredIssues.map((issue) => ({
     // This regex normalizes path separators for cross-platform JSON output.
     path: relative(repoRoot, issue.filePath).replace(/\\/g, "/"),
     line: issue.line,
@@ -186,6 +217,9 @@ function main(): void {
   const diffResult = options.onlyDiff
     ? listDiffScriptSourceFiles(repoRoot, options.baseRef)
     : { files: [], resolvedBaseRef: options.baseRef };
+  const diffLineMap = options.onlyDiff
+    ? computeDiffLineMap(repoRoot, diffResult.resolvedBaseRef)
+    : undefined;
   const diffFiles = diffResult.files;
   const tsdocIssues = options.onlyDiff
     ? collectTSDocCoverageIssuesForFiles(diffFiles)
@@ -227,7 +261,7 @@ function main(): void {
     disallowedIssues.length === 0
   ) {
     // Write empty diagnostics so CI can post a clean review and resolve stale comments.
-    writeDiagnosticsJson(options.jsonOutput, [], repoRoot);
+    writeDiagnosticsJson(options.jsonOutput, [], repoRoot, diffLineMap);
     console.log("TSDoc, intent-comment, and disallowed-pattern checks passed for scripts/**.");
     return;
   }
@@ -270,7 +304,7 @@ function main(): void {
 
   // Write all diagnostics to JSON so CI can post inline PR review comments.
   const allIntentIssues = [...intentCommentIssues, ...regexExplanationIssues, ...disallowedIssues];
-  writeDiagnosticsJson(options.jsonOutput, allIntentIssues, repoRoot);
+  writeDiagnosticsJson(options.jsonOutput, allIntentIssues, repoRoot, diffLineMap);
 
   throw new Error(
     `Script quality checks failed (tsdoc=${tsdocIssues.length}, intent=${intentCommentIssues.length}, regex=${regexExplanationIssues.length}, disallowed=${disallowedIssues.length}).`,
