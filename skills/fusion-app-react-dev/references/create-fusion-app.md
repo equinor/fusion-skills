@@ -34,7 +34,7 @@ Older codebases may use the lower-level `makeComponent` + `createRoot` pattern. 
 ```typescript
 import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 
-export const configure: AppModuleInitiator = (configurator, env) => {
+export const configure: AppModuleInitiator = (configurator, { env }) => {
   // Module configuration is added here as features are built
 };
 

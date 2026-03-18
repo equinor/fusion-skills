@@ -132,6 +132,7 @@ const client = http.createClient('my-api');
 For one-off calls without a named configuration:
 
 ```typescript
+// In config.ts, inside your Fusion configuration callback where `framework` is provided:
 const inlineClient = framework.modules.http.createClient({
   baseUri: '/api/search',
 });

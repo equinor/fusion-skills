@@ -10,4 +10,4 @@ Fusion Framework patterns. Includes helper agents for framework review,
 styling review, and code-quality review, plus reference docs and asset
 checklists.
 
-Resolves equinor/fusion-core-tasks#799
+resolves equinor/fusion-core-tasks#799
