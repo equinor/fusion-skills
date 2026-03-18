@@ -43,8 +43,7 @@ export function findCompanionSkillMetadataEntries(
     // exclusions (the external CLI does not discover skills under this lane).
     const isDeprecatedInDeprecatedLane =
       frontmatter["metadata.status"] === "deprecated" &&
-      (skillDir === "skills/.deprecated" ||
-        skillDir.startsWith("skills/.deprecated/"));
+      (skillDir === "skills/.deprecated" || skillDir.startsWith("skills/.deprecated/"));
 
     // Collect skills that are expected to be absent from external CLI output.
     if (hasMetadataSkills || isDeprecatedInDeprecatedLane) {
