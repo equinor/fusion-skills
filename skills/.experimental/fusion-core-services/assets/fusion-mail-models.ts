@@ -206,21 +206,21 @@ export interface MailAttachmentRequest {
 }
 
 /**
- * PUT /mails/{id}/status — update mail delivery status.
+ * PATCH /apps/{appId}/mails/{mailId} — update overall mail status.
  */
 export interface UpdateMailStatusRequest {
   status: ApiMailStatus;
 }
 
 /**
- * PUT /mails/{id}/delivery — update mail delivery result.
+ * PATCH /apps/{appId}/mails/{mailId}/recipients/{email} — update delivery status for a specific recipient.
  */
 export interface UpdateMailDeliveryRequest {
   status: ApiMailStatus;
 }
 
 /**
- * POST /whitelist — whitelist a recipient.
+ * POST /management/whitelist — whitelist a recipient.
  *
  * Validation:
  * @property person — Must resolve to a valid user (AzureUniqueId or Mail)

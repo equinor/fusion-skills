@@ -139,7 +139,7 @@ export interface UpdateServiceMessageRequest {
   scope?: string;
   relevantApps?: string[] | null;
   relevantPortals?: string[] | null;
-  visibility?: CreateMessageVisibilityRequest | null;
+  visibility?: UpdateServiceMessageVisibilityRequest | null;
 }
 
 /**

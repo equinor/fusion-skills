@@ -124,7 +124,7 @@ export interface AppNotificationSettingsRequest {
 }
 
 /**
- * PATCH /persons/{id}/notifications/{notificationId} — mark seen.
+ * PATCH /notifications/{id} — mark seen.
  *
  * Validation:
  * @property seenByUser — Required (must not be null)

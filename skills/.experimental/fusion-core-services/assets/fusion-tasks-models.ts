@@ -201,7 +201,7 @@ export interface NewFusionTaskRequest {
 
 /**
  * PATCH /tasks/{id} — selectively update a task.
- * Properties are patch-wrapped; only those present in the payload are applied.
+ * Only properties present in the payload are applied.
  */
 export interface PatchFusionTaskRequest {
   id: string;
