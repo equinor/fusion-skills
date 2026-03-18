@@ -77,6 +77,8 @@ Every API skill response should include these headings in order:
 6. Validation and test notes
 7. Risks and assumptions
 
+Router or multi-service catalog skills may insert `Service selection` immediately after `Scope check` when the skill must explicitly choose between multiple service references before endpoint mapping.
+
 ## Client stack defaults
 
 When the consumer is a Fusion Framework frontend, prefer these packages and patterns before generic `fetch` wrappers:

@@ -164,7 +164,7 @@ export interface SendMailRequestV3 {
 }
 
 /**
- * POST /mails/templated — send a templated mail.
+ * POST /templates/{templateName}/mails — create and queue a mail from a named template.
  *
  * Validation: same recipient/subject rules as NewMailRequest.
  * @property mailBody.htmlContent — Required

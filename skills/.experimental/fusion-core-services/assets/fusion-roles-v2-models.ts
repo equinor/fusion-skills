@@ -329,7 +329,7 @@ export interface ApiRoleBindingConfigurationStatus {
 // ---------------------------------------------------------------------------
 
 /**
- * POST /systems/{systemName}/roles — create a role.
+ * POST /roles — create a role.
  *
  * Validation:
  * @property name — Required, max 200, URL-safe, validated by BeValidRoleName()
@@ -348,7 +348,7 @@ export interface CreateRoleRequest {
 }
 
 /**
- * PATCH /systems/{systemName}/roles/{roleName} — update role fields.
+ * PATCH /roles/{roleIdentifier} — update role fields.
  * Only properties present in the payload are applied.
  */
 export interface UpdateRoleRequest {
@@ -359,7 +359,7 @@ export interface UpdateRoleRequest {
 }
 
 /**
- * POST /systems/{systemName}/claimable-roles — create a claimable role.
+ * POST /claimable-roles — create a claimable role.
  *
  * Validation: same constraints as CreateRoleRequest.
  */
@@ -374,7 +374,7 @@ export interface CreateClaimableRoleRequest {
 }
 
 /**
- * PATCH /systems/{systemName}/claimable-roles/{roleName}.
+ * PATCH /claimable-roles/{claimableRoleIdentifier}.
  * Patch-based update.
  */
 export interface UpdateClaimableRoleRequest {
@@ -444,7 +444,7 @@ export interface UpdateSystemRequest {
 }
 
 /**
- * POST /systems/{systemName}/scope-types.
+ * POST /scope-types.
  *
  * Validation:
  * @property name — Required, max 200, URL-safe
@@ -462,7 +462,7 @@ export interface CreateScopeTypeRequest {
 // ---------------------------------------------------------------------------
 
 /**
- * POST /systems/{systemName}/roles/{roleName}/assignments — assign a role.
+ * POST /roles/{roleIdentifier}/assignments — assign a role.
  *
  * Validation:
  * @property accountIdentifier — Required
@@ -489,7 +489,7 @@ export interface AssignRoleRequest {
 }
 
 /**
- * PATCH /systems/{systemName}/roles/{roleName}/assignments/{assignmentId}.
+ * PATCH /roles/{roleIdentifier}/assignments/{roleAssignmentId}.
  */
 export interface UpdateRoleAssignmentRequest {
   /** Must be in the future or null. */
@@ -563,7 +563,7 @@ export interface ActivateAssignedAccessRoleRequest {
 // ---------------------------------------------------------------------------
 
 /**
- * POST /systems/{systemName}/claimable-roles/{roleName}/assignments.
+ * POST /claimable-roles/{claimableRoleIdentifier}/assignments.
  * Same validation pattern as AssignRoleRequest.
  */
 export interface AssignClaimableRoleRequest {
