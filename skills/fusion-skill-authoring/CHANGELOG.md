@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.1 - 2026-03-18
+
+### patch
+
+- [#88](https://github.com/equinor/fusion-skills/pull/88) [`8cd7d9d`](https://github.com/equinor/fusion-skills/commit/8cd7d9d3a878b27425eb8a3e7be8398278e337e3) - Document SKILL.md size limits and CI guardrails
+
+
+  - Document 300-line recommended limit (triggers CI warning)
+  - Document 500-line hard limit (fails CI)
+  - Clarify expectation to move overflow to references/ early
+  - Add failure signal for exceeding size thresholds
+
+  Relates to: equinor/fusion-core-tasks#84
+
 ## 0.3.0 - 2026-03-09
 
 ### minor

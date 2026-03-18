@@ -212,6 +212,12 @@ In this repository, use `fusion-<skill-name>` as the default skill naming conven
 - `skills/.system/` ⚙️ internal/system skills and shared building blocks
 
 <!-- skills-table:start -->
+**👍 [`fusion-app-react-dev@0.1.0`](skills/fusion-app-react-dev/SKILL.md)**
+
+Guides feature development in Fusion Framework React apps — scaffolding components, hooks, services, and types that follow EDS conventions and Fusion Framework patterns. USE FOR: building new features, adding components or pages, creating hooks and services, wiring up API endpoints, and extending Fusion module configuration. DO NOT USE FOR: issue authoring, skill authoring, CI/CD configuration, or backend service changes.
+
+---
+
 **🧪 [`fusion-dependency-review@0.1.2`](skills/.experimental/fusion-dependency-review/SKILL.md)**
 
 Review dependency PRs with structured research, existing-PR-discussion capture, multi-lens analysis (security, code quality, impact), and a repeatable verdict template. USE FOR: dependency update PRs, Renovate/Dependabot PRs, library upgrade reviews, "review this dependency PR", "should we merge this update". DO NOT USE FOR: feature PRs, application code reviews, dependency automation/bot configuration, or unattended merge without confirmation.
@@ -236,7 +242,7 @@ Resolves unresolved GitHub PR review threads end-to-end: evaluates whether each 
 
 ---
 
-**👍 [`fusion-help-api@0.0.1`](skills/fusion-help-api/SKILL.md)**
+**👍 [`fusion-help-api@0.0.2`](skills/fusion-help-api/SKILL.md)**
 
 Guides developers and admins through direct interaction with the Fusion Help REST API — reading articles, FAQs, release notes, searching content, and managing help documentation programmatically. USE FOR: fetch help articles from API, integrate help content in app, search help content, manage help documentation via API, automate help content, build help tooling. DO NOT USE FOR: using the fhelp CLI tool (use fusion-help-docs skill), modifying Fusion.Services.Help backend code, or non-help-API tasks.
 
@@ -302,7 +308,7 @@ Explain what Fusion MCP is and guide users through setting it up when they need 
 
 ---
 
-**👍 [`fusion-skill-authoring@0.3.0`](skills/fusion-skill-authoring/SKILL.md)**
+**👍 [`fusion-skill-authoring@0.3.1`](skills/fusion-skill-authoring/SKILL.md)**
 
 Creates or modernizes repository skills with clear activation cues, purposeful support files, and practical review loops. USE FOR: creating a new skill, tightening an existing skill, improving discovery wording, and structuring references/assets/optional helper agents when they genuinely add value. DO NOT USE FOR: product-code changes, routine copy edits outside skills/, or documentation that should not become an installable skill.
 
