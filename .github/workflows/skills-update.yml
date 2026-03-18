@@ -25,6 +25,16 @@
 #     upgrade:
 #       uses: equinor/fusion-skills/.github/workflows/skills-update.yml@main
 #
+#   To also disable deprecation cleanup or customize it:
+#
+#   jobs:
+#     upgrade:
+#       uses: equinor/fusion-skills/.github/workflows/skills-update.yml@main
+#       with:
+#         skip-deprecation-cleanup: false  # set true to disable
+#         draft-deprecation-prs: false     # set true for draft PRs
+#         skip-if-rejected-pr-exists: true # respect rejected PRs
+#
 #   Notes:
 #   - Replace @main with a specific version tag to pin to a release
 #   - Adjust cron schedule to your preferred update frequency
@@ -44,7 +54,17 @@
 #   4. Detect which skills changed/were added
 #   5. Build a detailed PR body with CHANGELOG excerpts for each skill
 #   6. Create a PR with one commit containing all skill updates
-#   7. Report summary to workflow run (GitHub Actions UI)
+#   7. Scan refreshed skills for `metadata.status: deprecated` or `archived` markers
+#   8. For each deprecated skill, create one removal PR with migration guidance
+#   9. Report summary to workflow run (GitHub Actions UI)
+#
+# DEPRECATION CLEANUP:
+#   After upgrading, the workflow scans all installed skills for deprecation
+#   markers in their SKILL.md frontmatter. For each deprecated/archived skill it:
+#   - Creates a dedicated branch and PR to remove the skill
+#   - Updates the lock file to drop the entry
+#   - Includes successor recommendation if available upstream
+#   - Respects previously-rejected removal PRs (won't re-propose)
 #
 # ============================================================================
 
@@ -56,6 +76,22 @@ on:
     - cron: "0 8 * * 1-5"  # Weekdays at 8 AM UTC
   workflow_dispatch:  # Also allow manual trigger
   workflow_call:  # Allow calling as reusable workflow
+    inputs:
+      skip-deprecation-cleanup:
+        description: Disable the deprecation scan and removal PRs
+        required: false
+        type: boolean
+        default: false
+      draft-deprecation-prs:
+        description: Create deprecation removal PRs as drafts
+        required: false
+        type: boolean
+        default: false
+      skip-if-rejected-pr-exists:
+        description: Skip proposing removal when a previous PR was closed without merge
+        required: false
+        type: boolean
+        default: true
 
 permissions:
   # Write permissions required to:
@@ -69,6 +105,8 @@ jobs:
     name: Upgrade Agent Skills
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    outputs:
+      skipped: ${{ steps.install_skills.outputs.skipped }}
 
     steps:
       # -----------------------------------------------------------------------
@@ -242,15 +280,9 @@ jobs:
           draft: false  # Create as ready for review
 
       # -----------------------------------------------------------------------
-      # STEP 7: Report workflow summary to GitHub Actions UI
+      # STEP 7: Report upgrade summary to GitHub Actions UI
       # -----------------------------------------------------------------------
-      # Log final status to the workflow run summary (visible in GitHub Actions).
-      # Includes:
-      #   - Whether changes were detected
-      #   - Count of changed skills
-      #   - Link to created PR (if any)
-      #   - Warning if skills CLI was unavailable
-      - name: Workflow Summary
+      - name: Upgrade Summary
         if: always()
         shell: bash
         run: |
@@ -268,3 +300,383 @@ jobs:
           if [ "${{ steps.install_skills.outputs.skipped }}" = "true" ]; then
             echo "- Warning: Skills CLI step was skipped — check Node/npx setup." >> "$GITHUB_STEP_SUMMARY"
           fi
+
+  # =========================================================================
+  # JOB 2: Detect deprecated skills
+  # =========================================================================
+  # After the upgrade job refreshes local skill copies, scan all installed
+  # skills for `metadata.status: deprecated` or `archived` in their SKILL.md
+  # frontmatter. Outputs a JSON array of deprecated skill directory names for
+  # the removal matrix job.
+  detect_deprecated:
+    name: Detect deprecated skills
+    needs: upgrade
+    if: inputs.skip-deprecation-cleanup != true
+    runs-on: ubuntu-latest
+    outputs:
+      has_deprecated: ${{ steps.scan.outputs.has_deprecated }}
+      deprecated_count: ${{ steps.scan.outputs.deprecated_count }}
+      deprecated_skills: ${{ steps.scan.outputs.deprecated_skills }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      # -------------------------------------------------------------------
+      # Refresh skills so metadata is current (mirrors upgrade step)
+      # -------------------------------------------------------------------
+      - name: Refresh skills for deprecation scan
+        if: needs.upgrade.outputs.skipped != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if npx skills --version >/dev/null 2>&1; then
+            npx skills experimental_install || {
+              echo "::warning::Skills refresh failed — scanning existing local copies."
+            }
+          else
+            echo "::warning::npx skills CLI not accessible — scanning existing local copies."
+          fi
+
+      # -------------------------------------------------------------------
+      # Scan installed skills for status: deprecated or archived via CLI
+      # -------------------------------------------------------------------
+      - name: Scan for deprecated skills
+        id: scan
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          deprecated_skills=()
+          total=0
+
+          # Use the CLI to get installed skills with their actual paths
+          skills_json=$(npx -y skills list --json 2>/dev/null || echo '[]')
+
+          while IFS=$'\t' read -r name skill_path; do
+            [ -z "$name" ] && continue
+            total=$((total + 1))
+
+            skill_md="$skill_path/SKILL.md"
+            [ -f "$skill_md" ] || continue
+
+            # Extract YAML frontmatter (content between first --- pair)
+            frontmatter=$(awk '/^---$/{if(++c==2)exit}c==1' "$skill_md")
+
+            # Check for status: deprecated or archived (quoted or unquoted)
+            if printf '%s\n' "$frontmatter" | grep -qE '^\s*status:\s*"?(deprecated|archived)"?\s*$'; then
+              deprecated_skills+=("$name")
+              echo "Deprecated/archived skill detected: $name"
+            fi
+          done < <(printf '%s' "$skills_json" | jq -r '.[] | [.name, .path] | @tsv')
+
+          if [ ${#deprecated_skills[@]} -eq 0 ]; then
+            echo "has_deprecated=false" >> "$GITHUB_OUTPUT"
+            echo "deprecated_count=0" >> "$GITHUB_OUTPUT"
+            echo "deprecated_skills=[]" >> "$GITHUB_OUTPUT"
+            echo "No deprecated skills detected."
+          else
+            json=$(jq -nc '$ARGS.positional' --args "${deprecated_skills[@]}")
+            echo "has_deprecated=true" >> "$GITHUB_OUTPUT"
+            echo "deprecated_count=${#deprecated_skills[@]}" >> "$GITHUB_OUTPUT"
+            echo "deprecated_skills=$json" >> "$GITHUB_OUTPUT"
+          fi
+
+          # Report to workflow summary
+          {
+            echo "## Deprecation Scan Summary"
+            echo "- Installed skills scanned: $total"
+            echo "- Deprecated skills found: ${#deprecated_skills[@]}"
+            if [ ${#deprecated_skills[@]} -gt 0 ]; then
+              echo ""
+              echo "### Deprecated skills"
+              printf '%s\n' "${deprecated_skills[@]}" | sed 's/^/- /'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # =========================================================================
+  # JOB 3: Create one removal PR per deprecated skill
+  # =========================================================================
+  # For each deprecated skill, create a pull request that:
+  #   - Removes the skill via `npx skills remove`
+  #   - Documents successor skill and migration path in the PR body
+  remove_deprecated:
+    name: Remove deprecated skill
+    needs: detect_deprecated
+    if: needs.detect_deprecated.outputs.has_deprecated == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        skill: ${{ fromJson(needs.detect_deprecated.outputs.deprecated_skills) }}
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      # -------------------------------------------------------------------
+      # STEP 1: Checkout repository
+      # -------------------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      # -------------------------------------------------------------------
+      # STEP 2: Evaluate prior pull request state
+      # -------------------------------------------------------------------
+      # Check whether an open or previously-rejected PR already exists
+      # for this skill's deprecation branch. Avoids duplicate PRs and
+      # respects team decisions to keep a skill temporarily.
+      - name: Evaluate prior pull request state for skill
+        id: pr_state
+        uses: actions/github-script@v8
+        env:
+          SKILL: ${{ matrix.skill }}
+          SKIP_REJECTED: ${{ inputs.skip-if-rejected-pr-exists }}
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            const skill = process.env.SKILL;
+            const skipRejected = process.env.SKIP_REJECTED === "true";
+            const { owner, repo } = context.repo;
+            const branch = `chore/skills-deprecation/${skill}`;
+
+            const outputs = {
+              mode: "create-new",
+              blocked: "false",
+              open_exists: "false",
+              open_url: "",
+              rejected_exists: "false",
+              rejected_url: "",
+            };
+
+            const openPrs = await github.paginate(github.rest.pulls.list, {
+              owner,
+              repo,
+              state: "open",
+              head: `${owner}:${branch}`,
+              per_page: 100,
+            });
+            const openPr = openPrs.find((pr) => pr.head?.ref === branch);
+
+            if (openPr) {
+              outputs.mode = "update-open";
+              outputs.open_exists = "true";
+              outputs.open_url = openPr.html_url;
+              core.notice(`Open deprecation PR exists for ${skill}; will update ${openPr.html_url}.`);
+            } else {
+              const closedPrs = await github.paginate(github.rest.pulls.list, {
+                owner,
+                repo,
+                state: "closed",
+                head: `${owner}:${branch}`,
+                per_page: 100,
+              });
+              const rejectedPr = closedPrs.find(
+                (pr) => pr.head?.ref === branch && !pr.merged_at,
+              );
+
+              if (rejectedPr) {
+                outputs.rejected_exists = "true";
+                outputs.rejected_url = rejectedPr.html_url;
+                if (skipRejected) {
+                  outputs.mode = "blocked-rejected";
+                  outputs.blocked = "true";
+                  core.notice(
+                    `Skipping ${skill}; previous removal PR was closed without merge: ${rejectedPr.html_url}.`,
+                  );
+                }
+              }
+            }
+
+            for (const [key, value] of Object.entries(outputs)) {
+              core.setOutput(key, value);
+            }
+
+      # -------------------------------------------------------------------
+      # STEP 3: Extract deprecation metadata
+      # -------------------------------------------------------------------
+      # Look up the skill's actual install path via CLI, then parse
+      # successor and description from SKILL.md frontmatter.
+      - name: Extract deprecation metadata
+        if: steps.pr_state.outputs.blocked != 'true'
+        id: metadata
+        shell: bash
+        env:
+          SKILL: ${{ matrix.skill }}
+        run: |
+          set -euo pipefail
+
+          successor=""
+          description=""
+
+          # Resolve actual install path via CLI
+          skill_path=$(npx -y skills list --json 2>/dev/null \
+            | jq -r --arg s "$SKILL" '.[] | select(.name == $s) | .path' \
+            | head -1)
+
+          skill_md="${skill_path}/SKILL.md"
+          if [ -n "$skill_path" ] && [ -f "$skill_md" ]; then
+            # Extract YAML frontmatter (content between first --- pair)
+            frontmatter=$(awk '/^---$/{if(++c==2)exit}c==1' "$skill_md")
+
+            successor=$(printf '%s\n' "$frontmatter" \
+              | sed -nE 's/^\s*successor:\s*"?([^"]+)"?\s*$/\1/p' \
+              | head -1 | xargs)
+
+            description=$(printf '%s\n' "$frontmatter" \
+              | sed -nE 's/^\s*description:\s*"?([^"]*)"?\s*$/\1/p' \
+              | head -1 | xargs)
+          fi
+
+          echo "successor=${successor}" >> "$GITHUB_OUTPUT"
+          echo "description=${description}" >> "$GITHUB_OUTPUT"
+
+      # -------------------------------------------------------------------
+      # STEP 4: Remove the deprecated skill
+      # -------------------------------------------------------------------
+      # Use the skills CLI to remove the skill — it knows the correct
+      # install path and handles skills-lock.json cleanup.
+      - name: Remove deprecated skill
+        if: steps.pr_state.outputs.blocked != 'true'
+        shell: bash
+        env:
+          SKILL: ${{ matrix.skill }}
+        run: |
+          set -euo pipefail
+          npx -y skills remove "$SKILL" -y
+          echo "Removed $SKILL via skills CLI"
+
+      # -------------------------------------------------------------------
+      # STEP 5: Check whether removal produced changes
+      # -------------------------------------------------------------------
+      - name: Check whether changes were produced
+        id: has_changes
+        if: steps.pr_state.outputs.blocked != 'true'
+        shell: bash
+        env:
+          SKILL: ${{ matrix.skill }}
+        run: |
+          set -euo pipefail
+
+          if git diff --quiet --exit-code HEAD; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No changes for $SKILL (skill may already be removed)."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # -------------------------------------------------------------------
+      # STEP 6: Build pull request body
+      # -------------------------------------------------------------------
+      - name: Build pull request body
+        if: steps.pr_state.outputs.blocked != 'true' && steps.has_changes.outputs.changed == 'true'
+        shell: bash
+        env:
+          SKILL: ${{ matrix.skill }}
+          SUCCESSOR: ${{ steps.metadata.outputs.successor }}
+          DESCRIPTION: ${{ steps.metadata.outputs.description }}
+        run: |
+          set -euo pipefail
+          body="pr-body-${SKILL}.md"
+
+          {
+            echo "## Why"
+            echo ""
+            echo "The skill \`$SKILL\` has been deprecated upstream."
+            if [ -n "$SUCCESSOR" ]; then
+              echo "The recommended replacement is \`$SUCCESSOR\`."
+            fi
+
+            echo ""
+            echo "## Current behavior"
+            echo ""
+            echo "The deprecated skill \`$SKILL\` is still installed locally."
+
+            echo ""
+            echo "## New behavior"
+            echo ""
+            echo "- Removes \`$SKILL\` from installed skills"
+            echo "- Updates lock file to remove the entry"
+            if [ -n "$SUCCESSOR" ]; then
+              echo "- **Migration**: replace usage with \`$SUCCESSOR\`"
+            fi
+
+            echo ""
+            echo "## References"
+            echo ""
+            echo "- Workflow run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            if [ -n "$SUCCESSOR" ]; then
+              echo "- Successor skill: \`$SUCCESSOR\`"
+            fi
+
+            echo ""
+            echo "## Reviewer focus"
+            echo ""
+            echo "- Confirm \`$SKILL\` is no longer referenced in project configuration"
+            echo "- Verify the skill and lock file removal is correct"
+            if [ -n "$SUCCESSOR" ]; then
+              echo "- Ensure successor \`$SUCCESSOR\` is installed before merging"
+            fi
+          } > "$body"
+
+      # -------------------------------------------------------------------
+      # STEP 7: Create pull request
+      # -------------------------------------------------------------------
+      - name: Create pull request
+        if: steps.pr_state.outputs.blocked != 'true' && steps.has_changes.outputs.changed == 'true'
+        id: create_pr
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ github.token }}
+          commit-message: "chore(skills): remove deprecated skill ${{ matrix.skill }}"
+          title: "chore(skills): remove deprecated skill ${{ matrix.skill }}"
+          body-path: pr-body-${{ matrix.skill }}.md
+          branch: chore/skills-deprecation/${{ matrix.skill }}
+          base: ${{ github.event.repository.default_branch }}
+          draft: ${{ inputs.draft-deprecation-prs || false }}
+          delete-branch: true
+          labels: |
+            skills
+            automation
+            deprecation
+
+      # -------------------------------------------------------------------
+      # STEP 8: Report job summary
+      # -------------------------------------------------------------------
+      - name: Job summary
+        if: always()
+        shell: bash
+        env:
+          SUCCESSOR: ${{ steps.metadata.outputs.successor }}
+        run: |
+          set -euo pipefail
+          {
+            echo "## Skill Deprecation: \`${{ matrix.skill }}\`"
+
+            if [ -n "$SUCCESSOR" ]; then
+              echo "- Successor: \`$SUCCESSOR\`"
+            fi
+
+            if [ "${{ steps.pr_state.outputs.blocked }}" = "true" ]; then
+              echo "- Skipped: previous removal PR was closed without merge (${{ steps.pr_state.outputs.rejected_url }})"
+            elif [ "${{ steps.has_changes.outputs.changed }}" = "true" ] && [ -n "${{ steps.create_pr.outputs.pull-request-url }}" ]; then
+              if [ "${{ steps.pr_state.outputs.mode }}" = "update-open" ]; then
+                echo "- Pull request updated: ${{ steps.create_pr.outputs.pull-request-url }}"
+              else
+                echo "- Pull request created: ${{ steps.create_pr.outputs.pull-request-url }}"
+              fi
+            elif [ "${{ steps.pr_state.outputs.open_exists }}" = "true" ] && [ "${{ steps.has_changes.outputs.changed }}" = "false" ]; then
+              echo "- Existing PR already up to date: ${{ steps.pr_state.outputs.open_url }}"
+            elif [ "${{ steps.has_changes.outputs.changed }}" = "false" ]; then
+              echo "- No PR created (skill already removed)."
+            else
+              echo "- PR creation did not produce a URL."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

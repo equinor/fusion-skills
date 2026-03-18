@@ -1,0 +1,355 @@
+# ============================================================================
+# Fusion Skills Greenkeeping Workflow
+# ============================================================================
+#
+# PURPOSE:
+#   Scan skills/.deprecated/ for skills that have been deprecated for at
+#   least 3 months and create one removal PR per eligible skill to delete
+#   the skill source from the repository.
+#
+# This is an INTERNAL workflow for the fusion-skills catalog repository.
+# It is not intended for consumer repositories.
+#
+# HOW IT WORKS:
+#   1. List all directories under skills/.deprecated/
+#   2. For each directory, use git history to determine when the skill
+#      first appeared (moved/added) in skills/.deprecated/
+#   3. If that date is >= 3 months ago:
+#      a. Check if an open or previously-rejected PR already exists
+#      b. If not, create a removal PR that deletes the skill directory
+#   4. Report summary to GitHub Actions UI
+#
+# ============================================================================
+
+name: Skills Greenkeeping
+
+on:
+  schedule:
+    # First Monday of each month at 8 AM UTC
+    - cron: "0 8 1-7 * 1"
+  workflow_dispatch:
+    inputs:
+      retention-months:
+        description: "Months after deprecation before creating removal PR"
+        required: false
+        type: number
+        default: 3
+      dry-run:
+        description: "Only report eligible skills without creating PRs"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  # =========================================================================
+  # JOB 1: Detect deprecated skills past retention period
+  # =========================================================================
+  detect:
+    name: Detect stale deprecated skills
+    runs-on: ubuntu-latest
+    outputs:
+      has_stale: ${{ steps.scan.outputs.has_stale }}
+      stale_count: ${{ steps.scan.outputs.stale_count }}
+      stale_skills: ${{ steps.scan.outputs.stale_skills }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0  # Full history to determine deprecation dates
+
+      # -------------------------------------------------------------------
+      # Scan skills/.deprecated/ for skills older than retention period
+      # -------------------------------------------------------------------
+      - name: Scan for stale deprecated skills
+        id: scan
+        shell: bash
+        env:
+          RETENTION_MONTHS: ${{ inputs.retention-months || '3' }}
+        run: |
+          set -euo pipefail
+
+          stale_skills=()
+          total=0
+
+          deprecated_dir="skills/.deprecated"
+
+          if [ ! -d "$deprecated_dir" ]; then
+            echo "No skills/.deprecated/ directory found."
+            echo "has_stale=false" >> "$GITHUB_OUTPUT"
+            echo "stale_count=0" >> "$GITHUB_OUTPUT"
+            echo "stale_skills=[]" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Calculate cutoff date (N months ago)
+          cutoff=$(date -u -d "${RETENTION_MONTHS} months ago" +%s 2>/dev/null \
+            || date -u -v-"${RETENTION_MONTHS}"m +%s)
+
+          for skill_dir in "$deprecated_dir"/*/; do
+            [ -d "$skill_dir" ] || continue
+            skill=$(basename "$skill_dir")
+            total=$((total + 1))
+
+            # Find the earliest commit that added files to this deprecated path.
+            # This captures both direct additions and git mv operations.
+            deprecated_date=$(git log --diff-filter=A --format='%aI' \
+              --follow -- "$skill_dir" | tail -1)
+
+            if [ -z "$deprecated_date" ]; then
+              echo "Warning: Could not determine deprecation date for $skill — skipping."
+              continue
+            fi
+
+            deprecated_epoch=$(date -u -d "$deprecated_date" +%s 2>/dev/null \
+              || date -u -j -f '%Y-%m-%dT%H:%M:%S' \
+                "$(echo "$deprecated_date" | sed 's/+.*//')" +%s)
+
+            if [ "$deprecated_epoch" -le "$cutoff" ]; then
+              stale_skills+=("$skill")
+              echo "Stale skill: $skill (deprecated $deprecated_date, cutoff $(date -u -d @"$cutoff" +%Y-%m-%d 2>/dev/null || date -u -r "$cutoff" +%Y-%m-%d))"
+            else
+              echo "Skipping $skill — deprecated $deprecated_date, not yet past retention."
+            fi
+          done
+
+          if [ ${#stale_skills[@]} -eq 0 ]; then
+            echo "has_stale=false" >> "$GITHUB_OUTPUT"
+            echo "stale_count=0" >> "$GITHUB_OUTPUT"
+            echo "stale_skills=[]" >> "$GITHUB_OUTPUT"
+            echo "No stale deprecated skills found."
+          else
+            json=$(jq -nc '$ARGS.positional' --args "${stale_skills[@]}")
+            echo "has_stale=true" >> "$GITHUB_OUTPUT"
+            echo "stale_count=${#stale_skills[@]}" >> "$GITHUB_OUTPUT"
+            echo "stale_skills=$json" >> "$GITHUB_OUTPUT"
+          fi
+
+          # Report to workflow summary
+          {
+            echo "## Greenkeeping Scan Summary"
+            echo "- Deprecated skills scanned: $total"
+            echo "- Retention period: ${RETENTION_MONTHS} months"
+            echo "- Skills past retention: ${#stale_skills[@]}"
+            if [ ${#stale_skills[@]} -gt 0 ]; then
+              echo ""
+              echo "### Eligible for removal"
+              printf '%s\n' "${stale_skills[@]}" | sed 's/^/- /'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # =========================================================================
+  # JOB 2: Create one removal PR per stale deprecated skill
+  # =========================================================================
+  remove:
+    name: "Remove ${{ matrix.skill }}"
+    needs: detect
+    if: needs.detect.outputs.has_stale == 'true' && inputs.dry-run != true
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        skill: ${{ fromJson(needs.detect.outputs.stale_skills) }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      # -------------------------------------------------------------------
+      # Check for existing open or rejected PR for this skill
+      # -------------------------------------------------------------------
+      - name: Check for existing PR
+        id: pr_state
+        uses: actions/github-script@v8
+        env:
+          SKILL: ${{ matrix.skill }}
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            const skill = process.env.SKILL;
+            const { owner, repo } = context.repo;
+            const branch = `chore/greenkeeping/remove-${skill}`;
+
+            const outputs = {
+              blocked: "false",
+              open_url: "",
+            };
+
+            // Check for open PRs on this branch
+            const openPrs = await github.paginate(github.rest.pulls.list, {
+              owner,
+              repo,
+              state: "open",
+              head: `${owner}:${branch}`,
+              per_page: 100,
+            });
+            const openPr = openPrs.find((pr) => pr.head?.ref === branch);
+
+            if (openPr) {
+              outputs.blocked = "true";
+              outputs.open_url = openPr.html_url;
+              core.notice(`Open removal PR already exists for ${skill}: ${openPr.html_url}`);
+            } else {
+              // Check for previously rejected (closed without merge) PRs
+              const closedPrs = await github.paginate(github.rest.pulls.list, {
+                owner,
+                repo,
+                state: "closed",
+                head: `${owner}:${branch}`,
+                per_page: 100,
+              });
+              const rejectedPr = closedPrs.find(
+                (pr) => pr.head?.ref === branch && !pr.merged_at,
+              );
+
+              if (rejectedPr) {
+                outputs.blocked = "true";
+                outputs.open_url = rejectedPr.html_url;
+                core.notice(
+                  `Previous removal PR for ${skill} was closed without merge: ${rejectedPr.html_url} — skipping.`,
+                );
+              }
+            }
+
+            for (const [key, value] of Object.entries(outputs)) {
+              core.setOutput(key, value);
+            }
+
+      # -------------------------------------------------------------------
+      # Extract metadata from the deprecated skill for the PR body
+      # -------------------------------------------------------------------
+      - name: Extract skill metadata
+        if: steps.pr_state.outputs.blocked != 'true'
+        id: metadata
+        shell: bash
+        env:
+          SKILL: ${{ matrix.skill }}
+        run: |
+          set -euo pipefail
+
+          skill_md="skills/.deprecated/$SKILL/SKILL.md"
+          successor=""
+          description=""
+
+          if [ -f "$skill_md" ]; then
+            frontmatter=$(awk '/^---$/{if(++c==2)exit}c==1' "$skill_md")
+
+            successor=$(printf '%s\n' "$frontmatter" \
+              | sed -nE 's/^\s*successor:\s*"?([^"]+)"?\s*$/\1/p' \
+              | head -1 | xargs)
+
+            description=$(printf '%s\n' "$frontmatter" \
+              | sed -nE 's/^\s*description:\s*"?([^"]*)"?\s*$/\1/p' \
+              | head -1 | xargs)
+          fi
+
+          # Find deprecation date from git history
+          deprecated_date=$(git log --diff-filter=A --format='%aI' \
+            --follow -- "skills/.deprecated/$SKILL/" | tail -1)
+
+          echo "successor=${successor}" >> "$GITHUB_OUTPUT"
+          echo "description=${description}" >> "$GITHUB_OUTPUT"
+          echo "deprecated_date=${deprecated_date}" >> "$GITHUB_OUTPUT"
+
+      # -------------------------------------------------------------------
+      # Delete the skill source directory
+      # -------------------------------------------------------------------
+      - name: Remove skill source
+        if: steps.pr_state.outputs.blocked != 'true'
+        shell: bash
+        env:
+          SKILL: ${{ matrix.skill }}
+        run: |
+          set -euo pipefail
+          rm -rf "skills/.deprecated/$SKILL"
+          echo "Removed skills/.deprecated/$SKILL"
+
+      # -------------------------------------------------------------------
+      # Build PR body
+      # -------------------------------------------------------------------
+      - name: Build PR body
+        if: steps.pr_state.outputs.blocked != 'true'
+        shell: bash
+        env:
+          SKILL: ${{ matrix.skill }}
+          SUCCESSOR: ${{ steps.metadata.outputs.successor }}
+          DESCRIPTION: ${{ steps.metadata.outputs.description }}
+          DEPRECATED_DATE: ${{ steps.metadata.outputs.deprecated_date }}
+        run: |
+          set -euo pipefail
+          body="pr-body.md"
+
+          {
+            echo "## Why"
+            echo ""
+            echo "The skill \`$SKILL\` has been in \`skills/.deprecated/\` since $DEPRECATED_DATE — past the 3-month retention period."
+            if [ -n "$SUCCESSOR" ]; then
+              echo "It was replaced by \`$SUCCESSOR\`."
+            fi
+
+            echo ""
+            echo "## What this PR does"
+            echo ""
+            echo "- Deletes \`skills/.deprecated/$SKILL/\` and all its contents from the repository"
+
+            echo ""
+            echo "## Reviewer focus"
+            echo ""
+            echo "- Confirm no other skills reference \`$SKILL\` as a dependency"
+            if [ -n "$SUCCESSOR" ]; then
+              echo "- Confirm successor \`$SUCCESSOR\` covers the use cases previously handled by \`$SKILL\`"
+            fi
+            echo "- Verify no active consumers still rely on this skill"
+
+            echo ""
+            echo "## References"
+            echo ""
+            echo "- Workflow run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            if [ -n "$SUCCESSOR" ]; then
+              echo "- Successor skill: \`$SUCCESSOR\`"
+            fi
+          } > "$body"
+
+      # -------------------------------------------------------------------
+      # Create the removal PR
+      # -------------------------------------------------------------------
+      - name: Create Pull Request
+        if: steps.pr_state.outputs.blocked != 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ github.token }}
+          commit-message: "chore: remove deprecated skill ${{ matrix.skill }}"
+          branch: "chore/greenkeeping/remove-${{ matrix.skill }}"
+          delete-branch: true
+          title: "chore: remove deprecated skill `${{ matrix.skill }}`"
+          body-path: pr-body.md
+          labels: |
+            chore
+            greenkeeping
+            deprecated
+
+      # -------------------------------------------------------------------
+      # Report to workflow summary
+      # -------------------------------------------------------------------
+      - name: Report
+        if: always()
+        shell: bash
+        env:
+          SKILL: ${{ matrix.skill }}
+          BLOCKED: ${{ steps.pr_state.outputs.blocked }}
+          OPEN_URL: ${{ steps.pr_state.outputs.open_url }}
+        run: |
+          {
+            echo "## Removal: $SKILL"
+            if [ "$BLOCKED" = "true" ]; then
+              echo "- **Skipped**: Existing PR at $OPEN_URL"
+            else
+              echo "- **Created**: Removal PR for \`$SKILL\`"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

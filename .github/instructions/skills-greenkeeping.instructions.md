@@ -42,6 +42,7 @@ Greenkeeping additionally requires ownership metadata:
   - Use a stable GitHub identity (`@user` or `@org/team`).
   - Avoid personal names without GitHub identity.
 - `metadata.sponsor` (optional): backup accountability owner (team or maintainer).
+- `metadata.deprecated_at` (required for skills in `skills/.deprecated/`): date the skill was deprecated in `YYYY-MM-DD` format. Validated by CI.
 
 Discovery and currency checks:
 

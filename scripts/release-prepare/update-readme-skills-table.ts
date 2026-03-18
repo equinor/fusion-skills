@@ -89,10 +89,18 @@ export function updateReadmeSkillsTable(repoRoot: string): number {
   }
 
   const skillFiles = findSkillFiles(join(repoRoot, "skills")).sort();
+  const EXCLUDED_STATUSES = new Set(["deprecated", "archived"]);
   // Convert each value into the shape expected by downstream code.
-  const rows: SkillRow[] = skillFiles.map((skillFile) => {
+  const rows: SkillRow[] = [];
+  for (const skillFile of skillFiles) {
     const markdown = readFileSync(skillFile, "utf8");
     const frontmatter = parseFrontmatter(extractFrontmatter(markdown));
+    const status = frontmatter["metadata.status"]?.trim().toLowerCase();
+
+    if (status && EXCLUDED_STATUSES.has(status)) {
+      continue;
+    }
+
     const name = frontmatter.name?.trim();
     const description = frontmatter.description?.trim();
     const version = frontmatter["metadata.version"]?.trim();
@@ -104,14 +112,14 @@ export function updateReadmeSkillsTable(repoRoot: string): number {
       throw new Error(`Missing required frontmatter fields in ${relative(repoRoot, skillFile)}`);
     }
 
-    return {
+    rows.push({
       typeIcon: getSkillTypeIcon(relativePath),
       name,
       description,
       version,
       relativePath,
-    };
-  });
+    });
+  }
 
   rows.sort((left, right) => left.name.localeCompare(right.name));
 

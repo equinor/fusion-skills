@@ -10,9 +10,14 @@ function writeSkill(
   name: string,
   description: string,
   version: string,
+  status?: string,
 ): void {
   const skillDir = join(repoRoot, "skills", skillDirName);
   mkdirSync(skillDir, { recursive: true });
+  const metadataLines = [`  version: "${version}"`];
+  if (status) {
+    metadataLines.push(`  status: ${status}`);
+  }
   writeFileSync(
     join(skillDir, "SKILL.md"),
     [
@@ -20,7 +25,7 @@ function writeSkill(
       `name: ${name}`,
       `description: ${description}`,
       "metadata:",
-      `  version: "${version}"`,
+      ...metadataLines,
       "---",
       "",
       "# Skill",
@@ -107,6 +112,55 @@ describe("updateReadmeSkillsTable", () => {
       expect(aIndex).toBeGreaterThan(-1);
       expect(zIndex).toBeGreaterThan(-1);
       expect(aIndex).toBeLessThan(zIndex);
+    } finally {
+      rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("excludes deprecated and archived skills from the list", () => {
+    const repoRoot = mkdtempSync(join(tmpdir(), "fusion-skills-"));
+
+    try {
+      mkdirSync(join(repoRoot, "skills"), { recursive: true });
+      writeFileSync(
+        join(repoRoot, "README.md"),
+        [
+          "# Test README",
+          "",
+          "## Skills",
+          "<!-- skills-table:start -->",
+          "| stale |",
+          "<!-- skills-table:end -->",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+
+      writeSkill(repoRoot, "fusion-active-skill", "fusion-active-skill", "Active.", "1.0.0");
+      writeSkill(
+        repoRoot,
+        "fusion-old-skill",
+        "fusion-old-skill",
+        "Old deprecated skill.",
+        "2.0.0",
+        "deprecated",
+      );
+      writeSkill(
+        repoRoot,
+        "fusion-gone-skill",
+        "fusion-gone-skill",
+        "Archived skill.",
+        "3.0.0",
+        "archived",
+      );
+
+      const count = updateReadmeSkillsTable(repoRoot);
+      const readme = readFileSync(join(repoRoot, "README.md"), "utf8");
+
+      expect(count).toBe(1);
+      expect(readme).toContain("fusion-active-skill");
+      expect(readme).not.toContain("fusion-old-skill");
+      expect(readme).not.toContain("fusion-gone-skill");
     } finally {
       rmSync(repoRoot, { recursive: true, force: true });
     }

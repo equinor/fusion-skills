@@ -16,10 +16,6 @@ For Fusion issue-authoring with GitHub Copilot, use the explicit agent-targeted 
 ```bash
 npx skills add equinor/fusion-skills \
 	--skill fusion-issue-authoring \
-	--skill fusion-issue-author-feature \
-	--skill fusion-issue-author-user-story \
-	--skill fusion-issue-author-task \
-	--skill fusion-issue-author-bug \
 	--agent github-copilot \
 	-y
 ```
@@ -186,6 +182,26 @@ If a skill already has an open PR from branch `chore/skills-discovery/<skill>`, 
 
 `skip-if-rejected-pr-exists` blocks re-proposing skills where a previous PR from that skill branch was closed without merge.
 
+## 🗑️ Automated deprecation cleanup
+
+The update workflow also scans installed skills for `metadata.status: deprecated` or `archived` in their SKILL.md frontmatter. For each such skill it creates a separate removal PR that:
+
+- Removes the skill via `npx skills remove`
+- Includes successor recommendation and migration guidance when available
+- Respects previously-rejected removal PRs (won't re-propose)
+
+This runs automatically as part of the update workflow above. To customize or disable:
+
+```yaml
+jobs:
+  upgrade:
+    uses: equinor/fusion-skills/.github/workflows/skills-update.yml@main
+    with:
+      skip-deprecation-cleanup: false  # set true to disable
+      draft-deprecation-prs: false     # set true for draft PRs
+      skip-if-rejected-pr-exists: true # respect rejected PRs
+```
+
 ## 🤌 What you get
 
 This repo contains reusable skills for common workflows (planning, triage, reviews, runbooks, etc.).
@@ -266,33 +282,9 @@ Wires Fusion Help Center into app pages — creates article slug constants, adds
 
 ---
 
-**👍 [`fusion-issue-author-bug@0.1.2`](skills/fusion-issue-author-bug/SKILL.md)**
-
-Draft and update bug issues using a bug-focused structure, repository-valid labels, and explicit publish confirmation before GitHub mutation.
-
----
-
-**👍 [`fusion-issue-author-feature@0.1.2`](skills/fusion-issue-author-feature/SKILL.md)**
-
-Draft and update feature issues with clear problem framing, scoped requirements, repository-valid labels, and explicit confirmation before publishing.
-
----
-
-**👍 [`fusion-issue-author-task@0.1.2`](skills/fusion-issue-author-task/SKILL.md)**
-
-Draft and update task issues with checklist-first decomposition, dependency-aware sequencing, repository-valid labels, and explicit publish confirmation.
-
----
-
-**👍 [`fusion-issue-author-user-story@0.1.2`](skills/fusion-issue-author-user-story/SKILL.md)**
-
-Draft and update user-story issues with role-action-value framing, workflow scenarios, repository-valid labels, and explicit publish confirmation.
-
----
-
 **👍 [`fusion-issue-authoring@0.2.4`](skills/fusion-issue-authoring/SKILL.md)**
 
-Orchestrate GitHub issue authoring by classifying request type, routing to a type-specific issue-author skill, and enforcing shared safety gates before mutation.
+Classify issue type, activate the matching agent mode for type-specific drafting, and enforce shared safety gates before GitHub mutation.
 
 ---
 

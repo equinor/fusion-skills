@@ -126,15 +126,17 @@ When deprecating a skill:
    ```yaml
    metadata:
      status: deprecated
+     deprecated_at: "YYYY-MM-DD"
      successor: successor-skill-name
    ```
+   `deprecated_at` is required for skills in `skills/.deprecated/` and is validated by CI (`validate:ownership`).
 3. **Add `deprecated` to `metadata.tags`**
 4. **Add deprecation notice**: Add a prominent blockquote at the top of the SKILL.md body pointing to the successor and the tracking issue
 5. **Move to `skills/.deprecated/`**: Use `git mv skills/<skill-name> skills/.deprecated/<skill-name>` to preserve history
 6. **Update description**: Prefix with `DEPRECATED: Use <successor> instead.`
 7. **Notify contributors**: Comment on related PRs/issues
 8. **Release notes**: Include in changelog with migration guidance
-9. **Timeline**: Remove after 2-3 releases (allow transition period)
+9. **Automated removal**: The `skills-greenkeeping.yml` workflow runs monthly and creates a removal PR for skills that have been in `.deprecated/` for 3+ months
 
 **Example deprecation notice:**
 ```
@@ -156,10 +158,12 @@ See [equinor/fusion-core-tasks#XXX](https://github.com/equinor/fusion-core-tasks
 
 1. Create issue documenting deprecation reason + timeline
 2. Update `metadata.status` to `deprecated`
-3. Add successor skill reference in `metadata.successor`
-4. Update description with deprecation notice
-5. Commit with message: `deprecate: [skill-name] in favor of [successor]`
-6. Close issue when removal is complete (mark as archived)
+3. Add `metadata.deprecated_at` with today's date in `YYYY-MM-DD` format
+4. Add successor skill reference in `metadata.successor`
+5. Move to `skills/.deprecated/` using `git mv`
+6. Update description with deprecation notice
+7. Commit with message: `deprecate: [skill-name] in favor of [successor]`
+8. After 3 months, the greenkeeping workflow will auto-propose a removal PR
 
 ### I found a security issue
 

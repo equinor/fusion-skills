@@ -5,6 +5,7 @@ license: MIT
 metadata:
   version: "0.1.2"
   status: deprecated
+  deprecated_at: "2026-03-18"
   successor: fusion-issue-authoring
   owner: "@equinor/fusion-core"
   orchestrator: "fusion-issue-authoring"
