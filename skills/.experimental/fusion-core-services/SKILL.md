@@ -3,7 +3,7 @@ name: fusion-core-services
 description: 'Guides integrations across Fusion Core service APIs from a single installable skill. USE FOR: service discovery across apps, people, context, roles, notifications, reports, tasks, and other Fusion Core APIs; cross-service integration planning; choosing the right endpoint/model guidance for a workflow. DO NOT USE FOR: modifying Fusion backend source code, non-Fusion APIs, or generic cloud architecture work without a Fusion service integration target.'
 license: MIT
 metadata:
-  version: "0.0.0"
+  version: "0.0.1"
   status: experimental
   owner: "@equinor/fusion-core"
   tags:
