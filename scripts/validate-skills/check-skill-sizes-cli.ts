@@ -2,7 +2,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import process from "node:process";
-import { checkSkillSizes } from "./check-skill-sizes";
+import { checkSkillSizes, ERROR_THRESHOLD, WARN_THRESHOLD } from "./check-skill-sizes";
 
 /**
  * Parsed CLI options for the skill-sizes command.
@@ -128,8 +128,10 @@ function main(): void {
   // Report each finding with severity-appropriate prefix.
   for (const finding of findings) {
     const prefix = finding.level === "error" ? "ERROR" : "WARNING";
+    const threshold = finding.level === "error" ? ERROR_THRESHOLD : WARN_THRESHOLD;
+    const label = finding.level === "error" ? "max" : "recommended max";
     console.error(
-      `${prefix}: ${finding.skillPath} has ${finding.lineCount} lines (${finding.level === "error" ? "max 500" : "recommended max 300"}).`,
+      `${prefix}: ${finding.skillPath} has ${finding.lineCount} lines (${label} ${threshold}).`,
     );
   }
 

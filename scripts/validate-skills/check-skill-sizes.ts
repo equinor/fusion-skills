@@ -5,8 +5,8 @@ import { findSkillFiles } from "../list-skills/find-skill-files";
 /**
  * Line-count thresholds for SKILL.md size validation.
  */
-const WARN_THRESHOLD = 300;
-const ERROR_THRESHOLD = 500;
+export const WARN_THRESHOLD = 300;
+export const ERROR_THRESHOLD = 500;
 
 /**
  * Describes one SKILL.md line-count finding.
