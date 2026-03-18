@@ -25,7 +25,7 @@ export type ApiMetadataValueType = "String" | "Number" | "Date" | "DateTimeOffse
 // Response models
 // ---------------------------------------------------------------------------
 
-/** Returned by GET /tasks/{id} and person-scoped collection routes such as GET /persons/me/tasks. */
+/** Returned by GET /tasks/{taskId} and person-scoped collection routes such as GET /persons/me/tasks. */
 export interface ApiFusionTask {
   id: string;
   title: string;
@@ -126,7 +126,7 @@ export interface ApiProjectMaster {
 // PIMS integration
 // ---------------------------------------------------------------------------
 
-/** Returned by GET /persons/{id}/tasks/pims. */
+/** Returned by GET /persons/{personIdentifier}/tasks/pims. */
 export interface ApiPimsTask {
   id: string | null;
   title: string | null;
@@ -144,7 +144,7 @@ export interface ApiPimsTask {
   assignedTo: ApiAssignee | null;
 }
 
-/** Returned by deprecated GET /persons/{id}/tasks/procosys routes. */
+/** Returned by deprecated GET /persons/{personIdentifier}/tasks/procosys routes. */
 export interface ApiProCoSysTask {
   siteCode: string | null;
   projectIdentifier: string | null;
@@ -200,7 +200,7 @@ export interface NewFusionTaskRequest {
 }
 
 /**
- * PATCH /tasks/{id} — selectively update a task.
+ * PATCH /tasks/{taskId} — selectively update a task.
  * Only properties present in the payload are applied.
  */
 export interface PatchFusionTaskRequest {

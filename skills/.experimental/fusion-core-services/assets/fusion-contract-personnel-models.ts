@@ -28,7 +28,7 @@ export type ApiWorkflowStepState = "Pending" | "Approved" | "Rejected" | "Skippe
 // Core response models
 // ---------------------------------------------------------------------------
 
-/** Contract (V2) — returned by GET /projects/{projectId}/contracts/{contractId}. */
+/** Contract (V2) — returned by GET /projects/{projectIdentifier}/contracts/{contractIdentifier}. */
 export interface ApiContractV2 {
   id: string;
   name: string;

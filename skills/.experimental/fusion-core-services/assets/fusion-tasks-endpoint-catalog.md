@@ -14,8 +14,8 @@ This catalog covers the verified public Fusion task and source-system task surfa
 - `GET /persons/{personIdentifier}/tasks` → `ApiFusionTask[]`
 	OData: same filter/search surface as `/persons/me/tasks`
 - `POST /tasks` → `NewFusionTaskRequest` → `ApiFusionTask`
-- `PATCH /tasks/{id}` → `PatchFusionTaskRequest` → `ApiFusionTask`
-- `DELETE /tasks/{id}` → `204 NoContent`
+- `PATCH /tasks/{taskId}` → `PatchFusionTaskRequest` → `ApiFusionTask`
+- `DELETE /tasks/{taskId}` → `204 NoContent`
 
 ## PIMS task endpoints
 - `GET /persons/me/tasks/pims` → `ApiPimsTask[]`

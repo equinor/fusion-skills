@@ -10,52 +10,52 @@ This catalog covers the verified public contract-personnel surface for projects,
 - `OPTIONS /projects/{projectIdentifier}/contracts` → access probe, `204 NoContent`
 - `GET /projects/{projectIdentifier}/contracts/{contractIdentifier}` (v`2.0`) → `ApiContractV2`
 	OData: `Expand(personnel, delegates)`
-- `PATCH /projects/{projectIdentifier}/contracts/{contractId}` (v`2.0`) → `PatchContractRequest` → `ApiContractV2`
-- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}` → access probe, `204 NoContent`
+- `PATCH /projects/{projectIdentifier}/contracts/{contractIdentifier}` (v`2.0`) → `PatchContractRequest` → `ApiContractV2`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractIdentifier}` → access probe, `204 NoContent`
 - `GET /contracts` (v`2.0`) → `ApiPagedCollection<ApiContractV2>`
 	OData: `Filter(endDate)`, `Expand(personnel, delegates)`
 
 ## Personnel endpoints
-- `GET /projects/{projectIdentifier}/contracts/{contractId}/personnel` (v`1.0`) → `ApiPagedCollection<ApiPersonnel>`
+- `GET /projects/{projectIdentifier}/contracts/{contractIdentifier}/personnel` (v`1.0`) → `ApiPagedCollection<ApiPersonnel>`
 	OData: `Filter(person.mail, person.name, person.azureUniquePersonId, person.accountStatus)`, `Expand(roleAssignments)`
-- `GET /projects/{projectIdentifier}/contracts/{contractId}/personnel` (v`1.1-preview`) → `ApiPagedCollection<ApiPersonnel>`
+- `GET /projects/{projectIdentifier}/contracts/{contractIdentifier}/personnel` (v`1.1-preview`) → `ApiPagedCollection<ApiPersonnel>`
 	Adds deleted-account enrichment and duplicate-account hints.
-- `GET /projects/{projectIdentifier}/contracts/{contractId}/personnel/{personnelId}` → `ApiPersonnel`
-- `DELETE /projects/{projectIdentifier}/contracts/{contractId}/personnel/{personnelId}` → `204 NoContent`
-- `PATCH /projects/{projectIdentifier}/contracts/{contractId}/personnel/{personnelId}/person` → `PatchPersonRequest` → `ApiPersonnel`
-- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/personnel` → access probe, `204 NoContent`
-- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/personnel/{personnelId}` → access probe, `204 NoContent`
-- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/personnel/{personnelId}/person` → access probe, `204 NoContent`
+- `GET /projects/{projectIdentifier}/contracts/{contractIdentifier}/personnel/{personnelId}` → `ApiPersonnel`
+- `DELETE /projects/{projectIdentifier}/contracts/{contractIdentifier}/personnel/{personnelId}` → `204 NoContent`
+- `PATCH /projects/{projectIdentifier}/contracts/{contractIdentifier}/personnel/{personnelId}/person` → `PatchPersonRequest` → `ApiPersonnel`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractIdentifier}/personnel` → access probe, `204 NoContent`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractIdentifier}/personnel/{personnelId}` → access probe, `204 NoContent`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractIdentifier}/personnel/{personnelId}/person` → access probe, `204 NoContent`
 
 ## Delegate endpoints
-- `GET /projects/{projectIdentifier}/contracts/{contractId}/delegates` → `ApiPagedCollection<ApiDelegate>`
+- `GET /projects/{projectIdentifier}/contracts/{contractIdentifier}/delegates` → `ApiPagedCollection<ApiDelegate>`
 	OData: `Filter(classification, validTo)`
-- `GET /projects/{projectIdentifier}/contracts/{contractId}/delegates/{delegateId}` → `ApiDelegate`
-- `POST /projects/{projectIdentifier}/contracts/{contractId}/delegates` → `CreateDelegateRequest` → `ApiDelegate`
-- `PATCH /projects/{projectIdentifier}/contracts/{contractId}/delegates/{delegateId}` → `PatchDelegateRequest` → `ApiDelegate`
-- `DELETE /projects/{projectIdentifier}/contracts/{contractId}/delegates/{delegateId}` → `204 NoContent`
-- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/delegates` → access probe, `204 NoContent`
-- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/delegates/{delegateId}` → access probe, `204 NoContent`
+- `GET /projects/{projectIdentifier}/contracts/{contractIdentifier}/delegates/{delegateId}` → `ApiDelegate`
+- `POST /projects/{projectIdentifier}/contracts/{contractIdentifier}/delegates` → `CreateDelegateRequest` → `ApiDelegate`
+- `PATCH /projects/{projectIdentifier}/contracts/{contractIdentifier}/delegates/{delegateId}` → `PatchDelegateRequest` → `ApiDelegate`
+- `DELETE /projects/{projectIdentifier}/contracts/{contractIdentifier}/delegates/{delegateId}` → `204 NoContent`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractIdentifier}/delegates` → access probe, `204 NoContent`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractIdentifier}/delegates/{delegateId}` → access probe, `204 NoContent`
 
 ## Personnel request endpoints
-- `GET /projects/{projectIdentifier}/contracts/{contractId}/requests` → `ApiPagedCollection<ApiPersonnelRequest>`
+- `GET /projects/{projectIdentifier}/contracts/{contractIdentifier}/requests` → `ApiPagedCollection<ApiPersonnelRequest>`
 	OData: `Expand(originalPersonnel)`, `Filter(state, category, originalPersonnelId, updated, created, person.mail, person.name, person.azureUniquePersonId)`
-- `GET /projects/{projectIdentifier}/contracts/{contractId}/requests/{requestId}` → `ApiPersonnelRequest`
-- `POST /projects/{projectIdentifier}/contracts/{contractId}/requests` → `CreatePersonnelRequestRequest` → `ApiPersonnelRequest`
-- `DELETE /projects/{projectIdentifier}/contracts/{contractId}/requests/{requestId}` → `204 NoContent`
-- `POST /projects/{projectIdentifier}/contracts/{contractId}/requests/{requestId}/approve` → `ApiPersonnelRequest`
-- `POST /projects/{projectIdentifier}/contracts/{contractId}/requests/{requestId}/reject` → `RejectPersonnelRequestRequest` → `ApiPersonnelRequest`
-- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/requests` → access probe, `204 NoContent`
-- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/requests/{requestId}` → access probe, `204 NoContent`
-- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/requests/{requestId}/approve` → access probe, `204 NoContent`
-- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/requests/{requestId}/reject` → access probe, `204 NoContent`
+- `GET /projects/{projectIdentifier}/contracts/{contractIdentifier}/requests/{requestId}` → `ApiPersonnelRequest`
+- `POST /projects/{projectIdentifier}/contracts/{contractIdentifier}/requests` → `CreatePersonnelRequestRequest` → `ApiPersonnelRequest`
+- `DELETE /projects/{projectIdentifier}/contracts/{contractIdentifier}/requests/{requestId}` → `204 NoContent`
+- `POST /projects/{projectIdentifier}/contracts/{contractIdentifier}/requests/{requestId}/approve` → `ApiPersonnelRequest`
+- `POST /projects/{projectIdentifier}/contracts/{contractIdentifier}/requests/{requestId}/reject` → `RejectPersonnelRequestRequest` → `ApiPersonnelRequest`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractIdentifier}/requests` → access probe, `204 NoContent`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractIdentifier}/requests/{requestId}` → access probe, `204 NoContent`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractIdentifier}/requests/{requestId}/approve` → access probe, `204 NoContent`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractIdentifier}/requests/{requestId}/reject` → access probe, `204 NoContent`
 
 ## Role endpoints
 - `GET /roles` → `ApiRole[]`
 - `GET /projects/{projectIdentifier}/contracts/{contractIdentifier}/role-assignments` → `ApiPersonRoleAssignment[]`
 - `GET /projects/{projectIdentifier}/contracts/{contractIdentifier}/personnel/{personnelId}/role-assignments` → `ApiRoleAssignment[]`
 - `POST /projects/{projectIdentifier}/contracts/{contractIdentifier}/personnel/{personnelId}/role-assignments` → `AssignRoleRequest` → `ApiPersonRoleAssignment`
-- `DELETE /projects/{projectIdentifier}/contracts/{contractId}/personnel/{personnelId}/role-assignments/{roleAssignmentId}` → `204 NoContent`
+- `DELETE /projects/{projectIdentifier}/contracts/{contractIdentifier}/personnel/{personnelId}/role-assignments/{roleAssignmentId}` → `204 NoContent`
 - `OPTIONS /roles` → access probe, `204 NoContent`
 - `OPTIONS /projects/{projectIdentifier}/contracts/{contractIdentifier}/role-assignments` → access probe, `204 NoContent`
 - `OPTIONS /projects/{projectIdentifier}/contracts/{contractIdentifier}/personnel/{personnelId}/role-assignments` → access probe, `204 NoContent`
@@ -63,10 +63,10 @@ This catalog covers the verified public contract-personnel surface for projects,
 ## Change log endpoints
 - `GET /change-log` → `ApiPagedCollection<ApiChangeLog>`
 	OData: `Filter(projectMaster.id, contract.id, performedBy.azureUniqueId, performedBy.name, performedBy.mail, performed, action, source)`, `Search`, `Top(100)`, `Skip`
-- `GET /projects/{projectIdentifier}/contracts/{contractId}/change-log` → `ApiPagedCollection<ApiChangeLog>`
+- `GET /projects/{projectIdentifier}/contracts/{contractIdentifier}/change-log` → `ApiPagedCollection<ApiChangeLog>`
 	OData: `Filter(performedBy.azureUniqueId, performedBy.name, performedBy.mail, performed, action)`, `Search`, `Top(100)`, `Skip`
 - `OPTIONS /change-log` → access probe, `204 NoContent`
-- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/change-log` → access probe, `204 NoContent`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractIdentifier}/change-log` → access probe, `204 NoContent`
 
 ## Recertification endpoints
 - `GET /recertifications` → `ApiPagedCollection<ApiRecertification>`
@@ -75,7 +75,7 @@ This catalog covers the verified public contract-personnel surface for projects,
 	OData: `Filter(contractId, projectMasterId)`, `Top(1000)`, `Skip`
 
 ## Affiliate sponsor endpoints
-- `GET /projects/{projectIdentifier}/contracts/{contractId}/affiliate-sponsors` → `ApiPagedCollection<ApiAffiliateSponsor>`
+- `GET /projects/{projectIdentifier}/contracts/{contractIdentifier}/affiliate-sponsors` → `ApiPagedCollection<ApiAffiliateSponsor>`
 - `GET /affiliate-sponsors` → `ApiPagedCollection<ApiAffiliateSponsor>`
 	OData: `Filter(contractId)`
 - `POST /affiliate-sponsors` → `CreateAffiliateSponsorsRequest` → `ApiAffiliateSponsor[]`
@@ -83,18 +83,18 @@ This catalog covers the verified public contract-personnel surface for projects,
 - `OPTIONS /affiliate-sponsors` → access probe, `204 NoContent`
 
 ## Valid company and domain endpoints
-- `GET /projects/{projectIdentifier}/contracts/{contractId}/valid-companies` → `ApiValidCompany[]`
-- `GET /projects/{projectIdentifier}/contracts/{contractId}/valid-companies/{companyId}` → `ApiValidCompany`
-- `POST /projects/{projectIdentifier}/contracts/{contractId}/valid-companies` → `CreateValidCompanyRequest` → `ApiValidCompany`
-- `DELETE /projects/{projectIdentifier}/contracts/{contractId}/valid-companies/{companyId}` → `204 NoContent`
-- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/valid-companies` → access probe, `204 NoContent`
-- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/valid-companies/{companyId}` → access probe, `204 NoContent`
-- `GET /projects/{projectIdentifier}/contracts/{contractId}/valid-domains` → `ApiValidDomain[]`
-- `GET /projects/{projectIdentifier}/contracts/{contractId}/valid-domains/{domainId}` → `ApiValidDomain`
-- `POST /projects/{projectIdentifier}/contracts/{contractId}/valid-domains` → `CreateValidDomainRequest` → `ApiValidDomain`
-- `DELETE /projects/{projectIdentifier}/contracts/{contractId}/valid-domains/{domainId}` → `204 NoContent`
-- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/valid-domains` → access probe, `204 NoContent`
-- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/valid-domains/{domainId}` → access probe, `204 NoContent`
+- `GET /projects/{projectIdentifier}/contracts/{contractIdentifier}/valid-companies` → `ApiValidCompany[]`
+- `GET /projects/{projectIdentifier}/contracts/{contractIdentifier}/valid-companies/{companyId}` → `ApiValidCompany`
+- `POST /projects/{projectIdentifier}/contracts/{contractIdentifier}/valid-companies` → `CreateValidCompanyRequest` → `ApiValidCompany`
+- `DELETE /projects/{projectIdentifier}/contracts/{contractIdentifier}/valid-companies/{companyId}` → `204 NoContent`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractIdentifier}/valid-companies` → access probe, `204 NoContent`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractIdentifier}/valid-companies/{companyId}` → access probe, `204 NoContent`
+- `GET /projects/{projectIdentifier}/contracts/{contractIdentifier}/valid-domains` → `ApiValidDomain[]`
+- `GET /projects/{projectIdentifier}/contracts/{contractIdentifier}/valid-domains/{domainId}` → `ApiValidDomain`
+- `POST /projects/{projectIdentifier}/contracts/{contractIdentifier}/valid-domains` → `CreateValidDomainRequest` → `ApiValidDomain`
+- `DELETE /projects/{projectIdentifier}/contracts/{contractIdentifier}/valid-domains/{domainId}` → `204 NoContent`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractIdentifier}/valid-domains` → access probe, `204 NoContent`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractIdentifier}/valid-domains/{domainId}` → access probe, `204 NoContent`
 
 ## Authorization notes
 - Most routes enforce a combination of full-control, trusted-application, employee, contract-personnel, contract-responsibility, delegate-responsibility, or contract-management rules.
