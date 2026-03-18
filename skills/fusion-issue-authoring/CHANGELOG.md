@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0 - 2026-03-18
+
+### minor
+
+- [#98](https://github.com/equinor/fusion-skills/pull/98) [`6bb9cdc`](https://github.com/equinor/fusion-skills/commit/6bb9cdcc1e2e0ed25d562bfd5db4dfab52559c0f) - Consolidate issue-authoring capability into a single skill with agent modes
+
+
+  - Merge type-specific drafting logic from 4 subordinate skills into agent mode files (`agents/*.agent.md`)
+  - Move all 10 issue templates into `assets/issue-templates/` within this skill
+  - Update orchestrator to route to internal agent modes instead of external subordinate skills
+  - Retain full 8-step workflow, shared gates, caching strategy, and MCP mutation sequencing
+
+  Resolves equinor/fusion-core-tasks#802
+
 ## 0.2.4 - 2026-03-17
 
 ### patch

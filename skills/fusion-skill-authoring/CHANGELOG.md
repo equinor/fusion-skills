@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.2 - 2026-03-18
+
+### patch
+
+- [#98](https://github.com/equinor/fusion-skills/pull/98) [`6bb9cdc`](https://github.com/equinor/fusion-skills/commit/6bb9cdcc1e2e0ed25d562bfd5db4dfab52559c0f) - Extract template baseline and validation signals to references/
+
+
+  - Move folder structure and SKILL.md baseline template to `references/skill-template-baseline.md`
+  - Move success/failure signals and recovery steps to `references/validation-signals.md`
+  - Reduce SKILL.md from 356 to 286 lines (below 300-line CI warning threshold)
+
 ## 0.3.1 - 2026-03-18
 
 ### patch
