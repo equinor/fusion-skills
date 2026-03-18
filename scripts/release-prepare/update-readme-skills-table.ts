@@ -92,11 +92,13 @@ export function updateReadmeSkillsTable(repoRoot: string): number {
   const EXCLUDED_STATUSES = new Set(["deprecated", "archived"]);
   // Convert each value into the shape expected by downstream code.
   const rows: SkillRow[] = [];
+  // Build a table row from each discovered skill file.
   for (const skillFile of skillFiles) {
     const markdown = readFileSync(skillFile, "utf8");
     const frontmatter = parseFrontmatter(extractFrontmatter(markdown));
     const status = frontmatter["metadata.status"]?.trim().toLowerCase();
 
+    // Skip deprecated/archived skills so they don't appear in the public table.
     if (status && EXCLUDED_STATUSES.has(status)) {
       continue;
     }

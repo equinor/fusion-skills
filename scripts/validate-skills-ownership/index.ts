@@ -60,13 +60,17 @@ export function validateSkillOwnership(
     skillPath.includes(`${sep}.deprecated${sep}`) || skillPath.includes("/.deprecated/");
   const isDeprecatedStatus =
     metadata["metadata.status"] === "deprecated" || metadata["metadata.status"] === "archived";
+  // Only enforce deprecated_at when the skill lives in .deprecated/ AND has a matching status.
   if (isDeprecatedPath && isDeprecatedStatus) {
     const deprecatedAt = metadata["metadata.deprecated_at"]?.trim();
+    // Require the field to be present.
     if (!deprecatedAt) {
       errors.push(
         `${skillName}: Missing required metadata.deprecated_at for deprecated skill in .deprecated/. Use YYYY-MM-DD format.`,
       );
+    // Validate the format and parse-ability of the deprecated_at value.
     } else if (
+      // Regex: match exactly a YYYY-MM-DD date string (four digits, dash, two digits, dash, two digits).
       !/^\d{4}-\d{2}-\d{2}$/.test(deprecatedAt) ||
       Number.isNaN(Date.parse(deprecatedAt))
     ) {
