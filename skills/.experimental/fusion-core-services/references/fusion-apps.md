@@ -51,15 +51,24 @@
 - Starter shape:
 
 ```ts
+export interface PagedResponse<T> {
+	totalCount: number;
+	count: number;
+	value: T[];
+	'@nextPage'?: string | null;
+	'@prevPage'?: string | null;
+}
+
 export interface AppSummary {
-	key: string;
-	title?: string;
+	appKey: string;
+	displayName: string;
+	description?: string | null;
 }
 
 export async function getApps(baseUrl: string, init?: RequestInit) {
 	const response = await fetch(`${baseUrl}/apps`, init);
 	if (!response.ok) throw new Error(`Apps API failed: ${response.status}`);
-	return (await response.json()) as AppSummary[];
+	return (await response.json()) as PagedResponse<AppSummary>;
 }
 ```
 
@@ -76,11 +85,13 @@ export async function getApps(baseUrl: string, init?: RequestInit) {
 ```csharp
 public sealed class AppsApiClient(HttpClient httpClient)
 {
-		public async Task<IReadOnlyList<AppSummary>?> GetAppsAsync(CancellationToken cancellationToken)
-				=> await httpClient.GetFromJsonAsync<IReadOnlyList<AppSummary>>("apps", cancellationToken);
+		public async Task<PagedResponse<AppSummary>?> GetAppsAsync(CancellationToken cancellationToken)
+				=> await httpClient.GetFromJsonAsync<PagedResponse<AppSummary>>("apps", cancellationToken);
 }
 
-public sealed record AppSummary(string Key, string? Title);
+public sealed record PagedResponse<T>(int TotalCount, int Count, IReadOnlyList<T> Value);
+
+public sealed record AppSummary(string AppKey, string DisplayName, string? Description);
 ```
 
 ## Suggested local models
@@ -89,7 +100,7 @@ public sealed record AppSummary(string Key, string? Title);
 - `AppSyncStatusDto`
 
 ## Representative model snapshots
-- `AppSummary`: key and display/title metadata
+- `AppSummary`: `appKey`, `displayName`, optional `description`
 - `AppDetailsDto`: application metadata, owners/admins, tags, classification
 - `CreateAppRequestDto`: app name, type, admins, and ownership fields
 

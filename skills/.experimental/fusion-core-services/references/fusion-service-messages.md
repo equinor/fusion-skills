@@ -37,7 +37,7 @@
 export interface ServiceMessageItem {
 	id: string;
 	title?: string;
-	isActive?: boolean;
+	isCurrentlyActive?: boolean;
 }
 
 export async function listServiceMessages(baseUrl: string, init?: RequestInit) {
@@ -65,7 +65,7 @@ public sealed class ServiceMessagesApiClient(HttpClient httpClient)
 				=> await httpClient.GetFromJsonAsync<IReadOnlyList<ServiceMessageItem>>("service-messages", cancellationToken);
 }
 
-public sealed record ServiceMessageItem(string Id, string? Title, bool? IsActive);
+public sealed record ServiceMessageItem(string Id, string? Title, bool? IsCurrentlyActive);
 ```
 
 ## Suggested local models
@@ -75,7 +75,7 @@ public sealed record ServiceMessageItem(string Id, string? Title, bool? IsActive
 - `UpdateVisibilityRequestDto`
 
 ## Representative model snapshots
-- `ServiceMessageItem`: id, title, content, active/visibility metadata
+- `ServiceMessageItem`: id, title, content, and current-visibility metadata
 - `CreateServiceMessageRequestDto`: title, content, type, scope, relevant apps/portals
 - `UpdateVisibilityRequestDto`: applies-from/to and visibility targeting details
 

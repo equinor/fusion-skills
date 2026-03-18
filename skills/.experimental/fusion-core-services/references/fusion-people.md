@@ -54,9 +54,9 @@
 
 ```ts
 export interface PersonSummary {
-	id: string;
-	displayName: string;
-	mail?: string;
+	azureUniqueId?: string | null;
+	name: string;
+	mail?: string | null;
 }
 
 export async function getPerson(baseUrl: string, personId: string, init?: RequestInit) {
@@ -84,7 +84,7 @@ public sealed class PeopleApiClient(HttpClient httpClient)
 				=> await httpClient.GetFromJsonAsync<PersonSummary>($"persons/{personId}", cancellationToken);
 }
 
-public sealed record PersonSummary(string Id, string DisplayName, string? Mail);
+public sealed record PersonSummary(string? AzureUniqueId, string Name, string? Mail);
 
 // Registration with fusion-integration-lib should bootstrap discovery first
 services.AddFusionIntegrationCore("FPRD");

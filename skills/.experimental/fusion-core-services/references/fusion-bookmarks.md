@@ -35,8 +35,8 @@
 ```ts
 export interface BookmarkItem {
 	id: string;
-	title?: string;
-	sourceSystem?: string;
+	name: string;
+	appKey: string;
 }
 
 export async function listMyBookmarks(baseUrl: string, init?: RequestInit) {
@@ -64,7 +64,7 @@ public sealed class BookmarksApiClient(HttpClient httpClient)
 				=> await httpClient.GetFromJsonAsync<IReadOnlyList<BookmarkItem>>("persons/me/bookmarks", cancellationToken);
 }
 
-public sealed record BookmarkItem(string Id, string? Title, string? SourceSystem);
+public sealed record BookmarkItem(string Id, string Name, string AppKey);
 ```
 
 ## Suggested local models
@@ -74,7 +74,7 @@ public sealed record BookmarkItem(string Id, string? Title, string? SourceSystem
 - `FavoriteRequestDto`
 
 ## Representative model snapshots
-- `BookmarkItem`: bookmark id, title/name, source system, payload metadata
+- `BookmarkItem`: bookmark `id`, `name`, and `appKey`
 - `BookmarkPayloadDto`: app-specific state payload
 - `CreateBookmarkRequestDto`: name, appKey, payload, optional context id
 

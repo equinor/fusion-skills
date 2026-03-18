@@ -41,15 +41,24 @@
 - Starter shape:
 
 ```ts
+export interface PagedResponse<T> {
+	totalCount: number;
+	count: number;
+	value: T[];
+	'@nextPage'?: string | null;
+	'@prevPage'?: string | null;
+}
+
 export interface PortalSummary {
 	id: string;
-	title?: string;
+	name: string;
+	displayName: string;
 }
 
 export async function listPortals(baseUrl: string, init?: RequestInit) {
 	const response = await fetch(`${baseUrl}/portals`, init);
 	if (!response.ok) throw new Error(`Portal Config API failed: ${response.status}`);
-	return (await response.json()) as PortalSummary[];
+	return (await response.json()) as PagedResponse<PortalSummary>;
 }
 ```
 
@@ -67,11 +76,13 @@ export async function listPortals(baseUrl: string, init?: RequestInit) {
 ```csharp
 public sealed class PortalConfigApiClient(HttpClient httpClient)
 {
-		public async Task<IReadOnlyList<PortalSummary>?> GetPortalsAsync(CancellationToken cancellationToken)
-				=> await httpClient.GetFromJsonAsync<IReadOnlyList<PortalSummary>>("portals", cancellationToken);
+		public async Task<PagedResponse<PortalSummary>?> GetPortalsAsync(CancellationToken cancellationToken)
+				=> await httpClient.GetFromJsonAsync<PagedResponse<PortalSummary>>("portals", cancellationToken);
 }
 
-public sealed record PortalSummary(string Id, string? Title);
+public sealed record PagedResponse<T>(int TotalCount, int Count, IReadOnlyList<T> Value);
+
+public sealed record PortalSummary(string Id, string Name, string DisplayName);
 ```
 
 ## Suggested local models
@@ -81,7 +92,7 @@ public sealed record PortalSummary(string Id, string? Title);
 - `PortalSettingsDto`
 
 ## Representative model snapshots
-- `PortalSummary`: portal id and title/display metadata
+- `PortalSummary`: portal `id`, `name`, and `displayName`
 - `TemplateSummary`: template id/name plus version/tag metadata
 - `CreatePortalRequestDto`: name, displayName, template, admins
 - `PortalSettingsDto`: global portal-config settings shape

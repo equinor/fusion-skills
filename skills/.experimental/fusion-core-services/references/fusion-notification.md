@@ -31,10 +31,16 @@
 - Starter shape:
 
 ```ts
+export interface NotificationSourceSystem {
+	name?: string | null;
+	subSystem?: string | null;
+	identifier?: string | null;
+}
+
 export interface NotificationItem {
 	id: string;
 	title?: string;
-	sourceSystem?: string;
+	sourceSystem?: NotificationSourceSystem | null;
 }
 
 export async function createNotification(baseUrl: string, personIdentifier: string, payload: unknown, init?: RequestInit) {
@@ -71,7 +77,9 @@ public sealed class NotificationApiClient(HttpClient httpClient)
 		}
 }
 
-public sealed record NotificationItem(string Id, string? Title, string? SourceSystem);
+	public sealed record NotificationSourceSystem(string? Name, string? SubSystem, string? Identifier);
+
+	public sealed record NotificationItem(string Id, string? Title, NotificationSourceSystem? SourceSystem);
 ```
 
 ## Suggested local models
@@ -81,7 +89,7 @@ public sealed record NotificationItem(string Id, string? Title, string? SourceSy
 - `PatchNotificationRequestDto`
 
 ## Representative model snapshots
-- `NotificationItem`: `id`, `title`, `sourceSystem`, `created`, `seen`
+- `NotificationItem`: `id`, `title`, nested `sourceSystem`, `created`, `seen`
 - `CreateNotificationRequestDto`: title, description/card, app context, recipient info
 - `NotificationSettingsDto`: user notification preference set
 

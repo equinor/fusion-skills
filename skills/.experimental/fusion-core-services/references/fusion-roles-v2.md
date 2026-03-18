@@ -47,6 +47,14 @@
 - Starter shape:
 
 ```ts
+export interface PagedResponse<T> {
+	totalCount: number;
+	count: number;
+	value: T[];
+	'@nextPage'?: string | null;
+	'@prevPage'?: string | null;
+}
+
 export interface RoleSummary {
 	id: string;
 	name: string;
@@ -55,7 +63,7 @@ export interface RoleSummary {
 export async function listRoles(baseUrl: string, init?: RequestInit) {
 	const response = await fetch(`${baseUrl}/roles`, init);
 	if (!response.ok) throw new Error(`RolesV2 API failed: ${response.status}`);
-	return (await response.json()) as RoleSummary[];
+	return (await response.json()) as PagedResponse<RoleSummary>;
 }
 ```
 
@@ -72,9 +80,11 @@ export async function listRoles(baseUrl: string, init?: RequestInit) {
 ```csharp
 public sealed class RolesV2ApiClient(HttpClient httpClient)
 {
-		public async Task<IReadOnlyList<RoleSummary>?> GetRolesAsync(CancellationToken cancellationToken)
-				=> await httpClient.GetFromJsonAsync<IReadOnlyList<RoleSummary>>("roles", cancellationToken);
+		public async Task<PagedResponse<RoleSummary>?> GetRolesAsync(CancellationToken cancellationToken)
+				=> await httpClient.GetFromJsonAsync<PagedResponse<RoleSummary>>("roles", cancellationToken);
 }
+
+public sealed record PagedResponse<T>(int TotalCount, int Count, IReadOnlyList<T> Value);
 
 public sealed record RoleSummary(string Id, string Name);
 
@@ -87,7 +97,7 @@ services.AddFusionIntegrationHttpClient("roles-client", options =>
 ```
 
 ## Representative model snapshots
-- `RoleSummary`: `id`, `name`
+- `RoleSummary`: paged role item with `id` and `name`
 - `AssignRoleRequestDto`: account identifier, role identifier, reason, validity range
 - `AccessRoleSummary`: access-role identifier and metadata
 - `ClaimableRoleSummary`: claimable role plus scope/activation metadata

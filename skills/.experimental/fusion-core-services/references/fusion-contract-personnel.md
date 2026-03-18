@@ -42,16 +42,28 @@
 - Starter shape:
 
 ```ts
+export interface PagedResponse<T> {
+	totalCount: number;
+	count: number;
+	value: T[];
+	'@nextPage'?: string | null;
+	'@prevPage'?: string | null;
+}
+
+export interface PersonnelPersonSummary {
+	name?: string | null;
+	mail?: string | null;
+}
+
 export interface PersonnelItem {
 	id: string;
-	fullName?: string;
-	mail?: string;
+	person: PersonnelPersonSummary;
 }
 
 export async function listPersonnel(baseUrl: string, projectId: string, contractId: string, init?: RequestInit) {
 	const response = await fetch(`${baseUrl}/projects/${projectId}/contracts/${contractId}/personnel`, init);
 	if (!response.ok) throw new Error(`Contract Personnel API failed: ${response.status}`);
-	return await response.json();
+	return (await response.json()) as PagedResponse<PersonnelItem>;
 }
 ```
 
@@ -68,11 +80,15 @@ export async function listPersonnel(baseUrl: string, projectId: string, contract
 ```csharp
 public sealed class ContractPersonnelApiClient(HttpClient httpClient)
 {
-		public async Task<IReadOnlyList<PersonnelItem>?> GetPersonnelAsync(string projectId, string contractId, CancellationToken cancellationToken)
-				=> await httpClient.GetFromJsonAsync<IReadOnlyList<PersonnelItem>>($"projects/{projectId}/contracts/{contractId}/personnel", cancellationToken);
+		public async Task<PagedResponse<PersonnelItem>?> GetPersonnelAsync(string projectId, string contractId, CancellationToken cancellationToken)
+				=> await httpClient.GetFromJsonAsync<PagedResponse<PersonnelItem>>($"projects/{projectId}/contracts/{contractId}/personnel", cancellationToken);
 }
 
-public sealed record PersonnelItem(string Id, string? FullName, string? Mail);
+public sealed record PagedResponse<T>(int TotalCount, int Count, IReadOnlyList<T> Value);
+
+public sealed record PersonnelPersonSummary(string? Name, string? Mail);
+
+public sealed record PersonnelItem(string Id, PersonnelPersonSummary Person);
 ```
 
 ## Suggested local models
@@ -82,7 +98,7 @@ public sealed record PersonnelItem(string Id, string? FullName, string? Mail);
 - `RecertificationItem`
 
 ## Representative model snapshots
-- `PersonnelItem`: person/account identity, contract relation, company metadata
+- `PersonnelItem`: personnel `id` plus nested person identity/contact summary
 - `ContractItem`: contract id, title/reference, project binding
 - `CreatePersonnelRequestDto`: person reference, start/end dates, and assignment metadata
 - `RoleAssignmentDto`: personnel/contract role assignment payload
