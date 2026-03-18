@@ -25,15 +25,20 @@ function parseDiffHunks(diffOutput: string): DiffLineMap {
   const lineMap: DiffLineMap = {};
 
   // Split on "diff --git" markers to isolate per-file blocks.
+  // This regex matches git diff file-header boundaries across multiline unified diff output.
   const fileBlocks = diffOutput.split(/^diff --git/m).slice(1);
 
+  // Iterate each file block so we can collect changed line ranges per file path.
   for (const block of fileBlocks) {
     const lines = block.split("\n");
     const firstLine = (lines[0] || "").trim();
+    // This regex splits the header line on one-or-more whitespace separators.
     const headerParts = firstLine.split(/\s+/);
+    // Skip malformed diff headers that do not include both old and new file tokens.
     if (headerParts.length < 2) continue;
 
     const rawNewPath = headerParts[1];
+    // Skip deleted-file entries where the new-file side is not present.
     if (!rawNewPath || rawNewPath === "/dev/null") continue;
 
     const filePath = rawNewPath.startsWith("b/") ? rawNewPath.slice(2) : rawNewPath;
@@ -41,8 +46,10 @@ function parseDiffHunks(diffOutput: string): DiffLineMap {
 
     // Find hunk headers (@@ -old,count +new,count @@) to extract line ranges in the new file.
     for (const line of lines) {
-      // Hunk header format: @@ -oldStart,oldCount +newStart,newCount @@
+      // This regex captures new-file hunk start/count fields from unified diff hunk headers.
+      // This regex hunk header format is: @@ -oldStart,oldCount +newStart,newCount @@
       const hunkMatch = line.match(/^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@/);
+      // Skip non-hunk lines so only changed range metadata is parsed.
       if (!hunkMatch) continue;
 
       const newStart = parseInt(hunkMatch[1], 10);
@@ -87,13 +94,3 @@ export function computeDiffLineMap(repoRoot: string, baseRef: string): DiffLineM
   }
 }
 
-/**
- * Checks whether a line falls within any of the changed ranges for a file.
- *
- * @param line - Line number to check (1-indexed).
- * @param ranges - Array of changed line ranges for the file.
- * @returns True if the line is within a changed range.
- */
-export function isLineInDiff(line: number, ranges: LineRange[]): boolean {
-  return ranges.some((range) => line >= range.start && line <= range.end);
-}

@@ -6,7 +6,7 @@ import { collectIntentCommentIssues } from "./collect-intent-comment-issues";
 import { collectIntentCommentIssuesForFiles } from "./collect-intent-comment-issues-for-files";
 import { collectTSDocCoverageIssues } from "./collect-tsdoc-coverage-issues";
 import { collectTSDocCoverageIssuesForFiles } from "./collect-tsdoc-coverage-issues-for-files";
-import { computeDiffLineMap, isLineInDiff } from "./compute-diff-lines";
+import { computeDiffLineMap } from "./compute-diff-lines";
 import { formatCoverageIssues } from "./format-coverage-issues";
 import { FIX_HINTS, formatIntentCommentIssues } from "./format-intent-comment-issues";
 import type { IntentCommentIssue } from "./types";
@@ -160,12 +160,16 @@ function filterIssuesToDiffLines(
   repoRoot: string,
   diffLineMap: Record<string, Array<{ start: number; end: number }>>,
 ): IntentCommentIssue[] {
+  const lineIsInRanges = (line: number, ranges: Array<{ start: number; end: number }>): boolean =>
+    // Check each changed range so only diagnostics on touched lines are kept.
+    ranges.some((range) => line >= range.start && line <= range.end);
+
   // Iterate each issue so PR review comments only target changed diff hunks.
   return issues.filter((issue) => {
     // This regex normalizes Windows path separators to POSIX for diff-map key lookup.
     const relPath = relative(repoRoot, issue.filePath).replace(/\\/g, "/");
     const ranges = diffLineMap[relPath];
-    return ranges ? isLineInDiff(issue.line, ranges) : false;
+    return ranges ? lineIsInRanges(issue.line, ranges) : false;
   });
 }
 

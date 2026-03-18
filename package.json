@@ -20,6 +20,7 @@
     "test:watch": "bun test --watch",
     "list:skills": "bun run scripts/list-skills/index.ts",
     "list:changesets": "bun run scripts/list-changesets/index.ts",
+    "validate": "bun run validate:graphql && bun run validate:scripts && bun run validate:skills && bun run validate:skill-sizes && bun run validate:ownership && bun run validate:pr",
     "validate:graphql": "bun run scripts/validate-graphql/index.ts",
     "validate:graphql:codegen": "graphql-codegen --config codegen.github.yml --errors-only",
     "validate:scripts": "bun run scripts/validate-scripts/index.ts",

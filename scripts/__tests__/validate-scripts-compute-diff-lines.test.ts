@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { computeDiffLineMap, isLineInDiff } from "../validate-scripts/compute-diff-lines";
+import { computeDiffLineMap } from "../validate-scripts/compute-diff-lines";
 
 function runGit(repoRoot: string, args: string[]): string {
   return execFileSync("git", args, {
@@ -38,12 +38,15 @@ describe("computeDiffLineMap", () => {
 
       const lineMap = computeDiffLineMap(tempRoot, baseRef);
       const ranges = lineMap["scripts/example.ts"];
+      const includesLine = (line: number): boolean =>
+        // Check each captured range to assert expected changed-line membership.
+        (ranges ?? []).some((range) => line >= range.start && line <= range.end);
 
       expect(ranges).toBeDefined();
-      expect(isLineInDiff(2, ranges ?? [])).toBe(true);
-      expect(isLineInDiff(5, ranges ?? [])).toBe(true);
-      expect(isLineInDiff(1, ranges ?? [])).toBe(false);
-      expect(isLineInDiff(3, ranges ?? [])).toBe(false);
+      expect(includesLine(2)).toBe(true);
+      expect(includesLine(5)).toBe(true);
+      expect(includesLine(1)).toBe(false);
+      expect(includesLine(3)).toBe(false);
     } finally {
       rmSync(tempRoot, { recursive: true, force: true });
     }
@@ -59,12 +62,5 @@ describe("computeDiffLineMap", () => {
     } finally {
       rmSync(tempRoot, { recursive: true, force: true });
     }
-  });
-});
-
-describe("isLineInDiff", () => {
-  it("returns true only when line is inside any range", () => {
-    expect(isLineInDiff(5, [{ start: 3, end: 7 }])).toBe(true);
-    expect(isLineInDiff(2, [{ start: 3, end: 7 }])).toBe(false);
   });
 });
