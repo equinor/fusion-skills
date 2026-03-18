@@ -266,7 +266,9 @@ function main(): void {
   ) {
     // Write empty diagnostics so CI can post a clean review and resolve stale comments.
     writeDiagnosticsJson(options.jsonOutput, [], repoRoot, diffLineMap);
-    console.log("TSDoc, intent-comment, regex-explanation, and disallowed-pattern checks passed for scripts/**.");
+    console.log(
+      "TSDoc, intent-comment, regex-explanation, and disallowed-pattern checks passed for scripts/**.",
+    );
     return;
   }
 
