@@ -6,7 +6,7 @@
 |-----|-----|
 | CI | `https://help.ci.api.fusion-dev.net` |
 | FQA | `https://help.fqa.api.fusion-dev.net` |
-| FPRD | `https://help.fprd.api.fusion-dev.net` |
+| FPRD | `https://help.api.fusion.equinor.com` |
 
 ## Token Audiences
 
