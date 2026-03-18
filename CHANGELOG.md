@@ -2,6 +2,19 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.12.1
+
+### Patch
+
+__🎯 [Add experimental Fusion API skills wave 1 and 2 #87](https://github.com/equinor/fusion-skills/pull/87)<br/>
+🗂️ [62d3098](https://github.com/equinor/fusion-skills/commit/62d30981a36e29198d009d20e5e7a899451a9d02)<br/>
+📦 fusion-core-services@0.0.1__
+
+Add a consolidated experimental `fusion-core-services` skill that bundles the Fusion Core API references into a single installable catalog.
+
+resolves equinor/fusion-core-tasks#791
+resolves equinor/fusion-core-tasks#792
+
 ## v0.12.0
 
 ### Minor

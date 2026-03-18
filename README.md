@@ -218,6 +218,12 @@ Guides feature development in Fusion Framework React apps — scaffolding compon
 
 ---
 
+**🧪 [`fusion-core-services@0.0.1`](skills/.experimental/fusion-core-services/SKILL.md)**
+
+Guides integrations across Fusion Core service APIs from a single installable skill. USE FOR: service discovery across apps, people, context, roles, notifications, reports, tasks, and other Fusion Core APIs; cross-service integration planning; choosing the right endpoint/model guidance for a workflow. DO NOT USE FOR: modifying Fusion backend source code, non-Fusion APIs, or generic cloud architecture work without a Fusion service integration target.
+
+---
+
 **🧪 [`fusion-dependency-review@0.1.2`](skills/.experimental/fusion-dependency-review/SKILL.md)**
 
 Review dependency PRs with structured research, existing-PR-discussion capture, multi-lens analysis (security, code quality, impact), and a repeatable verdict template. USE FOR: dependency update PRs, Renovate/Dependabot PRs, library upgrade reviews, "review this dependency PR", "should we merge this update". DO NOT USE FOR: feature PRs, application code reviews, dependency automation/bot configuration, or unattended merge without confirmation.
