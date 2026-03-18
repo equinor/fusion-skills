@@ -51,7 +51,7 @@ jobs:
 
       - name: Comment changeset summary (PR only)
         id: post_comment
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3
         with:
           path: .tmp/changeset-summary.md
           header: changeset-summary
