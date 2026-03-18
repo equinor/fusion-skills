@@ -259,81 +259,11 @@ Return:
 - Any repository-specific overlays applied after the portable draft
 - Any follow-up actions, unresolved questions, or recommended issue links
 
-For a newly scaffolded skill, the default structure should be:
-
-If no repository overlay says otherwise, default `<final-skill-name>` to `custom-<base-skill-name>`.
-
-```text
-skills/<final-skill-name>/
-├── SKILL.md
-├── references/
-└── assets/
-```
-
-Optional extras when they are justified:
-
-```text
-skills/<final-skill-name>/
-├── agents/
-└── scripts/
-```
-
-Use this baseline for generated `SKILL.md` files:
-
-```markdown
----
-name: <final-skill-name>
-description: '<what it does>. USE FOR: <trigger phrases>. DO NOT USE FOR: <anti-triggers>.'
-license: MIT
-compatibility: <optional: real environment requirements only>
-metadata:
-   version: "0.0.0"
-   tags:
-      - <tag>
----
-
-# <Skill Title>
-
-## When to use
-
-## When not to use
-
-## Required inputs
-
-## Instructions
-
-## Examples
-
-## Expected output
-
-## Safety & constraints
-```
-
-Add repository- or runtime-specific fields such as `owner`, `status`, composition metadata, or `mcp` only when they reflect real catalog or tool requirements.
+See `references/skill-template-baseline.md` for the default folder structure and `SKILL.md` baseline template.
 
 ## Validation
 
-Success signals:
-
-```text
-- the skill is discoverable in the target catalog or inventory view
-- the target environment's validation commands pass
-- direct references resolve without depending on files outside the installed skill package
-- representative requests trigger the right behavior and avoid obvious false positives
-```
-
-Common failure signals:
-- `name` does not match the folder name or violates naming rules
-- `description` is too vague, missing use cues, or contains invalid markup
-- `SKILL.md` exceeds 300 lines (warning) or 500 lines (error) — split content into `references/`
-- repository- or catalog-required metadata is missing or inconsistent
-- the skill still depends on repo-local docs, sibling skills, or hidden conventions that will not ship with the installed package
-- references or structure are inconsistent with the declared role / MCP needs
-
-If validation fails:
-- fix the reported metadata or structure error,
-- re-run the failed command,
-- report the final status instead of stopping at the first failure.
+See `references/validation-signals.md` for success signals, common failure signals, and recovery steps.
 
 ## Skill Readiness Checklist
 
