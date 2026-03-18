@@ -49,7 +49,7 @@ jobs:
 
       - name: Validate SKILL.md file sizes
         id: validate_sizes
-        run: bun run validate:skill-sizes
+        run: bun run validate:skill-sizes --only-diff --base-ref origin/${{ github.base_ref || 'main' }}
 
       - name: Job summary
         if: always()

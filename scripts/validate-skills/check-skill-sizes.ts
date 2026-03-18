@@ -18,13 +18,14 @@ export interface SkillSizeFinding {
 }
 
 /**
- * Checks all SKILL.md files for excessive line counts.
+ * Checks SKILL.md files for excessive line counts.
  *
  * @param repoRoot - Absolute repository root path.
+ * @param filePaths - Optional list of absolute SKILL.md paths to check. When omitted, discovers all SKILL.md files.
  * @returns Findings sorted by severity (errors first) then path.
  */
-export function checkSkillSizes(repoRoot: string): SkillSizeFinding[] {
-  const skillFiles = findSkillFiles(join(repoRoot, "skills"));
+export function checkSkillSizes(repoRoot: string, filePaths?: string[]): SkillSizeFinding[] {
+  const skillFiles = filePaths ?? findSkillFiles(join(repoRoot, "skills"));
   const findings: SkillSizeFinding[] = [];
 
   // Check each SKILL.md file against size thresholds.
