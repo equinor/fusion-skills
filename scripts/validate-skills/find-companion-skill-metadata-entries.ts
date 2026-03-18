@@ -39,12 +39,15 @@ export function findCompanionSkillMetadataEntries(
     // Treat metadata.skills as companion metadata regardless of role hint.
     const hasMetadataSkills = Boolean(frontmatter["metadata.skills"]);
 
-    // Treat deprecated skills as expected CLI exclusions (the external CLI
-    // does not discover skills under skills/.deprecated/).
-    const isDeprecated = frontmatter["metadata.status"] === "deprecated";
+    // Treat deprecated skills in the skills/.deprecated/ lane as expected CLI
+    // exclusions (the external CLI does not discover skills under this lane).
+    const isDeprecatedInDeprecatedLane =
+      frontmatter["metadata.status"] === "deprecated" &&
+      (skillDir === "skills/.deprecated" ||
+        skillDir.startsWith("skills/.deprecated/"));
 
     // Collect skills that are expected to be absent from external CLI output.
-    if (hasMetadataSkills || isDeprecated) {
+    if (hasMetadataSkills || isDeprecatedInDeprecatedLane) {
       excluded.push(skillDir);
     }
   }

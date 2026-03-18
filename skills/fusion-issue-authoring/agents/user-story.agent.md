@@ -28,7 +28,7 @@ Do not use this agent mode for pure bug reports, generic feature specs without u
 5. Return draft summary for orchestrator review/publish flow.
 
 Template fallback:
-- `skills/fusion-issue-authoring/assets/issue-templates/user-story.md`
+- `assets/issue-templates/user-story.md`
 
 ## Expected output
 

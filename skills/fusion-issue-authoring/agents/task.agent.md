@@ -24,13 +24,13 @@ Do not use this agent mode when the request is clearly a bug, feature, or user-s
 7. Return draft summary for orchestrator review/publish flow.
 
 Template fallback:
-- `skills/fusion-issue-authoring/assets/issue-templates/task.md`
-- `skills/fusion-issue-authoring/assets/issue-templates/task.planning.md`
-- `skills/fusion-issue-authoring/assets/issue-templates/task.research.md`
-- `skills/fusion-issue-authoring/assets/issue-templates/task.spec.md`
-- `skills/fusion-issue-authoring/assets/issue-templates/task.ux.md`
-- `skills/fusion-issue-authoring/assets/issue-templates/task.testing.md`
-- `skills/fusion-issue-authoring/assets/issue-templates/task.documentation.md`
+- `assets/issue-templates/task.md`
+- `assets/issue-templates/task.planning.md`
+- `assets/issue-templates/task.research.md`
+- `assets/issue-templates/task.spec.md`
+- `assets/issue-templates/task.ux.md`
+- `assets/issue-templates/task.testing.md`
+- `assets/issue-templates/task.documentation.md`
 
 ## Expected output
 

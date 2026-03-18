@@ -29,7 +29,7 @@ Do not use this agent mode for feature requests, user stories, or generic enable
 5. Return the draft summary for orchestrator review/publish flow.
 
 Template fallback:
-- `skills/fusion-issue-authoring/assets/issue-templates/bug.md`
+- `assets/issue-templates/bug.md`
 
 ## Expected output
 
