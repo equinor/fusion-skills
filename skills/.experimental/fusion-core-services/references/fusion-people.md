@@ -95,7 +95,7 @@ services.AddFusionIntegrationHttpClient("people-client", options =>
 ```
 
 ## Representative model snapshots
-- `PersonSummary`: `id`, `displayName`, optional `mail`
+- `PersonSummary`: `azureUniqueId`, `name`, optional `mail`
 - `PeopleSearchRequest`: identifiers/text query plus page/filter settings
 - `PeopleSearchResponse`: result collection plus search metadata/count information
 - `PersonProfile`: version-specific person profile payload (`ApiPersonV3`/`ApiPersonV4`)

@@ -61,7 +61,7 @@ export interface ApiBookmarkV2 {
   isFavourite: boolean | null;
 }
 
-/** Returned by GET /bookmarks/{id}/payload. */
+/** Returned by GET /bookmarks/{id}/apply. */
 export interface ApiBookmarkPayload {
   id: string;
   payload: unknown;
