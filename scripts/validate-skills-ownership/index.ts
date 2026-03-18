@@ -68,7 +68,7 @@ export function validateSkillOwnership(
       errors.push(
         `${skillName}: Missing required metadata.deprecated_at for deprecated skill in .deprecated/. Use YYYY-MM-DD format.`,
       );
-    // Validate the format and parse-ability of the deprecated_at value.
+      // Validate the format and parse-ability of the deprecated_at value.
     } else if (
       // Regex: match exactly a YYYY-MM-DD date string (four digits, dash, two digits, dash, two digits).
       !/^\d{4}-\d{2}-\d{2}$/.test(deprecatedAt) ||
