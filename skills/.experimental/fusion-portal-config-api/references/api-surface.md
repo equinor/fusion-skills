@@ -26,6 +26,11 @@
 - Response models: `Controllers/ViewModels/*`
 - Identifier binders: `Controllers/Binders/*`
 
+## Capability / OPTIONS defaults
+- The public endpoint catalog explicitly excludes HTTP `OPTIONS` capability probes for this service, so they should not be treated as part of the stable documented surface for this skill.
+- Frontend consumers should only enable portal, template, tag, and category mutation UI when the app already has trusted information about admin or full-control access.
+- If capability-aware UI is required, verify current service behavior before depending on probe routes that are not part of the documented public surface.
+
 ## React/TypeScript defaults
 - Preferred Fusion Framework stack:
 	- `@equinor/fusion-framework-module-http`

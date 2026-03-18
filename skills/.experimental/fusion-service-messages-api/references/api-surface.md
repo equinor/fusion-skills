@@ -19,6 +19,11 @@
 - Response models: `Controllers/ViewModels/*`
 - Validation helpers: `Controllers/Validation/*`
 
+## Capability / OPTIONS defaults
+- This service exposes public `OPTIONS` probes on collection and item routes for service messages.
+- Frontend consumers should use the corresponding `OPTIONS` calls before enabling create, patch, delete, or publish actions, especially when callers may be limited to app-admin scoped access.
+- Do not assume that message list visibility implies mutation access because the service can filter reads while still denying writes.
+
 ## React/TypeScript defaults
 - Preferred Fusion Framework stack:
 	- `@equinor/fusion-framework-module-http`

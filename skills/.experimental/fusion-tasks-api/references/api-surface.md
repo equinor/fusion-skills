@@ -14,13 +14,23 @@
 - core Fusion task CRUD via `FusionTaskController`
 - PIMS task retrieval/integration via `PimsTaskController`
 - ProCoSys task retrieval/integration via `ProCoSysTaskController`
-- subscription flows via `SubscriptionsController`
+- backend event-subscription registration via `SubscriptionsController`
 - operational/admin flows via `AdminController`
 
 ## Model clarity map
 - Entity models: `Controllers/ViewModels/Entities/*`
 - Request models: `Controllers/ViewModels/Request/*`
 - Key cross-system models: `ApiFusionTask`, `ApiPimsTask`, `ApiProCoSysTask`, `ApiContextReference`
+
+## Capability / OPTIONS defaults
+- No public `OPTIONS` capability probes are documented in the verified Tasks API surface.
+- Frontend consumers should only enable task mutation UI when the app already knows the current caller or owning application can write the relevant task resources.
+- For source-system-backed views such as PIMS, keep the UI read-oriented by default unless the service contract explicitly documents write capability.
+
+## Subscription defaults
+- `PUT /subscriptions/fusiontasks` is a backend integration route, not a frontend task workflow.
+- It requires an application token and returns `ApiEventSubscriptionV1` connection details for event delivery.
+- Use it for CloudEvent-style task-change processing, cache invalidation, or maintaining a local read model when Fusion task data changes.
 
 ## React/TypeScript defaults
 - Preferred Fusion Framework stack:

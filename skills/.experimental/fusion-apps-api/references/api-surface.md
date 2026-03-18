@@ -4,16 +4,42 @@
 - `fusion-core-services/src/Fusion.Services.Apps`
 
 ## Endpoint groups (source-grounded)
-- Controllers are not currently exposed as a standard `Controllers/*` surface in this snapshot.
-- Treat this service as requiring source validation of exposed routes before implementation.
+- Application controllers under `Applications/Controllers/*` expose the main public app surface.
+- Widget controllers under `Widgets/Controllers/*` expose a separate widget surface that is only partially captured by this skill's bundled assets.
+- This service still benefits from source validation before implementation because authorization and capability probes are controller-driven rather than inferred from the route list alone.
 
 ## Priority workflow coverage
 - app metadata retrieval
 - application synchronization and registry-adjacent flows
+- backend event-subscription registration via `SubscriptionsController`
 - startup/configuration-driven service interaction patterns
 
 ## Model clarity map
 - Service configuration and context: `Configuration/*`, `Database/*`, and startup wiring in `Program.cs`/`Startup.cs`.
+
+## Capability / OPTIONS defaults
+- Public capability probes exist in source for the main app surface:
+	- `OPTIONS /apps`
+	- `OPTIONS /apps?template={appKey}`
+	- `OPTIONS /apps/{appIdentifier}`
+- Additional public capability probes also exist for adjacent app-management surfaces:
+	- `OPTIONS /apps/categories`
+	- `OPTIONS /context-types`
+	- `OPTIONS /apps/{appIdentifier}/governance`
+	- `OPTIONS /apps/{appIdentifier}/governance/documents`
+	- `OPTIONS /apps/{appIdentifier}/governance/documents/{documentType}`
+	- `OPTIONS /apps/{appIdentifier}/governance/confirmation`
+	- `OPTIONS /widgets`
+	- `OPTIONS /widgets/{widgetIdentifier}`
+- `OPTIONS /apps` always returns an `Allow` header containing `OPTIONS,GET`, and adds `POST` when the caller is authorized to create apps. The optional `template` query is used to check template-scoped creator access.
+- `OPTIONS /apps/{appIdentifier}` always returns `OPTIONS,GET`, and adds `PATCH,DELETE` when the caller is authorized as app admin, trusted application, or equivalent full-control role.
+- Category, context-type, governance, and widget probes follow the same pattern: the route always advertises read-safe verbs and conditionally adds mutation verbs in the `Allow` header when the caller has the required app, governance, or widget privileges.
+- Frontend consumers should prefer these `OPTIONS` probes before enabling create, edit, or delete UI, and still handle `403 Forbidden` defensively for race conditions or stale capability state.
+
+## Subscription defaults
+- `PUT /subscriptions/apps` is a backend integration route, not a frontend workflow.
+- It requires an application token and returns `ApiEventSubscriptionV1` connection details for event delivery rather than app data.
+- Treat it as the standard Fusion event-subscription pattern for keeping local projections in sync, invalidating caches, or reacting to app changes through CloudEvent-style messages with service-specific payloads.
 
 ## React/TypeScript defaults
 - Preferred Fusion Framework stack:
@@ -74,4 +100,4 @@ public sealed record AppSummary(string Key, string? Title);
 - treat route-specific validation as required to confirm before shipping because controller coverage is broader than the currently bundled asset
 
 ## Versioning notes
-- Route and model contracts should be confirmed directly from current source before generating client code.
+- Route and model contracts should still be confirmed directly from current source before generating client code, especially for widget and governance-adjacent flows.

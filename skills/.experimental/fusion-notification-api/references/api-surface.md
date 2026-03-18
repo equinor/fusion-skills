@@ -16,6 +16,11 @@
 - Request models: `Controllers/ViewModels/Request/*`
 - Response/entity models: `Controllers/ViewModels/Entities/*`
 
+## Capability / OPTIONS defaults
+- No public `OPTIONS` capability probes are documented in the verified Notification API surface.
+- Frontend consumers should only enable notification-settings mutation or notification-write UI when the caller context is already known to be self-service, application-user, or elevated-user compatible.
+- Treat `403 Forbidden` responses as the fallback signal for hiding or downgrading write actions when a dedicated capability probe is unavailable.
+
 ## React/TypeScript defaults
 - Preferred Fusion Framework stack:
 	- `@equinor/fusion-framework-module-http`
