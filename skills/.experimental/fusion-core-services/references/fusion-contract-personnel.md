@@ -10,7 +10,6 @@
 - `Roles/*`
 - `Recertifications/*`
 - `Requests/*`
-- `Subscription/*`
 - `ChangeLog/*`
 - `AffiliateSponsors/*`
 - `ValidCompanies/*` and `ValidDomains/*`
@@ -20,7 +19,7 @@
 - contract and project master flows, including V2 controllers
 - role assignment flows within contract personnel scope
 - request and recertification workflows
-- subscription and changelog-related integrations
+- changelog-related integrations
 
 ## Model clarity map
 - Domain API models: `Controllers/**/ApiModels/*`

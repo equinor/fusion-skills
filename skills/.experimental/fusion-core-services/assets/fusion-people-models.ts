@@ -136,7 +136,7 @@ export interface ApiPersonV3 {
   employeeId: string | null;
   orgUnitId: string | null;
   isPrimaryAccount: boolean | null;
-  preferredContactMail: boolean | null;
+  preferredContactMail: string | null;
   isResourceOwner: boolean | null;
   isExpired: boolean | null;
   expiredDate: string | null;
