@@ -39,7 +39,6 @@ export function checkSkillSizes(repoRoot: string, filePaths?: string[]): SkillSi
       findings.push({ skillPath, lineCount, level: "error" });
       // Report warnings for files approaching the hard limit.
     } else if (lineCount >= WARN_THRESHOLD) {
-      // Report warnings for files approaching the hard limit.
       findings.push({ skillPath, lineCount, level: "warning" });
     }
   }
