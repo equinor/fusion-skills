@@ -409,6 +409,19 @@ export interface CreateAppCategoryRequest {
 }
 
 /**
+ * PATCH /apps/categories/{appCategoryIdentifier} — update an app category.
+ * Only properties present in the payload are applied.
+ */
+export interface PatchCategoryRequest {
+  /** @minLength 3  @maxLength 50 */
+  displayName?: string | null;
+  /** @maxLength 20 */
+  color?: string | null;
+  defaultIcon?: string | null;
+  sortOrder?: number | null;
+}
+
+/**
  * POST /apps/{appKey}/tags/{tagName} — create an app tag.
  *
  * Validation:

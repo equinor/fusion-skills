@@ -39,7 +39,7 @@ This catalog covers the verified public application surface in Fusion Apps. It i
 - `OPTIONS /apps/categories` → `204 NoContent` with `Allow: OPTIONS,GET[,POST]`
 - `GET /apps/categories/{appCategoryIdentifier}` → `ApiAppCategory`
 - `POST /apps/categories` → `CreateAppCategoryRequest` → `ApiAppCategory`
-- `PATCH /apps/categories/{appCategoryIdentifier}` → patch category request → `ApiAppCategory`
+- `PATCH /apps/categories/{appCategoryIdentifier}` → `PatchCategoryRequest` → `ApiAppCategory`
 - `GET /apps/categories/{appCategoryIdentifier}/changelog` → `ApiPagedCollection<ApiChangelog>`
 	OData: `Filter(activityId, actorUpn, actorAzureUniqueId, commandName)`, `Top`, `Skip`
 

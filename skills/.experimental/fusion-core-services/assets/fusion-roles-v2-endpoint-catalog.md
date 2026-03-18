@@ -86,7 +86,7 @@ This catalog covers the verified public RolesV2 surface for roles, claimable rol
 - `GET /scope-types` → `ApiScopeType[]`
 - `GET /scope-types/{scopeTypeIdentifier}` → `ApiScopeType`
 - `POST /scope-types` → `CreateScopeTypeRequest` → `ApiScopeType`
-- `PATCH /scope-types/{scopeTypeIdentifier}` → update scope request → `ApiScopeType`
+- `PATCH /scope-types/{scopeTypeIdentifier}` → `UpdateScopeRequest` → `ApiScopeType`
 - `DELETE /scope-types/{scopeTypeIdentifier}` → `204 NoContent`
 
 ## Role-binding-configuration endpoints

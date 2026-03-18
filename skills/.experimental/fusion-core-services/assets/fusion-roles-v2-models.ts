@@ -392,7 +392,7 @@ export interface UpdateClaimableRoleRequest {
 // ---------------------------------------------------------------------------
 
 /**
- * POST /systems/{systemName}/access-roles — create an access role.
+ * POST /systems/{systemIdentifier}/access-roles — create an access role.
  *
  * Validation:
  * @property name — Required, max 200, URL-safe, validated by BeValidAccessRoleIdentifier()
@@ -407,7 +407,7 @@ export interface CreateAccessRoleRequest {
 }
 
 /**
- * PATCH /systems/{systemName}/access-roles/{accessRoleName}.
+ * PATCH /systems/{systemIdentifier}/access-roles/{accessRoleIdentifier}.
  */
 export interface UpdateAccessRoleRequest {
   /** @maxLength 500 */
@@ -435,12 +435,21 @@ export interface RegisterSystemRequest {
 }
 
 /**
- * PATCH /systems/{systemName}.
+ * PATCH /systems/{systemIdentifier}.
  */
 export interface UpdateSystemRequest {
   /** @maxLength 500 */
   description?: string | null;
   owners?: OwnerInfoRequest[] | null;
+}
+
+/**
+ * PATCH /scope-types/{scopeTypeIdentifier}.
+ * Only properties present in the payload are applied.
+ */
+export interface UpdateScopeRequest {
+  /** @maxLength 500 */
+  description?: string | null;
 }
 
 /**
@@ -509,7 +518,7 @@ export interface DeleteRoleAssignmentsRequest {
 // ---------------------------------------------------------------------------
 
 /**
- * POST /systems/{systemName}/access-roles/{accessRoleName}/assignments.
+ * POST /systems/{systemIdentifier}/access-roles/{accessRoleIdentifier}/assignments.
  *
  * Validation:
  * @property accountIdentifier — Required
@@ -591,7 +600,7 @@ export interface UpdateClaimableRoleAssignmentRequest {
 }
 
 /**
- * POST /claimable-role-assignments/{id}/activate.
+ * POST /accounts/{accountIdentifier}/claimable-role-assignments/{claimableRoleAssignmentId}/activate.
  */
 export interface ActivateAssignedRoleRequest {
   activeToDate?: string | null;
