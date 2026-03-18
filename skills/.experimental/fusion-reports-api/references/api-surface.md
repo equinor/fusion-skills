@@ -20,6 +20,11 @@
 - Request models: `Controllers/ViewModels/Request/*`
 - Enum model families: `Controllers/ViewModels/Enums/*`
 
+## Capability / OPTIONS defaults
+- This service exposes public `OPTIONS` capability probes for report access checks, including `OPTIONS /reports/{id}` and the advanced context-membership access route.
+- Frontend consumers should use these probes to decide whether edit, publish, or access-dependent report actions should be enabled for the current caller.
+- Because report read access does not imply report mutation access, do not light up admin or write UI purely from successful `GET /reports/{id}` responses.
+
 ## React/TypeScript defaults
 - Preferred Fusion Framework stack:
 	- `@equinor/fusion-framework-module-http`

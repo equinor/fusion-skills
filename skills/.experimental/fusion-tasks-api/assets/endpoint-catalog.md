@@ -1,6 +1,10 @@
 # Fusion Tasks API Endpoint Catalog
 
-This catalog covers the verified public Fusion task and source-system task surface. Admin and subscription endpoints are excluded. ProCoSys routes are documented for compatibility only and should not be used for new integrations.
+This catalog covers the verified public Fusion task and source-system task surface. Admin endpoints are excluded. The subscription route is documented because it is public, but it is backend-only. ProCoSys routes are documented for compatibility only and should not be used for new integrations.
+
+## Subscription endpoint
+- `PUT /subscriptions/fusiontasks` → backend subscription registration/update returning `ApiEventSubscriptionV1`
+	Application-token only. Use for task-change event delivery, local projection syncing, or cache invalidation rather than UI workflows.
 
 ## Fusion task endpoints
 - `GET /tasks/{taskId}` → `ApiFusionTask`
@@ -40,4 +44,3 @@ This catalog covers the verified public Fusion task and source-system task surfa
 
 ## Explicit exclusions
 - `AdminController`
-- `SubscriptionsController`

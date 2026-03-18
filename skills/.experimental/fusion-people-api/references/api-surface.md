@@ -19,7 +19,7 @@
 - person profile lookup and read flows via `PersonController.*`
 - people search and picker flows via `SearchController` and `PeoplePickerController`
 - presence retrieval via `PresenceController`
-- subscription flows via `SubscriptionsController`
+- backend event-subscription registration via `SubscriptionsController`
 - image/profile-adjacent flows via `ImagesController`
 - explicitly exclude role-management workflows that should move to RolesV2
 
@@ -28,6 +28,17 @@
 - Response/view models: `Controllers/Models/ViewModels/*`
 - Versioned person DTOs: `ApiPersonV1`, `ApiPersonV2`, `ApiPersonV3`, `ApiPersonV4`
 - Related public package: `src/ApiModels/Fusion.Services.People.ApiModels`
+
+## Capability / OPTIONS defaults
+- No public consumer-facing `OPTIONS` capability probes are documented in the verified People API surface.
+- Source does expose `OPTIONS /persons/migrations` for elevated profile-migration operations, but that route belongs to an operational migration controller and should not be treated as normal UI capability guidance.
+- Frontend consumers should enable mutation flows such as linked-account or extended-profile updates only when the user context or app policy already makes that authorization expectation explicit.
+- For cache reset and other elevated operations, avoid capability guesses and rely on route-specific authorization failures as the fallback behavior.
+
+## Subscription defaults
+- `PUT /subscriptions/persons` is a backend integration route, not a frontend profile workflow.
+- It requires an application token and returns `ApiEventSubscriptionV1` connection details for event delivery.
+- Use it for CloudEvent-style person-change processing, cache invalidation, or syncing a local copy when People data changes.
 
 ## React/TypeScript defaults
 - Preferred Fusion Framework stack:

@@ -36,6 +36,8 @@ This catalog covers the verified `Fusion.Services.Context` HTTP surface, includi
 	- List known context types as `ApiContextTypeDetails[]`.
 - `PUT /subscriptions/contexts`
 	- Renew or create a context-event subscription for application callers.
+	- Backend integration only; requires an application token.
+	- Returns `ApiEventSubscriptionV1` connection details for CloudEvent-style event delivery rather than context payloads.
 	- Uses shared subscription contracts from the `Fusion.Events` package rather than service-local request/view-model files.
 
 ## Operational/admin routes

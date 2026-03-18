@@ -11,13 +11,23 @@
 ## Priority workflow coverage
 - context lookup and traversal via `ContextController`
 - relation management and path-query flows via `ContextController`
-- subscription flows via `SubscriptionsController`
+- backend event-subscription registration via `SubscriptionsController`
 - cache/refresh-adjacent operational flows via `CacheController`
 
 ## Model clarity map
 - Entity view models: `Controllers/ViewModels/Entities/*`
 - Request models: `Controllers/ViewModels/Request/*`
 - Common relation/request payloads: `ContextRelationRequest`, `NewContextRelationRequest`, `UpdateContextRequest`
+
+## Capability / OPTIONS defaults
+- No public `OPTIONS` capability probes are documented in the verified Context API surface.
+- Frontend consumers should avoid exposing mutation UI by default unless the consuming application already knows the caller has elevated or application-user access.
+- For context create, update, and relation-mutation flows, treat `403 Forbidden` as the fallback capability signal when no dedicated probe route is available.
+
+## Subscription defaults
+- `PUT /subscriptions/contexts` is a backend integration route, not a frontend workflow.
+- It requires an application token and returns `ApiEventSubscriptionV1` connection details rather than context entities.
+- Use it for CloudEvent-style change delivery, local cache invalidation, or projection updates when context data changes.
 
 ## React/TypeScript defaults
 - Preferred Fusion Framework stack:

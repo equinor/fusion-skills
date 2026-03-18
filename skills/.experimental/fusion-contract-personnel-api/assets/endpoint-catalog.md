@@ -25,6 +25,7 @@ This catalog covers the verified public contract-personnel surface for projects,
 - `PATCH /projects/{projectIdentifier}/contracts/{contractId}/personnel/{personnelId}/person` → `PatchPersonRequest` → `ApiPersonnel`
 - `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/personnel` → access probe, `204 NoContent`
 - `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/personnel/{personnelId}` → access probe, `204 NoContent`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/personnel/{personnelId}/person` → access probe, `204 NoContent`
 
 ## Delegate endpoints
 - `GET /projects/{projectIdentifier}/contracts/{contractId}/delegates` → `ApiPagedCollection<ApiDelegate>`
@@ -33,6 +34,8 @@ This catalog covers the verified public contract-personnel surface for projects,
 - `POST /projects/{projectIdentifier}/contracts/{contractId}/delegates` → `CreateDelegateRequest` → `ApiDelegate`
 - `PATCH /projects/{projectIdentifier}/contracts/{contractId}/delegates/{delegateId}` → `PatchDelegateRequest` → `ApiDelegate`
 - `DELETE /projects/{projectIdentifier}/contracts/{contractId}/delegates/{delegateId}` → `204 NoContent`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/delegates` → access probe, `204 NoContent`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/delegates/{delegateId}` → access probe, `204 NoContent`
 
 ## Personnel request endpoints
 - `GET /projects/{projectIdentifier}/contracts/{contractId}/requests` → `ApiPagedCollection<ApiPersonnelRequest>`
@@ -84,10 +87,14 @@ This catalog covers the verified public contract-personnel surface for projects,
 - `GET /projects/{projectIdentifier}/contracts/{contractId}/valid-companies/{companyId}` → `ApiValidCompany`
 - `POST /projects/{projectIdentifier}/contracts/{contractId}/valid-companies` → `CreateValidCompanyRequest` → `ApiValidCompany`
 - `DELETE /projects/{projectIdentifier}/contracts/{contractId}/valid-companies/{companyId}` → `204 NoContent`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/valid-companies` → access probe, `204 NoContent`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/valid-companies/{companyId}` → access probe, `204 NoContent`
 - `GET /projects/{projectIdentifier}/contracts/{contractId}/valid-domains` → `ApiValidDomain[]`
 - `GET /projects/{projectIdentifier}/contracts/{contractId}/valid-domains/{domainId}` → `ApiValidDomain`
 - `POST /projects/{projectIdentifier}/contracts/{contractId}/valid-domains` → `CreateValidDomainRequest` → `ApiValidDomain`
 - `DELETE /projects/{projectIdentifier}/contracts/{contractId}/valid-domains/{domainId}` → `204 NoContent`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/valid-domains` → access probe, `204 NoContent`
+- `OPTIONS /projects/{projectIdentifier}/contracts/{contractId}/valid-domains/{domainId}` → access probe, `204 NoContent`
 
 ## Authorization notes
 - Most routes enforce a combination of full-control, trusted-application, employee, contract-personnel, contract-responsibility, delegate-responsibility, or contract-management rules.
@@ -109,3 +116,4 @@ This catalog covers the verified public contract-personnel surface for projects,
 - `SubscriptionController`
 - `CacheController`
 - migration, deleted-account, and other operational/admin-only flows not needed for normal integration work
+- Source also exposes public `OPTIONS` probes for excluded route families such as contract migrations and project-masters; they remain out of this skill's normal integration catalog until the full route families are documented.

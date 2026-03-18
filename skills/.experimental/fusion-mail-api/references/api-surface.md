@@ -19,6 +19,11 @@
 - Validation helpers: `Controllers/Validation/*`
 - Key versioned request payloads: `SendMailRequestV2`, `SendMailRequestV3`
 
+## Capability / OPTIONS defaults
+- No public `OPTIONS` capability probes are documented in the verified Mail API surface.
+- Frontend or backend clients should infer send and management permissions from caller identity, configured scopes, and explicit `403 Forbidden` responses rather than a dedicated capability endpoint.
+- For administrative views such as whitelist or log management, prefer server-driven authorization checks and disable mutation UI unless the app already knows the current caller has the required scope or elevated role.
+
 ## React/TypeScript defaults
 - Preferred Fusion Framework stack:
 	- `@equinor/fusion-framework-module-http`

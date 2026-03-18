@@ -19,11 +19,22 @@
 - access-role assignment and activation via `AccessRolesController`
 - account/system/scope-type management via `AccountsController`, `SystemsController`, and `ScopeTypesController`
 - binding configuration flows via `RoleBindingConfigurationController`
+- backend event-subscription registration via `SubscriptionsController`
 
 ## Model clarity map
 - Request models: `Controllers/RequestModels/*`
 - Response models: `Controllers/ViewModels/*`
 - Binder types for path identifiers: `Controllers/Binders/*`
+
+## Capability / OPTIONS defaults
+- No public `OPTIONS` capability probes are documented in the verified RolesV2 surface.
+- Frontend consumers should not infer write capability from successful role or assignment reads; mutation UI should be enabled only when the app already knows the caller is an administrator, system owner, or otherwise privileged.
+- Treat authorization failures as the fallback capability signal when building role-management screens without a dedicated probe endpoint.
+
+## Subscription defaults
+- `PUT /subscriptions/roles-v2` is a backend integration route, not a frontend role-management workflow.
+- It requires an application token and returns `ApiEventSubscriptionV1` connection details for event delivery.
+- Use it for CloudEvent-style role-change processing, local projection syncing, or cache invalidation when role state changes.
 
 ## React/TypeScript defaults
 - Preferred Fusion Framework stack:

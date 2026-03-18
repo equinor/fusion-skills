@@ -1,6 +1,10 @@
 # People API Endpoint Catalog
 
-This catalog covers all public, non-admin endpoints across API versions. Admin, cache, migration, analytics, and subscription controllers are excluded. Obsolete endpoints (V1/V2) are noted for reference.
+This catalog covers all public, non-admin endpoints across API versions. Admin, cache, analytics, and most migration controllers are excluded. The subscription route is documented because it is public, but it is backend-only. Obsolete endpoints (V1/V2) are noted for reference.
+
+## Subscription endpoint
+- `PUT /subscriptions/persons` → backend subscription registration/update returning `ApiEventSubscriptionV1`
+  Application-token only. Use for person-change event delivery, local projection syncing, or cache invalidation rather than UI workflows.
 
 ## Person profiles — Read & manage
 
@@ -102,6 +106,7 @@ This catalog covers all public, non-admin endpoints across API versions. Admin, 
 
 ## Excluded endpoints
 - `AdminController` — admin-only operations
-- `CacheController`, `MigrationController`, `AnalyticsController`, `SubscriptionsController` — internal operations
+- `CacheController`, `AnalyticsController` — internal operations
+- `MigrationController` — operational migration routes; source also exposes `OPTIONS /persons/migrations` for elevated migration capability checks
 - Obsolete API versions (V1/V2 for most queries, use V3/V4)
 - Roles-related endpoints (managed by RolesV2 API)

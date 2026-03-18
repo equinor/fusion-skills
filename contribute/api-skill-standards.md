@@ -32,6 +32,7 @@ Explicit exclusions for the current wave:
 4. Execution guidance
 - `Instructions` section that prioritizes repository-grounded evidence:
   - endpoint discovery from controller files and route attributes
+  - capability discovery from `OPTIONS` routes or other access-probe patterns when the service exposes them
   - model discovery from API model packages and view model classes
   - versioning and request/response handling details
   - consumer-oriented guidance for at least these integration shapes:
@@ -52,6 +53,7 @@ Explicit exclusions for the current wave:
 Each API skill must document:
 - service source path
 - endpoint coverage map with priority workflows, not just controller names
+- capability or `OPTIONS` probe routes when the service exposes them and they affect client behavior
 - endpoint groups (by controller/domain)
 - model clarity map (key request/response model families)
 - known versioning notes
@@ -87,6 +89,7 @@ Use these patterns explicitly when relevant:
 - `useHttpClient(name)` in React components
 - `serviceDiscovery.createClient(serviceName)` for service-resolved clients
 - `IHttpClient.json<T>()`, `fetch<T>()`, or selector-based response handling
+- `OPTIONS` capability checks, or equivalent access-probe endpoints, to decide whether create/edit/delete UI should be enabled for the current caller
 
 When the consumer is a .NET console app, worker, or backend service and `fusion-integration-lib` is available, prefer these patterns before raw `new HttpClient()` setup:
 - `AddFusionIntegrationCore(environment)` to wire service discovery and HTTP support
@@ -101,10 +104,12 @@ When the consumer is a .NET console app, worker, or backend service and `fusion-
 Before considering a skill ready:
 - endpoint groups are grounded in current source files
 - priority endpoint/workflow coverage is broad enough that common consumer tasks do not require source spelunking
+- capability-probe or `OPTIONS` routes are documented when the service uses them to expose effective permissions
 - model notes point to concrete model families or packages
 - exclusions are explicit where scope is deprecated or superseded
 - no generic/non-Fusion assumptions are presented as facts
 - examples are copy/pasteable and include safe defaults
+- frontend guidance explains when it is appropriate to disable editing functionality based on the caller's effective API capabilities
 - React/TypeScript guidance can produce a starter client and local DTOs without needing to browse source files again
 - C# guidance can produce a typed `HttpClient` wrapper and DTO records without needing to browse source files again
 - representative request/response model notes are present for common workflows

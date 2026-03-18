@@ -27,6 +27,11 @@
 - Request models: `Controllers/**/Requests/*`
 - Request/reference helpers: `Controllers/ApiModels/RequestReferences/*`
 
+## Capability / OPTIONS defaults
+- This service exposes public `OPTIONS` capability probes on many contract-scoped routes, including contracts, personnel, requests, role assignments, change log, and affiliate sponsors.
+- Frontend consumers should call the matching `OPTIONS` route before enabling create, approve, reject, edit, or delete UI for contract-scoped workflows.
+- Use the probe result as the source of truth for action availability because read access and write access differ significantly across responsibility roles.
+
 ## React/TypeScript defaults
 - Preferred Fusion Framework stack:
 	- `@equinor/fusion-framework-module-http`

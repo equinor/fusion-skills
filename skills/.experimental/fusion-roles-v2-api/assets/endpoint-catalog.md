@@ -1,6 +1,10 @@
 # RolesV2 API Endpoint Catalog
 
-This catalog covers the verified public RolesV2 surface for roles, claimable roles, systems, access-role assignments, account views, scope types, and role-binding configurations. Subscription hooks are excluded.
+This catalog covers the verified public RolesV2 surface for roles, claimable roles, systems, access-role assignments, account views, scope types, and role-binding configurations. The subscription route is documented because it is public, but it is backend-only.
+
+## Subscription endpoint
+- `PUT /subscriptions/roles-v2` → backend subscription registration/update returning `ApiEventSubscriptionV1`
+	Application-token only. Use for role-change event delivery, local projection syncing, or cache invalidation rather than UI workflows.
 
 ## Role endpoints
 - `GET /roles` → `ApiPagedCollection<ApiRole>`
@@ -111,5 +115,4 @@ This catalog covers the verified public RolesV2 surface for roles, claimable rol
 - `409 Conflict`
 
 ## Explicit exclusions
-- `SubscriptionsController`
 - Legacy Roles v1 semantics

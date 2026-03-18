@@ -5,9 +5,12 @@ This catalog covers the verified public application surface in Fusion Apps. It i
 ## Application endpoints
 - `GET /apps` → `ApiPagedCollection<ApiAppListItem>`
 	OData: `Expand(category, admins, owners, keywords, build, classification)`, `Filter(type, appKey, displayName)`, `Search`, `Top`, `Skip`
+- `OPTIONS /apps` → `204 NoContent` with `Allow: OPTIONS,GET[,POST]`
+- `OPTIONS /apps?template={appKey}` → `204 NoContent` with template-scoped create capability in `Allow`
 - `GET /apps/{appIdentifier}` → `ApiApp`
 - `GET /apps/{appIdentifier}@{versionIdentifier}` → `ApiApp`
 - `HEAD /apps/{appIdentifier}` → existence probe only
+- `OPTIONS /apps/{appIdentifier}` → `204 NoContent` with `Allow: OPTIONS,GET[,PATCH,DELETE]`
 - `POST /apps` → `CreateAppRequest` → `ApiApp`
 - `PATCH /apps/{appIdentifier}` → `PatchAppRequest` → `ApiApp`
 - `DELETE /apps/{appIdentifier}` → `204 NoContent`
@@ -33,22 +36,30 @@ This catalog covers the verified public application surface in Fusion Apps. It i
 
 ## Category endpoints
 - `GET /apps/categories` → `ApiPagedCollection<ApiAppCategory>`
+- `OPTIONS /apps/categories` → `204 NoContent` with `Allow: OPTIONS,GET[,POST]`
 - `GET /apps/categories/{appCategoryIdentifier}` → `ApiAppCategory`
 - `POST /apps/categories` → `CreateAppCategoryRequest` → `ApiAppCategory`
 - `PATCH /apps/categories/{appCategoryIdentifier}` → patch category request → `ApiAppCategory`
 - `GET /apps/categories/{appCategoryIdentifier}/changelog` → `ApiPagedCollection<ApiChangelog>`
 	OData: `Filter(activityId, actorUpn, actorAzureUniqueId, commandName)`, `Top`, `Skip`
 
+## Context-type capability probe
+- `OPTIONS /context-types` → `204 NoContent` with `Allow: OPTIONS,GET[,POST]`
+
 ## Governance endpoints
 - `GET /governance-apps` (v`1.0-preview`) → `ApiPagedCollection<ApiGovernanceAppListItem>`
 	OData: `Filter(appKey)`, `Expand(documents.content)`, `Search`, `Top`, `Skip`
 - `GET /apps/{appIdentifier}/governance` → `ApiGovernanceApp`
+- `OPTIONS /apps/{appIdentifier}/governance` → `204 NoContent` with `Allow: OPTIONS,GET[,PATCH]`
 - `PATCH /apps/{appIdentifier}/governance` → `PatchGovernanceAppRequest` → `ApiGovernanceApp`
 - `POST /apps/{appIdentifier}/governance/documents` → `AppGovernanceDocumentRequest` → `ApiGovernanceDocument`
 - `GET /apps/{appIdentifier}/governance/documents` → `ApiGovernanceDocument[]`
+- `OPTIONS /apps/{appIdentifier}/governance/documents` → `204 NoContent` with `Allow: OPTIONS,GET[,POST]`
 - `GET /apps/{appIdentifier}/governance/documents/{documentType}` → `ApiGovernanceDocument`
+- `OPTIONS /apps/{appIdentifier}/governance/documents/{documentType}` → `204 NoContent` with `Allow: OPTIONS,GET[,PATCH,DELETE]`
 - `PATCH /apps/{appIdentifier}/governance/documents/{documentType}` → `PatchGovernanceDocumentRequest` → `ApiGovernanceDocument`
 - `DELETE /apps/{appIdentifier}/governance/documents/{documentType}` → `204 NoContent`
+- `OPTIONS /apps/{appIdentifier}/governance/confirmation` → `204 NoContent` with `Allow: OPTIONS[,PUT]`
 - `PUT /apps/{appIdentifier}/governance/confirmation` → `ConfirmGovernanceRequest` → `ApiGovernanceConfirmation`
 - `DELETE /apps/{appIdentifier}/governance/properties/{propertyName}` → `204 NoContent`
 
@@ -63,7 +74,8 @@ This catalog covers the verified public application surface in Fusion Apps. It i
 - `DELETE /persons/me/pinned-apps/{appIdentifier}` and `DELETE /persons/{accountIdentifier}/pinned-apps/{appIdentifier}` → `204 NoContent`
 
 ## Subscription endpoint
-- `PUT /subscriptions/apps` → subscription registration/update
+- `PUT /subscriptions/apps` → backend subscription registration/update returning `ApiEventSubscriptionV1`
+	Application-token only. Use for change-event delivery, local-cache invalidation, or projection syncing rather than UI workflows.
 
 ## Authorization notes
 - Read routes generally require authenticated callers.
@@ -84,5 +96,10 @@ This catalog covers the verified public application surface in Fusion Apps. It i
 
 ## Explicit exclusions
 - Widget controllers and widget bundle routes
-- Internal option/probe endpoints used only for permission discovery
 - Internal support surfaces outside the application domain
+
+## Capability probe notes
+- `OPTIONS /apps` checks app-create capability and can be scoped with `?template={appKey}` for template app creation.
+- `OPTIONS /apps/{appIdentifier}` checks item-level mutation capability and only advertises `PATCH` and `DELETE` when the caller has sufficient rights.
+- `OPTIONS /apps/categories`, `OPTIONS /context-types`, and the governance `OPTIONS` routes expose the same `Allow`-header capability pattern for adjacent administration flows.
+- Source also exposes `OPTIONS /widgets` and `OPTIONS /widgets/{widgetIdentifier}` for widget create/update/delete capability, but widget routes remain outside this catalog's current scope.

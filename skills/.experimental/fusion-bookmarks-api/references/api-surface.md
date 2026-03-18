@@ -18,6 +18,11 @@
 - Request models: `Controllers/RequestModel/*`
 - Response models: `Controllers/ViewModel/*`
 
+## Capability / OPTIONS defaults
+- No public `OPTIONS` capability probes are documented in the verified bookmark surface.
+- Frontend consumers should gate edit and delete UI from known ownership or sharing state rather than inferring write access from list/read success alone.
+- Treat `403 Forbidden` and `404 Not Found` responses as part of the capability model when deciding whether bookmark mutation actions should remain visible.
+
 ## React/TypeScript defaults
 - Preferred Fusion Framework stack:
 	- `@equinor/fusion-framework-module-http`
