@@ -24,6 +24,7 @@
     "validate:graphql:codegen": "graphql-codegen --config codegen.github.yml --errors-only",
     "validate:scripts": "bun run scripts/validate-scripts/index.ts",
     "validate:skills": "bun run scripts/validate-skills/index.ts",
+    "validate:skill-sizes": "bun run scripts/validate-skills/check-skill-sizes-cli.ts",
     "validate:ownership": "bun run scripts/validate-skills-ownership/index.ts",
     "validate:pr": "bun run scripts/validate-pr/index.ts",
     "release:prepare": "bun run scripts/release-prepare/index.ts",

@@ -47,6 +47,10 @@ jobs:
         id: validate_ownership
         run: bun run validate:ownership
 
+      - name: Validate SKILL.md file sizes
+        id: validate_sizes
+        run: bun run validate:skill-sizes
+
       - name: Job summary
         if: always()
         run: |
@@ -55,8 +59,10 @@ jobs:
             echo
             echo "- Skills validation result: ${{ steps.validate_skills.outcome }}"
             echo "- Ownership validation result: ${{ steps.validate_ownership.outcome }}"
+            echo "- SKILL.md size check result: ${{ steps.validate_sizes.outcome }}"
             echo
             echo "### Commands run"
             echo "- \\`bun run validate:skills\\`"
             echo "- \\`bun run validate:ownership\\`"
+            echo "- \\`bun run validate:skill-sizes\\`"
           } >> "$GITHUB_STEP_SUMMARY"

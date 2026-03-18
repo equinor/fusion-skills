@@ -199,7 +199,9 @@ function main(): void {
     // versions are computed and persisted.
     // Map touched skill names to their final post-bump skill@version strings.
     packages: entry.skillNames
+      // Exclude the meta-package so only real skill names appear in release notes.
       .filter((skillName) => skillName !== "fusion-skills")
+      // Format each skill name as skill@version for the root changelog.
       .map((skillName) => {
         const nextVersion = nextVersionBySkill.get(skillName);
         // Abort if any referenced skill failed to compute a final version.
