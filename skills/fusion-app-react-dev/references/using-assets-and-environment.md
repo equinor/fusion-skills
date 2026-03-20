@@ -56,7 +56,11 @@ import { useAppEnvironmentVariables } from '@equinor/fusion-framework-react-app'
 export const EnvironmentDisplay = () => {
   const { value, complete, error } = useAppEnvironmentVariables();
 
-  if (error && !complete) {
+  if (!complete) {
+    return <p>Loading runtime config...</p>;
+  }
+
+  if (error) {
     return <p>Unable to load runtime config</p>;
   }
 

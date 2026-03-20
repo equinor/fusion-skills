@@ -57,6 +57,31 @@ export const FiltersPanel = () => {
   useLayoutEffect(() => {
     latestFilters.current = filters;
   }, [filters]);
+
+  return (
+    <form>
+      <input
+        value={filters.query}
+        onChange={(event) =>
+          setFilters((current) => ({ ...current, query: event.target.value }))
+        }
+        placeholder="Search"
+      />
+      <label>
+        <input
+          type="checkbox"
+          checked={filters.includeClosed}
+          onChange={(event) =>
+            setFilters((current) => ({
+              ...current,
+              includeClosed: event.target.checked,
+            }))
+          }
+        />
+        Include closed
+      </label>
+    </form>
+  );
 };
 ```
 

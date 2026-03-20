@@ -4,17 +4,16 @@ How to access Fusion Framework modules (context, auth, navigation, feature flags
 
 ## Module access patterns
 
-All module hooks are available from sub-path imports of `@equinor/fusion-framework-react-app`:
+Most module hooks are available from sub-path imports of `@equinor/fusion-framework-react-app`. Runtime config access is currently exposed from the package root:
 
 ```typescript
-import { useAppModule } from '@equinor/fusion-framework-react-app';            // generic
+import { useAppEnvironmentVariables, useAppModule } from '@equinor/fusion-framework-react-app'; // root exports
 import { useHttpClient } from '@equinor/fusion-framework-react-app/http';       // HTTP
 import { useCurrentContext } from '@equinor/fusion-framework-react-app/context'; // context
 import { useCurrentAccount } from '@equinor/fusion-framework-react-app/msal';   // auth
 import { useRouter } from '@equinor/fusion-framework-react-app/navigation';     // routing
 import { useFeature } from '@equinor/fusion-framework-react-app/feature-flag';  // flags
 import { useAppSetting } from '@equinor/fusion-framework-react-app/settings';   // settings
-import { useAppEnvironmentVariables } from '@equinor/fusion-framework-react-app'; // runtime config
 import { useCurrentBookmark } from '@equinor/fusion-framework-react-app/bookmark'; // bookmark
 import { useTrackFeature } from '@equinor/fusion-framework-react-app/analytics'; // analytics
 ```
@@ -117,10 +116,18 @@ Use bookmarks for shareable, restorable view state such as filters, selected tab
 ## Analytics
 
 ```typescript
+import { useEffect } from 'react';
 import { useTrackFeature } from '@equinor/fusion-framework-react-app/analytics';
 
-const trackFeature = useTrackFeature();
-trackFeature('dashboard-opened');
+const DashboardPage = () => {
+  const trackFeature = useTrackFeature();
+
+  useEffect(() => {
+    trackFeature('dashboard-page-loaded');
+  }, [trackFeature]);
+
+  return null;
+};
 ```
 
 The portal provides analytics support out of the box. Use the hook for feature and interaction events, and see `using-analytics.md` for event design and local testing guidance.

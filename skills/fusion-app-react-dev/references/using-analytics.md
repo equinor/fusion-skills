@@ -9,29 +9,37 @@ Fusion Framework analytics gives apps a common tracking API while letting the pl
 ## Basic tracking
 
 ```typescript
+import { useEffect } from 'react';
 import { useTrackFeature } from '@equinor/fusion-framework-react-app/analytics';
 
-const trackFeature = useTrackFeature();
-trackFeature('dashboard-opened');
+export const DashboardPage = () => {
+  const trackFeature = useTrackFeature();
+
+  useEffect(() => {
+    trackFeature('dashboard-page-loaded');
+  }, [trackFeature]);
+
+  return null;
+};
 ```
 
 ## Track user actions and screen loads
 
 ```typescript
-import { useTrackFeature } from '@equinor/fusion-framework-react-app/analytics';
 import { useEffect } from 'react';
+import { useTrackFeature } from '@equinor/fusion-framework-react-app/analytics';
 
-const DashboardPage = () => {
+export const DashboardPage = () => {
   const trackFeature = useTrackFeature();
 
   useEffect(() => {
-    trackFeature('DashboardPage loaded');
+    trackFeature('dashboard-page-loaded');
   }, [trackFeature]);
 
   return (
-    <Button onClick={() => trackFeature('Dashboard filter opened')}>
+    <button type="button" onClick={() => trackFeature('dashboard-filter-opened')}>
       Open filters
-    </Button>
+    </button>
   );
 };
 ```
@@ -46,6 +54,8 @@ trackFeature('dashboard-filter-applied', {
 ```
 
 Use small, intentional metadata. Avoid secrets, access tokens, or personal data that does not belong in analytics events.
+
+Keep event names consistent. A simple default is lower-case `kebab-case`, for example `dashboard-page-loaded`, `dashboard-filter-opened`, and `dashboard-filter-applied`.
 
 ## When to instrument
 
@@ -72,6 +82,7 @@ Most app work can rely on the portal's existing analytics setup. If you need cus
 
 - Prefer `useTrackFeature()` over ad hoc analytics wrappers unless the project already standardizes one.
 - Reuse stable event names when extending an existing workflow.
+- Keep one event naming scheme across page-load and interaction events.
 - Track business-significant interactions, not implementation details.
 
 ## Relevant sources
