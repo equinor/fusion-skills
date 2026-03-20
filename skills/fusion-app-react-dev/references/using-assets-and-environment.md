@@ -12,7 +12,7 @@ Use `app.config.ts` for:
 ```typescript
 import { defineAppConfig } from '@equinor/fusion-framework-cli/app';
 
-export default defineAppConfig((env) => ({
+export default defineAppConfig((env, _args) => ({
   environment: {
     logLevel: env.environment === 'ci' ? 0 : 4,
     environmentName: env.environment,
