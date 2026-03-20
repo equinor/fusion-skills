@@ -4,7 +4,7 @@ description: 'Researches Fusion Framework implementation questions through the f
 license: MIT
 compatibility: Works best with Fusion MCP access via `mcp_fusion_search_framework`, with `mcp_fusion_search_docs` and `mcp_fusion_search_eds` available for out-of-scope redirects. If Fusion MCP is unavailable, this skill should say so clearly and avoid claiming verified framework evidence.
 metadata:
-  version: "0.0.0"
+  version: "0.1.0"
   status: experimental
   owner: "@equinor/fusion-core"
   tags:

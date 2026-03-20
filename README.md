@@ -228,9 +228,9 @@ In this repository, use `fusion-<skill-name>` as the default skill naming conven
 - `skills/.system/` ⚙️ internal/system skills and shared building blocks
 
 <!-- skills-table:start -->
-**👍 [`fusion-app-react-dev@0.1.0`](skills/fusion-app-react-dev/SKILL.md)**
+**👍 [`fusion-app-react-dev@0.1.1`](skills/fusion-app-react-dev/SKILL.md)**
 
-Guides feature development in Fusion Framework React apps — scaffolding components, hooks, services, and types that follow EDS conventions and Fusion Framework patterns. USE FOR: building new features, adding components or pages, creating hooks and services, wiring up API endpoints, and extending Fusion module configuration. DO NOT USE FOR: issue authoring, skill authoring, CI/CD configuration, or backend service changes.
+Guides feature development in Fusion Framework React apps, including app-scoped framework research needed to choose the right hooks, modules, packages, and integration patterns before implementation. USE FOR: building new features, adding components or pages, creating hooks and services, wiring up API endpoints, extending Fusion module configuration, and answering app implementation questions about which Fusion Framework surface to use. DO NOT USE FOR: issue authoring, skill authoring, CI/CD configuration, backend service changes, or general Fusion documentation that is not tied to app implementation.
 
 ---
 
@@ -303,6 +303,12 @@ Plan and break down user-story issues into ordered, traceable task issue drafts 
 **🧪 [`fusion-mcp@0.1.1`](skills/.experimental/fusion-mcp/SKILL.md)**
 
 Explain what Fusion MCP is and guide users through setting it up when they need Fusion-aware MCP capabilities in Copilot workflows.
+
+---
+
+**⚙️ [`fusion-research-framework@0.1.0`](skills/.system/fusion-research-framework/SKILL.md)**
+
+Researches Fusion Framework implementation questions through the framework MCP index, uses repeatable query lanes for APIs, packages, and examples, and returns source-backed answers with one refinement pass when results are weak. USE FOR: Fusion Framework package or hook behavior, module and API lookup, cookbook example discovery, source-backed implementation answers. DO NOT USE FOR: general Fusion product docs, EDS component docs, MCP setup, or inventing framework behavior without evidence.
 
 ---
 
