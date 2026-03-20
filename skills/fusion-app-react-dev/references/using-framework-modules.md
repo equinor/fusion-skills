@@ -1,19 +1,21 @@
 # Using Framework Modules
 
-How to access Fusion Framework modules (context, auth, navigation, feature flags, settings, environment) in components.
+How to access Fusion Framework modules (context, auth, navigation, feature flags, settings, environment, bookmarks, analytics) in components.
 
 ## Module access patterns
 
-All module hooks are available from sub-path imports of `@equinor/fusion-framework-react-app`:
+Most module hooks are available from sub-path imports of `@equinor/fusion-framework-react-app`. Runtime config access is currently exposed from the package root:
 
 ```typescript
-import { useAppModule } from '@equinor/fusion-framework-react-app';            // generic
+import { useAppEnvironmentVariables, useAppModule } from '@equinor/fusion-framework-react-app'; // root exports
 import { useHttpClient } from '@equinor/fusion-framework-react-app/http';       // HTTP
 import { useCurrentContext } from '@equinor/fusion-framework-react-app/context'; // context
 import { useCurrentAccount } from '@equinor/fusion-framework-react-app/msal';   // auth
 import { useRouter } from '@equinor/fusion-framework-react-app/navigation';     // routing
 import { useFeature } from '@equinor/fusion-framework-react-app/feature-flag';  // flags
 import { useAppSetting } from '@equinor/fusion-framework-react-app/settings';   // settings
+import { useCurrentBookmark } from '@equinor/fusion-framework-react-app/bookmark'; // bookmark
+import { useTrackFeature } from '@equinor/fusion-framework-react-app/analytics'; // analytics
 ```
 
 ## Context
@@ -81,10 +83,12 @@ Per-user settings stored by the Fusion platform:
 import { useAppSetting, useAppSettings } from '@equinor/fusion-framework-react-app/settings';
 
 const MyComponent = () => {
-  const [theme, setTheme] = useAppSetting<string>('theme');
+  const [theme, setTheme] = useAppSetting('theme', 'light');
   // theme is the current value, setTheme persists a new value
 };
 ```
+
+Use app settings for per-user preferences that should survive between sessions. See `using-settings.md` for how to decide between settings, bookmarks, and runtime config.
 
 ## Environment variables
 
@@ -94,22 +98,39 @@ Access runtime configuration from `app.config.ts`:
 import { useAppEnvironmentVariables } from '@equinor/fusion-framework-react-app';
 
 const MyComponent = () => {
-  const env = useAppEnvironmentVariables();
-  // env contains values defined in app.config.ts environment: {}
+  const { value, complete, error } = useAppEnvironmentVariables();
+  // value contains keys defined in app.config.ts environment: {}
 };
 ```
+
+Use `app.config.ts` for deployment-specific values and endpoint definitions. See `using-assets-and-environment.md` for config/file-placement guidance.
 
 ## Bookmarks
 
 ```typescript
-import { useCurrentBookmark, useBookmark } from '@equinor/fusion-framework-react-app/bookmark';
+import { useCurrentBookmark } from '@equinor/fusion-framework-react-app/bookmark';
 ```
+
+Use bookmarks for shareable, restorable view state such as filters, selected tabs, and dashboard layout. Prefer `useCurrentBookmark` for new work. See `using-bookmarks.md` for module setup and payload guidance.
 
 ## Analytics
 
 ```typescript
+import { useEffect } from 'react';
 import { useTrackFeature } from '@equinor/fusion-framework-react-app/analytics';
+
+const DashboardPage = () => {
+  const trackFeature = useTrackFeature();
+
+  useEffect(() => {
+    trackFeature('dashboard-page-loaded');
+  }, [trackFeature]);
+
+  return null;
+};
 ```
+
+The portal provides analytics support out of the box. Use the hook for feature and interaction events, and see `using-analytics.md` for event design and local testing guidance.
 
 ## Generic module access
 
