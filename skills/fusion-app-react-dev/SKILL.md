@@ -1,12 +1,14 @@
 ---
 name: fusion-app-react-dev
-description: 'Guides feature development in Fusion Framework React apps — scaffolding components, hooks, services, and types that follow EDS conventions and Fusion Framework patterns. USE FOR: building new features, adding components or pages, creating hooks and services, wiring up API endpoints, and extending Fusion module configuration. DO NOT USE FOR: issue authoring, skill authoring, CI/CD configuration, or backend service changes.'
+description: 'Guides feature development in Fusion Framework React apps, including app-scoped framework research needed to choose the right hooks, modules, packages, and integration patterns before implementation. USE FOR: building new features, adding components or pages, creating hooks and services, wiring up API endpoints, extending Fusion module configuration, and answering app implementation questions about which Fusion Framework surface to use. DO NOT USE FOR: issue authoring, skill authoring, CI/CD configuration, backend service changes, or general Fusion documentation that is not tied to app implementation.'
 license: MIT
 compatibility: Requires a Fusion Framework React app bootstrapped with @equinor/fusion-framework-cli. Works best when styled-components, @equinor/eds-core-react, and @equinor/fusion-react-* packages are installed.
 metadata:
   version: "0.1.0"
   status: active
   owner: "@equinor/fusion-core"
+  skills:
+    - fusion-research-framework
   tags:
     - fusion-framework
     - react
@@ -32,6 +34,9 @@ Typical triggers:
 - "Build a page for ..."
 - "Add a service to fetch ..."
 - "Configure a Fusion module"
+- "Which Fusion Framework hook should this app use?"
+- "What is the right package or module for this app integration?"
+- "Find the correct Fusion Framework example before implementing this app change"
 - "Persist this preference as an app setting"
 - "Add bookmark support for this view"
 - "Read runtime config or environment variables"
@@ -52,6 +57,8 @@ Do not use this skill for:
 - Backend/service changes (separate repository)
 - CI/CD pipeline or deployment configuration
 - Architecture documentation (use ADR template)
+
+When the request is primarily about Fusion Framework package ownership, hook behavior, or example discovery rather than app implementation, use the companion skill `fusion-research-framework` first and then return here for code changes.
 
 ## Required inputs
 
@@ -81,6 +88,7 @@ Before writing any code, inspect the target repository to learn its specific set
 4. Check for ADRs (`docs/adr/`) or a `contribute/` directory for project-specific code standards.
 5. Check for formatter/linter config (biome.json, .eslintrc, prettier config).
 6. Read `app.config.ts` and `app.manifest.ts` to understand existing endpoint and environment setup.
+7. If the implementation depends on uncertain Fusion Framework behavior, exact package ownership, or cookbook examples, delegate that research to `fusion-research-framework` before writing code.
 
 Adapt all subsequent steps to the conventions discovered here. The patterns in `references/` are defaults — defer to project-specific rules when they differ.
 
@@ -145,6 +153,7 @@ Follow `references/using-framework-modules.md`, `references/using-context.md`, `
 - Register HTTP client endpoints in `app.config.ts` when adding new API integrations.
 - Enable navigation with `enableNavigation` in `config.ts` when the app uses routing.
 - Define routes using the Fusion Router DSL (`layout`, `index`, `route`, `prefix`) for automatic code splitting.
+- When the right framework API is unclear, use `fusion-research-framework` to gather a source-backed answer before choosing an implementation pattern.
 
 ### Step 7 — Validate
 
@@ -167,6 +176,8 @@ Use `assets/review-checklist.md` as a comprehensive post-generation checklist.
 ## Helper agents
 
 This skill includes three optional helper agents in `agents/`. Use them for focused review after implementing changes, or consult them during implementation for specific guidance. If the runtime does not support skill-local agents, apply the same review criteria inline.
+
+This skill also has a companion skill, `fusion-research-framework`, for evidence-backed Fusion Framework API and package research. Use it when implementation work is blocked by uncertainty about framework behavior or ownership.
 
 - **`agents/framework.md`** — reviews Fusion Framework integration: module configuration, HTTP clients, bootstrap lifecycle, runtime config, settings, bookmarks, analytics, and hook usage. **Prefers `mcp_fusion_search_framework`** for API lookups; falls back to `mcp_fusion_search_docs` for general platform guidance. Consult when wiring up `config.ts`, `app.config.ts`, or any component that accesses framework modules.
 - **`agents/styling.md`** — reviews EDS component selection, styled-components patterns, design token usage, and accessibility. **Prefers `mcp_fusion_search_eds`** for component docs, props, and examples. Consult when building or modifying visual components.
