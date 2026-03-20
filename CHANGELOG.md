@@ -2,6 +2,52 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.14.0
+
+### Minor
+
+__🎯 [feat(skills): add fusion-research-framework #103](https://github.com/equinor/fusion-skills/pull/103)<br/>
+🗂️ [06b664d](https://github.com/equinor/fusion-skills/commit/06b664d177a01a760738ae3d43f1670e665f81fe)<br/>
+📦 fusion-research-framework@0.1.0__
+
+Add the `fusion-research-framework` skill under `skills/.system/` for source-backed Fusion Framework implementation lookup through MCP.
+
+- route framework research to the framework-focused MCP index
+- define repeatable search lanes for APIs, package docs, and cookbook examples
+- require source-path and excerpt evidence before finalizing answers
+- limit refinement to one pass and redirect out-of-scope requests cleanly
+
+resolves equinor/fusion-core-tasks#410
+
+### Patch
+
+__🎯 [feat(skills): expand fusion app framework guides #101](https://github.com/equinor/fusion-skills/pull/101)<br/>
+🗂️ [2bc25ee](https://github.com/equinor/fusion-skills/commit/2bc25eee94cd7bb80a8a9a0d1c844071fac0296f)<br/>
+📦 fusion-app-react-dev@0.1.1__
+
+Expand `fusion-app-react-dev` with focused framework guidance for app settings, bookmarks, runtime config and assets, and analytics.
+
+- add dedicated references for the current settings, bookmark, runtime-config, and analytics surfaces
+- improve module guidance and review checklists for these workflows
+- broaden activation cues so the skill is easier to discover for common Fusion app tasks
+
+resolves equinor/fusion-core-tasks#746
+resolves equinor/fusion-core-tasks#747
+resolves equinor/fusion-core-tasks#751
+resolves equinor/fusion-core-tasks#754
+
+---
+
+__🎯 [feat(skills): add fusion-research-framework #103](https://github.com/equinor/fusion-skills/pull/103)<br/>
+🗂️ [06b664d](https://github.com/equinor/fusion-skills/commit/06b664d177a01a760738ae3d43f1670e665f81fe)<br/>
+📦 fusion-app-react-dev@0.1.1__
+
+Teach `fusion-app-react-dev` to use the `fusion-research-framework` companion skill when implementation work depends on uncertain Fusion Framework APIs or examples.
+
+- add companion-skill metadata for `fusion-research-framework`
+- delegate framework API and package research before choosing app implementation patterns
+- align the framework helper agent with the shared source-backed research workflow
+
 ## v0.13.0
 
 ### Minor
