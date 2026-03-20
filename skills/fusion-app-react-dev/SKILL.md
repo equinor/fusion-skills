@@ -32,11 +32,16 @@ Typical triggers:
 - "Build a page for ..."
 - "Add a service to fetch ..."
 - "Configure a Fusion module"
+- "Persist this preference as an app setting"
+- "Add bookmark support for this view"
+- "Read runtime config or environment variables"
+- "Instrument this page with analytics"
 - "Implement a feature for ..."
 
 Implicit triggers:
 - The user asks to build something in `src/`
 - The user references Fusion Framework modules, EDS components, Fusion React components (`@equinor/fusion-react-*`), or styled-components patterns
+- The user references app settings, bookmarks, analytics, or `app.config.ts`
 - The user wants to add a new route, page, or data-fetching layer
 
 ## When not to use
@@ -62,6 +67,7 @@ If the user's request is ambiguous or missing critical details, consult `assets/
 - API endpoint details when the feature involves data fetching
 - Design/layout specifics when building visual components
 - Fusion module name when extending module configuration
+- Whether state should persist per-user, be shareable via bookmark, or stay runtime-only
 
 ## Instructions
 
@@ -132,7 +138,7 @@ Follow `references/configure-services.md`, `references/using-react-query.md`, an
 
 ### Step 6 — Configure Fusion modules (when applicable)
 
-Follow `references/using-framework-modules.md`, `references/using-context.md`, `references/using-router.md`, `references/using-ag-grid.md`, `references/using-fusion-react-components.md`, and `references/configure-services.md` for module configuration:
+Follow `references/using-framework-modules.md`, `references/using-context.md`, `references/using-router.md`, `references/using-ag-grid.md`, `references/using-fusion-react-components.md`, `references/configure-services.md`, `references/using-settings.md`, `references/using-bookmarks.md`, `references/using-assets-and-environment.md`, and `references/using-analytics.md` for module configuration:
 
 - Add module setup in `config.ts` using the `AppModuleInitiator` callback.
 - Access modules in components via hooks: `useAppModule`, `useHttpClient`, `useCurrentContext`.
@@ -162,7 +168,7 @@ Use `assets/review-checklist.md` as a comprehensive post-generation checklist.
 
 This skill includes three optional helper agents in `agents/`. Use them for focused review after implementing changes, or consult them during implementation for specific guidance. If the runtime does not support skill-local agents, apply the same review criteria inline.
 
-- **`agents/framework.md`** — reviews Fusion Framework integration: module configuration, HTTP clients, bootstrap lifecycle, and hook usage. **Prefers `mcp_fusion_search_framework`** for API lookups; falls back to `mcp_fusion_search_docs` for general platform guidance. Consult when wiring up `config.ts`, `app.config.ts`, or any component that accesses framework modules.
+- **`agents/framework.md`** — reviews Fusion Framework integration: module configuration, HTTP clients, bootstrap lifecycle, runtime config, settings, bookmarks, analytics, and hook usage. **Prefers `mcp_fusion_search_framework`** for API lookups; falls back to `mcp_fusion_search_docs` for general platform guidance. Consult when wiring up `config.ts`, `app.config.ts`, or any component that accesses framework modules.
 - **`agents/styling.md`** — reviews EDS component selection, styled-components patterns, design token usage, and accessibility. **Prefers `mcp_fusion_search_eds`** for component docs, props, and examples. Consult when building or modifying visual components.
 - **`agents/code-quality.md`** — reviews TSDoc completeness, naming conventions, single responsibility, error handling, and TypeScript strictness. Run on every new or modified file before finalizing.
 

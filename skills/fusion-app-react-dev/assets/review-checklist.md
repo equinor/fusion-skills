@@ -63,6 +63,9 @@ Run through this checklist after generating or modifying code. Skip items that d
 - [ ] Context read from `useCurrentContext()`, not duplicated into local state
 - [ ] No hardcoded URLs — endpoints come from `app.config.ts` or environment variables
 - [ ] No manual token management — MSAL module handles auth
+- [ ] Per-user preferences use app settings, not ad hoc runtime config or local storage by default
+- [ ] Bookmark payloads are serializable and limited to shareable view state
+- [ ] Analytics events use `useTrackFeature()` or the project's approved wrapper
 - [ ] Module hooks (`useHttpClient`, `useCurrentContext`, etc.) called inside React components/hooks only
 
 ## Data Fetching
