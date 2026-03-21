@@ -9,6 +9,7 @@ metadata:
   owner: "@equinor/fusion-core"
   skills:
     - fusion-research-framework
+    - fusion-code-conventions
   tags:
     - fusion-framework
     - react
@@ -111,14 +112,9 @@ If scaffolding a new app from scratch, use `assets/new-app-checklist.md` as a pr
 
 ### Step 3 — Implement following code conventions
 
-Follow the project's code standards (discovered in Step 1) and the defaults in `references/code-conventions.md`:
+Follow the project's code standards (discovered in Step 1). For all convention rules — naming, TSDoc, inline comments, type patterns, code style, and error handling — defer to the `fusion-code-conventions` skill.
 
-- **TSDoc**: Every exported function, component, hook, and type MUST have TSDoc with `@param`, `@returns`, and a summary explaining intent.
-- **Inline comments**: Add *why* comments on iterators, decision gates, RxJS chains, and complex logic.
-- **Naming**: Descriptive, self-documenting names. Components use PascalCase files. Hooks use `use` prefix.
-- **Single responsibility**: Each function, component, and module has one reason to change.
-- **Immutable patterns**: Prefer `map`, `filter`, `reduce` over mutable accumulators.
-- **Error handling**: Use specific error types with context, not generic `Error`.
+When convention questions arise during implementation, invoke `fusion-code-conventions` directly. It routes to the correct language agent and returns the authoritative rule with an example.
 
 ### Step 4 — Style with styled-components, EDS, and Fusion React components
 
@@ -146,7 +142,20 @@ Follow `references/configure-services.md`, `references/using-react-query.md`, an
 
 ### Step 6 — Configure Fusion modules (when applicable)
 
-Follow `references/using-framework-modules.md`, `references/using-context.md`, `references/using-router.md`, `references/using-ag-grid.md`, `references/using-fusion-react-components.md`, `references/configure-services.md`, `references/using-settings.md`, `references/using-bookmarks.md`, `references/using-assets-and-environment.md`, and `references/using-analytics.md` for module configuration:
+Identify which module the user needs, then read only the matching reference:
+
+| Need | Reference |
+|---|---|
+| HTTP clients / API integration | `references/configure-services.md` |
+| Context module | `references/using-context.md` |
+| Router and pages | `references/using-router.md` |
+| AG Grid | `references/using-ag-grid.md` |
+| EDS + Fusion React components | `references/using-fusion-react-components.md` |
+| Settings | `references/using-settings.md` |
+| Bookmarks | `references/using-bookmarks.md` |
+| Analytics | `references/using-analytics.md` |
+| Runtime config / environment | `references/using-assets-and-environment.md` |
+| General framework modules | `references/using-framework-modules.md` |
 
 - Add module setup in `config.ts` using the `AppModuleInitiator` callback.
 - Access modules in components via hooks: `useAppModule`, `useHttpClient`, `useCurrentContext`.
@@ -181,7 +190,7 @@ This skill also has a companion skill, `fusion-research-framework`, for evidence
 
 - **`agents/framework.md`** — reviews Fusion Framework integration: module configuration, HTTP clients, bootstrap lifecycle, runtime config, settings, bookmarks, analytics, and hook usage. **Prefers `mcp_fusion_search_framework`** for API lookups; falls back to `mcp_fusion_search_docs` for general platform guidance. Consult when wiring up `config.ts`, `app.config.ts`, or any component that accesses framework modules.
 - **`agents/styling.md`** — reviews EDS component selection, styled-components patterns, design token usage, and accessibility. **Prefers `mcp_fusion_search_eds`** for component docs, props, and examples. Consult when building or modifying visual components.
-- **`agents/code-quality.md`** — reviews TSDoc completeness, naming conventions, single responsibility, error handling, and TypeScript strictness. Run on every new or modified file before finalizing.
+- **`agents/code-quality.md`** — delegates convention checks (naming, TSDoc, TypeScript strictness, intent comments) to `fusion-code-conventions`, then aggregates findings in Fusion app context. Run on every new or modified file before finalizing.
 
 ## Safety & constraints
 
