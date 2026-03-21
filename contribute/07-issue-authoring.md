@@ -11,7 +11,7 @@ The skill enforces draft-first review, reads this repository's contributor guide
 | Issue type | Repository |
 |---|---|
 | Bug, CI failure, tooling error, skill regression | [equinor/fusion-skills](https://github.com/equinor/fusion-skills/issues) |
-| Feature, user story, task, improvement | [equinor/fusion-core-tasks](https://github.com/equinor/fusion-core-tasks) |
+| Feature, user story, task, improvement | [equinor/fusion-core-tasks](https://github.com/equinor/fusion-core-tasks/issues) |
 
 ## Install the skill
 
