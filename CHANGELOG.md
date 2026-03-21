@@ -2,6 +2,20 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.17.1
+
+### Patch
+
+__🎯 [feat(workflow): auto-install successor when removing deprecated skills #114](https://github.com/equinor/fusion-skills/pull/114)<br/>
+🗂️ [ba55a17](https://github.com/equinor/fusion-skills/commit/ba55a1781dc2860af47c2645a08bdf9ede7e385b)__
+
+Document `skip-successor-install` and `skills-source` inputs in sync-workflows reference
+
+Update `references/sync-workflows.md` to document the two new workflow inputs added to
+`skills-update.yml` for automated successor installation during deprecation cleanup.
+
+Resolves equinor/fusion-core-tasks#841
+
 ## v0.17.0
 
 ### Minor
