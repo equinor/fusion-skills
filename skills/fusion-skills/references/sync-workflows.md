@@ -9,7 +9,7 @@ Consumers call them with `uses:` and provide a schedule and optional `with:` inp
 
 ## 1. Skill Update Workflow
 
-**Purpose:** Refresh installed skills when new versions are released. Creates one PR with all updated skill files and per-skill changelog notes. Also scans for deprecated/archived skills and creates removal PRs.
+**Purpose:** Refresh installed skills when new versions are released. Creates one PR with all updated skill files and per-skill changelog notes. Also scans for deprecated/archived skills and creates replacement or removal PRs (installs successor when available).
 
 **File path:** `.github/workflows/skills-update.yml`
 
@@ -51,6 +51,8 @@ jobs:
       skip-deprecation-cleanup: false    # set true to disable deprecation scan
       draft-deprecation-prs: false       # set true for draft removal PRs
       skip-if-rejected-pr-exists: true   # respect previously-rejected PRs
+      skip-successor-install: false      # set true to only remove (don't install replacement)
+      skills-source: equinor/fusion-skills  # source repo for successor installs
 ```
 
 ### Available `with:` inputs
@@ -60,6 +62,8 @@ jobs:
 | `skip-deprecation-cleanup` | boolean | `false` | Disable the deprecation scan and removal PRs |
 | `draft-deprecation-prs` | boolean | `false` | Create deprecation removal PRs as drafts |
 | `skip-if-rejected-pr-exists` | boolean | `true` | Skip re-proposing removal when a previous PR was closed without merge |
+| `skip-successor-install` | boolean | `false` | Only remove deprecated skills — don't auto-install their successors |
+| `skills-source` | string | `equinor/fusion-skills` | GitHub `owner/repo` used as source when installing successor skills |
 
 ### Required permissions
 
