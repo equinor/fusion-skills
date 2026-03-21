@@ -190,7 +190,7 @@ paths:
 ## Naming
 
 - Follow Microsoft naming guidelines: PascalCase for public members, camelCase for locals.
-- Suffix interfaces with nothing (not `I` prefix) — use the type system.
+- Prefix interfaces with `I` and use PascalCase (for example, `IOrderRepository`).
 
 ## Architecture
 

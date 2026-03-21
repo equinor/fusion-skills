@@ -46,7 +46,7 @@ Detect the target editor from the request. Look for:
 - **Claude Code** — mentions "claude", "CLAUDE.md", ".claude/rules", "paths"
 - **All / unknown** — mentions "rules", "instructions", "set up AI rules", or doesn't specify an editor
 
-Route directly based on detected intent. If no editor is specified, run all three agents. Do not ask clarifying questions — each agent interviews the developer during its own workflow.
+Route directly based on detected intent. If no editor is specified, run all three agents.
 
 ## Loading behavior
 
@@ -56,9 +56,10 @@ Load ONLY the routed agent file. Each agent carries the full workflow and refere
 
 When targeting multiple editors:
 
-1. Run the scan and interview once (shared across editors)
-2. Route to each editor agent for drafting and writing
-3. Generate parallel files with equivalent content — no duplication within a single editor
+1. Run the first agent's scan and interview (Steps 1–3) in full
+2. Pass the scan summary and interview answers as context to the remaining agents — they skip Steps 1–3 and start at Step 4 (Classify)
+3. Each agent drafts, reviews, and writes files for its own editor format
+4. Generate parallel files with equivalent content — no duplication within a single editor
 
 ## What this skill does NOT do
 

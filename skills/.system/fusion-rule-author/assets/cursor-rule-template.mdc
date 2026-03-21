@@ -48,7 +48,6 @@ alwaysApply: false
 
 ```markdown
 ---
-alwaysApply: false
 ---
 
 - 
