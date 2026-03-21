@@ -2,7 +2,7 @@
 name: fusion-discover-skills
 description: 'Discovers relevant Fusion skills through Fusion MCP first, falls back to GitHub-backed catalog inspection when needed, returns concise matches with purpose and next-step guidance, and handles install, update, or remove intent without guesswork. USE FOR: finding a skill for a task, asking what to install, checking update or remove guidance, discovering available Fusion skills. DO NOT USE FOR: creating new skills, performing the task itself, or inventing results when discovery signals are unavailable.'
 license: MIT
-compatibility: Works best with Fusion MCP access via `mcp_fusion_skills`. When Fusion MCP is unavailable, this skill can fall back to GitHub MCP or read-only `gh` and GraphQL catalog inspection.
+compatibility: Works best with Fusion MCP. Uses `mcp_fusion_skills` for advisory lifecycle operations (install, update, remove) and `mcp_fusion_search_skills` for source-backed semantic discovery. When Fusion MCP is unavailable, this skill can fall back to GitHub MCP or read-only `gh` and GraphQL catalog inspection.
 metadata:
    version: "0.1.3"
    status: experimental
@@ -17,6 +17,7 @@ metadata:
    mcp:
       suggested:
          - mcp_fusion
+         - mcp_fusion_search_skills
          - github
 ---
 
@@ -77,8 +78,10 @@ Main workflow:
    - If the user wants install guidance and the active agent is not clear, ask which agent/client the command should target.
    - Do not ask for agent details for plain discovery requests.
 4. Query Fusion MCP first when available.
-   - Call `mcp_fusion_skills` with the user's wording.
-   - Use auto intent detection by default, but set `intent` explicitly when the user clearly wants `install`, `update`, `remove`, or `query`.
+   - For source-backed discovery of what skills exist and what they do, call `mcp_fusion_search_skills` with the user's wording. This uses semantic search over the local skills index.
+   - If `mcp_fusion_search_skills` results are weak or ambiguous, follow up with `mcp_fusion_skills` — it can reason about intent, resolve ambiguous names, and provide richer advisory context.
+   - For lifecycle operations (install, update, remove), call `mcp_fusion_skills` with explicit `intent` set.
+   - Use auto intent detection on `mcp_fusion_skills` by default when the intent is ambiguous.
    - Pass `agent` for install intent when known so the advisory command is directly usable.
    - Start with a small ranked set, usually top 3 to top 5 results.
 5. Fall back to GitHub-backed discovery when Fusion MCP is unavailable or too weak.

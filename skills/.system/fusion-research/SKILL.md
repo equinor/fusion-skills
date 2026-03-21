@@ -2,7 +2,7 @@
 name: fusion-research
 description: 'Source-backed research orchestrator for the Fusion ecosystem. Routes to the correct research agent based on question type. Returns source-backed evidence only; will not invent Framework behavior, component APIs, or skill catalog relationships. USE FOR: any research question needing source-backed evidence about Fusion Framework APIs, EDS components, or the Fusion skill catalog. DO NOT USE FOR: implementing code changes, installing or editing skills, MCP setup or troubleshooting, or inventing Fusion behavior without evidence.'
 license: MIT
-compatibility: Works best with Fusion MCP. Dispatches to `agents/framework.agent.md` for `mcp_fusion_search_framework`, `agents/eds.agent.md` for `mcp_fusion_search_eds`, and `agents/skills.agent.md` for `mcp_fusion_skills`. If MCP is unavailable, state that clearly rather than guessing.
+compatibility: Works best with Fusion MCP. Dispatches to `agents/framework.agent.md` for `mcp_fusion_search_framework`, `agents/eds.agent.md` for `mcp_fusion_search_eds`, and `agents/skills.agent.md` for `mcp_fusion_search_skills`. If MCP is unavailable, state that clearly rather than guessing.
 metadata:
   version: "0.1.0"
   status: experimental
@@ -20,6 +20,7 @@ metadata:
       - mcp_fusion_search_framework
       - mcp_fusion_search_eds
       - mcp_fusion_search_docs
+      - mcp_fusion_search_skills
       - mcp_fusion_skills
 ---
 
@@ -94,7 +95,7 @@ This skill includes three research agents in `agents/`. Each covers one Fusion r
 
 - **[`agents/framework.agent.md`](agents/framework.agent.md)** — source-backed answers about Fusion Framework hooks, packages, modules, and cookbook examples. Uses `mcp_fusion_search_framework`.
 - **[`agents/eds.agent.md`](agents/eds.agent.md)** — source-backed answers about EDS component props, usage, accessibility, and design tokens. Uses `mcp_fusion_search_eds`.
-- **[`agents/skills.agent.md`](agents/skills.agent.md)** — source-backed answers about the Fusion skill catalog: what skills exist, their scope, and how they relate. Uses `mcp_fusion_skills`.
+- **[`agents/skills.agent.md`](agents/skills.agent.md)** — source-backed answers about the Fusion skill catalog: what skills exist, their scope, and how they relate. Uses `mcp_fusion_search_skills`.
 
 ## Assets
 
