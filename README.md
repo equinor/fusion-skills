@@ -306,9 +306,9 @@ Explain what Fusion MCP is and guide users through setting it up when they need 
 
 ---
 
-**⚙️ [`fusion-research-framework@0.1.0`](skills/.system/fusion-research-framework/SKILL.md)**
+**⚙️ [`fusion-research@0.1.0`](skills/.system/fusion-research/SKILL.md)**
 
-Researches Fusion Framework implementation questions through the framework MCP index, uses repeatable query lanes for APIs, packages, and examples, and returns source-backed answers with one refinement pass when results are weak. USE FOR: Fusion Framework package or hook behavior, module and API lookup, cookbook example discovery, source-backed implementation answers. DO NOT USE FOR: general Fusion product docs, EDS component docs, MCP setup, or inventing framework behavior without evidence.
+Source-backed research orchestrator for the Fusion ecosystem. Routes to the correct research agent based on question type. USE FOR: any research question needing source-backed evidence about Fusion Framework APIs, EDS components, or the Fusion skill catalog. DO NOT USE FOR: implementing code changes, installing or editing skills, MCP setup or troubleshooting, or inventing Fusion behavior without evidence.
 
 ---
 
