@@ -26,7 +26,7 @@ Use this agent when the user wants to find the right skill for a task, list what
 | Signal | Action |
 |--------|---------|
 | Task-based ("find a skill for X") | Call `mcp_fusion_skills` with `intent: query` and the user's exact phrasing |
-| Inventory ("what's installed", "list my skills") | List directories under `.agents/skills/` and read each `SKILL.md` frontmatter for name and description |
+| Inventory ("what's installed", "list my skills") | Call `mcp_fusion_skills` with `intent: inventory`; fall back to `.agents/skills/` directory scan only if MCP is unavailable |
 | Proactive promotion | Call `mcp_fusion_skills` with `intent: query` based on current context |
 
 ### Step 2 — Search
