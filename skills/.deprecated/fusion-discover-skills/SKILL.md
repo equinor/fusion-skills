@@ -1,11 +1,13 @@
 ---
 name: fusion-discover-skills
-description: 'Discovers relevant Fusion skills through Fusion MCP first, falls back to GitHub-backed catalog inspection when needed, returns concise matches with purpose and next-step guidance, and handles install, update, or remove intent without guesswork. USE FOR: finding a skill for a task, asking what to install, checking update or remove guidance, discovering available Fusion skills. DO NOT USE FOR: creating new skills, performing the task itself, or inventing results when discovery signals are unavailable.'
+description: 'DEPRECATED: Use fusion-skills instead. This skill has been superseded by fusion-skills, which provides discover, sync, and author modes in a single orchestrator.'
 license: MIT
-compatibility: Works best with Fusion MCP. Uses `mcp_fusion_skills` for advisory lifecycle operations (install, update, remove) and `mcp_fusion_search_skills` for source-backed semantic discovery. When Fusion MCP is unavailable, this skill can fall back to GitHub MCP or read-only `gh` and GraphQL catalog inspection.
+compatibility: Deprecated. See fusion-skills.
 metadata:
    version: "0.1.4"
-   status: experimental
+   status: deprecated
+   deprecated_at: "2026-03-21"
+   successor: fusion-skills
    owner: "@equinor/fusion-core"
    tags:
       - fusion
@@ -14,6 +16,7 @@ metadata:
       - mcp
       - github
       - install
+      - deprecated
    mcp:
       suggested:
          - mcp_fusion
@@ -21,7 +24,11 @@ metadata:
          - github
 ---
 
-# Discover Fusion Skills
+# Discover Fusion Skills (Deprecated)
+
+> **Deprecated:** This skill has been superseded by `fusion-skills`.
+> Use the `discover` mode of `fusion-skills` instead. All functionality from this skill is available there.
+> Install: `npx -y skills add equinor/fusion-skills fusion-skills`
 
 ## When to use
 
