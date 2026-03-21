@@ -55,6 +55,8 @@ If you are unsure about direction, open a draft PR early and ask for feedback.
 
 Use the `fusion-issue-authoring` skill to draft and publish issues — it enforces draft-first review, correct routing, and consistent structure. See [Issue authoring guide](contribute/07-issue-authoring.md) for routing rules and usage.
 
+Do not report security vulnerabilities via GitHub issues or `fusion-issue-authoring`; always follow [SECURITY.md](SECURITY.md) and Equinor CSIRT guidance instead.
+
 ## Full contribution guide
 
 Use the full maintainer workflow in [contribute/README.md](contribute/README.md).
