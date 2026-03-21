@@ -24,19 +24,17 @@ Use this agent when the user wants to find the right skill for a task, list what
 ### Step 1 — Determine query mode
 
 | Signal | Action |
-|--------|-------|
-| Task-based ("find a skill for X") | Call `mcp_fusion_search_skills` with the user's exact phrasing |
+|--------|---------|
+| Task-based ("find a skill for X") | Call `mcp_fusion_skills` with `intent: query` and the user's exact phrasing |
 | Inventory ("what's installed", "list my skills") | List directories under `.agents/skills/` and read each `SKILL.md` frontmatter for name and description |
-| Proactive promotion | Call `mcp_fusion_search_skills` based on current context |
+| Proactive promotion | Call `mcp_fusion_skills` with `intent: query` based on current context |
 
 ### Step 2 — Search
 
-1. Call `mcp_fusion_search_skills` with the user's wording. Always try this first.
-   - `mcp_fusion_search_skills` = semantic search over the skills index (find by description or task).
-   - `mcp_fusion_skills` = advisory lifecycle tool that can reason about intent, resolve ambiguous names, and provide richer context. Use it when `mcp_fusion_search_skills` returns weak or ambiguous results.
+1. Call `mcp_fusion_skills` with `intent: query` and the user's wording. Always try this first.
 2. Do one refinement pass with sharper domain keywords if first results are weak. Stop after one pass.
 3. **If Fusion MCP is unavailable:** try these fallbacks in order:
-   a. **GitHub MCP** (if available): use `github-mcp-server-search_code` or repository content tools to search `equinor/fusion-skills` for SKILL.md files. Prefer this over raw CLI.
+   a. **GitHub MCP** (if available): use available GitHub MCP repository search/content tools to search `equinor/fusion-skills` for SKILL.md files. Prefer this over raw CLI.
    b. **Static catalog**: load `references/skill-catalog.md` (only load this file when MCP is unavailable).
    c. **Directory scan**: if the catalog is missing or no match found, scan the local `skills/` directory for SKILL.md files and read their frontmatter.
    d. End with a brief note that richer search is available with Fusion MCP.

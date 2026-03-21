@@ -19,7 +19,7 @@ metadata:
       - github
 ---
 
-> **Deprecated as of 2026-03-21.** This skill has been superseded by the `warden` agent in [`fusion-skills`](../fusion-skills/SKILL.md), which inlines the full bug reporting workflow and adds proactive frustration detection and skill smell inspection. Use `fusion-skills` instead.
+> **Deprecated as of 2026-03-21.** This skill has been superseded by the `warden` agent in [`fusion-skills`](../../fusion-skills/SKILL.md), which inlines the full bug reporting workflow and adds proactive frustration detection and skill smell inspection. Use `fusion-skills` instead.
 >
 > Install: `npx -y skills add equinor/fusion-skills fusion-skills`
 

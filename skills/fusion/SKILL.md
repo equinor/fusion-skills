@@ -2,7 +2,7 @@
 name: fusion
 description: 'Main Copilot skill gate for the Fusion ecosystem — cross-domain router. USE FOR: routing between different Fusion domains (skills, issues, PRs, reviews) when the right domain skill is unclear; getting install guidance for missing skills. DO NOT USE FOR: skill lifecycle operations (use fusion-skills directly), tasks where a specific Fusion skill is already active.'
 license: MIT
-compatibility: Assumes Fusion MCP is available (`mcp_fusion_search_skills`). Falls back to inline install commands when unavailable.
+compatibility: Assumes Fusion MCP is available (`mcp_fusion_skills`). Falls back to inline install commands when unavailable.
 metadata:
   version: "0.0.0"
   status: active
@@ -15,11 +15,8 @@ metadata:
     - orchestrator
     - triage
   mcp:
-    required:
-      - github
-      - mcp_fusion
     suggested:
-      - mcp_fusion_search_skills
+      - mcp_fusion_skills
 ---
 
 # Fusion
@@ -60,7 +57,6 @@ This skill is a top-level router. It must never re-route back to itself. If you 
 
 1. Identify intent from the user's request.
 2. Call `mcp_fusion_skills` to confirm which skill handles it and whether it is installed.
-   - Use `mcp_fusion_search_skills` for semantic lookup when the right skill is not obvious from the routing table.
    - **If MCP is unavailable:** use the routing table above as the sole source of truth. Do not guess or hallucinate skill names.
 3. **If installed:** redirect the user to invoke that skill directly.
 4. **If not installed but available (active or experimental):** name the skill, state what it does in one sentence, note if experimental, and give the install command:

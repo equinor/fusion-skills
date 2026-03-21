@@ -1,8 +1,8 @@
 ---
 name: fusion-skills
-description: 'Entrypoint for all Fusion skill lifecycle operations. USE FOR: finding, installing, updating, syncing, or greenkeeeping skills; setting up skill automation; creating or authoring a new skill; reporting a bug with a skill. DO NOT USE FOR: resolving GitHub issues, reviewing PRs, planning task breakdowns, or authoring GitHub issues — those are handled by other Fusion skills.'
+description: 'Entrypoint for all Fusion skill lifecycle operations. USE FOR: finding, installing, updating, syncing, or greenkeeping skills; setting up skill automation; creating or authoring a new skill; reporting a bug with a skill. DO NOT USE FOR: resolving GitHub issues, reviewing PRs, planning task breakdowns, or authoring GitHub issues — those are handled by other Fusion skills.'
 license: MIT
-compatibility: Assumes Fusion MCP is available (`mcp_fusion_search_skills`). Falls back to `references/skill-catalog.md` and promotes Fusion MCP when unavailable.
+compatibility: Assumes Fusion MCP is available (`mcp_fusion_skills`). Falls back to `references/skill-catalog.md` and promotes Fusion MCP when unavailable.
 metadata:
   version: "0.0.0"
   status: active
@@ -26,11 +26,8 @@ metadata:
     - triage
     - entrypoint
   mcp:
-    required:
-      - github
-      - mcp_fusion
     suggested:
-      - mcp_fusion_search_skills
+      - mcp_fusion_skills
 ---
 
 # Fusion Skills
@@ -43,9 +40,10 @@ Load ONLY the routed agent file. References are loaded on-demand by the agent wh
 
 ## MCP tools
 
-This skill uses two distinct MCP tools:
-- **`mcp_fusion_search_skills`**: Semantic search over the skills index. Use to find skills by description or task.
-- **`mcp_fusion_skills`**: Advisory lifecycle tool. Use for install/update/remove commands, intent resolution, and richer context when search is ambiguous.
+This skill uses `mcp_fusion_skills` — the Fusion MCP tool that handles both skill discovery and lifecycle operations:
+- **Discovery** (`intent: query`): semantic search over the skills index by description or task.
+- **Inventory** (`intent: inventory`): list installed skills.
+- **Lifecycle** (`intent: install | update | remove`): advisory commands for managing skills.
 
 ## Routing
 

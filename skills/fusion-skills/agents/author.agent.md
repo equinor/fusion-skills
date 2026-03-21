@@ -31,7 +31,7 @@ If not explicit, ask:
 
 ### Step 3 — Check installation via Fusion MCP
 
-Call `mcp_fusion_search_skills` with the target skill name.
+Call `mcp_fusion_skills` with `intent: query` and the target skill name to check whether it is installed.
 
 **If installed:** redirect the user to invoke it directly.
 
