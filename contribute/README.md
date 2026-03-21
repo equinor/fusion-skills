@@ -22,3 +22,7 @@ Then follow this path:
 If your change touches automation in `scripts/`, read [Repository scripts and code rules](06-scripts-code-rules.md) before opening a PR.
 
 Why? Script changes can break CI, release flow, or both — and nobody enjoys surprise archaeology in pipeline logs.
+
+## Reporting issues or requesting features?
+
+Read [Issue authoring guide](07-issue-authoring.md) to learn which repo to use and how to draft issues with the `fusion-issue-authoring` skill.

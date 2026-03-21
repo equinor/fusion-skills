@@ -77,6 +77,8 @@ If ambiguous, ask only essential clarifying questions.
 ### Step 2 — Resolve repository and template
 
 - Resolve the destination repository before any mutation.
+- When no explicit repository is given, check the active workspace for contributor guides (`CONTRIBUTING.md`, `contribute/`) that define default issue routing by type. Apply any routing rules found there before asking the user.
+- If no routing guidance exists in the repo, ask explicitly where the issue should be created.
 - Template precedence:
   1. repository template (`.github/ISSUE_TEMPLATE/`)
   2. specialist fallback template

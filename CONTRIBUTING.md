@@ -51,6 +51,10 @@ Before requesting review, make sure your PR is:
 
 If you are unsure about direction, open a draft PR early and ask for feedback.
 
+## Issues and feature requests
+
+Use the `fusion-issue-authoring` skill to draft and publish issues — it enforces draft-first review, correct routing, and consistent structure. See [Issue authoring guide](contribute/07-issue-authoring.md) for routing rules and usage.
+
 ## Full contribution guide
 
 Use the full maintainer workflow in [contribute/README.md](contribute/README.md).
