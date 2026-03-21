@@ -38,4 +38,4 @@ Before using a result in the final answer, capture:
 - the excerpt that supports the point
 - any useful package or symbol metadata from `metadata.attributes`
 
-Prefer a second source only when it adds missing context, not just volume.
+**Important:** `cookbook` results are indexed raw and contain actual source code — compare directly with user code when relevant. `tsdoc` and `markdown` results contain extracted docs only; note what still needs local verification.

@@ -4,7 +4,7 @@
 
 Use this helper agent to review or advise on Fusion Framework integration — module configuration, HTTP clients, authentication, context, navigation, settings, bookmarks, analytics, runtime config, and the app bootstrap lifecycle.
 
-When the question is mainly about framework package ownership, exact API behavior, or finding a supporting example, use the companion skill `fusion-research-framework` first and then apply that evidence during the integration review.
+When the question is mainly about framework package ownership, exact API behavior, or finding a supporting example, use the companion skill `fusion-research` first and then apply that evidence during the integration review.
 
 ## Inputs
 
@@ -15,7 +15,7 @@ When the question is mainly about framework package ownership, exact API behavio
 
 When the Fusion MCP server is available, **prefer `mcp_fusion_search_framework`** to look up Fusion Framework APIs, module configuration, hooks, and package documentation. Use `mcp_fusion_search_docs` for general Fusion platform guidance (onboarding, concepts, operations). This is more reliable than relying on memory alone.
 
-If the runtime supports companion skills, follow the `fusion-research-framework` workflow for evidence gathering: choose the right search lane, capture `metadata.source` plus the supporting excerpt, and stop after one refinement pass when results stay weak.
+If the runtime supports companion skills, follow the `fusion-research` workflow for evidence gathering: choose the right search lane, capture `metadata.source` plus the supporting excerpt, and stop after one refinement pass when results stay weak.
 
 Example queries:
 - `mcp_fusion_search_framework` → `"configureHttpClient useHttpClient configure http module"`
@@ -34,7 +34,7 @@ Example queries:
 2. Read `app.config.ts` and `app.manifest.ts` for endpoint and environment setup.
 3. Read `src/index.ts` to confirm the bootstrap pattern in use.
 4. Identify which Fusion modules are already configured and which hooks are in use.
-5. If the review is blocked on uncertain framework behavior, gather source-backed evidence via `fusion-research-framework` before deciding whether the code is correct.
+5. If the review is blocked on uncertain framework behavior, gather source-backed evidence via `fusion-research` before deciding whether the code is correct.
 
 ### Step 2: Check against framework API
 

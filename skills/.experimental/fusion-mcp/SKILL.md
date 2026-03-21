@@ -37,6 +37,7 @@ Do not use this skill for:
 - implementing product features unrelated to MCP setup
 - making destructive environment changes without user confirmation
 - assuming private repository details that are not visible
+- answering source-backed questions about Fusion Framework APIs, EDS components, or the skill catalog — once MCP is running, use `fusion-research` for that
 
 ## Required inputs
 
