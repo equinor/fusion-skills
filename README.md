@@ -228,9 +228,15 @@ In this repository, use `fusion-<skill-name>` as the default skill naming conven
 - `skills/.system/` ⚙️ internal/system skills and shared building blocks
 
 <!-- skills-table:start -->
-**👍 [`fusion-app-react-dev@0.1.1`](skills/fusion-app-react-dev/SKILL.md)**
+**👍 [`fusion-app-react-dev@0.1.2`](skills/fusion-app-react-dev/SKILL.md)**
 
 Guides feature development in Fusion Framework React apps, including app-scoped framework research needed to choose the right hooks, modules, packages, and integration patterns before implementation. USE FOR: building new features, adding components or pages, creating hooks and services, wiring up API endpoints, extending Fusion module configuration, and answering app implementation questions about which Fusion Framework surface to use. DO NOT USE FOR: issue authoring, skill authoring, CI/CD configuration, backend service changes, or general Fusion documentation that is not tied to app implementation.
+
+---
+
+**⚙️ [`fusion-code-conventions@0.1.0`](skills/.system/fusion-code-conventions/SKILL.md)**
+
+Applies and explains code conventions across TypeScript, React, C#, and Markdown. Enforces naming rules, file naming patterns, TSDoc and XML doc standards, inline comment intent (the *why*, not the *what*), code structure, error handling, async patterns, and dead code policy. Also enforces ADR and contributor doc decisions, and flags decisions that appear stale or misaligned with current tooling. USE FOR: convention questions, code review against project standards, applying naming rules, auditing intent comments, checking TSDoc completeness, enforcing recorded ADR decisions, and flagging stale architectural decisions. DO NOT USE FOR: security vulnerability scanning, performance profiling, runtime debugging, or generating net-new code without a review target.
 
 ---
 
@@ -246,7 +252,7 @@ Review dependency PRs with structured research, existing-PR-discussion capture, 
 
 ---
 
-**🧪 [`fusion-discover-skills@0.1.3`](skills/.experimental/fusion-discover-skills/SKILL.md)**
+**🧪 [`fusion-discover-skills@0.1.4`](skills/.experimental/fusion-discover-skills/SKILL.md)**
 
 Discovers relevant Fusion skills through Fusion MCP first, falls back to GitHub-backed catalog inspection when needed, returns concise matches with purpose and next-step guidance, and handles install, update, or remove intent without guesswork. USE FOR: finding a skill for a task, asking what to install, checking update or remove guidance, discovering available Fusion skills. DO NOT USE FOR: creating new skills, performing the task itself, or inventing results when discovery signals are unavailable.
 
@@ -300,15 +306,15 @@ Plan and break down user-story issues into ordered, traceable task issue drafts 
 
 ---
 
-**🧪 [`fusion-mcp@0.1.1`](skills/.experimental/fusion-mcp/SKILL.md)**
+**🧪 [`fusion-mcp@0.1.2`](skills/.experimental/fusion-mcp/SKILL.md)**
 
 Explain what Fusion MCP is and guide users through setting it up when they need Fusion-aware MCP capabilities in Copilot workflows.
 
 ---
 
-**⚙️ [`fusion-research@0.1.0`](skills/.system/fusion-research/SKILL.md)**
+**⚙️ [`fusion-research@0.2.0`](skills/.system/fusion-research/SKILL.md)**
 
-Source-backed research orchestrator for the Fusion ecosystem. Routes to the correct research agent based on question type. USE FOR: any research question needing source-backed evidence about Fusion Framework APIs, EDS components, or the Fusion skill catalog. DO NOT USE FOR: implementing code changes, installing or editing skills, MCP setup or troubleshooting, or inventing Fusion behavior without evidence.
+Source-backed research orchestrator for the Fusion ecosystem. Routes to the correct research agent based on question type. Returns source-backed evidence only; will not invent Framework behavior, component APIs, or skill catalog relationships. USE FOR: any research question needing source-backed evidence about Fusion Framework APIs, EDS components, or the Fusion skill catalog. DO NOT USE FOR: implementing code changes, installing or editing skills, MCP setup or troubleshooting, or inventing Fusion behavior without evidence.
 
 ---
 

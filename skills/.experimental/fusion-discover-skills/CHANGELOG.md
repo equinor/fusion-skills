@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.4 - 2026-03-21
+
+### patch
+
+- [#107](https://github.com/equinor/fusion-skills/pull/107) [`d75d8c6`](https://github.com/equinor/fusion-skills/commit/d75d8c60f15888fbe71340b53b2698f3361ac4c8) - Advertise `mcp_fusion_search_skills` for semantic discovery alongside advisory `mcp_fusion_skills`.
+
+
+  - add `mcp_fusion_search_skills` to `mcp.suggested`
+  - update compatibility line to distinguish source-backed search (`mcp_fusion_search_skills`) from advisory/lifecycle operations (`mcp_fusion_skills`)
+  - update step 4 in instructions to route discovery to `mcp_fusion_search_skills` and lifecycle to `mcp_fusion_skills`
+
+  Resolves equinor/fusion-core-tasks#834
+
 ## 0.1.3 - 2026-03-17
 
 ### patch

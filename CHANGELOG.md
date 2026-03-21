@@ -2,6 +2,110 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.15.0
+
+### Minor
+
+__🎯 [feat: add fusion-code-conventions system skill #104](https://github.com/equinor/fusion-skills/pull/104)<br/>
+🗂️ [67bfabd](https://github.com/equinor/fusion-skills/commit/67bfabd6c3e950dc7681a000eebdc42bff3be5fb)<br/>
+📦 fusion-code-conventions@0.1.0__
+
+Add new `fusion-code-conventions` system skill — orchestrates TypeScript, React, C#, and Markdown convention checks, intent comment auditing, and ADR/contributor-doc constitution enforcement across language-specific agents.
+
+---
+
+__🎯 [feat(skills): add fusion-research multi-domain research orchestrator #106](https://github.com/equinor/fusion-skills/pull/106)<br/>
+🗂️ [1f8a01d](https://github.com/equinor/fusion-skills/commit/1f8a01ddcb5c9afe9119a1fcf1ded2c6980036d0)<br/>
+📦 fusion-research@0.2.0__
+
+Rename `fusion-research-framework` to `fusion-research` and expand into a multi-domain research orchestrator.
+
+- rename skill from `fusion-research-framework` to `fusion-research`
+- expand scope from framework-only to three research domains: Framework, EDS, and skill catalog
+- add `agents/framework.agent.md` — source-backed Fusion Framework API and cookbook research via `mcp_fusion_search_framework`
+- add `agents/eds.agent.md` — source-backed EDS component props, usage, accessibility, and design token research via `mcp_fusion_search_eds`
+- add `agents/skills.agent.md` — source-backed skill catalog lookup, scope boundary, and companion relationship research via `mcp_fusion_skills`
+- add `assets/framework.follow-up.md`, `assets/eds.follow-up.md`, `assets/skills.follow-up.md` — pre-dispatch scope-sharpening questions per domain
+- add `references/framework.query.md`, `references/eds.query.md`, `references/skills.query.md` — repeatable query patterns and evidence checklists per domain
+- update `assets/source-backed-answer-template.md` to cover all three domains
+- connect to `fusion-mcp` as next-step redirect when MCP is not yet running
+- tighten discovery contract: description, trigger phrases, and "When not to use" boundaries
+- apply council review fixes: remove erroneous `cookbook` lane reference from EDS agent, orphan follow-up assets linked from SKILL.md, `mcp_fusion_search_docs` added to suggested MCP list
+
+Resolves equinor/fusion-core-tasks#837
+Resolves equinor/fusion-core-tasks#838
+
+### Patch
+
+__🎯 [feat(skills): advertise mcp_fusion_search_skills for source-backed catalog retrieval #107](https://github.com/equinor/fusion-skills/pull/107)<br/>
+🗂️ [d75d8c6](https://github.com/equinor/fusion-skills/commit/d75d8c60f15888fbe71340b53b2698f3361ac4c8)<br/>
+📦 fusion-discover-skills@0.1.4__
+
+Advertise `mcp_fusion_search_skills` for semantic discovery alongside advisory `mcp_fusion_skills`.
+
+- add `mcp_fusion_search_skills` to `mcp.suggested`
+- update compatibility line to distinguish source-backed search (`mcp_fusion_search_skills`) from advisory/lifecycle operations (`mcp_fusion_skills`)
+- update step 4 in instructions to route discovery to `mcp_fusion_search_skills` and lifecycle to `mcp_fusion_skills`
+
+Resolves equinor/fusion-core-tasks#834
+
+---
+
+__🎯 [feat(skills): advertise mcp_fusion_search_skills for source-backed catalog retrieval #107](https://github.com/equinor/fusion-skills/pull/107)<br/>
+🗂️ [d75d8c6](https://github.com/equinor/fusion-skills/commit/d75d8c60f15888fbe71340b53b2698f3361ac4c8)<br/>
+📦 fusion-mcp@0.1.2__
+
+Document `search_skills` in the MCP server tool surface.
+
+- add explicit tool listing to the setup instructions: `search_framework`, `search_docs`, `search_eds`, `search_skills`, `search_indexes`, `skills`, `skills_index_status`
+
+Resolves equinor/fusion-core-tasks#834
+
+---
+
+__🎯 [feat(skills): advertise mcp_fusion_search_skills for source-backed catalog retrieval #107](https://github.com/equinor/fusion-skills/pull/107)<br/>
+🗂️ [d75d8c6](https://github.com/equinor/fusion-skills/commit/d75d8c60f15888fbe71340b53b2698f3361ac4c8)<br/>
+📦 fusion-research@0.2.0__
+
+Switch skills catalog agent to `mcp_fusion_search_skills` for source-backed retrieval.
+
+- update `agents/skills.agent.md` to use `mcp_fusion_search_skills` (semantic search over local skills index) instead of the advisory `mcp_fusion_skills`
+- update `mcp.suggested` list in metadata: replace `mcp_fusion_skills` with `mcp_fusion_search_skills`
+- update compatibility line and agent description to reflect the correct tool
+- update source labels in `references/skills.query.md` evidence checklist
+
+Resolves equinor/fusion-core-tasks#834
+
+---
+
+__🎯 [feat(skills): add fusion-research multi-domain research orchestrator #106](https://github.com/equinor/fusion-skills/pull/106)<br/>
+🗂️ [1f8a01d](https://github.com/equinor/fusion-skills/commit/1f8a01ddcb5c9afe9119a1fcf1ded2c6980036d0)<br/>
+📦 fusion-mcp@0.1.2__
+
+Connect `fusion-mcp` to `fusion-research` as a next-step redirect.
+
+- add "When not to use" entry directing source-backed research questions to `fusion-research` once MCP is running
+
+---
+
+__🎯 [feat: add fusion-code-conventions system skill #104](https://github.com/equinor/fusion-skills/pull/104)<br/>
+🗂️ [67bfabd](https://github.com/equinor/fusion-skills/commit/67bfabd6c3e950dc7681a000eebdc42bff3be5fb)<br/>
+📦 fusion-app-react-dev@0.1.2__
+
+Delegate code convention checks to `fusion-code-conventions` skill — removes inline `references/code-conventions.md`, replaces Step 6 wall-of-links with a module routing table, and updates `code-quality` agent to aggregate findings from the dedicated conventions skill.
+
+---
+
+__🎯 [feat(skills): add fusion-research multi-domain research orchestrator #106](https://github.com/equinor/fusion-skills/pull/106)<br/>
+🗂️ [1f8a01d](https://github.com/equinor/fusion-skills/commit/1f8a01ddcb5c9afe9119a1fcf1ded2c6980036d0)<br/>
+📦 fusion-app-react-dev@0.1.2__
+
+Update companion skill reference from `fusion-research-framework` to `fusion-research`.
+
+- update `metadata.skills` entry to `fusion-research`
+- update all inline references in SKILL.md and `agents/framework.md` to the renamed companion skill
+- broaden companion description to reflect the expanded scope (Framework, EDS, and skill catalog research)
+
 ## v0.14.0
 
 ### Minor

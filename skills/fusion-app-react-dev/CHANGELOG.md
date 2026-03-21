@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.2 - 2026-03-21
+
+### patch
+
+- [#104](https://github.com/equinor/fusion-skills/pull/104) [`67bfabd`](https://github.com/equinor/fusion-skills/commit/67bfabd6c3e950dc7681a000eebdc42bff3be5fb) - Delegate code convention checks to `fusion-code-conventions` skill — removes inline `references/code-conventions.md`, replaces Step 6 wall-of-links with a module routing table, and updates `code-quality` agent to aggregate findings from the dedicated conventions skill.
+
+- [#106](https://github.com/equinor/fusion-skills/pull/106) [`1f8a01d`](https://github.com/equinor/fusion-skills/commit/1f8a01ddcb5c9afe9119a1fcf1ded2c6980036d0) - Update companion skill reference from `fusion-research-framework` to `fusion-research`.
+
+
+  - update `metadata.skills` entry to `fusion-research`
+  - update all inline references in SKILL.md and `agents/framework.md` to the renamed companion skill
+  - broaden companion description to reflect the expanded scope (Framework, EDS, and skill catalog research)
+
 ## 0.1.1 - 2026-03-20
 
 ### patch
