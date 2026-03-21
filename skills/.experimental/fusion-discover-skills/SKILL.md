@@ -79,6 +79,7 @@ Main workflow:
    - Do not ask for agent details for plain discovery requests.
 4. Query Fusion MCP first when available.
    - For source-backed discovery of what skills exist and what they do, call `mcp_fusion_search_skills` with the user's wording. This uses semantic search over the local skills index.
+   - If `mcp_fusion_search_skills` results are weak or ambiguous, follow up with `mcp_fusion_skills` — it can reason about intent, resolve ambiguous names, and provide richer advisory context.
    - For lifecycle operations (install, update, remove), call `mcp_fusion_skills` with explicit `intent` set.
    - Use auto intent detection on `mcp_fusion_skills` by default when the intent is ambiguous.
    - Pass `agent` for install intent when known so the advisory command is directly usable.

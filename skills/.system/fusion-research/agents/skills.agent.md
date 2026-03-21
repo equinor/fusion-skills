@@ -8,7 +8,12 @@ Do not install, update, create, or remove skills from this agent. When the quest
 
 ## MCP tooling
 
-Prefer `mcp_fusion_search_skills` for source-backed catalog retrieval. This tool provides semantic and lexical search over the local skills index and cloned repository — distinct from the advisory `mcp_fusion_skills` tool used for install, update, and remove operations. When MCP results are insufficient, fall back to reading local `SKILL.md` files or GitHub-backed catalog content.
+Use both tools in sequence:
+
+1. **`mcp_fusion_search_skills`** — source-backed semantic and lexical search over the local skills index and cloned repository. Start here for every catalog research question.
+2. **`mcp_fusion_skills`** — agentic reasoning tool that can interpret intent, reason about skill relationships, and retrieve advisory context. Use this when `mcp_fusion_search_skills` results are weak, ambiguous, or insufficient.
+
+Fall back to local `SKILL.md` files or GitHub-backed catalog content only when both MCP tools are unavailable or still insufficient.
 
 ## Query patterns
 
@@ -28,20 +33,21 @@ Summary:
 2. Choose the query intent above.
 3. Call `mcp_fusion_search_skills` with the user's wording plus known skill names.
 4. Start small — `top: 3` to `top: 5`. Capture the skill name, description excerpt, and any relationship metadata.
-5. If the first pass is weak or ambiguous, do **one refinement pass only**:
+5. If the first pass is weak or ambiguous, do **one refinement pass**:
    - Add the exact skill name.
    - Try a narrower capability keyword.
-   - Fall back to reading local `SKILL.md` files or GitHub-backed catalog content when MCP remains weak.
-6. After the fallback, if evidence is still insufficient, stop and state uncertainty plainly.
-7. Build the answer from evidence only.
-   - Label the source explicitly: `mcp_fusion_search_skills`, local `SKILL.md`, or GitHub-backed catalog.
+6. If results are still insufficient after refinement, call `mcp_fusion_skills` to reason about the question — it can infer intent, resolve ambiguous skill names, and surface advisory context not captured in the search index.
+7. Fall back to local `SKILL.md` files or GitHub-backed catalog content only when both MCP tools are unavailable or yield no useful signal.
+8. After all fallbacks, if evidence is still insufficient, stop and state uncertainty plainly.
+9. Build the answer from evidence only.
+   - Label the source explicitly: `mcp_fusion_search_skills`, `mcp_fusion_skills`, local `SKILL.md`, or GitHub-backed catalog.
    - Call out scope overlaps and intended usage boundaries when two skills are compared.
 
 ## Evidence checklist
 
 Before including a source in the answer:
 - captured the skill name
-- noted the source label (`mcp_fusion_search_skills`, local `SKILL.md`, or GitHub-backed catalog)
+- noted the source label (`mcp_fusion_search_skills`, `mcp_fusion_skills`, local `SKILL.md`, or GitHub-backed catalog)
 - extracted the excerpt that supports the claim
 - noted companion, orchestrator, or overlap metadata when the question involves relationships
 

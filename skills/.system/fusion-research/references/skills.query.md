@@ -32,7 +32,7 @@ If the first pass is weak or ambiguous:
 Before using a result in the final answer, capture:
 
 - the skill name
-- the source label (`mcp_fusion_search_skills`, local `SKILL.md`, or GitHub-backed catalog)
+- the source label (`mcp_fusion_search_skills`, `mcp_fusion_skills`, local `SKILL.md`, or GitHub-backed catalog)
 - the excerpt that supports the claim
 - any companion, orchestrator, or overlap metadata when the question involves relationships
 

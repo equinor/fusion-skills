@@ -21,6 +21,7 @@ metadata:
       - mcp_fusion_search_eds
       - mcp_fusion_search_docs
       - mcp_fusion_search_skills
+      - mcp_fusion_skills
 ---
 
 # Fusion Research
