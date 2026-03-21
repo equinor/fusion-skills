@@ -21,10 +21,14 @@ Goal: create clear GitHub issues fast, with draft-first review and safe mutation
 - Run sub-issue mutations only for relationships that actually changed.
 - If rate limits are hit, stop optional lookups and return a clear retry plan.
 
+## Repository routing
+
+Routing is repo-specific. When no explicit repository is given, read the active workspace's `CONTRIBUTING.md` and `contribute/` docs and apply any issue routing rules found there. See SKILL.md Step 2 for the authoritative flow. Never hardcode destinations in this skill.
+
 ## Workflow
 
 1. Classify issue type (`Bug`, `Feature`, `User Story`, `Task`).
-2. Resolve destination repository.
+2. Resolve destination repository (apply contributor guide routing when in the active workspace context).
 3. Check template source in order:
 	- repository template (`.github/ISSUE_TEMPLATE/`)
 	- specialist fallback template

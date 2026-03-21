@@ -36,3 +36,5 @@
 ## Questions and uncertainty
 
 If naming, safety constraints, or ownership are unclear, open a draft PR early and document the open questions in the PR description.
+
+For issue routing and how to author issues, see [CONTRIBUTING.md](../CONTRIBUTING.md).
