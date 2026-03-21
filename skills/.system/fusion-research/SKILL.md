@@ -100,7 +100,7 @@ Use the structure in [assets/source-backed-answer-template.md](assets/source-bac
 
 ## Research agents
 
-This skill includes three research agents in `agents/`. Each covers one Fusion research domain with its own query patterns and evidence checklist.
+This skill includes four research agents in `agents/`. Each covers one Fusion research domain with its own query patterns and evidence checklist.
 
 - **[`agents/framework.agent.md`](agents/framework.agent.md)** — source-backed answers about Fusion Framework hooks, packages, modules, and cookbook examples. Uses `mcp_fusion_search_framework`.
 - **[`agents/eds.agent.md`](agents/eds.agent.md)** — source-backed answers about EDS component props, usage, accessibility, and design tokens. Uses `mcp_fusion_search_eds`.

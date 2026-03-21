@@ -10,7 +10,7 @@ When the question belongs to Fusion Framework implementation (hooks, packages, A
 
 Use `mcp_fusion_search_docs` for all platform documentation questions.
 
-Fall back to `mcp_fusion_search_framework` only when the docs index yields no results and the question has a framework-adjacent implementation component.
+Do not fall back to `mcp_fusion_search_framework` or other indexes. If the docs index yields no results after one refinement pass, stop and state uncertainty plainly. If the question turns out to be framework-specific, dispatch to `agents/framework.agent.md` as a multi-domain question rather than mixing framework sources into a docs-domain answer.
 
 ## Query patterns
 

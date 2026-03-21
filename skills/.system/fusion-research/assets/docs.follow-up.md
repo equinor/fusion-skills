@@ -17,6 +17,6 @@ Clarifying questions to sharpen the research scope before dispatching to `agents
 
 ## Evidence requirements
 
-- Is a direct excerpt from the docs source required, or is a paraphrase sufficient?
-- Should the answer include attribution (source title or URL), or just a summary?
+- Is a direct excerpt from the docs source required, or is a paraphrase sufficient (with clear source backing either way)?
+- What form of attribution is preferred (source title, URL, section heading, and/or excerpt)? Attribution is always required.
 - If results are sparse after one refinement pass, should uncertainty be reported immediately?
