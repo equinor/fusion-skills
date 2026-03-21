@@ -44,7 +44,7 @@ Typical triggers:
 - "Read runtime config or environment variables"
 - "Instrument this page with analytics"
 - "Add a feature flag to this app"
-- "How do I use useFeature in a Fusion app?"
+- "How do I use the useFeature hook in a Fusion app?"
 - "Implement a feature for ..."
 
 Implicit triggers:

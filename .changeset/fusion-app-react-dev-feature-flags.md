@@ -11,4 +11,4 @@ Add feature-flag guidance as `references/using-feature-flags.md`
 - Calls out `readonly` vs `readOnly` API ambiguity
 - Updated Step 6 module table and trigger phrases in SKILL.md to point to the new reference
 
-Resolves equinor/fusion-core-tasks#840
+resolves equinor/fusion-core-tasks#840

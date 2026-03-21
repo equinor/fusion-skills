@@ -48,18 +48,21 @@ export const configure: AppModuleInitiator = (appConfigurator) => {
 When a flag should participate in framework-wide providers, or when local persistence and URL override are needed, use the module-level API.
 
 ```ts
+// framework-level configuration (for example in src/framework-config.ts)
 import { enableFeatureFlagging } from '@equinor/fusion-framework-module-feature-flag';
 import {
   createLocalStoragePlugin,
   createUrlPlugin,
 } from '@equinor/fusion-framework-module-feature-flag/plugins';
 
-enableFeatureFlagging(config, (builder) => {
-  builder.addPlugin(
-    createLocalStoragePlugin([{ key: 'fusionDebug', title: 'Fusion debug log' }]),
-  );
-  builder.addPlugin(createUrlPlugin(['fusionDebug']));
-});
+export const configureFeatureFlags = (configurator) => {
+  enableFeatureFlagging(configurator, (builder) => {
+    builder.addPlugin(
+      createLocalStoragePlugin([{ key: 'fusionDebug', title: 'Fusion debug log' }]),
+    );
+    builder.addPlugin(createUrlPlugin(['fusionDebug']));
+  });
+};
 ```
 
 - `createLocalStoragePlugin` — persists toggle state in `localStorage`; suitable for developer or debug flags.

@@ -9,4 +9,4 @@ Deprecate skill — content consolidated into `fusion-app-react-dev`
 - Added deprecation notice in SKILL.md
 - Moved from `skills/.experimental/` to `skills/.deprecated/`
 
-Resolves equinor/fusion-core-tasks#840
+resolves equinor/fusion-core-tasks#840
