@@ -490,7 +490,7 @@ jobs:
                 outputs.open_exists = "true";
                 outputs.open_url = openPr.html_url;
                 outputs.open_branch = branch;
-                core.notice(`Open deprecation PR exists for ${skill} on ${branch}; will update ${openPr.html_url}.`);
+                core.notice(`Open removal/replacement PR exists for ${skill} on ${branch}; will update ${openPr.html_url}.`);
                 break;
               }
 
@@ -606,12 +606,20 @@ jobs:
             echo "Successor $SUCCESSOR is already installed — skipping install."
             echo "already_installed=true" >> "$GITHUB_OUTPUT"
             echo "installed=false" >> "$GITHUB_OUTPUT"
+            echo "install_failed=false" >> "$GITHUB_OUTPUT"
           else
             echo "Installing successor $SUCCESSOR from $SOURCE..."
-            npx -y skills add "$SOURCE" --skill "$SUCCESSOR" -y
-            echo "already_installed=false" >> "$GITHUB_OUTPUT"
-            echo "installed=true" >> "$GITHUB_OUTPUT"
-            echo "Installed successor $SUCCESSOR"
+            if npx -y skills add "$SOURCE" --skill "$SUCCESSOR" -y; then
+              echo "already_installed=false" >> "$GITHUB_OUTPUT"
+              echo "installed=true" >> "$GITHUB_OUTPUT"
+              echo "install_failed=false" >> "$GITHUB_OUTPUT"
+              echo "Installed successor $SUCCESSOR"
+            else
+              echo "Failed to install successor $SUCCESSOR from $SOURCE. Continuing with removal-only changes." >&2
+              echo "already_installed=false" >> "$GITHUB_OUTPUT"
+              echo "installed=false" >> "$GITHUB_OUTPUT"
+              echo "install_failed=true" >> "$GITHUB_OUTPUT"
+            fi
           fi
 
       # -------------------------------------------------------------------
@@ -645,6 +653,7 @@ jobs:
           DESCRIPTION: ${{ steps.metadata.outputs.description }}
           SUCCESSOR_INSTALLED: ${{ steps.successor.outputs.installed }}
           SUCCESSOR_ALREADY: ${{ steps.successor.outputs.already_installed }}
+          INSTALL_FAILED: ${{ steps.successor.outputs.install_failed }}
           SOURCE: ${{ inputs.skills-source || 'equinor/fusion-skills' }}
         run: |
           set -euo pipefail
@@ -684,6 +693,9 @@ jobs:
             elif [ -n "$SUCCESSOR" ]; then
               echo "- **Migration**: successor \`$SUCCESSOR\` was not installed (opt-out or install failure)"
               echo "  - Install manually: \`npx -y skills add $SOURCE --skill $SUCCESSOR -y\`"
+              if [ "$INSTALL_FAILED" = "true" ]; then
+                echo "  - ⚠️ Automated install failed — check [workflow logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+              fi
             fi
 
             echo ""
@@ -779,6 +791,7 @@ jobs:
           SUCCESSOR: ${{ steps.metadata.outputs.successor }}
           SUCCESSOR_INSTALLED: ${{ steps.successor.outputs.installed }}
           SUCCESSOR_ALREADY: ${{ steps.successor.outputs.already_installed }}
+          INSTALL_FAILED: ${{ steps.successor.outputs.install_failed }}
         run: |
           set -euo pipefail
           {
@@ -790,10 +803,10 @@ jobs:
                 echo "- ✅ Successor installed as replacement"
               elif [ "$SUCCESSOR_ALREADY" = "true" ]; then
                 echo "- ✅ Successor already installed"
+              elif [ "$INSTALL_FAILED" = "true" ]; then
+                echo "- ⚠️ Successor install failed — check step logs"
               elif [ "${{ inputs.skip-successor-install }}" = "true" ]; then
                 echo "- ⏭️ Successor install skipped (opt-out)"
-              else
-                echo "- ⚠️ Successor install failed or was skipped — check step logs"
               fi
             fi
 
