@@ -17,6 +17,7 @@ metadata:
     - fusion-react-components
     - styled-components
     - app-development
+    - feature-flag
   mcp:
     suggested:
       - fusion
@@ -42,6 +43,8 @@ Typical triggers:
 - "Add bookmark support for this view"
 - "Read runtime config or environment variables"
 - "Instrument this page with analytics"
+- "Add a feature flag to this app"
+- "How do I use useFeature in a Fusion app?"
 - "Implement a feature for ..."
 
 Implicit triggers:
@@ -155,6 +158,7 @@ Identify which module the user needs, then read only the matching reference:
 | Bookmarks | `references/using-bookmarks.md` |
 | Analytics | `references/using-analytics.md` |
 | Runtime config / environment | `references/using-assets-and-environment.md` |
+| Feature flags | `references/using-feature-flags.md` |
 | General framework modules | `references/using-framework-modules.md` |
 
 - Add module setup in `config.ts` using the `AppModuleInitiator` callback.
