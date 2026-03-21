@@ -8,7 +8,7 @@ Do not install, update, create, or remove skills from this agent. When the quest
 
 ## MCP tooling
 
-Prefer `mcp_fusion_skills` for catalog-aware retrieval. When MCP results are insufficient, fall back to reading local `SKILL.md` files or GitHub-backed catalog content.
+Prefer `mcp_fusion_search_skills` for source-backed catalog retrieval. This tool provides semantic and lexical search over the local skills index and cloned repository — distinct from the advisory `mcp_fusion_skills` tool used for install, update, and remove operations. When MCP results are insufficient, fall back to reading local `SKILL.md` files or GitHub-backed catalog content.
 
 ## Query patterns
 
@@ -26,7 +26,7 @@ Summary:
    - If the user wants to install, update, or remove a skill, redirect to `fusion-discover-skills`.
    - If the user wants to create or edit skill files, redirect to `fusion-skill-authoring`.
 2. Choose the query intent above.
-3. Call `mcp_fusion_skills` with the user's wording plus known skill names.
+3. Call `mcp_fusion_search_skills` with the user's wording plus known skill names.
 4. Start small — `top: 3` to `top: 5`. Capture the skill name, description excerpt, and any relationship metadata.
 5. If the first pass is weak or ambiguous, do **one refinement pass only**:
    - Add the exact skill name.
@@ -34,14 +34,14 @@ Summary:
    - Fall back to reading local `SKILL.md` files or GitHub-backed catalog content when MCP remains weak.
 6. After the fallback, if evidence is still insufficient, stop and state uncertainty plainly.
 7. Build the answer from evidence only.
-   - Label the source explicitly: `mcp_fusion_skills`, local `SKILL.md`, or GitHub-backed catalog.
+   - Label the source explicitly: `mcp_fusion_search_skills`, local `SKILL.md`, or GitHub-backed catalog.
    - Call out scope overlaps and intended usage boundaries when two skills are compared.
 
 ## Evidence checklist
 
 Before including a source in the answer:
 - captured the skill name
-- noted the source label (`mcp_fusion_skills`, local `SKILL.md`, or GitHub-backed catalog)
+- noted the source label (`mcp_fusion_search_skills`, local `SKILL.md`, or GitHub-backed catalog)
 - extracted the excerpt that supports the claim
 - noted companion, orchestrator, or overlap metadata when the question involves relationships
 
