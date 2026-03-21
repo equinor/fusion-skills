@@ -3,7 +3,7 @@ name: fusion-rule-author
 description: 'Support skill providing the workflow, templates, and references for AI coding assistant rule authoring. Invoked by fusion-rules gateway agents — not intended for direct use.'
 license: MIT
 metadata:
-  version: "0.0.0"
+  version: "0.1.0"
   status: active
   owner: "@equinor/fusion-core"
   role: support

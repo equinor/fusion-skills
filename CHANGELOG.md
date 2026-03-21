@@ -2,6 +2,32 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.18.0
+
+### Minor
+
+__🎯 [feat: add fusion-rules gateway and fusion-rule-author support skill #116](https://github.com/equinor/fusion-skills/pull/116)<br/>
+🗂️ [2037597](https://github.com/equinor/fusion-skills/commit/20375978cba700b828b5c912e7159ef117ee2422)<br/>
+📦 fusion-rule-author@0.1.0__
+
+Add fusion-rule-author support skill with workflow, templates, and references
+
+Internal support skill providing the canonical 7-step authoring workflow, starter templates, frontmatter scenarios, follow-up questions, quality checklist, and tech-stack examples for GitHub Copilot, Cursor, and Claude Code rule files.
+
+---
+
+__🎯 [feat: add fusion-rules gateway and fusion-rule-author support skill #116](https://github.com/equinor/fusion-skills/pull/116)<br/>
+🗂️ [2037597](https://github.com/equinor/fusion-skills/commit/20375978cba700b828b5c912e7159ef117ee2422)<br/>
+📦 fusion-rules@0.1.0__
+
+Add fusion-rules gateway skill for AI coding assistant rule authoring
+
+Gateway entrypoint that detects the target editor (GitHub Copilot, Cursor, Claude Code) and routes to the matching agent for guided rule scaffolding.
+
+- `agents/copilot.agent.md` — GitHub Copilot instructions workflow
+- `agents/cursor.agent.md` — Cursor project rules workflow
+- `agents/claude-code.agent.md` — Claude Code rules workflow
+
 ## v0.17.1
 
 ### Patch

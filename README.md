@@ -312,6 +312,18 @@ Source-backed research orchestrator for the Fusion ecosystem. Routes to the corr
 
 ---
 
+**⚙️ [`fusion-rule-author@0.1.0`](skills/.system/fusion-rule-author/SKILL.md)**
+
+Support skill providing the workflow, templates, and references for AI coding assistant rule authoring. Invoked by fusion-rules gateway agents — not intended for direct use.
+
+---
+
+**👍 [`fusion-rules@0.1.0`](skills/fusion-rules/SKILL.md)**
+
+Entrypoint for AI coding assistant rule authoring across GitHub Copilot, Cursor, and Claude Code. USE FOR: setting up rules, reviewing existing rules, scaffolding instruction files, or asking which editor format to use. DO NOT USE FOR: authoring skills (SKILL.md), agent definitions (.agent.md), or CI enforcement of rule files.
+
+---
+
 **👍 [`fusion-skill-authoring@0.3.2`](skills/fusion-skill-authoring/SKILL.md)**
 
 Creates or modernizes repository skills with clear activation cues, purposeful support files, and practical review loops. USE FOR: creating a new skill, tightening an existing skill, improving discovery wording, and structuring references/assets/optional helper agents when they genuinely add value. DO NOT USE FOR: product-code changes, routine copy edits outside skills/, or documentation that should not become an installable skill.
