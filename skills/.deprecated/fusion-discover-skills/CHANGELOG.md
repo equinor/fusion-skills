@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.5 - 2026-03-21
+
+### patch
+
+- [#113](https://github.com/equinor/fusion-skills/pull/113) [`d777366`](https://github.com/equinor/fusion-skills/commit/d777366fe6e1b710876a8e1abd2f311e3f4440c4) - Deprecate `fusion-discover-skills` in favour of `fusion-skills`
+
+
+  All discovery, install, update, and remove functionality has been absorbed into the `discover` mode of `fusion-skills`. The skill is moved to `.deprecated/` with `metadata.status: deprecated` and `metadata.successor: fusion-skills`.
+
+  Install the replacement: `npx -y skills add equinor/fusion-skills fusion-skills`
+
 ## 0.1.4 - 2026-03-21
 
 ### patch

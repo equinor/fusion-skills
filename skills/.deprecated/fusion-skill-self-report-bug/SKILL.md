@@ -3,7 +3,7 @@ name: fusion-skill-self-report-bug
 description: Capture Fusion skill workflow failure context and guide a draft-first bug reporting flow with explicit confirmation before any GitHub mutation.
 license: MIT
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
   status: deprecated
   deprecated_at: "2026-03-21"
   successor: fusion-skills

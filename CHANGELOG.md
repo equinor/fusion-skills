@@ -2,6 +2,88 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.17.0
+
+### Minor
+
+__🎯 [feat: add fusion main gate and fusion-skills lifecycle orchestrator #113](https://github.com/equinor/fusion-skills/pull/113)<br/>
+🗂️ [d777366](https://github.com/equinor/fusion-skills/commit/d777366fe6e1b710876a8e1abd2f311e3f4440c4)<br/>
+📦 fusion@0.1.0__
+
+Add `fusion` skill — main Copilot gate for the Fusion ecosystem
+
+Introduces `skills/fusion` as the universal cross-domain router. Routes any Fusion-related request to the right installed skill: `fusion-skills` (skill lifecycle), `fusion-issue-authoring`, `fusion-issue-solving`, `fusion-issue-task-planning`, `fusion-github-review-resolution`, `fusion-dependency-review`. Includes status column (active/experimental), loop prevention, first-contact response, and MCP fallback guidance.
+
+Related to: equinor/fusion-core-tasks#470
+
+---
+
+__🎯 [feat(fusion-research): add docs domain for platform documentation research #110](https://github.com/equinor/fusion-skills/pull/110)<br/>
+🗂️ [859fd0c](https://github.com/equinor/fusion-skills/commit/859fd0c466884178169e7c14fd29565ad6a0d156)<br/>
+📦 fusion-research@0.3.0__
+
+Add docs domain to fusion-research skill
+
+- Add `agents/docs.agent.md` routing platform documentation questions to `mcp_fusion_search_docs`
+- Add `assets/docs.follow-up.md` for pre-dispatch scope questions
+- Add `references/docs.query.md` with proven query lanes for docs retrieval
+- Update SKILL.md description, classification table, dispatch table, agents list, and assets list to cover the new Docs domain
+- Docs domain covers: Fusion platform concepts, onboarding, platform operations, and governance
+
+Resolves equinor/fusion-core-tasks#411
+
+---
+
+__🎯 [feat: add fusion main gate and fusion-skills lifecycle orchestrator #113](https://github.com/equinor/fusion-skills/pull/113)<br/>
+🗂️ [d777366](https://github.com/equinor/fusion-skills/commit/d777366fe6e1b710876a8e1abd2f311e3f4440c4)__
+
+Add `fusion-skills` skill — agentic entrypoint for all Fusion skill lifecycle operations
+
+New skill with four focused agents:
+- **discovery** — find skills by task, list installed skills, proactive promotion via Fusion MCP semantic search
+- **greenkeeper** — install, update, remove, check for updates, and set up automated sync/discovery workflows
+- **author** — clarify and redirect skill creation/improvement requests to `fusion-skill-authoring`
+- **warden** — inspect SKILL.md for quality smells; report skill failures via inline bug drafting (supersedes `fusion-skill-self-report-bug`)
+
+Includes `references/sync-workflows.md` (canonical workflow YAML patterns), `references/skill-catalog.md` (MCP fallback lookup), `references/follow-up-questions.md` (per-agent tiebreakers), and `assets/issue-templates/skill-workflow-failure-bug.md` (bug report template from deprecated skill).
+
+Resolves equinor/fusion-core-tasks#470
+
+### Patch
+
+__🎯 [feat: add fusion main gate and fusion-skills lifecycle orchestrator #113](https://github.com/equinor/fusion-skills/pull/113)<br/>
+🗂️ [d777366](https://github.com/equinor/fusion-skills/commit/d777366fe6e1b710876a8e1abd2f311e3f4440c4)<br/>
+📦 fusion-discover-skills@0.1.5__
+
+Deprecate `fusion-discover-skills` in favour of `fusion-skills`
+
+All discovery, install, update, and remove functionality has been absorbed into the `discover` mode of `fusion-skills`. The skill is moved to `.deprecated/` with `metadata.status: deprecated` and `metadata.successor: fusion-skills`.
+
+Install the replacement: `npx -y skills add equinor/fusion-skills fusion-skills`
+
+---
+
+__🎯 [feat: add fusion main gate and fusion-skills lifecycle orchestrator #113](https://github.com/equinor/fusion-skills/pull/113)<br/>
+🗂️ [d777366](https://github.com/equinor/fusion-skills/commit/d777366fe6e1b710876a8e1abd2f311e3f4440c4)<br/>
+📦 fusion-skill-self-report-bug@0.1.2__
+
+Deprecate `fusion-skill-self-report-bug` in favour of the `warden` agent in `fusion-skills`
+
+The bug reporting workflow has been inlined into `fusion-skills/agents/warden.agent.md`, which also adds proactive frustration detection and skill smell inspection. The `fusion-skill-self-report-bug` skill is no longer needed as a standalone install.
+
+Superseded by the `warden` agent in `fusion-skills`.
+
+---
+
+__🎯 [docs: add issue routing guidance and contributor-guide-aware routing to fusion-issue-authoring #112](https://github.com/equinor/fusion-skills/pull/112)<br/>
+🗂️ [e90fb97](https://github.com/equinor/fusion-skills/commit/e90fb97b20d1aceb0929dbc96bddf28fdf358f0a)<br/>
+📦 fusion-issue-authoring@0.3.1__
+
+Add contributor-guide-aware repository routing to issue authoring
+
+- SKILL.md Step 2: read active workspace `CONTRIBUTING.md` / `contribute/` for routing rules before asking the user
+- `references/instructions.md`: add Repository routing note pointing to SKILL.md Step 2 as authoritative flow
+
 ## v0.16.0
 
 ### Minor

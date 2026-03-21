@@ -4,7 +4,7 @@ description: 'DEPRECATED: Use fusion-skills instead. This skill has been superse
 license: MIT
 compatibility: Deprecated. See fusion-skills.
 metadata:
-   version: "0.1.4"
+   version: "0.1.5"
    status: deprecated
    deprecated_at: "2026-03-21"
    successor: fusion-skills

@@ -228,6 +228,12 @@ In this repository, use `fusion-<skill-name>` as the default skill naming conven
 - `skills/.system/` ⚙️ internal/system skills and shared building blocks
 
 <!-- skills-table:start -->
+**👍 [`fusion@0.1.0`](skills/fusion/SKILL.md)**
+
+Main Copilot skill gate for the Fusion ecosystem — cross-domain router. USE FOR: routing between different Fusion domains (skills, issues, PRs, reviews) when the right domain skill is unclear; getting install guidance for missing skills. DO NOT USE FOR: skill lifecycle operations (use fusion-skills directly), tasks where a specific Fusion skill is already active.
+
+---
+
 **👍 [`fusion-app-react-dev@0.2.0`](skills/fusion-app-react-dev/SKILL.md)**
 
 Guides feature development in Fusion Framework React apps, including app-scoped framework research needed to choose the right hooks, modules, packages, and integration patterns before implementation. USE FOR: building new features, adding components or pages, creating hooks and services, wiring up API endpoints, extending Fusion module configuration, and answering app implementation questions about which Fusion Framework surface to use. DO NOT USE FOR: issue authoring, skill authoring, CI/CD configuration, backend service changes, or general Fusion documentation that is not tied to app implementation.
@@ -249,12 +255,6 @@ Guides integrations across Fusion Core service APIs from a single installable sk
 **🧪 [`fusion-dependency-review@0.1.2`](skills/.experimental/fusion-dependency-review/SKILL.md)**
 
 Review dependency PRs with structured research, existing-PR-discussion capture, multi-lens analysis (security, code quality, impact), and a repeatable verdict template. USE FOR: dependency update PRs, Renovate/Dependabot PRs, library upgrade reviews, "review this dependency PR", "should we merge this update". DO NOT USE FOR: feature PRs, application code reviews, dependency automation/bot configuration, or unattended merge without confirmation.
-
----
-
-**🧪 [`fusion-discover-skills@0.1.4`](skills/.experimental/fusion-discover-skills/SKILL.md)**
-
-Discovers relevant Fusion skills through Fusion MCP first, falls back to GitHub-backed catalog inspection when needed, returns concise matches with purpose and next-step guidance, and handles install, update, or remove intent without guesswork. USE FOR: finding a skill for a task, asking what to install, checking update or remove guidance, discovering available Fusion skills. DO NOT USE FOR: creating new skills, performing the task itself, or inventing results when discovery signals are unavailable.
 
 ---
 
@@ -282,7 +282,7 @@ Wires Fusion Help Center into app pages — creates article slug constants, adds
 
 ---
 
-**👍 [`fusion-issue-authoring@0.3.0`](skills/fusion-issue-authoring/SKILL.md)**
+**👍 [`fusion-issue-authoring@0.3.1`](skills/fusion-issue-authoring/SKILL.md)**
 
 Classify issue type, activate the matching agent mode for type-specific drafting, and enforce shared safety gates before GitHub mutation.
 
@@ -306,9 +306,9 @@ Explain what Fusion MCP is and guide users through setting it up when they need 
 
 ---
 
-**⚙️ [`fusion-research@0.2.0`](skills/.system/fusion-research/SKILL.md)**
+**⚙️ [`fusion-research@0.3.0`](skills/.system/fusion-research/SKILL.md)**
 
-Source-backed research orchestrator for the Fusion ecosystem. Routes to the correct research agent based on question type. Returns source-backed evidence only; will not invent Framework behavior, component APIs, or skill catalog relationships. USE FOR: any research question needing source-backed evidence about Fusion Framework APIs, EDS components, or the Fusion skill catalog. DO NOT USE FOR: implementing code changes, installing or editing skills, MCP setup or troubleshooting, or inventing Fusion behavior without evidence.
+Source-backed research orchestrator for the Fusion ecosystem. Routes to the correct research agent based on question type. Returns source-backed evidence only; will not invent Framework behavior, component APIs, skill catalog relationships, or platform guidance. USE FOR: any research question needing source-backed evidence about Fusion Framework APIs, EDS components, the Fusion skill catalog, or Fusion platform documentation. DO NOT USE FOR: implementing code changes, installing or editing skills, MCP setup or troubleshooting, or inventing Fusion behavior without evidence.
 
 ---
 
@@ -318,9 +318,9 @@ Creates or modernizes repository skills with clear activation cues, purposeful s
 
 ---
 
-**👍 [`fusion-skill-self-report-bug@0.1.1`](skills/fusion-skill-self-report-bug/SKILL.md)**
+**👍 [`fusion-skills@0.0.0`](skills/fusion-skills/SKILL.md)**
 
-Capture Fusion skill workflow failure context and guide a draft-first bug reporting flow with explicit confirmation before any GitHub mutation.
+Entrypoint for all Fusion skill lifecycle operations. USE FOR: finding, installing, updating, syncing, or greenkeeping skills; setting up skill automation; creating or authoring a new skill; reporting a bug with a skill. DO NOT USE FOR: resolving GitHub issues, reviewing PRs, planning task breakdowns, or authoring GitHub issues — those are handled by other Fusion skills.
 <!-- skills-table:end -->
 
 ## 🔖 Versioning
