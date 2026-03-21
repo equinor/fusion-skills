@@ -1,8 +1,8 @@
 ---
 name: fusion-research
-description: 'Source-backed research orchestrator for the Fusion ecosystem. Routes to the correct research agent based on question type. Returns source-backed evidence only; will not invent Framework behavior, component APIs, or skill catalog relationships. USE FOR: any research question needing source-backed evidence about Fusion Framework APIs, EDS components, or the Fusion skill catalog. DO NOT USE FOR: implementing code changes, installing or editing skills, MCP setup or troubleshooting, or inventing Fusion behavior without evidence.'
+description: 'Source-backed research orchestrator for the Fusion ecosystem. Routes to the correct research agent based on question type. Returns source-backed evidence only; will not invent Framework behavior, component APIs, skill catalog relationships, or platform guidance. USE FOR: any research question needing source-backed evidence about Fusion Framework APIs, EDS components, the Fusion skill catalog, or Fusion platform documentation. DO NOT USE FOR: implementing code changes, installing or editing skills, MCP setup or troubleshooting, or inventing Fusion behavior without evidence.'
 license: MIT
-compatibility: Works best with Fusion MCP. Dispatches to `agents/framework.agent.md` for `mcp_fusion_search_framework`, `agents/eds.agent.md` for `mcp_fusion_search_eds`, and `agents/skills.agent.md` for `mcp_fusion_search_skills`. If MCP is unavailable, state that clearly rather than guessing.
+compatibility: Works best with Fusion MCP. Dispatches to `agents/framework.agent.md` for `mcp_fusion_search_framework`, `agents/eds.agent.md` for `mcp_fusion_search_eds`, `agents/skills.agent.md` for `mcp_fusion_search_skills`, and `agents/docs.agent.md` for `mcp_fusion_search_docs`. If MCP is unavailable, state that clearly rather than guessing.
 metadata:
   version: "0.2.0"
   status: experimental
@@ -15,6 +15,8 @@ metadata:
     - framework
     - eds
     - skills
+    - docs
+    - platform-guidance
   mcp:
     suggested:
       - mcp_fusion_search_framework
@@ -41,6 +43,10 @@ Typical triggers:
 - "What's the recommended pattern for X in Fusion?"
 - "Show me a Fusion Framework example for building X."
 - "What are the design tokens for color and spacing in EDS?"
+- "How does Fusion handle X at the platform level?"
+- "What is the Fusion platform guidance on Y?"
+- "How do I onboard to Fusion?"
+- "What are the guidelines for Z in the Fusion platform?"
 
 ## When not to use
 
@@ -49,7 +55,7 @@ Do not use this skill for:
 - finding, installing, updating, or removing skills — use `fusion-discover-skills`; use this skill only to understand a skill's scope, relationships, or catalog fit — not to discover what to install
 - creating or editing skill files — use `fusion-skill-authoring` for authoring-time research
 - Fusion MCP installation or troubleshooting — use `fusion-mcp`; once MCP is running, return here for research
-- pure conceptual Fusion questions with no specific artifact name (hook, component, package, token) — ask the user for a concrete artifact reference first
+- pure conceptual Fusion questions with no specific artifact name (hook, component, package, token, or platform topic) — ask the user for a concrete artifact reference or platform topic first
 
 ## Instructions
 
@@ -59,6 +65,7 @@ Before classifying, you may use the domain-specific follow-up questions to narro
 - Framework scope: [assets/framework.follow-up.md](assets/framework.follow-up.md)
 - EDS scope: [assets/eds.follow-up.md](assets/eds.follow-up.md)
 - Skills catalog scope: [assets/skills.follow-up.md](assets/skills.follow-up.md)
+- Docs scope: [assets/docs.follow-up.md](assets/docs.follow-up.md)
 
 Skip this step if the question already names a specific artifact (hook, component, package, token, or skill).
 
@@ -71,6 +78,7 @@ Determine which domain the question belongs to:
 | **Framework** | Fusion Framework hooks, packages, modules, TypeScript APIs, cookbook examples | [`agents/framework.agent.md`](agents/framework.agent.md) |
 | **EDS** | EDS component props, usage examples, accessibility, design tokens | [`agents/eds.agent.md`](agents/eds.agent.md) |
 | **Skills** | Skill catalog lookup, scope boundaries, companion/orchestrator relationships | [`agents/skills.agent.md`](agents/skills.agent.md) |
+| **Docs** | Fusion platform concepts, onboarding, platform operations, governance, non-implementation guidance | [`agents/docs.agent.md`](agents/docs.agent.md) |
 
 If the question spans multiple domains, answer each domain separately using the appropriate agent in sequence.
 
@@ -79,6 +87,7 @@ If the question spans multiple domains, answer each domain separately using the 
 - Framework questions → follow [`agents/framework.agent.md`](agents/framework.agent.md).
 - EDS questions → follow [`agents/eds.agent.md`](agents/eds.agent.md).
 - Skills questions → follow [`agents/skills.agent.md`](agents/skills.agent.md).
+- Docs questions → follow [`agents/docs.agent.md`](agents/docs.agent.md).
 
 If the runtime supports skill-local agents, invoke the agent directly. Otherwise, apply the agent's instructions inline.
 
@@ -96,6 +105,7 @@ This skill includes three research agents in `agents/`. Each covers one Fusion r
 - **[`agents/framework.agent.md`](agents/framework.agent.md)** — source-backed answers about Fusion Framework hooks, packages, modules, and cookbook examples. Uses `mcp_fusion_search_framework`.
 - **[`agents/eds.agent.md`](agents/eds.agent.md)** — source-backed answers about EDS component props, usage, accessibility, and design tokens. Uses `mcp_fusion_search_eds`.
 - **[`agents/skills.agent.md`](agents/skills.agent.md)** — source-backed answers about the Fusion skill catalog: what skills exist, their scope, and how they relate. Uses `mcp_fusion_search_skills`.
+- **[`agents/docs.agent.md`](agents/docs.agent.md)** — source-backed answers about Fusion platform concepts, onboarding, operations, and governance. Uses `mcp_fusion_search_docs`.
 
 ## Assets
 
@@ -103,6 +113,7 @@ This skill includes three research agents in `agents/`. Each covers one Fusion r
 - [assets/framework.follow-up.md](assets/framework.follow-up.md) — pre-dispatch scope questions for Framework research
 - [assets/eds.follow-up.md](assets/eds.follow-up.md) — pre-dispatch scope questions for EDS research
 - [assets/skills.follow-up.md](assets/skills.follow-up.md) — pre-dispatch scope questions for skills catalog research
+- [assets/docs.follow-up.md](assets/docs.follow-up.md) — pre-dispatch scope questions for Docs platform research
 
 ## Safety & constraints
 
