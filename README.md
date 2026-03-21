@@ -228,7 +228,7 @@ In this repository, use `fusion-<skill-name>` as the default skill naming conven
 - `skills/.system/` ⚙️ internal/system skills and shared building blocks
 
 <!-- skills-table:start -->
-**👍 [`fusion-app-react-dev@0.1.2`](skills/fusion-app-react-dev/SKILL.md)**
+**👍 [`fusion-app-react-dev@0.2.0`](skills/fusion-app-react-dev/SKILL.md)**
 
 Guides feature development in Fusion Framework React apps, including app-scoped framework research needed to choose the right hooks, modules, packages, and integration patterns before implementation. USE FOR: building new features, adding components or pages, creating hooks and services, wiring up API endpoints, extending Fusion module configuration, and answering app implementation questions about which Fusion Framework surface to use. DO NOT USE FOR: issue authoring, skill authoring, CI/CD configuration, backend service changes, or general Fusion documentation that is not tied to app implementation.
 
@@ -255,12 +255,6 @@ Review dependency PRs with structured research, existing-PR-discussion capture, 
 **🧪 [`fusion-discover-skills@0.1.4`](skills/.experimental/fusion-discover-skills/SKILL.md)**
 
 Discovers relevant Fusion skills through Fusion MCP first, falls back to GitHub-backed catalog inspection when needed, returns concise matches with purpose and next-step guidance, and handles install, update, or remove intent without guesswork. USE FOR: finding a skill for a task, asking what to install, checking update or remove guidance, discovering available Fusion skills. DO NOT USE FOR: creating new skills, performing the task itself, or inventing results when discovery signals are unavailable.
-
----
-
-**🧪 [`fusion-framework-feature-toggling@0.1.0`](skills/.experimental/fusion-framework-feature-toggling/SKILL.md)**
-
-Guides developers using Fusion Framework feature flags with MCP-backed framework retrieval first and bundled public-source fallback assets when MCP is unavailable. USE FOR: helping with `enableFeatureFlag`, `enableFeatureFlagging`, `useFeature`, rollout/cleanup guidance, and finding Fusion Framework feature-flag examples. DO NOT USE FOR: generic SaaS flag platforms, backend-only rollout systems, or inventing framework APIs.
 
 ---
 

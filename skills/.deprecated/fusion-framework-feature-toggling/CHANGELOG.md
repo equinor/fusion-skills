@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.1 - 2026-03-21
+
+### patch
+
+- [#108](https://github.com/equinor/fusion-skills/pull/108) [`5573046`](https://github.com/equinor/fusion-skills/commit/5573046cc9534d48740c6487690d2db3956c5a3b) - Deprecate skill — content consolidated into `fusion-app-react-dev`
+
+
+  - Set `metadata.status: deprecated`, `metadata.successor: fusion-app-react-dev`
+  - Added `deprecated` tag
+  - Added deprecation notice in SKILL.md
+  - Moved from `skills/.experimental/` to `skills/.deprecated/`
+
+  resolves equinor/fusion-core-tasks#840
+
 ## 0.1.0 - 2026-03-16
 
 ### minor
@@ -15,4 +29,3 @@
 
   Related to: equinor/fusion-core-tasks#362
   resolves equinor/fusion-core-tasks#740
-

@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.0 - 2026-03-21
+
+### minor
+
+- [#108](https://github.com/equinor/fusion-skills/pull/108) [`5573046`](https://github.com/equinor/fusion-skills/commit/5573046cc9534d48740c6487690d2db3956c5a3b) - Add feature-flag guidance as `references/using-feature-flags.md`
+
+
+  - Covers app-level `enableFeatureFlag` + `useFeature` from `@equinor/fusion-framework-react-app/feature-flag`
+  - Covers framework-level `enableFeatureFlagging` with `createLocalStoragePlugin` and `createUrlPlugin` from `@equinor/fusion-framework-module-feature-flag`
+  - Documents provider-based `useFeature(provider, key)` variant
+  - Includes rollout checklist and cleanup guidance
+  - Calls out `readonly` vs `readOnly` API ambiguity
+  - Updated Step 6 module table and trigger phrases in SKILL.md to point to the new reference
+
+  resolves equinor/fusion-core-tasks#840
+
 ## 0.1.2 - 2026-03-21
 
 ### patch

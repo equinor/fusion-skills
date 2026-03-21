@@ -2,6 +2,40 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.16.0
+
+### Minor
+
+__🎯 [feat(skills): merge feature-toggling into fusion-app-react-dev, deprecate experimental skill #108](https://github.com/equinor/fusion-skills/pull/108)<br/>
+🗂️ [5573046](https://github.com/equinor/fusion-skills/commit/5573046cc9534d48740c6487690d2db3956c5a3b)<br/>
+📦 fusion-app-react-dev@0.2.0__
+
+Add feature-flag guidance as `references/using-feature-flags.md`
+
+- Covers app-level `enableFeatureFlag` + `useFeature` from `@equinor/fusion-framework-react-app/feature-flag`
+- Covers framework-level `enableFeatureFlagging` with `createLocalStoragePlugin` and `createUrlPlugin` from `@equinor/fusion-framework-module-feature-flag`
+- Documents provider-based `useFeature(provider, key)` variant
+- Includes rollout checklist and cleanup guidance
+- Calls out `readonly` vs `readOnly` API ambiguity
+- Updated Step 6 module table and trigger phrases in SKILL.md to point to the new reference
+
+resolves equinor/fusion-core-tasks#840
+
+### Patch
+
+__🎯 [feat(skills): merge feature-toggling into fusion-app-react-dev, deprecate experimental skill #108](https://github.com/equinor/fusion-skills/pull/108)<br/>
+🗂️ [5573046](https://github.com/equinor/fusion-skills/commit/5573046cc9534d48740c6487690d2db3956c5a3b)<br/>
+📦 fusion-framework-feature-toggling@0.1.1__
+
+Deprecate skill — content consolidated into `fusion-app-react-dev`
+
+- Set `metadata.status: deprecated`, `metadata.successor: fusion-app-react-dev`
+- Added `deprecated` tag
+- Added deprecation notice in SKILL.md
+- Moved from `skills/.experimental/` to `skills/.deprecated/`
+
+resolves equinor/fusion-core-tasks#840
+
 ## v0.15.0
 
 ### Minor
