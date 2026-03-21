@@ -5,7 +5,9 @@ license: MIT
 compatibility: Works best with Fusion MCP access via `mcp_fusion_search_framework` or `mcp_fusion_search_docs`. When Fusion MCP is unavailable, this skill falls back to bundled public-source references and offline assets.
 metadata:
   version: "0.1.0"
-  status: experimental
+  status: deprecated
+  deprecated_at: "2026-03-21"
+  successor: fusion-app-react-dev
   owner: "@equinor/fusion-core"
   tags:
     - fusion
@@ -14,10 +16,15 @@ metadata:
     - feature-toggle
     - mcp
     - guidance
+    - deprecated
   mcp:
     suggested:
       - mcp_fusion
 ---
+
+> **Deprecated** — This skill has been merged into `fusion-app-react-dev`.
+> Use `fusion-app-react-dev` and its reference `references/using-feature-flags.md` for all Fusion Framework feature-flag guidance.
+> This skill is retained for historical context only and will be removed in a future release.
 
 # Fusion Framework Feature Toggling
 
