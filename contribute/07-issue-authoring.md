@@ -1,8 +1,10 @@
 # Issue authoring
 
-All issues related to this repository must be drafted and published using the **`fusion-issue-authoring`** skill.
+All **non-security** issues related to this repository must be drafted and published using the **`fusion-issue-authoring`** skill.
 
 The skill enforces draft-first review, reads this repository's contributor guides to resolve the correct destination automatically, and walks through a confirm-before-publish gate — so no issue lands in the wrong tracker or goes out half-baked.
+
+> **Security vulnerabilities:** Do **not** use GitHub issues or the `fusion-issue-authoring` skill to report potential security issues. Instead, follow this repository's responsible disclosure process described in [`SECURITY.md`](../SECURITY.md).
 
 ## Where issues go
 
