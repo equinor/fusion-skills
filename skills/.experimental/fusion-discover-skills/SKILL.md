@@ -4,7 +4,7 @@ description: 'Discovers relevant Fusion skills through Fusion MCP first, falls b
 license: MIT
 compatibility: Works best with Fusion MCP. Uses `mcp_fusion_skills` for advisory lifecycle operations (install, update, remove) and `mcp_fusion_search_skills` for source-backed semantic discovery. When Fusion MCP is unavailable, this skill can fall back to GitHub MCP or read-only `gh` and GraphQL catalog inspection.
 metadata:
-   version: "0.1.3"
+   version: "0.1.4"
    status: experimental
    owner: "@equinor/fusion-core"
    tags:
