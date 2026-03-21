@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.1 - 2026-03-21
+
+### patch
+
+- [#112](https://github.com/equinor/fusion-skills/pull/112) [`e90fb97`](https://github.com/equinor/fusion-skills/commit/e90fb97b20d1aceb0929dbc96bddf28fdf358f0a) - Add contributor-guide-aware repository routing to issue authoring
+
+
+  - SKILL.md Step 2: read active workspace `CONTRIBUTING.md` / `contribute/` for routing rules before asking the user
+  - `references/instructions.md`: add Repository routing note pointing to SKILL.md Step 2 as authoritative flow
+
 ## 0.3.0 - 2026-03-18
 
 ### minor
