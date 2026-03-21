@@ -62,9 +62,11 @@
 #   After upgrading, the workflow scans all installed skills for deprecation
 #   markers in their SKILL.md frontmatter. For each deprecated/archived skill it:
 #   - Creates a dedicated branch and PR to remove the skill
-#   - Updates the lock file to drop the entry
-#   - Includes successor recommendation if available upstream
-#   - Respects previously-rejected removal PRs (won't re-propose)
+#   - If the skill has metadata.successor, installs the replacement in the same PR
+#   - Updates the lock file accordingly
+#   - Includes successor recommendation and migration guidance in the PR body
+#   - Respects previously-rejected removal/replacement PRs (won't re-propose)
+#   - Deduplicates successor installs (skips if already installed)
 #
 # ============================================================================
 
@@ -92,6 +94,16 @@ on:
         required: false
         type: boolean
         default: true
+      skip-successor-install:
+        description: Skip installing successor skill when removing a deprecated skill that has metadata.successor
+        required: false
+        type: boolean
+        default: false
+      skills-source:
+        description: Source repository for installing successor skills (defaults to equinor/fusion-skills)
+        required: false
+        type: string
+        default: equinor/fusion-skills
 
 permissions:
   # Write permissions required to:
@@ -401,10 +413,11 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
   # =========================================================================
-  # JOB 3: Create one removal PR per deprecated skill
+  # JOB 3: Create one removal/replacement PR per deprecated skill
   # =========================================================================
   # For each deprecated skill, create a pull request that:
   #   - Removes the skill via `npx skills remove`
+  #   - If metadata.successor exists, installs the replacement via `npx skills add`
   #   - Documents successor skill and migration path in the PR body
   remove_deprecated:
     name: Remove deprecated skill
@@ -445,32 +458,42 @@ jobs:
             const skill = process.env.SKILL;
             const skipRejected = process.env.SKIP_REJECTED === "true";
             const { owner, repo } = context.repo;
-            const branch = `chore/skills-deprecation/${skill}`;
+
+            // Check both branch patterns: replacement (successor exists) and deprecation (no successor)
+            const branches = [
+              `chore/skills-replacement/${skill}`,
+              `chore/skills-deprecation/${skill}`,
+            ];
 
             const outputs = {
               mode: "create-new",
               blocked: "false",
               open_exists: "false",
               open_url: "",
+              open_branch: "",
               rejected_exists: "false",
               rejected_url: "",
             };
 
-            const openPrs = await github.paginate(github.rest.pulls.list, {
-              owner,
-              repo,
-              state: "open",
-              head: `${owner}:${branch}`,
-              per_page: 100,
-            });
-            const openPr = openPrs.find((pr) => pr.head?.ref === branch);
+            for (const branch of branches) {
+              const openPrs = await github.paginate(github.rest.pulls.list, {
+                owner,
+                repo,
+                state: "open",
+                head: `${owner}:${branch}`,
+                per_page: 100,
+              });
+              const openPr = openPrs.find((pr) => pr.head?.ref === branch);
 
-            if (openPr) {
-              outputs.mode = "update-open";
-              outputs.open_exists = "true";
-              outputs.open_url = openPr.html_url;
-              core.notice(`Open deprecation PR exists for ${skill}; will update ${openPr.html_url}.`);
-            } else {
+              if (openPr) {
+                outputs.mode = "update-open";
+                outputs.open_exists = "true";
+                outputs.open_url = openPr.html_url;
+                outputs.open_branch = branch;
+                core.notice(`Open removal/replacement PR exists for ${skill} on ${branch}; will update ${openPr.html_url}.`);
+                break;
+              }
+
               const closedPrs = await github.paginate(github.rest.pulls.list, {
                 owner,
                 repo,
@@ -489,8 +512,9 @@ jobs:
                   outputs.mode = "blocked-rejected";
                   outputs.blocked = "true";
                   core.notice(
-                    `Skipping ${skill}; previous removal PR was closed without merge: ${rejectedPr.html_url}.`,
+                    `Skipping ${skill}; previous replacement/removal PR was closed without merge: ${rejectedPr.html_url}.`,
                   );
+                  break;
                 }
               }
             }
@@ -554,7 +578,52 @@ jobs:
           echo "Removed $SKILL via skills CLI"
 
       # -------------------------------------------------------------------
-      # STEP 5: Check whether removal produced changes
+      # STEP 4b: Install successor skill (if available)
+      # -------------------------------------------------------------------
+      # When the deprecated skill declares metadata.successor, install the
+      # replacement in the same branch so the PR is an atomic swap.
+      # Skips if: successor is empty, opt-out input is set, or successor
+      # is already installed.
+      - name: Install successor skill
+        if: |
+          steps.pr_state.outputs.blocked != 'true'
+          && steps.metadata.outputs.successor != ''
+          && !inputs.skip-successor-install
+        id: successor
+        shell: bash
+        env:
+          SUCCESSOR: ${{ steps.metadata.outputs.successor }}
+          SOURCE: ${{ inputs.skills-source || 'equinor/fusion-skills' }}
+        run: |
+          set -euo pipefail
+
+          # Check if successor is already installed
+          installed=$(npx -y skills list --json 2>/dev/null \
+            | jq -r --arg s "$SUCCESSOR" '.[] | select(.name == $s) | .name' \
+            | head -1)
+
+          if [ -n "$installed" ]; then
+            echo "Successor $SUCCESSOR is already installed — skipping install."
+            echo "already_installed=true" >> "$GITHUB_OUTPUT"
+            echo "installed=false" >> "$GITHUB_OUTPUT"
+            echo "install_failed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Installing successor $SUCCESSOR from $SOURCE..."
+            if npx -y skills add "$SOURCE" --skill "$SUCCESSOR" -y; then
+              echo "already_installed=false" >> "$GITHUB_OUTPUT"
+              echo "installed=true" >> "$GITHUB_OUTPUT"
+              echo "install_failed=false" >> "$GITHUB_OUTPUT"
+              echo "Installed successor $SUCCESSOR"
+            else
+              echo "Failed to install successor $SUCCESSOR from $SOURCE. Continuing with removal-only changes." >&2
+              echo "already_installed=false" >> "$GITHUB_OUTPUT"
+              echo "installed=false" >> "$GITHUB_OUTPUT"
+              echo "install_failed=true" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+      # -------------------------------------------------------------------
+      # STEP 5: Check whether removal/replacement produced changes
       # -------------------------------------------------------------------
       - name: Check whether changes were produced
         id: has_changes
@@ -565,7 +634,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          if git diff --quiet --exit-code HEAD; then
+          if git diff --quiet --exit-code HEAD -- .agents/skills/ skills-lock.json 2>/dev/null; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "No changes for $SKILL (skill may already be removed)."
           else
@@ -582,9 +651,19 @@ jobs:
           SKILL: ${{ matrix.skill }}
           SUCCESSOR: ${{ steps.metadata.outputs.successor }}
           DESCRIPTION: ${{ steps.metadata.outputs.description }}
+          SUCCESSOR_INSTALLED: ${{ steps.successor.outputs.installed }}
+          SUCCESSOR_ALREADY: ${{ steps.successor.outputs.already_installed }}
+          INSTALL_FAILED: ${{ steps.successor.outputs.install_failed }}
+          SOURCE: ${{ inputs.skills-source || 'equinor/fusion-skills' }}
         run: |
           set -euo pipefail
           body="pr-body-${SKILL}.md"
+
+          # Determine if this is a replacement or removal
+          is_replacement=false
+          if [ -n "$SUCCESSOR" ] && { [ "$SUCCESSOR_INSTALLED" = "true" ] || [ "$SUCCESSOR_ALREADY" = "true" ]; }; then
+            is_replacement=true
+          fi
 
           {
             echo "## Why"
@@ -604,8 +683,19 @@ jobs:
             echo ""
             echo "- Removes \`$SKILL\` from installed skills"
             echo "- Updates lock file to remove the entry"
-            if [ -n "$SUCCESSOR" ]; then
-              echo "- **Migration**: replace usage with \`$SUCCESSOR\`"
+            if [ "$is_replacement" = "true" ]; then
+              if [ "$SUCCESSOR_ALREADY" = "true" ]; then
+                echo "- Successor \`$SUCCESSOR\` is already installed — no additional install needed"
+              else
+                echo "- **Installs successor** \`$SUCCESSOR\` as a direct replacement"
+                echo "- Updates lock file with the new skill entry"
+              fi
+            elif [ -n "$SUCCESSOR" ]; then
+              echo "- **Migration**: successor \`$SUCCESSOR\` was not installed (opt-out or install failure)"
+              echo "  - Install manually: \`npx -y skills add $SOURCE --skill $SUCCESSOR -y\`"
+              if [ "$INSTALL_FAILED" = "true" ]; then
+                echo "  - ⚠️ Automated install failed — check [workflow logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+              fi
             fi
 
             echo ""
@@ -620,14 +710,58 @@ jobs:
             echo "## Reviewer focus"
             echo ""
             echo "- Confirm \`$SKILL\` is no longer referenced in project configuration"
-            echo "- Verify the skill and lock file removal is correct"
-            if [ -n "$SUCCESSOR" ]; then
-              echo "- Ensure successor \`$SUCCESSOR\` is installed before merging"
+            if [ "$is_replacement" = "true" ]; then
+              echo "- Verify the successor \`$SUCCESSOR\` skill files are correct"
+              echo "- Verify lock file updates reflect both the removal and addition"
+            else
+              echo "- Verify the skill and lock file removal is correct"
+              if [ -n "$SUCCESSOR" ]; then
+                echo "- Ensure successor \`$SUCCESSOR\` is installed before merging"
+              fi
             fi
           } > "$body"
 
       # -------------------------------------------------------------------
-      # STEP 7: Create pull request
+      # STEP 7: Determine PR metadata (branch, title, commit message)
+      # -------------------------------------------------------------------
+      - name: Determine PR metadata
+        if: steps.pr_state.outputs.blocked != 'true' && steps.has_changes.outputs.changed == 'true'
+        id: pr_meta
+        shell: bash
+        env:
+          SKILL: ${{ matrix.skill }}
+          SUCCESSOR: ${{ steps.metadata.outputs.successor }}
+          SUCCESSOR_INSTALLED: ${{ steps.successor.outputs.installed }}
+          SUCCESSOR_ALREADY: ${{ steps.successor.outputs.already_installed }}
+          PR_MODE: ${{ steps.pr_state.outputs.mode }}
+          OPEN_BRANCH: ${{ steps.pr_state.outputs.open_branch }}
+        run: |
+          set -euo pipefail
+
+          is_replacement=false
+          if [ -n "$SUCCESSOR" ] && { [ "$SUCCESSOR_INSTALLED" = "true" ] || [ "$SUCCESSOR_ALREADY" = "true" ]; }; then
+            is_replacement=true
+          fi
+
+          if [ "$is_replacement" = "true" ]; then
+            desired_branch="chore/skills-replacement/$SKILL"
+            echo "title=chore(skills): replace deprecated $SKILL with $SUCCESSOR" >> "$GITHUB_OUTPUT"
+            echo "commit=chore(skills): replace deprecated $SKILL with $SUCCESSOR" >> "$GITHUB_OUTPUT"
+          else
+            desired_branch="chore/skills-deprecation/$SKILL"
+            echo "title=chore(skills): remove deprecated skill $SKILL" >> "$GITHUB_OUTPUT"
+            echo "commit=chore(skills): remove deprecated skill $SKILL" >> "$GITHUB_OUTPUT"
+          fi
+
+          # When updating an existing open PR, keep its branch to avoid orphaning it
+          if [ "$PR_MODE" = "update-open" ] && [ -n "$OPEN_BRANCH" ]; then
+            echo "branch=$OPEN_BRANCH" >> "$GITHUB_OUTPUT"
+          else
+            echo "branch=$desired_branch" >> "$GITHUB_OUTPUT"
+          fi
+
+      # -------------------------------------------------------------------
+      # STEP 8: Create pull request
       # -------------------------------------------------------------------
       - name: Create pull request
         if: steps.pr_state.outputs.blocked != 'true' && steps.has_changes.outputs.changed == 'true'
@@ -635,10 +769,10 @@ jobs:
         uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ github.token }}
-          commit-message: "chore(skills): remove deprecated skill ${{ matrix.skill }}"
-          title: "chore(skills): remove deprecated skill ${{ matrix.skill }}"
+          commit-message: ${{ steps.pr_meta.outputs.commit }}
+          title: ${{ steps.pr_meta.outputs.title }}
           body-path: pr-body-${{ matrix.skill }}.md
-          branch: chore/skills-deprecation/${{ matrix.skill }}
+          branch: ${{ steps.pr_meta.outputs.branch }}
           base: ${{ github.event.repository.default_branch }}
           draft: ${{ inputs.draft-deprecation-prs || false }}
           delete-branch: true
@@ -648,13 +782,16 @@ jobs:
             deprecation
 
       # -------------------------------------------------------------------
-      # STEP 8: Report job summary
+      # STEP 9: Report job summary
       # -------------------------------------------------------------------
       - name: Job summary
         if: always()
         shell: bash
         env:
           SUCCESSOR: ${{ steps.metadata.outputs.successor }}
+          SUCCESSOR_INSTALLED: ${{ steps.successor.outputs.installed }}
+          SUCCESSOR_ALREADY: ${{ steps.successor.outputs.already_installed }}
+          INSTALL_FAILED: ${{ steps.successor.outputs.install_failed }}
         run: |
           set -euo pipefail
           {
@@ -662,10 +799,19 @@ jobs:
 
             if [ -n "$SUCCESSOR" ]; then
               echo "- Successor: \`$SUCCESSOR\`"
+              if [ "$SUCCESSOR_INSTALLED" = "true" ]; then
+                echo "- ✅ Successor installed as replacement"
+              elif [ "$SUCCESSOR_ALREADY" = "true" ]; then
+                echo "- ✅ Successor already installed"
+              elif [ "$INSTALL_FAILED" = "true" ]; then
+                echo "- ⚠️ Successor install failed — check step logs"
+              elif [ "${{ inputs.skip-successor-install }}" = "true" ]; then
+                echo "- ⏭️ Successor install skipped (opt-out)"
+              fi
             fi
 
             if [ "${{ steps.pr_state.outputs.blocked }}" = "true" ]; then
-              echo "- Skipped: previous removal PR was closed without merge (${{ steps.pr_state.outputs.rejected_url }})"
+              echo "- Skipped: previous replacement/removal PR was closed without merge (${{ steps.pr_state.outputs.rejected_url }})"
             elif [ "${{ steps.has_changes.outputs.changed }}" = "true" ] && [ -n "${{ steps.create_pr.outputs.pull-request-url }}" ]; then
               if [ "${{ steps.pr_state.outputs.mode }}" = "update-open" ]; then
                 echo "- Pull request updated: ${{ steps.create_pr.outputs.pull-request-url }}"
