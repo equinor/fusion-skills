@@ -2,6 +2,8 @@
 
 Naming, component structure, and hooks rules for React in Fusion Framework apps.
 
+> **Applicability:** These are org-wide baseline defaults. Repository-level policy (`CONTRIBUTING.md`, ADRs, contributor guides) and tooling configuration (`biome.json`, `tsconfig.json`) take precedence when they explicitly override a rule below. See the skill's **Precedence and applicability** section for the full resolution order.
+
 ## Naming conventions
 
 | Kind           | Convention   | Example          |

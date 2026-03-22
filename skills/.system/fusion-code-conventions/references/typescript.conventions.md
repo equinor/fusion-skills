@@ -2,6 +2,8 @@
 
 Conventions for TypeScript across all contexts — Fusion Framework apps, libraries, scripts, and skill tooling.
 
+> **Applicability:** These are org-wide baseline defaults. Repository-level policy (`CONTRIBUTING.md`, ADRs, contributor guides) and tooling configuration (`biome.json`, `tsconfig.json`) take precedence when they explicitly override a rule below. See the skill's **Precedence and applicability** section for the full resolution order.
+
 ---
 
 ## TSDoc — mandatory for all exports

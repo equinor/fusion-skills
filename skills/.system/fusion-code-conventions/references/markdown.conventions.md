@@ -2,6 +2,8 @@
 
 Conventions for authoring Markdown across all contexts — documentation, READMEs, changelogs, skill files, and any prose-heavy file.
 
+> **Applicability:** These are org-wide baseline defaults. Repository-level policy (`CONTRIBUTING.md`, ADRs, contributor guides) and tooling configuration (`.editorconfig`, `.markdownlint.json`) take precedence when they explicitly override a rule below. See the skill's **Precedence and applicability** section for the full resolution order.
+
 Reference: [CommonMark spec](https://spec.commonmark.org/) · [GitHub Flavored Markdown spec](https://github.github.com/gfm/)
 
 ---

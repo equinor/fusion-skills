@@ -2,6 +2,8 @@
 
 Naming, null safety, async/await, and code style conventions for C# in Fusion projects.
 
+> **Applicability:** These are org-wide baseline defaults. Repository-level policy (`CONTRIBUTING.md`, ADRs, contributor guides) and tooling configuration (`.editorconfig`, `Directory.Build.props`, analyzer settings) take precedence when they explicitly override a rule below. See the skill's **Precedence and applicability** section for the full resolution order.
+
 ## Project structure
 
 ASP.NET Core services typically follow a layered internal layout:
