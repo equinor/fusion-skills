@@ -8,4 +8,4 @@ Clarify default rules vs repository-level precedence for agents
 - Add applicability callout to all four convention reference files (TypeScript, React, C#, Markdown)
 - Guide maintainers to record overrides in CONTRIBUTING.md, contributor guides, or ADRs
 
-Refs: equinor/fusion-core-tasks#842
+Resolves equinor/fusion-core-tasks#842
