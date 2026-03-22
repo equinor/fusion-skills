@@ -55,6 +55,20 @@ Do not use this skill for:
 - Generating net-new code without a review target
 - Mutating files without explicit user confirmation
 
+## Precedence and applicability
+
+This skill provides **org-wide baseline conventions**. When it is installed in a repository that also documents its own conventions, the following precedence applies (highest wins):
+
+1. **Repository-level policy** — docs such as `CONTRIBUTING.md`, contributor guides (for example under `contribute/`), ADRs (wherever they are stored, for example `docs/adr/`), `.github/copilot-instructions.md`, `AGENTS.md`, or equivalent repo-specific files
+2. **Tooling configuration** — files such as `biome.json`, `tsconfig.json`, `.editorconfig`, and linter configs wherever they are defined
+3. **This skill** — all rules in `references/*.conventions.md` and agent modes
+
+When a repository explicitly narrows, relaxes, or contradicts a rule from this skill, the repository policy wins. Agents must not flag code that conforms to the repo's documented conventions, even if it deviates from the skill baseline.
+
+If the conflict is not documented anywhere (no ADR, no contributor note, no config), treat the skill rule as the default and recommend the team record their intent — either adopt the baseline or add an explicit override.
+
+> **For maintainers:** record convention overrides in `CONTRIBUTING.md`, a contributor guide, or an ADR so that both humans and agents discover them consistently.
+
 ## Agent modes
 
 | Agent | Activated for |
