@@ -2,6 +2,22 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.18.1
+
+### Patch
+
+__🎯 [docs(fusion-code-conventions): clarify repo-level precedence over skill defaults #118](https://github.com/equinor/fusion-skills/pull/118)<br/>
+🗂️ [90e0ee2](https://github.com/equinor/fusion-skills/commit/90e0ee2c0f14b3e0c5e0073839b6679baea16295)<br/>
+📦 fusion-code-conventions@0.1.1__
+
+Clarify default rules vs repository-level precedence for agents
+
+- Add "Precedence and applicability" section to SKILL.md establishing resolution order: repo policy > tooling config > skill defaults
+- Add applicability callout to all four convention reference files (TypeScript, React, C#, Markdown)
+- Guide maintainers to record overrides in CONTRIBUTING.md, contributor guides, or ADRs
+
+Resolves equinor/fusion-core-tasks#842
+
 ## v0.18.0
 
 ### Minor
