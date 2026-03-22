@@ -59,8 +59,8 @@ Do not use this skill for:
 
 This skill provides **org-wide baseline conventions**. When it is installed in a repository that also documents its own conventions, the following precedence applies (highest wins):
 
-1. **Repository-level policy** — `CONTRIBUTING.md`, `contribute/`, ADRs (`docs/adr/`), `.github/copilot-instructions.md`, `AGENTS.md`
-2. **Tooling configuration** — `biome.json`, `tsconfig.json`, `.editorconfig`, linter configs
+1. **Repository-level policy** — docs such as `CONTRIBUTING.md`, contributor guides (for example under `contribute/`), ADRs (wherever they are stored, for example `docs/adr/`), `.github/copilot-instructions.md`, `AGENTS.md`, or equivalent repo-specific files
+2. **Tooling configuration** — files such as `biome.json`, `tsconfig.json`, `.editorconfig`, and linter configs wherever they are defined
 3. **This skill** — all rules in `references/*.conventions.md` and agent modes
 
 When a repository explicitly narrows, relaxes, or contradicts a rule from this skill, the repository policy wins. Agents must not flag code that conforms to the repo's documented conventions, even if it deviates from the skill baseline.
