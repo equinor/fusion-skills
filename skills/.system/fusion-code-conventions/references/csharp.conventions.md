@@ -1,30 +1,32 @@
 # C# Code Conventions
 
-Naming, null safety, async/await, and code style conventions for C# in Fusion projects.
+Naming, null safety, async/await, and code style conventions for C# projects.
 
 > **Applicability:** These are org-wide baseline defaults. Repository-level policy (`CONTRIBUTING.md`, ADRs, contributor guides) and tooling configuration (`.editorconfig`, `Directory.Build.props`, analyzer settings) take precedence when they explicitly override a rule below. See the skill's **Precedence and applicability** section for the full resolution order.
 
 ## Project structure
 
-ASP.NET Core services typically follow a layered internal layout:
+ASP.NET Core services commonly follow a layered internal layout similar to:
 
 ```
-Controllers/          ← API controllers + response model types
+Controllers/ or Endpoints/ ← API controllers (MVC) or endpoint definitions (minimal APIs)
 Domain/
-  Commands/           ← MediatR IRequest command + nested Handler class
-  Query/              ← MediatR IRequest query + nested Handler class
-  Models/             ← Domain-internal result types
-  Errors/             ← Domain-specific exception types
-  Behaviours/         ← MediatR pipeline behaviours
+  Commands/                ← MediatR IRequest command + nested Handler class
+  Query/                   ← MediatR IRequest query + nested Handler class
+  Models/                  ← Domain-internal result types
+  Errors/                  ← Domain-specific exception types
+  Behaviours/              ← MediatR pipeline behaviours
 Database/
-  Entities/           ← EF Core entity types
-  Extensions/         ← EF Core queryable helpers
-  *DbContext.cs       ← EF Core DbContext
-Authorization/        ← IAuthorizationRequirement and handler extensions
-Integrations/         ← External service client adapters
-Program.cs            ← Entry point
-Startup.cs            ← DI registration
+  Entities/                ← EF Core entity types
+  Extensions/              ← EF Core queryable helpers
+  *DbContext.cs            ← EF Core DbContext
+Authorization/             ← IAuthorizationRequirement and handler extensions
+Integrations/              ← External service client adapters
+Program.cs                 ← Entry point (and DI registration for minimal APIs)
 ```
+
+Add a `Startup.cs` if using the traditional `IStartup` / `WebApplicationBuilder` separation pattern.
+For minimal APIs, endpoint definitions may live in an `Endpoints/` folder or be organized by feature.
 
 Common reusable packages and shared libraries live in a separate `common/` or `shared/` directory.
 Integration tests live in a sibling `test/` directory, mirroring the production project name.
@@ -77,8 +79,9 @@ Integration tests live in a sibling `test/` directory, mirroring the production 
 
 ## Architecture patterns
 
-- **MediatR CQRS**: business logic flows through `IRequest` + nested `Handler : IRequestHandler`. Commands (state-changing) and queries (read-only) are separated into distinct folders.
-- **Base controller**: share common concerns (authorization helpers, dispatch, enrichment) via a base `ControllerBase` subclass rather than duplicating logic per controller.
+- **Thin endpoints**: endpoints should be small and contain little logic. Parse the request, dispatch to a handler, return the result. Business logic belongs in handlers, not in controllers or endpoint definitions.
+- **Minimal APIs and MVC**: minimal APIs (`app.MapGet(...)`) and MVC controllers (`[ApiController]`) are both valid choices. Pick one style per project and apply it consistently.
+- **CQRS / MediatR**: prefer dispatching business logic through handlers (e.g., MediatR `IRequest` + `IRequestHandler`). Separate commands (state-changing) from queries (read-only) into distinct folders.
 - **Authorization**: prefer policy/requirement-based authorization over inline role string checks in action methods.
 - **API versioning**: `[ApiVersion("X.0")]` + `[MapToApiVersion("X.0")]` from `Asp.Versioning`. Versioned controllers may be split as `partial` classes per version file.
 - **Route naming**: kebab-case path segments (`/orders/{orderId}/line-items`).
@@ -102,7 +105,7 @@ Integration tests live in a sibling `test/` directory, mirroring the production 
 
 - Domain errors are typed exceptions that extend `Exception` directly (`RoleExistsError : Exception`).
 - Constructor sets a formatted message; the class exposes domain-specific read-only properties.
-- Controllers translate domain errors to HTTP responses via `FusionApiError.NotFound(...)`, `FusionApiError.IllegalAction(...)`.
+- Return RFC 7807 Problem Details responses for errors — use `TypedResults.Problem(...)` in minimal APIs or the `ProblemDetails` middleware in MVC.
 - Catch the specific domain exception; let middleware handle unexpected exceptions.
 
 ## Code style (enforced via `.editorconfig`)
