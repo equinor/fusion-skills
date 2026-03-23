@@ -92,6 +92,7 @@ Integration tests live in a sibling `test/` directory, mirroring the production 
 - Null properties should be suppressed in JSON output where they add noise: `[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]` (Newtonsoft) or `[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]` (`System.Text.Json`).
 - Pick one JSON serializer per project and use it consistently. Prefer `System.Text.Json` for new projects; Newtonsoft.Json for projects that already rely on it.
 - Versioned response models use a `V2`/`V3` suffix and may inherit from the previous version to extend incrementally.
+- Avoid reusing the same model across different endpoints — each endpoint should have its own request/response types. Shared models create hidden coupling and make it harder to evolve endpoints independently.
 - Response models live close to their controllers (`Controllers/Models/` or `Controllers/ViewModels/`).
 
 ## EF Core conventions
@@ -129,7 +130,7 @@ Integration tests live in a sibling `test/` directory, mirroring the production 
 ## Testing
 
 - **Framework**: xUnit + `Microsoft.AspNetCore.Mvc.Testing` for integration tests.
-- **Assertions**: `FluentAssertions` is preferred for readable assertion messages; plain xUnit `Assert.*` is fine for simple checks.
+- **Assertions**: use xUnit `Assert.*` or consider lightweight assertion libraries like `Shouldly` or `AwesomeAssertions`. Prefer readable assertion messages.
 - **Containers**: `Testcontainers` (e.g. `Testcontainers.MsSql`) for integration tests that need a real database — prefer over in-memory providers for production-representative coverage.
 - **Test class naming**: `*Tests` suffix, one class per subject (`OrderApiTests`, `CacheTests`).
 - **Test method naming**: `Subject_Context_ShouldOutcome` (`CreateOrder_AsGuest_ShouldBeUnauthorized`).
