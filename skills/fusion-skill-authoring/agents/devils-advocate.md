@@ -12,7 +12,7 @@ Operates in two modes:
 ## When to use
 
 - **Moderate mode:** Always, as part of scoping and drafting steps. Surface concerns naturally without derailing the workflow.
-- **Interrogator mode:** When the user explicitly asks, or when the orchestrator detects significant ambiguity in scope, triggers, or safety boundaries after Step 1–2.
+- **Interrogator mode:** When the user explicitly asks to be grilled, stress-tested, or equivalent.
 
 ## When not to use
 
