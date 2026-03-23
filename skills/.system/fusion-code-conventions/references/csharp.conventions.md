@@ -9,7 +9,7 @@ Naming, null safety, async/await, and code style conventions for C# projects.
 ASP.NET Core services commonly follow a layered internal layout similar to:
 
 ```
-Controllers/ or Endpoints/ ← API controllers (MVC) or endpoint definitions (minimal APIs)
+Controllers/               ← API controllers (MVC)
 Domain/
   Commands/                ← MediatR IRequest command + nested Handler class
   Query/                   ← MediatR IRequest query + nested Handler class
@@ -25,8 +25,8 @@ Integrations/              ← External service client adapters
 Program.cs                 ← Entry point (and DI registration for minimal APIs)
 ```
 
-Add a `Startup.cs` if using the traditional `IStartup` / `WebApplicationBuilder` separation pattern.
-For minimal APIs, endpoint definitions may live in an `Endpoints/` folder or be organized by feature.
+Use a `Startup.cs` (with `ConfigureServices` / `Configure`) only when following the older ASP.NET Core Startup class pattern or a custom startup abstraction.
+For minimal APIs using the .NET 6+ hosting model, keep configuration in `Program.cs`; endpoint definitions may live in an `Endpoints/` folder or be organized by feature.
 
 Common reusable packages and shared libraries live in a separate `common/` or `shared/` directory.
 Integration tests live in a sibling `test/` directory, mirroring the production project name.
@@ -106,7 +106,7 @@ Integration tests live in a sibling `test/` directory, mirroring the production 
 
 - Domain errors are typed exceptions that extend `Exception` directly (`RoleExistsError : Exception`).
 - Constructor sets a formatted message; the class exposes domain-specific read-only properties.
-- Return RFC 7807 Problem Details responses for errors — use `TypedResults.Problem(...)` in minimal APIs or the `ProblemDetails` middleware in MVC.
+- Return RFC 7807 Problem Details responses for errors — for minimal APIs use the built-in ProblemDetails helpers (for example `Results.Problem(...)` / `TypedResults.Problem(...)`, depending on target framework); for MVC use `ControllerBase.Problem(...)` and/or the built-in exception handler middleware that produces ProblemDetails.
 - Catch the specific domain exception; let middleware handle unexpected exceptions.
 
 ## Code style (enforced via `.editorconfig`)
