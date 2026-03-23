@@ -1,10 +1,10 @@
 ---
-name: fusion-app-react-dev
+name: fusion-developer-app
 description: 'Guides feature development in Fusion Framework React apps, including app-scoped framework research needed to choose the right hooks, modules, packages, and integration patterns before implementation. USE FOR: building new features, adding components or pages, creating hooks and services, wiring up API endpoints, extending Fusion module configuration, and answering app implementation questions about which Fusion Framework surface to use. DO NOT USE FOR: issue authoring, skill authoring, CI/CD configuration, backend service changes, or general Fusion documentation that is not tied to app implementation.'
 license: MIT
 compatibility: Requires a Fusion Framework React app bootstrapped with @equinor/fusion-framework-cli. Works best when styled-components, @equinor/eds-core-react, and @equinor/fusion-react-* packages are installed.
 metadata:
-  version: "0.2.0"
+  version: "0.0.0"
   status: active
   owner: "@equinor/fusion-core"
   skills:
