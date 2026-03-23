@@ -2,6 +2,92 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.19.0
+
+### Minor
+
+__🎯 [feat(skills): rename fusion-app-react-dev to fusion-developer-app #124](https://github.com/equinor/fusion-skills/pull/124)<br/>
+🗂️ [42150b6](https://github.com/equinor/fusion-skills/commit/42150b62e1aa14c3c08007258a73d6902bb4dceb)<br/>
+📦 fusion-developer-app@0.1.0__
+
+Add fusion-developer-app skill (renamed from fusion-app-react-dev)
+
+- New skill with the same capability as fusion-app-react-dev under the fusion-developer-* naming convention
+- Aligns naming with fusion-developer-portal and other developer-facing skills
+- Content migrated from fusion-app-react-dev v0.2.0
+
+Resolves equinor/fusion-core-tasks#848
+
+### Patch
+
+__🎯 [Update C# conventions for clarity and consistency #120](https://github.com/equinor/fusion-skills/pull/120)<br/>
+🗂️ [5eb8e4d](https://github.com/equinor/fusion-skills/commit/5eb8e4d4af2fd8d1cb11d042339100cb1197753d)<br/>
+📦 fusion-code-conventions@0.1.2__
+
+Improve C# conventions for clarity and consistency
+
+- Separate Controllers/ and Endpoints/ into distinct lines in the project layout to avoid ambiguity
+- Clarify Startup.cs guidance to distinguish the older Startup class pattern from the .NET 6+ minimal hosting model
+- Broaden error-handling guidance to cover both minimal API and MVC ProblemDetails helpers across supported target frameworks
+
+---
+
+__🎯 [feat(skills): add fusion-developer-portal skill for portal shell development #123](https://github.com/equinor/fusion-skills/pull/123)<br/>
+🗂️ [aa9fc17](https://github.com/equinor/fusion-skills/commit/aa9fc1707ca4c95edc15f2ef3068a3175c47670e)<br/>
+📦 fusion-developer-portal@0.0.1__
+
+Add fusion-developer-portal skill for Fusion portal shell development
+
+- Guides scaffolding portals with the Fusion Framework CLI (`ffc portal dev/build/upload`)
+- Documents portal-level module configuration (`FrameworkConfigurator` vs `AppModuleInitiator`)
+- Covers app loading (Apploader component, useApploader hook, custom AppLoader with RxJS)
+- Includes portal routing, chrome (header, context selector), analytics, and telemetry
+- Reference file with full portal architecture patterns from framework cookbooks
+
+resolves equinor/fusion-core-tasks#752
+
+---
+
+__🎯 [feat: add devil's advocate agents for issue and skill authoring #121](https://github.com/equinor/fusion-skills/pull/121)<br/>
+🗂️ [831f8ee](https://github.com/equinor/fusion-skills/commit/831f8eed3054ee747d3300c9144312ef3b5c02e0)<br/>
+📦 fusion-issue-authoring@0.3.2__
+
+Add devil's advocate agent for issue authoring
+
+- Always-on moderate mode raises 2-3 key concerns after classification
+- Interrogator mode runs full structured interview on explicit user request or when scope/criteria gaps are significant
+- Wired into SKILL.md agent modes section
+
+Refs: equinor/fusion-core-tasks#847
+
+---
+
+__🎯 [feat(skills): rename fusion-app-react-dev to fusion-developer-app #124](https://github.com/equinor/fusion-skills/pull/124)<br/>
+🗂️ [42150b6](https://github.com/equinor/fusion-skills/commit/42150b62e1aa14c3c08007258a73d6902bb4dceb)<br/>
+📦 fusion-app-react-dev@0.2.1__
+
+Deprecate fusion-app-react-dev in favor of fusion-developer-app
+
+- Set status to deprecated with successor pointer to fusion-developer-app
+- Added deprecation notice and migration guidance to SKILL.md
+- Moved to skills/.deprecated/
+
+Resolves equinor/fusion-core-tasks#848
+
+---
+
+__🎯 [feat: add devil's advocate agents for issue and skill authoring #121](https://github.com/equinor/fusion-skills/pull/121)<br/>
+🗂️ [831f8ee](https://github.com/equinor/fusion-skills/commit/831f8eed3054ee747d3300c9144312ef3b5c02e0)<br/>
+📦 fusion-skill-authoring@0.3.3__
+
+Add devil's advocate agent for skill authoring
+
+- Always-on moderate mode raises 2-3 key concerns during scoping/drafting
+- Interrogator mode runs full structured interview on explicit user request or when the orchestrator detects significant ambiguity
+- Wired into SKILL.md helper agents and Step 6 validation sections
+
+Refs: equinor/fusion-core-tasks#847
+
 ## v0.18.1
 
 ### Patch

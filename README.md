@@ -234,13 +234,7 @@ Main Copilot skill gate for the Fusion ecosystem — cross-domain router. USE FO
 
 ---
 
-**👍 [`fusion-app-react-dev@0.2.0`](skills/fusion-app-react-dev/SKILL.md)**
-
-Guides feature development in Fusion Framework React apps, including app-scoped framework research needed to choose the right hooks, modules, packages, and integration patterns before implementation. USE FOR: building new features, adding components or pages, creating hooks and services, wiring up API endpoints, extending Fusion module configuration, and answering app implementation questions about which Fusion Framework surface to use. DO NOT USE FOR: issue authoring, skill authoring, CI/CD configuration, backend service changes, or general Fusion documentation that is not tied to app implementation.
-
----
-
-**⚙️ [`fusion-code-conventions@0.1.1`](skills/.system/fusion-code-conventions/SKILL.md)**
+**⚙️ [`fusion-code-conventions@0.1.2`](skills/.system/fusion-code-conventions/SKILL.md)**
 
 Applies and explains code conventions across TypeScript, React, C#, and Markdown. Enforces naming rules, file naming patterns, TSDoc and XML doc standards, inline comment intent (the *why*, not the *what*), code structure, error handling, async patterns, and dead code policy. Also enforces ADR and contributor doc decisions, and flags decisions that appear stale or misaligned with current tooling. USE FOR: convention questions, code review against project standards, applying naming rules, auditing intent comments, checking TSDoc completeness, enforcing recorded ADR decisions, and flagging stale architectural decisions. DO NOT USE FOR: security vulnerability scanning, performance profiling, runtime debugging, or generating net-new code without a review target.
 
@@ -255,6 +249,18 @@ Guides integrations across Fusion Core service APIs from a single installable sk
 **🧪 [`fusion-dependency-review@0.1.2`](skills/.experimental/fusion-dependency-review/SKILL.md)**
 
 Review dependency PRs with structured research, existing-PR-discussion capture, multi-lens analysis (security, code quality, impact), and a repeatable verdict template. USE FOR: dependency update PRs, Renovate/Dependabot PRs, library upgrade reviews, "review this dependency PR", "should we merge this update". DO NOT USE FOR: feature PRs, application code reviews, dependency automation/bot configuration, or unattended merge without confirmation.
+
+---
+
+**👍 [`fusion-developer-app@0.1.0`](skills/fusion-developer-app/SKILL.md)**
+
+Guides feature development in Fusion Framework React apps, including app-scoped framework research needed to choose the right hooks, modules, packages, and integration patterns before implementation. USE FOR: building new features, adding components or pages, creating hooks and services, wiring up API endpoints, extending Fusion module configuration, and answering app implementation questions about which Fusion Framework surface to use. DO NOT USE FOR: issue authoring, skill authoring, CI/CD configuration, backend service changes, or general Fusion documentation that is not tied to app implementation.
+
+---
+
+**👍 [`fusion-developer-portal@0.0.1`](skills/fusion-developer-portal/SKILL.md)**
+
+Guides development of Fusion portal shells — scaffolding, module configuration, app loading, routing, header/context integration, analytics, and deployment using the Fusion Framework CLI portal commands. USE FOR: create portal, scaffold portal, configure portal modules, portal app loading, portal routing, portal header, context selector, portal analytics, portal telemetry, portal manifest, ffc portal dev, portal deployment, embed apps in portal. DO NOT USE FOR: app-level feature development (use fusion-app-react-dev), backend service changes, Fusion Help Center integration, skill authoring.
 
 ---
 
@@ -282,7 +288,7 @@ Wires Fusion Help Center into app pages — creates article slug constants, adds
 
 ---
 
-**👍 [`fusion-issue-authoring@0.3.1`](skills/fusion-issue-authoring/SKILL.md)**
+**👍 [`fusion-issue-authoring@0.3.2`](skills/fusion-issue-authoring/SKILL.md)**
 
 Classify issue type, activate the matching agent mode for type-specific drafting, and enforce shared safety gates before GitHub mutation.
 
@@ -324,7 +330,7 @@ Entrypoint for AI coding assistant rule authoring across GitHub Copilot, Cursor,
 
 ---
 
-**👍 [`fusion-skill-authoring@0.3.2`](skills/fusion-skill-authoring/SKILL.md)**
+**👍 [`fusion-skill-authoring@0.3.3`](skills/fusion-skill-authoring/SKILL.md)**
 
 Creates or modernizes repository skills with clear activation cues, purposeful support files, and practical review loops. USE FOR: creating a new skill, tightening an existing skill, improving discovery wording, and structuring references/assets/optional helper agents when they genuinely add value. DO NOT USE FOR: product-code changes, routine copy edits outside skills/, or documentation that should not become an installable skill.
 
