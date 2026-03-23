@@ -145,18 +145,19 @@ export const AppLoader = (props: { readonly appKey: string }) => {
   }, [appKey, fusion]);
 
   useEffect(() => {
+    if (!currentApp) return;
+
     setLoading(true);
     setError(undefined);
     const subscription = new Subscription();
 
     subscription.add(
       currentApp
-        ?.initialize()
+        .initialize()
         .pipe(last())
         .subscribe({
           next: ({ manifest, script, config }) => {
-            const [basename] =
-              window.location.pathname.match(/\/?apps\/[a-z|-]+(\/)?/g) ?? [''];
+            const basename = `/apps/${appKey}`;
             const el = document.createElement('div');
             if (!ref.current) throw Error('Missing application mounting point');
             ref.current.appendChild(el);
@@ -166,7 +167,10 @@ export const AppLoader = (props: { readonly appKey: string }) => {
             subscription.add(() => el.remove());
           },
           complete: () => setLoading(false),
-          error: (err) => setError(err),
+          error: (err) => {
+            setLoading(false);
+            setError(err);
+          },
         }),
     );
 

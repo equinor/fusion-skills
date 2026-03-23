@@ -195,12 +195,14 @@ For telemetry (OpenTelemetry / Application Insights), see [references/portal-arc
 # Build the portal template
 ffc portal build
 
-# Upload to the Fusion portal service
-ffc portal upload --portal-id <id> --token <pat>
+# Upload to the Fusion portal service (authenticate via `az login` or FUSION_TOKEN env var)
+ffc portal upload --portal-id <id>
 
 # Tag a specific version
 ffc portal tag --portal-id <id> --tag latest --version <version>
 ```
+
+> **Never paste tokens directly into commands.** Use `az login` for interactive auth or set the `FUSION_TOKEN` environment variable for CI pipelines.
 
 ### Step 8 — Validate
 

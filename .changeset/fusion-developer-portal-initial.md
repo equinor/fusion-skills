@@ -10,4 +10,4 @@ Add fusion-developer-portal skill for Fusion portal shell development
 - Includes portal routing, chrome (header, context selector), analytics, and telemetry
 - Reference file with full portal architecture patterns from framework cookbooks
 
-Resolves equinor/fusion-core-tasks#752
+resolves equinor/fusion-core-tasks#752
