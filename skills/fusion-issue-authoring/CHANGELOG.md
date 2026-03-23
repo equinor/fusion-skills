@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.2 - 2026-03-23
+
+### patch
+
+- [#121](https://github.com/equinor/fusion-skills/pull/121) [`831f8ee`](https://github.com/equinor/fusion-skills/commit/831f8eed3054ee747d3300c9144312ef3b5c02e0) - Add devil's advocate agent for issue authoring
+
+
+  - Always-on moderate mode raises 2-3 key concerns after classification
+  - Interrogator mode runs full structured interview on explicit user request or when scope/criteria gaps are significant
+  - Wired into SKILL.md agent modes section
+
+  Refs: equinor/fusion-core-tasks#847
+
 ## 0.3.1 - 2026-03-21
 
 ### patch

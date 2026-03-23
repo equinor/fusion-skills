@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.2 - 2026-03-23
+
+### patch
+
+- [#120](https://github.com/equinor/fusion-skills/pull/120) [`5eb8e4d`](https://github.com/equinor/fusion-skills/commit/5eb8e4d4af2fd8d1cb11d042339100cb1197753d) Thanks [@alftore](https://github.com/alftore)! - Improve C# conventions for clarity and consistency
+
+
+  - Separate Controllers/ and Endpoints/ into distinct lines in the project layout to avoid ambiguity
+  - Clarify Startup.cs guidance to distinguish the older Startup class pattern from the .NET 6+ minimal hosting model
+  - Broaden error-handling guidance to cover both minimal API and MVC ProblemDetails helpers across supported target frameworks
+
 ## 0.1.1 - 2026-03-22
 
 ### patch

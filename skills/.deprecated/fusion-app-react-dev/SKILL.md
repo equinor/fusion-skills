@@ -4,7 +4,7 @@ description: 'DEPRECATED — use fusion-developer-app instead. Guides feature de
 license: MIT
 compatibility: Requires a Fusion Framework React app bootstrapped with @equinor/fusion-framework-cli. Works best when styled-components, @equinor/eds-core-react, and @equinor/fusion-react-* packages are installed.
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
   status: deprecated
   successor: fusion-developer-app
   deprecated_at: "2026-03-23"

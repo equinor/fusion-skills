@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.1 - 2026-03-23
+
+### patch
+
+- [#124](https://github.com/equinor/fusion-skills/pull/124) [`42150b6`](https://github.com/equinor/fusion-skills/commit/42150b62e1aa14c3c08007258a73d6902bb4dceb) - Deprecate fusion-app-react-dev in favor of fusion-developer-app
+
+
+  - Set status to deprecated with successor pointer to fusion-developer-app
+  - Added deprecation notice and migration guidance to SKILL.md
+  - Moved to skills/.deprecated/
+
+  Resolves equinor/fusion-core-tasks#848
+
 ## 0.2.0 - 2026-03-21
 
 ### minor

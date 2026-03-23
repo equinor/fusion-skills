@@ -4,7 +4,7 @@ description: 'Guides development of Fusion portal shells — scaffolding, module
 license: MIT
 compatibility: Requires @equinor/fusion-framework-cli for portal scaffolding and dev server. Requires @equinor/fusion-framework and @equinor/fusion-framework-react for portal runtime.
 metadata:
-  version: "0.0.0"
+  version: "0.0.1"
   status: active
   owner: "@equinor/fusion-core"
   skills:
