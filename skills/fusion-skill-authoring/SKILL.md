@@ -203,7 +203,7 @@ Use the representative requests from Step 2 to review the final result:
 
 If subagents are available, use the bundled role files when they help:
 - `agents/scoper.md` before drafting to decide create vs update vs not-a-skill and to choose the smallest useful structure
-- `agents/devils-advocate.md` during scoping and drafting to surface key concerns (moderate mode), or before drafting for a full structured interview when the user asks to be grilled (interrogator mode)
+- `agents/devils-advocate.md` during scoping and drafting to surface key concerns (moderate mode), or before drafting for a full structured interview when the user asks to be grilled or when the orchestrator detects significant ambiguity (interrogator mode)
 - `agents/reviewer.md` after drafting to review discovery, structure, safety, and validation evidence like a strict maintainer
 - `agents/trigger-tuner.md` when the main risk is weak activation cues or when choosing between two description variants
 
@@ -235,7 +235,7 @@ This skill borrows Anthropic `skill-creator`'s pattern of bundling a small `agen
 - `agents/scoper.md` — decide whether the request should become a new skill, an update, or not a skill at all; choose the smallest folder structure that still solves the problem
 - `agents/reviewer.md` — review a drafted skill package against discovery, structure, safety, and validation expectations
 - `agents/trigger-tuner.md` — sharpen description wording and compare activation-cue variants against realistic prompts
-- `agents/devils-advocate.md` — always-on quality collaborator that raises key concerns during authoring (moderate mode) and runs a full structured interview when explicitly asked (interrogator mode)
+- `agents/devils-advocate.md` — always-on quality collaborator that raises key concerns during authoring (moderate mode) and runs a full structured interview when explicitly asked or when the orchestrator flags significant ambiguity (interrogator mode)
 
 If a runtime offers no subagents, keep the same review loop inline and do not skip the agent-shaped reasoning just because the packaging is ignored.
 

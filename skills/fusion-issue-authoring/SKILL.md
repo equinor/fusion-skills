@@ -24,7 +24,7 @@ This skill uses internal agent modes for type-specific drafting logic:
 - `agents/feature.agent.md`: feature-focused scope and acceptance structure
 - `agents/user-story.agent.md`: role/workflow/scenario-driven story structure
 - `agents/task.agent.md`: checklist-first task decomposition and dependency planning
-- `agents/devils-advocate.agent.md`: always-on quality collaborator that raises key concerns after classification (moderate mode) and runs a full structured interview when explicitly asked (interrogator mode)
+- `agents/devils-advocate.agent.md`: always-on quality collaborator that raises key concerns after classification (moderate mode) and runs a full structured interview when explicitly asked or when scope/criteria gaps are significant (interrogator mode)
 
 Agent modes are activated internally based on issue type classification. Users never reference agent files directly. Shared gates (labels, assignee confirmation, draft review, publish confirmation, and mutation sequencing) remain in this skill.
 
@@ -75,7 +75,7 @@ Classify request as `Bug`, `Feature`, `User Story`, or `Task`, then activate the
 
 If ambiguous, ask only essential clarifying questions.
 
-Devil's advocate pass: `agents/devils-advocate.agent.md` is always active in moderate mode — it surfaces the 2–3 most important concerns after classification without interrupting flow. When the user asks to be "grilled" or says "stress-test this", escalate to interrogator mode for a full structured interview before the type-specific agent. The devil's advocate returns confirmed decisions and noted risks, then hands off to the type-specific drafting agent.
+Devil's advocate pass: `agents/devils-advocate.agent.md` is always active in moderate mode — it surfaces the 2–3 most important concerns after classification without interrupting flow. When the user asks to be "grilled", says "stress-test this", or when scope/criteria gaps are significant, escalate to interrogator mode for a full structured interview before the type-specific agent. The devil's advocate returns confirmed decisions and noted risks, then hands off to the type-specific drafting agent.
 
 ### Step 2 — Resolve repository and template
 

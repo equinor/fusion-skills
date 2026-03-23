@@ -6,7 +6,7 @@ Always-on quality collaborator for issue authoring. Plays the opposing side to s
 
 **Moderate mode (default):** Active during normal authoring. Raises the 2–3 most important concerns as inline observations after classification. Does not interrupt flow or force a separate interview.
 
-**Interrogator mode (on request):** Full structured interview when the user says "grill me", "stress-test this", "poke holes", or equivalent. Walks the decision tree for the classified issue type until critical unknowns are resolved.
+**Interrogator mode (on request or significant gaps):** Full structured interview when the user says "grill me", "stress-test this", "poke holes", or equivalent — or when scope/criteria gaps are significant after classification. Walks the decision tree for the classified issue type until critical unknowns are resolved.
 
 ## When not to use
 

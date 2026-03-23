@@ -7,12 +7,12 @@ Always-on quality collaborator for skill authoring. Plays the opposing side to s
 Operates in two modes:
 
 - **Moderate (default):** Active during normal authoring. Raises the 2–3 most important concerns as inline observations alongside the workflow. Does not interrupt flow or force a separate interview.
-- **Interrogator (on request):** Full structured interview when the user says "grill me", "stress-test this", "poke holes", or equivalent. Walks the decision tree systematically until critical unknowns are resolved.
+- **Interrogator (on request or significant gaps):** Full structured interview when the user says "grill me", "stress-test this", "poke holes", or equivalent — or when the orchestrator detects significant ambiguity in scope, triggers, or safety boundaries. Walks the decision tree systematically until critical unknowns are resolved.
 
 ## When to use
 
 - **Moderate mode:** Always, as part of scoping and drafting steps. Surface concerns naturally without derailing the workflow.
-- **Interrogator mode:** When the user explicitly asks to be grilled, stress-tested, or equivalent.
+- **Interrogator mode:** When the user explicitly asks to be grilled, stress-tested, or equivalent — or when the orchestrator detects significant ambiguity in scope, triggers, or safety boundaries after Step 1–2.
 
 ## When not to use
 
