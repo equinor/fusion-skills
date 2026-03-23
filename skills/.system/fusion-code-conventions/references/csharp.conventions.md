@@ -1,30 +1,32 @@
 # C# Code Conventions
 
-Naming, null safety, async/await, and code style conventions for C# in Fusion projects.
+Naming, null safety, async/await, and code style conventions for C# projects.
 
 > **Applicability:** These are org-wide baseline defaults. Repository-level policy (`CONTRIBUTING.md`, ADRs, contributor guides) and tooling configuration (`.editorconfig`, `Directory.Build.props`, analyzer settings) take precedence when they explicitly override a rule below. See the skill's **Precedence and applicability** section for the full resolution order.
 
 ## Project structure
 
-ASP.NET Core services typically follow a layered internal layout:
+ASP.NET Core services commonly follow a layered internal layout similar to:
 
 ```
-Controllers/          ← API controllers + response model types
+Controllers/               ← API controllers (MVC)
 Domain/
-  Commands/           ← MediatR IRequest command + nested Handler class
-  Query/              ← MediatR IRequest query + nested Handler class
-  Models/             ← Domain-internal result types
-  Errors/             ← Domain-specific exception types
-  Behaviours/         ← MediatR pipeline behaviours
+  Commands/                ← MediatR IRequest command + nested Handler class
+  Query/                   ← MediatR IRequest query + nested Handler class
+  Models/                  ← Domain-internal result types
+  Errors/                  ← Domain-specific exception types
+  Behaviours/              ← MediatR pipeline behaviours
 Database/
-  Entities/           ← EF Core entity types
-  Extensions/         ← EF Core queryable helpers
-  *DbContext.cs       ← EF Core DbContext
-Authorization/        ← IAuthorizationRequirement and handler extensions
-Integrations/         ← External service client adapters
-Program.cs            ← Entry point
-Startup.cs            ← DI registration
+  Entities/                ← EF Core entity types
+  Extensions/              ← EF Core queryable helpers
+  *DbContext.cs            ← EF Core DbContext
+Authorization/             ← IAuthorizationRequirement and handler extensions
+Integrations/              ← External service client adapters
+Program.cs                 ← Entry point (and DI registration for minimal APIs)
 ```
+
+Use a `Startup.cs` (with `ConfigureServices` / `Configure`) only when following the older ASP.NET Core Startup class pattern or a custom startup abstraction.
+For minimal APIs using the .NET 6+ hosting model, keep configuration in `Program.cs`; endpoint definitions may live in an `Endpoints/` folder or be organized by feature.
 
 Common reusable packages and shared libraries live in a separate `common/` or `shared/` directory.
 Integration tests live in a sibling `test/` directory, mirroring the production project name.
@@ -77,8 +79,9 @@ Integration tests live in a sibling `test/` directory, mirroring the production 
 
 ## Architecture patterns
 
-- **MediatR CQRS**: business logic flows through `IRequest` + nested `Handler : IRequestHandler`. Commands (state-changing) and queries (read-only) are separated into distinct folders.
-- **Base controller**: share common concerns (authorization helpers, dispatch, enrichment) via a base `ControllerBase` subclass rather than duplicating logic per controller.
+- **Thin endpoints**: endpoints should be small and contain little logic. Parse the request, dispatch to a handler, return the result. Business logic belongs in handlers, not in controllers or endpoint definitions.
+- **Minimal APIs and MVC**: minimal APIs (`app.MapGet(...)`) and MVC controllers (`[ApiController]`) are both valid choices. Pick one style per project and apply it consistently.
+- **CQRS / MediatR**: prefer dispatching business logic through handlers (e.g., MediatR `IRequest` + `IRequestHandler`). Separate commands (state-changing) from queries (read-only) into distinct folders.
 - **Authorization**: prefer policy/requirement-based authorization over inline role string checks in action methods.
 - **API versioning**: `[ApiVersion("X.0")]` + `[MapToApiVersion("X.0")]` from `Asp.Versioning`. Versioned controllers may be split as `partial` classes per version file.
 - **Route naming**: kebab-case path segments (`/orders/{orderId}/line-items`).
@@ -89,6 +92,7 @@ Integration tests live in a sibling `test/` directory, mirroring the production 
 - Null properties should be suppressed in JSON output where they add noise: `[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]` (Newtonsoft) or `[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]` (`System.Text.Json`).
 - Pick one JSON serializer per project and use it consistently. Prefer `System.Text.Json` for new projects; Newtonsoft.Json for projects that already rely on it.
 - Versioned response models use a `V2`/`V3` suffix and may inherit from the previous version to extend incrementally.
+- Avoid reusing the same model across different endpoints — each endpoint should have its own request/response types. Shared models create hidden coupling and make it harder to evolve endpoints independently.
 - Response models live close to their controllers (`Controllers/Models/` or `Controllers/ViewModels/`).
 
 ## EF Core conventions
@@ -102,7 +106,7 @@ Integration tests live in a sibling `test/` directory, mirroring the production 
 
 - Domain errors are typed exceptions that extend `Exception` directly (`RoleExistsError : Exception`).
 - Constructor sets a formatted message; the class exposes domain-specific read-only properties.
-- Controllers translate domain errors to HTTP responses via `FusionApiError.NotFound(...)`, `FusionApiError.IllegalAction(...)`.
+- Return RFC 7807 Problem Details responses for errors — for minimal APIs use the built-in ProblemDetails helpers (for example `Results.Problem(...)` / `TypedResults.Problem(...)`, depending on target framework); for MVC use `ControllerBase.Problem(...)` and/or the built-in exception handler middleware that produces ProblemDetails.
 - Catch the specific domain exception; let middleware handle unexpected exceptions.
 
 ## Code style (enforced via `.editorconfig`)
@@ -126,7 +130,7 @@ Integration tests live in a sibling `test/` directory, mirroring the production 
 ## Testing
 
 - **Framework**: xUnit + `Microsoft.AspNetCore.Mvc.Testing` for integration tests.
-- **Assertions**: `FluentAssertions` is preferred for readable assertion messages; plain xUnit `Assert.*` is fine for simple checks.
+- **Assertions**: use xUnit `Assert.*` or consider lightweight assertion libraries like `Shouldly` or `AwesomeAssertions`. Prefer readable assertion messages.
 - **Containers**: `Testcontainers` (e.g. `Testcontainers.MsSql`) for integration tests that need a real database — prefer over in-memory providers for production-representative coverage.
 - **Test class naming**: `*Tests` suffix, one class per subject (`OrderApiTests`, `CacheTests`).
 - **Test method naming**: `Subject_Context_ShouldOutcome` (`CreateOrder_AsGuest_ShouldBeUnauthorized`).
