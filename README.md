@@ -246,7 +246,7 @@ Guides integrations across Fusion Core service APIs from a single installable sk
 
 ---
 
-**🧪 [`fusion-dependency-review@0.1.2`](skills/.experimental/fusion-dependency-review/SKILL.md)**
+**🧪 [`fusion-dependency-review@0.1.3`](skills/.experimental/fusion-dependency-review/SKILL.md)**
 
 Review dependency PRs with structured research, existing-PR-discussion capture, multi-lens analysis (security, code quality, impact), and a repeatable verdict template. USE FOR: dependency update PRs, Renovate/Dependabot PRs, library upgrade reviews, "review this dependency PR", "should we merge this update". DO NOT USE FOR: feature PRs, application code reviews, dependency automation/bot configuration, or unattended merge without confirmation.
 
@@ -264,7 +264,7 @@ Guides development of Fusion portal shells — scaffolding, module configuration
 
 ---
 
-**🧪 [`fusion-github-review-resolution@0.1.5`](skills/.experimental/fusion-github-review-resolution/SKILL.md)**
+**🧪 [`fusion-github-review-resolution@0.1.6`](skills/.experimental/fusion-github-review-resolution/SKILL.md)**
 
 Resolves unresolved GitHub PR review threads end-to-end: evaluates whether each review comment is correct, applies a targeted fix when valid, replies with rationale when not, commits, and resolves the thread. USE FOR: unresolved review threads, PR review feedback, changes requested PRs, PR review URLs (#pullrequestreview-...), fix the review comments, close the open threads, address PR feedback. DO NOT USE FOR: summarizing feedback without code changes, creating new PRs, or read-only branches.
 
@@ -294,13 +294,13 @@ Classify issue type, activate the matching agent mode for type-specific drafting
 
 ---
 
-**🧪 [`fusion-issue-solving@0.1.5`](skills/.experimental/fusion-issue-solving/SKILL.md)**
+**🧪 [`fusion-issue-solving@0.1.6`](skills/.experimental/fusion-issue-solving/SKILL.md)**
 
 Handles GitHub issue resolution end-to-end for prompts like "solve #123", "lets solve #123", "work on #123", "work on https://github.com/owner/repo/issues/123", or by pasting a direct GitHub issue URL as the request. USE FOR: solve #123, continue work on issue #123, work on https://github.com/owner/repo/issues/123, paste a GitHub issue URL for implementation work. DO NOT USE FOR: issue drafting only, PR review only, or non-implementation research.
 
 ---
 
-**🧪 [`fusion-issue-task-planning@0.1.4`](skills/.experimental/fusion-issue-task-planning/SKILL.md)**
+**🧪 [`fusion-issue-task-planning@0.1.5`](skills/.experimental/fusion-issue-task-planning/SKILL.md)**
 
 Plan and break down user-story issues into ordered, traceable task issue drafts with explicit publish gates.
 

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.5 - 2026-03-24
+
+### patch
+
+- [#126](https://github.com/equinor/fusion-skills/pull/126) [`1470bc8`](https://github.com/equinor/fusion-skills/commit/1470bc81e1b04e9727049f01742ea881579ad57b) - Add repository-policy handoff section for governance alignment
+
+
+  - Add explicit "Repository-policy handoff" section that defers issue type, changeset, and PR rules to repo-local instructions
+
+  Resolves equinor/fusion-core-tasks#581
+
 ## 0.1.4 - 2026-03-17
 
 ### patch

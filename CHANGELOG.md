@@ -2,6 +2,58 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.19.1
+
+### Patch
+
+__🎯 [fix: harden governance guardrails and add governance-link validation #126](https://github.com/equinor/fusion-skills/pull/126)<br/>
+🗂️ [1470bc8](https://github.com/equinor/fusion-skills/commit/1470bc81e1b04e9727049f01742ea881579ad57b)<br/>
+📦 fusion-dependency-review@0.1.3__
+
+Add repository-policy handoff section for governance alignment
+
+- Add explicit "Repository-policy handoff" section that defers commit, validation, changeset, and PR rules to repo-local instructions
+- Update source-control-advisor to also defer to repo-local workflow instructions
+
+Resolves equinor/fusion-core-tasks#581
+
+---
+
+__🎯 [fix: harden governance guardrails and add governance-link validation #126](https://github.com/equinor/fusion-skills/pull/126)<br/>
+🗂️ [1470bc8](https://github.com/equinor/fusion-skills/commit/1470bc81e1b04e9727049f01742ea881579ad57b)<br/>
+📦 fusion-issue-solving@0.1.6__
+
+Add repository-policy handoff section for governance alignment
+
+- Add explicit "Repository-policy handoff" section that defers commit, validation, changeset, and PR rules to repo-local instructions
+
+Resolves equinor/fusion-core-tasks#581
+
+---
+
+__🎯 [fix: harden governance guardrails and add governance-link validation #126](https://github.com/equinor/fusion-skills/pull/126)<br/>
+🗂️ [1470bc8](https://github.com/equinor/fusion-skills/commit/1470bc81e1b04e9727049f01742ea881579ad57b)<br/>
+📦 fusion-issue-task-planning@0.1.5__
+
+Add repository-policy handoff section for governance alignment
+
+- Add explicit "Repository-policy handoff" section that defers issue type, changeset, and PR rules to repo-local instructions
+
+Resolves equinor/fusion-core-tasks#581
+
+---
+
+__🎯 [fix: harden governance guardrails and add governance-link validation #126](https://github.com/equinor/fusion-skills/pull/126)<br/>
+🗂️ [1470bc8](https://github.com/equinor/fusion-skills/commit/1470bc81e1b04e9727049f01742ea881579ad57b)<br/>
+📦 fusion-github-review-resolution@0.1.6__
+
+Add repository-policy handoff section for governance alignment
+
+- Add explicit "Repository-policy handoff" section that defers commit, validation, changeset, and PR rules to repo-local instructions
+- Keeps the skill portable while ensuring repo-local policy takes precedence when present
+
+Resolves equinor/fusion-core-tasks#581
+
 ## v0.19.0
 
 ### Minor
