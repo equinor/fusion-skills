@@ -100,6 +100,12 @@ When maintaining a skill, verify:
 - [ ] GitHub API usage is up-to-date
 - [ ] Known issues documented/tracked
 
+**Workflow-policy alignment (mutation-capable skills):**
+- [ ] Skill includes a "Repository-policy handoff" section deferring commit, validation, changeset, and PR rules to repo-local instructions
+- [ ] Skill does not duplicate repository-specific workflow policy inline
+- [ ] References to repo-local files (`.github/instructions/`, `contribute/`, `CONTRIBUTING.md`) resolve to files that exist
+- [ ] Skill-local agents/advisors that handle source-control mutations also defer to repo-local instructions
+
 ## Validation in CI
 
 Every PR running `validate:skills` checks:

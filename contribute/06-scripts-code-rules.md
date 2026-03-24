@@ -32,6 +32,7 @@ The scripts folder currently includes these domains:
 - scripts/list-changesets/
 - scripts/validate-skills/
 - scripts/validate-pr/
+- scripts/validate-governance/
 - scripts/release-prepare/
 - scripts/release-finalize/
 - scripts/__tests__/

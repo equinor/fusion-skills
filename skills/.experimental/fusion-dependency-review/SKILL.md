@@ -141,6 +141,8 @@ If the PR target is resolved, return a structured review containing:
 
 ## Safety & constraints
 
+- This skill is mutation-capable. Repository-local workflow instructions take precedence over inline guidance when they conflict.
+
 Never:
 
 - Merge or approve a dependency PR without explicit user confirmation
