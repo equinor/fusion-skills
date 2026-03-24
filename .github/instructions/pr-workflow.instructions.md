@@ -77,3 +77,28 @@ GitHub automatically closes issues when a PR body or commit message includes clo
   Resolves equinor/fusion-core-tasks#123
   ```
 - Changeset closure references do not auto-close issues; only PR body references do (when PR merges).
+
+## Policy gaps that review workflows must surface as findings
+
+Review-oriented workflows (including agent-driven reviews) must explicitly flag the following as findings when they are detected. These are not optional suggestions — each gap must appear in the review output so the author can address it before merge.
+
+**Missing or incomplete changesets:**
+- A skill or package changed without a corresponding `.changeset/*.md` file.
+- A single changeset file covers multiple skills/packages (must be one entry per file).
+
+**Missing validation evidence:**
+- The PR does not document which validation commands were run and their outcomes.
+- Required repository checks (`bun run biome:check`, `bun run validate:skills`, `bun run validate:ownership`) are not evidenced.
+
+**Weak PR body or template usage:**
+- The PR body does not follow `.github/pull_request_template.md` structure.
+- The "Why" section is missing or vacuous.
+- Issue references use closure keywords (`resolves`, `fixes`, `closes`) when the PR only partially addresses the issue, or plain references when full closure is intended.
+
+**Repository-policy drift in skills:**
+- A mutation-capable skill encodes repository-specific commit, validation, changeset, or PR rules inline instead of deferring to repo-local instructions.
+- A skill references repo-local files (`.github/instructions/`, `contribute/`, `CONTRIBUTING.md`) that do not exist or have moved.
+
+**Safety and constraint gaps:**
+- Destructive operations introduced without explicit confirmation gates.
+- Scripts or skill instructions that request, expose, or log secrets/tokens.

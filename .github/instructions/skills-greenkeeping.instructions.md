@@ -27,6 +27,7 @@ For each greenkeeping run, cover all activity lanes:
 3. Quality audit (structure, completeness, references)
 4. Security audit (unsafe patterns, secret exposure risk)
 5. Ownership and lifecycle audit (owner/sponsor, status, deprecation path)
+6. Workflow-policy alignment audit (governance handoff, policy drift)
 
 ## Metadata standards and currency checks
 
@@ -123,6 +124,17 @@ When reporting completion, include:
 - Lifecycle action taken per skill (add/update/deprecate/remove).
 - Validation commands run and outcomes.
 - Security findings and remediations.
+
+## Workflow-policy alignment audit
+
+Mutation-capable skills (those that can commit, push, rebase, open or update PRs) must stay portable and defer repository-specific policy to repo-local instructions. Check each mutation-capable skill for:
+
+- **Governance handoff section exists**: the skill includes a "Repository-policy handoff" section (or equivalent) that explicitly defers commit, validation, changeset, and PR rules to repo-local instructions.
+- **No duplicated repo policy**: the skill does not re-encode repository-specific commit message conventions, changeset scope rules, PR template requirements, or validation command lists that belong in repo-local instructions.
+- **References are valid**: any references to repo-local files (`.github/instructions/`, `contribute/`, `CONTRIBUTING.md`) resolve to files that actually exist. Run `bun run validate:governance` to check programmatically.
+- **Advisors and agents align**: skill-local agent/advisor files that handle source-control mutations also defer to repo-local instructions rather than encoding their own policy.
+
+Flag skills that encode repository-specific workflow policy inline as findings and propose either a handoff rewrite or a reference cleanup.
 
 ## Guardrails
 

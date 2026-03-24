@@ -153,6 +153,7 @@ For `publish-now` or `repair` mode, include a per-issue post-flight report with:
 
 ## Safety & constraints
 
+- This skill is mutation-capable. Repository-local workflow instructions take precedence over inline guidance when they conflict.
 - Never mutate GitHub state without explicit confirmation.
 - Never infer acceptance criteria without flagging assumptions.
 - Always preserve AC traceability in the task plan.

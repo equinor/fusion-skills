@@ -94,3 +94,23 @@ Never:
 - request or expose secrets/credentials,
 - run destructive commands without explicit confirmation,
 - claim validation passed without running the commands.
+
+## Governance handoff for mutation-capable skills
+
+Skills that can commit, push, rebase, open, or update pull requests are **mutation-capable** and must stay portable. They must not hard-code repository-specific workflow rules.
+
+When a mutation-capable skill operates inside a repository that provides its own workflow instructions (for example `.github/instructions/pr-workflow.instructions.md`, `CONTRIBUTING.md`, or `contribute/` guidance), it must defer to those repo-local rules for:
+
+- commit message conventions and granularity,
+- required validation and lint commands before push,
+- changeset requirements and scope rules,
+- PR template usage, base-branch selection, and issue-linking conventions,
+- merge strategy, branch-refresh policy, and review-request workflow.
+
+Repo-local instructions take precedence over any inline guidance in the skill when they conflict. Do not duplicate repo-local policy inside the skill; reference it at the point of use.
+
+Each mutation-capable skill must include this line in its **Safety & constraints** section to signal the contract:
+
+> This skill is mutation-capable. Repository-local workflow instructions take precedence over inline guidance when they conflict.
+
+Skill-local agents and advisors that handle source-control mutations must follow the same rule: defer to repo-local instructions for commit conventions, validation commands, changeset requirements, and branch-refresh policy.

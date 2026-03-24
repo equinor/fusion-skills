@@ -135,6 +135,7 @@ Return a concise delivery report with:
 
 ## Safety & constraints
 
+- This skill is mutation-capable. Repository-local workflow instructions take precedence over inline guidance when they conflict.
 - Never request or expose secrets/credentials.
 - Never run destructive commands without explicit confirmation.
 - Keep changes minimal and scoped to the issue.

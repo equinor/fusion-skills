@@ -205,6 +205,7 @@ When an issue is provided (for example `equinor/fusion-core-tasks#432`):
 
 ## Safety & constraints
 
+- This skill is mutation-capable. Repository-local workflow instructions take precedence over inline guidance when they conflict.
 - Never expose secrets or tokens in logs/replies.
 - Prefer argv-based process execution over shell-interpolated command strings.
 - Keep diffs minimal and scoped to review feedback.
