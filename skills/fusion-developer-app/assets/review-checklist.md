@@ -76,6 +76,17 @@ Run through this checklist after generating or modifying code. Skip items that d
 - [ ] Mutations invalidate related queries on success
 - [ ] Loading and error states handled in the UI
 
+## Charts & Visualization
+
+- [ ] AG Charts imports come from `@equinor/fusion-framework-react-ag-charts`, not directly from `ag-charts-*`
+- [ ] `ModuleRegistry.registerModules([AllCommunityModule])` called once at startup before any chart renders
+- [ ] Chart data has a typed interface, not inline untyped objects
+- [ ] Chart options use `AgChartOptions` type (AG Charts) or library option types (Chart.js)
+- [ ] Data fetching, transformation, and chart rendering are in separate layers
+- [ ] Charts are in a responsive container with explicit sizing
+- [ ] Enterprise imports only when enterprise features are needed and license is available
+- [ ] AG Grid integrated charts use `IntegratedChartsModule.with(AgChartsEnterpriseModule)` in `enableAgGrid`
+
 ## Dependencies
 
 - [ ] No new dependencies added without explicit justification

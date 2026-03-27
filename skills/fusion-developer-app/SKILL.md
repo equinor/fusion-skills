@@ -17,6 +17,8 @@ metadata:
     - fusion-react-components
     - styled-components
     - app-development
+    - charts
+    - ag-charts
     - feature-flag
   mcp:
     suggested:
@@ -46,12 +48,16 @@ Typical triggers:
 - "Add a feature flag to this app"
 - "How do I use the useFeature hook in a Fusion app?"
 - "Implement a feature for ..."
+- "Add a chart to this page"
+- "How do I use AG Charts in my Fusion app?"
+- "Create a dashboard with charts"
 
 Implicit triggers:
 - The user asks to build something in `src/`
 - The user references Fusion Framework modules, EDS components, Fusion React components (`@equinor/fusion-react-*`), or styled-components patterns
 - The user references app settings, bookmarks, analytics, or `app.config.ts`
 - The user wants to add a new route, page, or data-fetching layer
+- The user references `@equinor/fusion-framework-react-ag-charts`, `chart.js`, `react-chartjs-2`, or charting/visualization in a Fusion app
 
 ## When not to use
 
@@ -153,6 +159,8 @@ Identify which module the user needs, then read only the matching reference:
 | Context module | `references/using-context.md` |
 | Router and pages | `references/using-router.md` |
 | AG Grid | `references/using-ag-grid.md` |
+| AG Charts (standalone) | `references/using-ag-charts.md` |
+| AG Grid integrated charts | `references/using-ag-grid-charts.md` |
 | EDS + Fusion React components | `references/using-fusion-react-components.md` |
 | Settings | `references/using-settings.md` |
 | Bookmarks | `references/using-bookmarks.md` |
@@ -188,12 +196,13 @@ Use `assets/review-checklist.md` as a comprehensive post-generation checklist.
 
 ## Helper agents
 
-This skill includes three optional helper agents in `agents/`. Use them for focused review after implementing changes, or consult them during implementation for specific guidance. If the runtime does not support skill-local agents, apply the same review criteria inline.
+This skill includes four optional helper agents in `agents/`. Use them for focused review after implementing changes, or consult them during implementation for specific guidance. If the runtime does not support skill-local agents, apply the same review criteria inline.
 
 This skill also has a companion skill, `fusion-research`, for source-backed Fusion ecosystem research. Use it when implementation work is blocked by uncertainty about framework behavior, EDS component APIs, or skill catalog questions.
 
 - **`agents/framework.md`** — reviews Fusion Framework integration: module configuration, HTTP clients, bootstrap lifecycle, runtime config, settings, bookmarks, analytics, and hook usage. **Prefers `mcp_fusion_search_framework`** for API lookups; falls back to `mcp_fusion_search_docs` for general platform guidance. Consult when wiring up `config.ts`, `app.config.ts`, or any component that accesses framework modules.
 - **`agents/styling.md`** — reviews EDS component selection, styled-components patterns, design token usage, and accessibility. **Prefers `mcp_fusion_search_eds`** for component docs, props, and examples. Consult when building or modifying visual components.
+- **`agents/data-display.md`** — reviews data display implementation: choosing between AG Grid (tabular) and AG Charts (visual), module setup, column definitions, chart options, integrated charting, and combined grid+chart pages. **Prefers `mcp_fusion_search_framework`** for AG Grid and AG Charts package lookups and cookbook examples. Consult when building grids, charts, dashboards, or any data presentation view. Use `assets/charts-decision-matrix.md` for chart library selection guidance.
 - **`agents/code-quality.md`** — delegates convention checks (naming, TSDoc, TypeScript strictness, intent comments) to `fusion-code-conventions`, then aggregates findings in Fusion app context. Run on every new or modified file before finalizing.
 
 ## Safety & constraints

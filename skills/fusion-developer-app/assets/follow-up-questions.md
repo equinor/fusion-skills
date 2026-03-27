@@ -63,6 +63,17 @@ Clarifying questions to ask before implementing, organized by domain. Pick the r
 - Should the grid export data (Excel, clipboard)?
 - Are Enterprise features required, or is Community sufficient?
 
+## Charts & Visualization
+
+- What data should the chart display? Is the shape already defined?
+- Which chart type fits the data? (bar, line, area, pie, scatter, or let the user choose?)
+- Is the chart standalone, or should it be created from AG Grid data (integrated charts)?
+- Does the chart need to update reactively when data changes?
+- Are enterprise chart types needed (waterfall, heatmap, sunburst, treemap)?
+- Is there a library preference (AG Charts vs Chart.js), or should we go with the default (AG Charts)?
+- How many charts appear on the page? Is this a dashboard layout?
+- Does the chart need interactive features (zoom, pan, crosshairs, drill-down)?
+
 ## Module Configuration
 
 - Which Fusion modules does this feature need? (HTTP, context, navigation, feature flags, settings)
