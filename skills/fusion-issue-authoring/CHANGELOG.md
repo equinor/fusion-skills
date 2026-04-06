@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.3 - 2026-04-06
+
+### patch
+
+- [#135](https://github.com/equinor/fusion-skills/pull/135) [`5fa9384`](https://github.com/equinor/fusion-skills/commit/5fa938467edfad41d381f0ee2d7320b609c156ed) - Make draft location flexible — check user preferences and session memory before defaulting to `.tmp/`
+
+
+  - Step 4 now checks user preferences and session memory for a preferred draft location
+  - Asks once when intent is ambiguous and remembers the answer for the session
+  - Falls back to `.tmp/{TYPE}-{CONTEXT}.md` only when no preference is found
+
 ## 0.3.2 - 2026-03-23
 
 ### patch
