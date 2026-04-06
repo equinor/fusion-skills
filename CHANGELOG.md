@@ -2,6 +2,20 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.19.2
+
+### Patch
+
+__🎯 [fix(fusion-issue-authoring): make draft location flexible, respect user preferences #135](https://github.com/equinor/fusion-skills/pull/135)<br/>
+🗂️ [5fa9384](https://github.com/equinor/fusion-skills/commit/5fa938467edfad41d381f0ee2d7320b609c156ed)<br/>
+📦 fusion-issue-authoring@0.3.3__
+
+Make draft location flexible — check user preferences and session memory before defaulting to `.tmp/`
+
+- Step 4 now checks user preferences and session memory for a preferred draft location
+- Asks once when intent is ambiguous and remembers the answer for the session
+- Falls back to `.tmp/{TYPE}-{CONTEXT}.md` only when no preference is found
+
 ## v0.19.1
 
 ### Patch

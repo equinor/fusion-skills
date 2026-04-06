@@ -288,7 +288,7 @@ Wires Fusion Help Center into app pages — creates article slug constants, adds
 
 ---
 
-**👍 [`fusion-issue-authoring@0.3.2`](skills/fusion-issue-authoring/SKILL.md)**
+**👍 [`fusion-issue-authoring@0.3.3`](skills/fusion-issue-authoring/SKILL.md)**
 
 Classify issue type, activate the matching agent mode for type-specific drafting, and enforce shared safety gates before GitHub mutation.
 
