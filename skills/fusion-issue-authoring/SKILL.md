@@ -93,7 +93,7 @@ Do not run repeated broad duplicate scans unless the user changes scope/title ma
 
 ### Step 4 — Draft first
 
-Draft in `.tmp/{TYPE}-{CONTEXT}.md` using GitHub Flavored Markdown.
+Before writing, check user preferences and session memory for a preferred draft location. If a stored preference exists, use it. If no preference is found and the intent is ambiguous, ask once and remember the answer for the session. Default to `.tmp/{TYPE}-{CONTEXT}.md` when no preference is found and there is nothing to ask about. Write the draft using GitHub Flavored Markdown.
 
 ### Step 5 — Review and confirm
 
