@@ -8,7 +8,7 @@ Goal: create clear GitHub issues fast, with draft-first review and safe mutation
 - Use full issue references (`owner/repo#123`).
 - Never mutate before explicit publish confirmation.
 - Ask only essential clarifying questions.
-- Resolve repository and labels before mutation.
+- Resolve repository, project intent, and labels before mutation.
 - Prefer MCP tools first and avoid ad hoc GitHub API/GraphQL retries when an MCP equivalent exists.
 
 ## Low-token strategy
@@ -39,6 +39,7 @@ Routing is repo-specific. When no explicit repository is given, read the active 
 8. Mutate via MCP in this order:
 	- `mcp_github::issue_write` create/update with full known payload (labels/assignees/type when supported)
 	- optional single follow-up `mcp_github::issue_write` only for fields unavailable in the first call
+	- project placement and stage/status mutation when requested and supported
 	- `mcp_github::sub_issue_write` for sub-issue ordering/links only when changes are needed
 	- `mcp_github::add_issue_comment` for blocker/status notes only when requested
 
@@ -88,6 +89,13 @@ Quick check:
 - If the user gives `@me` or an exact GitHub login, do not run `mcp_github::search_users`.
 - When assignee search is needed, cache the result set for the active session keyed by owner/repo (or owner) and query. Prefer `/memories/session/{owner}-{repo}-assignee-candidates.json` or `/memories/session/{owner}-assignee-candidates.json`; otherwise use `.tmp/issue-authoring-assignee-candidates-{owner}-{repo}.json`.
 - If the host exposes repository contributors or organization members, hydrate that cache once and reuse it; otherwise reuse the first `mcp_github::search_users` result for the same query.
+
+## Project and stage gate
+
+- Ask project intent explicitly: add to project or skip.
+- If "add", ask which project should receive the issue.
+- Ask desired stage/status when project placement is selected.
+- If project/stage mutation is unsupported in available MCP tools, ask whether to continue without project placement and provide a follow-up path.
 
 ## MCP reference
 

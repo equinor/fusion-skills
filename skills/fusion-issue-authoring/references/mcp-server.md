@@ -12,6 +12,7 @@ Use this file for GitHub MCP-specific tools and payload examples.
 - `mcp_github::search_users`: search users for assignment candidates.
 - `mcp_github::add_issue_comment`: add comment to issue.
 - `mcp_github::list_issue_types`: list available issue types.
+- project-capable MCP tools to add issues to a project and set stage/status (exact tool names can vary by MCP server/client build).
 
 ## High-cost operations and mitigation
 
@@ -76,6 +77,13 @@ There is no dedicated Issues MCP tool in this set for setting blocking/blocked l
 
 - Prefer `mcp_github::sub_issue_write` to organize issues in a logical execution order.
 - Use `mcp_github::add_issue_comment` (or issue body text) to document blocker relationships when needed.
+
+## Project and stage placement note
+
+Some GitHub MCP deployments expose project item mutations (add to project and update status field), while others do not.
+
+- When available, use project-capable MCP mutations after issue create/update to place the issue in the selected project and requested stage.
+- When unavailable, keep issue creation/update flow intact, inform the user that project/stage placement was skipped, and provide a follow-up path.
 
 ## `type` parameter rule
 
@@ -202,8 +210,9 @@ Use either `after_id` or `before_id` for reprioritization.
 
 1. `mcp_github::issue_write` create/update with full known fields (`title`, `body`, `labels`, `assignees`, optional `type`) using cache-backed label/assignee data when available
 2. Optional single follow-up `mcp_github::issue_write` only for fields that were unavailable in step 1
-3. `mcp_github::sub_issue_write` add/reprioritize children in execution order only when linkage changed
-4. Optional: `mcp_github::add_issue_comment` to record blocker context when requested
+3. Optional project placement and stage/status mutation when requested and supported
+4. `mcp_github::sub_issue_write` add/reprioritize children in execution order only when linkage changed
+5. Optional: `mcp_github::add_issue_comment` to record blocker context when requested
 
 ## Rate-limit fallback behavior
 
