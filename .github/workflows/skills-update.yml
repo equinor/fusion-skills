@@ -448,7 +448,7 @@ jobs:
       # respects team decisions to keep a skill temporarily.
       - name: Evaluate prior pull request state for skill
         id: pr_state
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         env:
           SKILL: ${{ matrix.skill }}
           SKIP_REJECTED: ${{ inputs.skip-if-rejected-pr-exists }}
