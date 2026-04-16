@@ -10,4 +10,4 @@ Add new experimental skill for systematic TSDoc and README documentation across 
 - Review council validates intent extraction, code comprehension, user-facing quality, and retrieval fitness
 - Token budget guidance and batch strategy for large monorepo sweeps
 
-Resolves equinor/fusion-core-tasks#702
+resolves equinor/fusion-core-tasks#702

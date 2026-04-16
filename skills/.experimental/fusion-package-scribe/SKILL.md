@@ -66,7 +66,7 @@ If required inputs are missing or ambiguous, ask before proceeding.
 ### Conditional inputs
 
 - **Package filter**: glob or list when processing a subset of packages
-- **README template path**: repo-specific template if not using the built-in default (for example `.github/instructions/documentation.instructions.md`)
+- **README template path**: repo-specific template if not using the built-in default (for example under `.github/instructions/`)
 - **Tracking issue**: issue number for lifecycle updates (assign, status, close)
 - **Commit style**: repo-specific conventional commit format (defaults to `docs(<package>): `)
 - **Batch size**: number of packages per batch for sweep mode (defaults to 5)
@@ -83,7 +83,7 @@ If required inputs are missing or ambiguous, ask before proceeding.
 
 This skill discovers and follows the target repository's own standards:
 
-1. **Repository instructions** — `.github/instructions/code-generation.instructions.md`, `.github/instructions/documentation.instructions.md`, `CONTRIBUTING.md`, `contribute/`
+1. **Repository instructions** — applicable files under `.github/instructions/`, `CONTRIBUTING.md`, `contribute/`
 2. **Tooling configuration** — `tsconfig.json`, `biome.json`, `.editorconfig`
 3. **Companion skill** — `fusion-code-conventions` for TSDoc rules, naming conventions, and intent quality (when installed)
 4. **Built-in defaults** — `references/tsdoc-checklist.md` and `references/readme-template.md`
@@ -107,8 +107,7 @@ In single-agent runtimes, all three roles run inline sequentially.
 Before generating any documentation:
 
 1. Search for repo-level documentation instructions:
-   - `.github/instructions/documentation.instructions.md`
-   - `.github/instructions/code-generation.instructions.md`
+   - applicable files under `.github/instructions/`
    - `CONTRIBUTING.md`, `contribute/`
 2. Read `tsconfig.json` to understand module structure, path aliases, and strict mode settings
 3. Read `biome.json` or equivalent linter config for style expectations

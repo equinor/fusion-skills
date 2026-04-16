@@ -10,7 +10,7 @@ Ask only the relevant unanswered questions from this bank. Do not ask all questi
 
 ## Standards questions
 
-- Does this repository have documentation standards I should follow? (e.g., `.github/instructions/documentation.instructions.md`, `CONTRIBUTING.md`)
+- Does this repository have documentation standards I should follow? (e.g., files under `.github/instructions/`, `CONTRIBUTING.md`)
 - Is there a preferred README structure or template?
 - Are there TSDoc conventions beyond the standard tags? (e.g., custom tags, specific example formats)
 
