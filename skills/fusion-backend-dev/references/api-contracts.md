@@ -23,9 +23,9 @@ DELETE /api/v{major}/{id}                # Resource deletion
 
 ### Error Response Format
 
-All errors return standard format:
+All errors return a standard JSON shape:
 
-```csharp
+```json
 {
   "code": "VALIDATION_FAILED",           // Machine-readable error code
   "message": "One or more validation errors occurred",  // Human-readable message
@@ -138,11 +138,12 @@ See `async-patterns.md` for event details.
 
 ## Rate Limiting
 
-Most Fusion services implement standard rate limiting:
+Fusion services may apply rate limiting, but quotas, headers, and retry behavior can vary by service and environment.
 
-- **Default**: 1000 requests per minute per caller
-- **Exceeded**: Returns `429 Too Many Requests` with `Retry-After` header
-- **Header**: `X-RateLimit-Remaining` shows remaining quota
+Common patterns include:
+- **Exceeded**: `429 Too Many Requests`, sometimes with a `Retry-After` header
+- **Headers**: Some services or gateways may expose headers such as `X-RateLimit-Remaining`
+- **Quotas**: Request limits are service-specific; verify exact limits in the target API/OpenAPI documentation
 
 ---
 

@@ -11,15 +11,24 @@ Authorization: Bearer {jwt_token}
 The token is obtained from Azure AD using the Fusion app client ID:
 - **Client ID**: `0ec6e8f2-d309-4316-90e6-1d05628b5f07`
 - **Authority**: `https://login.microsoftonline.com/`
-- **Scope format**: `api://{service-id}/.default`
+- **Delegated scope format**: `api://{service-id}/{scope-name}`
+- **Client credentials scope format**: `api://{service-id}/.default`
 
 ### Example Scopes
+
+**Delegated scopes** (user/app acting on behalf of a signed-in user):
 
 | Service | Scope |
 | --- | --- |
 | People | `api://0ec6e8f2-d309-4316-90e6-1d05628b5f07/people` |
 | Org | `api://0ec6e8f2-d309-4316-90e6-1d05628b5f07/org` |
 | Context | `api://0ec6e8f2-d309-4316-90e6-1d05628b5f07/context` |
+
+**Application scope** (client credentials / app-only access):
+
+| Flow | Scope |
+| --- | --- |
+| Client credentials | `api://0ec6e8f2-d309-4316-90e6-1d05628b5f07/.default` |
 
 ---
 

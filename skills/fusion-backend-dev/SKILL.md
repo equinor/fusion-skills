@@ -2,10 +2,10 @@
 name: fusion-backend-dev
 description: 'Guides consumption and understanding of Fusion backend services, APIs, and patterns for frontend/client developers, integrators, and architects. Shows reference implementations, explains architectural decisions, and clarifies contracts. USE FOR: understanding Fusion backend APIs, learning implementation patterns, exploring reference code, choosing the right integration point, and understanding authorization/validation/async patterns. DO NOT USE FOR: modifying backend services, creating new endpoints, database changes, or backend-specific development (use fusion-services-develop or backend service repo instead).'
 license: MIT
-compatibility: Works best with Fusion MCP. Requires mcp_fusion_search_backend_code for reference code discovery. Frontend/client developers should also install fusion-research for deeper architectural context.
+compatibility: Works best with Fusion MCP. Works best with mcp_fusion_search_backend_code for reference code discovery. Frontend/client developers should also install fusion-research for deeper architectural context.
 metadata:
-  version: "0.1.0"
-  status: experimental
+  version: "0.0.0"
+  status: active
   owner: "@equinor/fusion-core"
   skills:
     - fusion-research
@@ -19,7 +19,6 @@ metadata:
   mcp:
     suggested:
       - mcp_fusion_search_backend_code
-      - mcp_fusion_research
 ---
 
 # Fusion Backend Consumption
@@ -136,7 +135,7 @@ See `references/` for deeper pattern documentation:
 ## Assets
 
 - `assets/follow-up-questions.md` — Clarifying questions for ambiguous requests
-- `assets/integration-scenarios.md` — Common integration scenarios and which patterns apply
+- `references/integration-patterns.md` — Common integration scenarios and which patterns apply
 
 ## Safety & constraints
 

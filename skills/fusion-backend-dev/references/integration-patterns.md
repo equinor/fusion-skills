@@ -137,12 +137,27 @@ X-Fusion-Delivery-Id: {uuid}
 The receiver validates the signature:
 
 ```csharp
-// Compute signature with shared secret
-var hmac = HMAC.SHA256(secret, requestBody);
-var signature = "sha256=" + Convert.ToHexString(hmac);
+var keyBytes = System.Text.Encoding.UTF8.GetBytes(secret);
+var bodyBytes = System.Text.Encoding.UTF8.GetBytes(requestBody);
+byte[] computedSignature;
 
-// Compare with header
-if (signature != request.Headers["X-Fusion-Signature"])
+using (var hmac = new System.Security.Cryptography.HMACSHA256(keyBytes))
+{
+  computedSignature = hmac.ComputeHash(bodyBytes);
+}
+
+var headerValue = request.Headers["X-Fusion-Signature"].ToString();
+const string signaturePrefix = "sha256=";
+
+if (!headerValue.StartsWith(signaturePrefix, StringComparison.Ordinal))
+{
+  // Missing or malformed signature; reject it
+  return 401 Unauthorized;
+}
+
+var providedSignature = Convert.FromHexString(headerValue.Substring(signaturePrefix.Length));
+
+if (!System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(computedSignature, providedSignature))
 {
   // Request may be spoofed; reject it
   return 401 Unauthorized;
@@ -212,7 +227,7 @@ public async Task<PersonDto> GetPerson(string id)
     return cached;
   
   var person = await _sapClient.GetPerson(id);
-  _cache.Set($"person:{id}", person, expiration: 1hour);
+  _cache.Set($"person:{id}", person, expiration: TimeSpan.FromHours(1));
   return person;
 }
 ```
