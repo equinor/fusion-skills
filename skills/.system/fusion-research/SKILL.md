@@ -1,10 +1,10 @@
 ---
 name: fusion-research
-description: 'Source-backed research orchestrator for the Fusion ecosystem. Routes to the correct research agent based on question type. Returns source-backed evidence only; will not invent Framework behavior, component APIs, skill catalog relationships, or platform guidance. USE FOR: any research question needing source-backed evidence about Fusion Framework APIs, EDS components, the Fusion skill catalog, or Fusion platform documentation. DO NOT USE FOR: implementing code changes, installing or editing skills, MCP setup or troubleshooting, or inventing Fusion behavior without evidence.'
+description: 'Source-backed research orchestrator for the Fusion ecosystem. Routes to the correct research agent based on question type. Returns source-backed evidence only; will not invent Framework behavior, component APIs, skill catalog relationships, platform guidance, or backend implementation details. USE FOR: any research question needing source-backed evidence about Fusion Framework APIs, EDS components, the Fusion skill catalog, Fusion platform documentation, or backend service implementation. DO NOT USE FOR: implementing code changes, installing or editing skills, MCP setup or troubleshooting, or inventing Fusion behavior without evidence.'
 license: MIT
-compatibility: Works best with Fusion MCP. Dispatches to `agents/framework.agent.md` for `mcp_fusion_search_framework`, `agents/eds.agent.md` for `mcp_fusion_search_eds`, `agents/skills.agent.md` for `mcp_fusion_search_skills`, and `agents/docs.agent.md` for `mcp_fusion_search_docs`. If MCP is unavailable, state that clearly rather than guessing.
+compatibility: Works best with Fusion MCP. Dispatches to `agents/framework.agent.md` for `mcp_fusion_search_framework`, `agents/eds.agent.md` for `mcp_fusion_search_eds`, `agents/skills.agent.md` for `mcp_fusion_search_skills`, `agents/docs.agent.md` for `mcp_fusion_search_docs`, and `agents/backend-code.agent.md` for `mcp_fusion_search_backend_code`. If MCP is unavailable, state that clearly rather than guessing.
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
   status: experimental
   owner: "@equinor/fusion-core"
   tags:
@@ -16,6 +16,9 @@ metadata:
     - eds
     - skills
     - docs
+    - backend
+    - csharp
+    - services
     - platform-guidance
   mcp:
     suggested:
@@ -23,6 +26,7 @@ metadata:
       - mcp_fusion_search_eds
       - mcp_fusion_search_docs
       - mcp_fusion_search_skills
+      - mcp_fusion_search_backend_code
       - mcp_fusion_skills
 ---
 
@@ -79,6 +83,7 @@ Determine which domain the question belongs to:
 | **EDS** | EDS component props, usage examples, accessibility, design tokens | [`agents/eds.agent.md`](agents/eds.agent.md) |
 | **Skills** | Skill catalog lookup, scope boundaries, companion/orchestrator relationships | [`agents/skills.agent.md`](agents/skills.agent.md) |
 | **Docs** | Fusion platform concepts, onboarding, platform operations, governance, non-implementation guidance | [`agents/docs.agent.md`](agents/docs.agent.md) |
+| **Backend Code** | C# service implementations, interfaces, CQRS patterns, authorization, validation, cross-service APIs | [`agents/backend-code.agent.md`](agents/backend-code.agent.md) |
 
 If the question spans multiple domains, answer each domain separately using the appropriate agent in sequence.
 
@@ -88,6 +93,7 @@ If the question spans multiple domains, answer each domain separately using the 
 - EDS questions → follow [`agents/eds.agent.md`](agents/eds.agent.md).
 - Skills questions → follow [`agents/skills.agent.md`](agents/skills.agent.md).
 - Docs questions → follow [`agents/docs.agent.md`](agents/docs.agent.md).
+- Backend code questions → follow [`agents/backend-code.agent.md`](agents/backend-code.agent.md).
 
 If the runtime supports skill-local agents, invoke the agent directly. Otherwise, apply the agent's instructions inline.
 
@@ -100,12 +106,13 @@ Use the structure in [assets/source-backed-answer-template.md](assets/source-bac
 
 ## Research agents
 
-This skill includes four research agents in `agents/`. Each covers one Fusion research domain with its own query patterns and evidence checklist.
+This skill includes five research agents in `agents/`. Each covers one Fusion research domain with its own query patterns and evidence checklist.
 
 - **[`agents/framework.agent.md`](agents/framework.agent.md)** — source-backed answers about Fusion Framework hooks, packages, modules, and cookbook examples. Uses `mcp_fusion_search_framework`.
 - **[`agents/eds.agent.md`](agents/eds.agent.md)** — source-backed answers about EDS component props, usage, accessibility, and design tokens. Uses `mcp_fusion_search_eds`.
 - **[`agents/skills.agent.md`](agents/skills.agent.md)** — source-backed answers about the Fusion skill catalog: what skills exist, their scope, and how they relate. Uses `mcp_fusion_search_skills`.
 - **[`agents/docs.agent.md`](agents/docs.agent.md)** — source-backed answers about Fusion platform concepts, onboarding, operations, and governance. Uses `mcp_fusion_search_docs`.
+- **[`agents/backend-code.agent.md`](agents/backend-code.agent.md)** — source-backed answers about Fusion backend service implementations: C# services, interfaces, CQRS patterns, authorization, and cross-service integrations. Uses `mcp_fusion_search_backend_code`.
 
 ## Assets
 
