@@ -174,7 +174,8 @@ Services support idempotent retries for transient failures:
 | Status | Retryable? | Strategy |
 | --- | --- | --- |
 | 400, 401, 403, 404, 422 | ❌ No | Fix the request; retrying won't help |
-| 409, 429, 503, 504 | ✅ Yes | Wait and retry (exponential backoff) |
+| 409 | ⚠️ Depends | Do not blindly retry version/state conflicts; fetch current state, resolve the conflict, then retry only with an updated request. Use backoff only for explicitly transient conflicts |
+| 429, 503, 504 | ✅ Yes | Wait and retry (exponential backoff) |
 | 500 | ✅ Maybe | Retry once; if still fails, likely needs investigation |
 
 **Recommended backoff**:

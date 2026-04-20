@@ -16,6 +16,7 @@ public class CreatePositionCommand : IRequest<PositionDto>
     public string Title { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
+    public string? ExternalId { get; set; }  // Optional idempotency key
 }
 ```
 

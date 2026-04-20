@@ -12,6 +12,6 @@ Add new shared skill for consuming and understanding Fusion backend services
 - CQRS reference guide for command/query patterns and handlers
 - Follow-up questions asset for clarifying ambiguous requests
 - Integrates with fusion-research skill for code discovery via MCP
-- Marked experimental; suitable for shared consumption across teams
+- Published as active skill; suitable for shared consumption across teams
 
 Used by backend development workflows and service integration tasks.

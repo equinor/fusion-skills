@@ -10,7 +10,7 @@ Authorization: Bearer {jwt_token}
 
 The token is obtained from Azure AD using the Fusion app client ID:
 - **Client ID**: `0ec6e8f2-d309-4316-90e6-1d05628b5f07`
-- **Authority**: `https://login.microsoftonline.com/`
+- **Authority**: `https://login.microsoftonline.com/{tenant-id}/` (replace `{tenant-id}` with your Azure AD tenant ID, or use `common` / `organizations` if appropriate)
 - **Delegated scope format**: `api://{service-id}/{scope-name}`
 - **Client credentials scope format**: `api://{service-id}/.default`
 
@@ -171,7 +171,7 @@ Before calling an endpoint, understand what you can do:
   "name": "John Doe",
   "email": "john.doe@equinor.com",
   "roles": ["engineer", "approver"],
-  "scp": "api://fusion-person/.default",
+  "scp": "api://fusion-people/.default",
   "aud": "0ec6e8f2-d309-4316-90e6-1d05628b5f07"
 }
 ```

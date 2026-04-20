@@ -59,8 +59,7 @@ When Fusion services call external systems (outside Equinor):
 
 ### Pattern: HTTP Client with Retry
 
-```csharp
-// Service configuration
+```json
 {
   "ExternalApis": {
     "SAPSystem": {
