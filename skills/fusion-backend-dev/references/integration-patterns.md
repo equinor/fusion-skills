@@ -100,7 +100,7 @@ public class SAPPerson
 }
 
 // Mapper converts between formats
-var fusion = mapper.Map<PersonDto>(sapPerson);
+PersonDto fusion = mapper.Map<PersonDto>(sapPerson);
 ```
 
 ---
@@ -136,16 +136,16 @@ X-Fusion-Delivery-Id: {uuid}
 The receiver validates the signature:
 
 ```csharp
-var keyBytes = System.Text.Encoding.UTF8.GetBytes(secret);
-var bodyBytes = System.Text.Encoding.UTF8.GetBytes(requestBody);
+byte[] keyBytes = System.Text.Encoding.UTF8.GetBytes(secret);
+byte[] bodyBytes = System.Text.Encoding.UTF8.GetBytes(requestBody);
 byte[] computedSignature;
 
-using (var hmac = new System.Security.Cryptography.HMACSHA256(keyBytes))
+using (HMACSHA256 hmac = new System.Security.Cryptography.HMACSHA256(keyBytes))
 {
   computedSignature = hmac.ComputeHash(bodyBytes);
 }
 
-var headerValue = request.Headers["X-Fusion-Signature"].ToString();
+string headerValue = request.Headers["X-Fusion-Signature"].ToString();
 const string signaturePrefix = "sha256=";
 
 if (!headerValue.StartsWith(signaturePrefix, StringComparison.Ordinal))
@@ -154,7 +154,7 @@ if (!headerValue.StartsWith(signaturePrefix, StringComparison.Ordinal))
   return 401 Unauthorized;
 }
 
-var providedSignature = Convert.FromHexString(headerValue.Substring(signaturePrefix.Length));
+byte[] providedSignature = Convert.FromHexString(headerValue.Substring(signaturePrefix.Length));
 
 if (!System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(computedSignature, providedSignature))
 {
@@ -173,9 +173,9 @@ Services handle external API calls carefully:
 
 ```csharp
 // All external calls have timeouts
-var timeout = TimeSpan.FromSeconds(30);
-using var cts = new CancellationTokenSource(timeout);
-var response = await _httpClient.GetAsync(url, cts.Token);
+TimeSpan timeout = TimeSpan.FromSeconds(30);
+using CancellationTokenSource cts = new CancellationTokenSource(timeout);
+HttpResponseMessage response = await _httpClient.GetAsync(url, cts.Token);
 ```
 
 **Why**: Prevents a slow external API from blocking the entire service
@@ -201,13 +201,13 @@ If external integration fails:
 ```csharp
 try
 {
-  var sap = await _sapClient.GetPerson(personId);
+  SAPPersonDto sap = await _sapClient.GetPerson(personId);
   return enriched(sap);
 }
 catch (SAPUnavailableException)
 {
   // SAP is down; use cached data or return minimal response
-  var cached = _cache.Get(personId);
+  PersonDto? cached = _cache.Get(personId);
   return cached ?? new MinimalPersonDto();
 }
 ```
@@ -221,11 +221,11 @@ catch (SAPUnavailableException)
 ```csharp
 public async Task<PersonDto> GetPerson(string id)
 {
-  var cached = _cache.Get<PersonDto>($"person:{id}");
+  PersonDto? cached = _cache.Get<PersonDto>($"person:{id}");
   if (cached != null)
     return cached;
   
-  var person = await _sapClient.GetPerson(id);
+  PersonDto person = await _sapClient.GetPerson(id);
   _cache.Set($"person:{id}", person, expiration: TimeSpan.FromHours(1));
   return person;
 }
@@ -258,7 +258,7 @@ public interface IExternalApiClient
 public class HttpExternalApiClient : IExternalApiClient { }
 
 // Testing: Mock
-public class MockExternalApiClient : IExternalApiClient
+public class TestExternalApiClient : IExternalApiClient
 {
   public Task<PersonDto> GetPerson(string id)
   {

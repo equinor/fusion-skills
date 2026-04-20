@@ -9,6 +9,7 @@ metadata:
   owner: "@equinor/fusion-core"
   skills:
     - fusion-research
+    - fusion-code-conventions
   tags:
     - fusion-backend
     - api-consumption

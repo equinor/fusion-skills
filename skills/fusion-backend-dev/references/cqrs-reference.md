@@ -197,12 +197,12 @@ Some queries support fluent building:
 
 ```csharp
 // Usage:
-var query = new GetContextQuery(contextId)
+GetContextQuery query = new GetContextQuery(contextId)
     .WithPositions()
     .WithManager()
     .WithResponsibilities();
 
-var context = await mediator.Send(query);
+ContextDto context = await mediator.Send(query);
 ```
 
 **What this enables**: Load only the data you need (optimization)
@@ -318,19 +318,21 @@ Response: 500 Internal Server Error
 ### Idempotent Creation
 
 ```csharp
-public async Task<PositionDto> Handle(CreatePositionCommand request)
+public async Task<PositionDto> Handle(
+    CreatePositionCommand request,
+    CancellationToken cancellationToken)
 {
     // Check if already exists (idempotent key)
-    var existing = await _db.Positions
-        .FirstOrDefaultAsync(p => p.ExternalId == request.ExternalId);
+    DbPosition? existing = await _db.Positions
+        .FirstOrDefaultAsync(p => p.ExternalId == request.ExternalId, cancellationToken);
     
     if (existing != null)
         return _mapper.Map<PositionDto>(existing);  // Return existing
     
     // Create new
-    var position = new Position { ... };
-    await _db.SaveChangesAsync();
-    await _mediator.Publish(new PositionCreated(position));
+    DbPosition position = new DbPosition { ... };
+    await _db.SaveChangesAsync(cancellationToken);
+    await _mediator.Publish(new PositionCreated(position), cancellationToken);
     
     return _mapper.Map<PositionDto>(position);
 }
@@ -339,16 +341,18 @@ public async Task<PositionDto> Handle(CreatePositionCommand request)
 ### Soft Delete
 
 ```csharp
-public async Task<bool> Handle(DeleteContextCommand request)
+public async Task<bool> Handle(
+    DeleteContextCommand request,
+    CancellationToken cancellationToken)
 {
-    var context = await _db.Contexts.FindAsync(request.ContextId);
+    DbFusionContext? context = await _db.Contexts.FindAsync(request.ContextId);
     
     context.IsArchived = true;
     context.ArchivedAt = DateTime.UtcNow;
     context.ArchivedBy = _currentUser.Id;
     
-    await _db.SaveChangesAsync();
-    await _mediator.Publish(new ContextArchived(context));
+    await _db.SaveChangesAsync(cancellationToken);
+    await _mediator.Publish(new ContextArchived(context), cancellationToken);
     
     return true;
 }
@@ -357,30 +361,32 @@ public async Task<bool> Handle(DeleteContextCommand request)
 ### Transactional Consistency
 
 ```csharp
-public async Task<ContextDto> Handle(CreateContextCommand request)
+public async Task<ContextDto> Handle(
+    CreateContextCommand request,
+    CancellationToken cancellationToken)
 {
-    using var transaction = await _db.Database.BeginTransactionAsync();
+    using IDbContextTransaction transaction = await _db.Database.BeginTransactionAsync(cancellationToken);
     
     try
     {
-        var context = new Context { ... };
-        await _db.Contexts.AddAsync(context);
+        DbFusionContext context = new DbFusionContext { ... };
+        await _db.Contexts.AddAsync(context, cancellationToken);
         
         // Create default positions, approvals, etc. in same transaction
-        var defaultPosition = new Position { ContextId = context.Id, ... };
-        await _db.Positions.AddAsync(defaultPosition);
+        DbPosition defaultPosition = new DbPosition { ContextId = context.Id, ... };
+        await _db.Positions.AddAsync(defaultPosition, cancellationToken);
         
-        await _db.SaveChangesAsync();
-        await transaction.CommitAsync();
+        await _db.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
         
         // Publish events AFTER transaction succeeds
-        await _mediator.Publish(new ContextCreated(context));
+        await _mediator.Publish(new ContextCreated(context), cancellationToken);
         
         return _mapper.Map<ContextDto>(context);
     }
     catch
     {
-        await transaction.RollbackAsync();
+        await transaction.RollbackAsync(cancellationToken);
         throw;
     }
 }

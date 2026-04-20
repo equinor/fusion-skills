@@ -140,14 +140,14 @@ Events can be delivered multiple times. Your handler must be idempotent:
 // ❌ NOT idempotent:
 public void Handle(PositionAssigned @event)
 {
-  var position = _db.Positions.Add(@event.Data);
+  DbPosition position = _db.Positions.Add(@event.Data);
   _db.SaveChanges();
 }
 
 // ✅ Idempotent:
 public void Handle(PositionAssigned @event)
 {
-  var existing = _db.Positions.Find(@event.Data.PositionId);
+  DbPosition? existing = _db.Positions.Find(@event.Data.PositionId);
   if (existing == null)
   {
     _db.Positions.Add(@event.Data);
