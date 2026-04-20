@@ -150,4 +150,4 @@ Always:
 - Capture and cite the source file path when showing code
 - State explicitly which repository the pattern comes from
 - Note when a pattern exists in one service but not others (services have variation)
-- Offer to escalate to `fusion-services-develop` skill if the user wants to implement changes
+- Offer to escalate to `fusion-services-develop` skill (available in the [fusion-core-services](https://github.com/equinor/fusion-core-services) repo) if the user wants to implement changes

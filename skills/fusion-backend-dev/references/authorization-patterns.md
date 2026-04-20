@@ -8,11 +8,11 @@ All Fusion services require an Azure AD access token in the Authorization header
 Authorization: Bearer {jwt_token}
 ```
 
-The token is obtained from Azure AD using the Fusion app client ID:
-- **Client ID**: `0ec6e8f2-d309-4316-90e6-1d05628b5f07`
+The token is obtained from Azure AD using the Fusion app registration:
+- **Client ID**: `{app-client-id}` (obtain from your Fusion app registration)
 - **Authority**: `https://login.microsoftonline.com/{tenant-id}/` (replace `{tenant-id}` with your Azure AD tenant ID, or use `common` / `organizations` if appropriate)
-- **Delegated scope format**: `api://{service-id}/{scope-name}`
-- **Client credentials scope format**: `api://{service-id}/.default`
+- **Delegated scope format**: `api://{resource-app-id}/{scope-name}`
+- **Client credentials scope format**: `api://{resource-app-id}/.default`
 
 ### Example Scopes
 
@@ -20,15 +20,15 @@ The token is obtained from Azure AD using the Fusion app client ID:
 
 | Service | Scope |
 | --- | --- |
-| People | `api://0ec6e8f2-d309-4316-90e6-1d05628b5f07/people` |
-| Org | `api://0ec6e8f2-d309-4316-90e6-1d05628b5f07/org` |
-| Context | `api://0ec6e8f2-d309-4316-90e6-1d05628b5f07/context` |
+| People | `api://{resource-app-id}/people` |
+| Org | `api://{resource-app-id}/org` |
+| Context | `api://{resource-app-id}/context` |
 
 **Application scope** (client credentials / app-only access):
 
 | Flow | Scope |
 | --- | --- |
-| Client credentials | `api://0ec6e8f2-d309-4316-90e6-1d05628b5f07/.default` |
+| Client credentials | `api://{resource-app-id}/.default` |
 
 ---
 
@@ -171,8 +171,8 @@ Before calling an endpoint, understand what you can do:
   "name": "John Doe",
   "email": "john.doe@equinor.com",
   "roles": ["engineer", "approver"],
-  "scp": "api://fusion-people/.default",
-  "aud": "0ec6e8f2-d309-4316-90e6-1d05628b5f07"
+  "scp": "api://{resource-app-id}/.default",
+  "aud": "{app-client-id}"
 }
 ```
 

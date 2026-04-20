@@ -12,7 +12,7 @@ Fusion services validate all input before processing. Validation happens in laye
 ✓ API version supported
 ```
 
-**Errors**: `400 Bad Request`, `401 Unauthorized`, `406 Not Acceptable`
+**Errors**: `400 Bad Request`, `401 Unauthorized`, `415 Unsupported Media Type`
 
 ### 2. Model Validation (FluentValidation)
 
@@ -25,23 +25,26 @@ Before business logic runs, all input is validated:
 "StartDate must be before EndDate"
 ```
 
-**Error response**:
+**Error response** (ProblemDetails with validation extensions):
 ```json
 {
-  "code": "VALIDATION_FAILED",
-  "message": "One or more validation errors occurred",
-  "details": [
-    {
-      "field": "email",
-      "code": "INVALID_EMAIL_FORMAT",
-      "message": "Email must be a valid email address"
-    },
-    {
-      "field": "startDate",
-      "code": "INVALID_DATE_RANGE",
-      "message": "Start date must be before end date"
-    }
-  ]
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+  "title": "One or more validation errors occurred.",
+  "status": 400,
+  "error": {
+    "code": "ModelValidationError",
+    "message": "Model contained 2 error",
+    "errors": [
+      { "property": "email", "message": "Email must be a valid email address" },
+      { "property": "startDate", "message": "Start date must be before end date" }
+    ]
+  },
+  "errors": {
+    "email": ["Email must be a valid email address"],
+    "startDate": ["Start date must be before end date"]
+  },
+  "traceId": "...",
+  "timestamp": "..."
 }
 ```
 
@@ -56,15 +59,19 @@ After model validation passes, business rules are checked:
 "Cannot modify archived context"
 ```
 
-**Error response**:
+**Error response** (via `FusionApiError.InvalidOperation` or thrown as domain exception):
 ```json
 {
-  "code": "BUSINESS_RULE_VIOLATION",
-  "message": "Cannot delete context with active positions",
-  "details": {
-    "violation": "ActivePositionsExist",
-    "positions": [123, 456]  // Position IDs that must be resolved first
-  }
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+  "title": "Invalid operation",
+  "status": 400,
+  "detail": "Cannot delete context with active positions",
+  "error": {
+    "code": "InvalidOperation",
+    "message": "Cannot delete context with active positions"
+  },
+  "traceId": "...",
+  "timestamp": "..."
 }
 ```
 
@@ -72,80 +79,140 @@ After model validation passes, business rules are checked:
 
 ## Error Response Format
 
-All Fusion services use consistent error format:
+All Fusion services return errors as RFC 7807 `ProblemDetails` with Fusion-specific extensions. The envelope is always the same; what varies is the `error` extension content.
+
+### Validation errors (400)
+
+FluentValidation failures produce a `ProblemDetails` with both a legacy `error` object and a standard `errors` dictionary:
 
 ```json
 {
-  "code": "ERROR_CODE",              // Machine-readable code
-  "message": "Human readable",       // What went wrong
-  "details": {                       // Optional: additional context
-    "field": "value",
-    "reason": "explanation"
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+  "title": "One or more validation errors occurred.",
+  "status": 400,
+  "error": {
+    "code": "ModelValidationError",
+    "message": "Model contained 2 error",
+    "errors": [
+      { "property": "email", "message": "Email must be a valid email address", "attemptedValue": "bad" },
+      { "property": "startDate", "message": "Must be before end date" }
+    ]
   },
-  "timestamp": "2026-04-17T10:30:00Z",  // When it happened
-  "traceId": "uuid"                  // For support/debugging
+  "errors": {
+    "email": ["Email must be a valid email address"],
+    "startDate": ["Must be before end date"]
+  },
+  "traceId": "00-abc123...",
+  "timestamp": "2026-04-17T10:30:00Z"
 }
 ```
+
+> **Note:** The top-level `errors` dictionary (field name → message array) matches the standard ASP.NET Core validation format. The nested `error.errors` array is a legacy format with additional context like `attemptedValue`. Consumers should prefer the top-level `errors` dictionary.
+
+### Domain and operational errors (404, 409, 424, etc.)
+
+Domain-specific errors use the same `ProblemDetails` envelope with an `error` extension:
+
+```json
+{
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+  "title": "Resource not found",
+  "status": 404,
+  "instance": "abc-123",
+  "error": {
+    "code": "ResourceNotFound",
+    "message": "Context abc-123 was not found",
+    "resourceIdentifier": "abc-123"
+  },
+  "traceId": "00-abc123...",
+  "timestamp": "2026-04-17T10:30:00Z"
+}
+```
+
+Controllers produce these via `FusionApiError` static factory methods (defined in `fusion-libraries`):
+- `FusionApiError.NotFound(resource, message)` → 404
+- `FusionApiError.InvalidOperation(code, message)` → 400
+- `FusionApiError.ResourceExists(resource, message, exception)` → 409
+- `FusionApiError.Forbidden(message)` → 403
+- `FusionApiError.FailedDependency(code, message)` → 424
+- `FusionApiError.IncorrectETag(message)` → 409
+
+### Unhandled exceptions (500, middleware-caught)
+
+The `ApiExceptionMiddleware` catches unhandled exceptions and maps known types:
+- `NotFoundError` → 404
+- `NotAuthorizedError` → 403 (includes `accessRequirements` in the error)
+- `ResourceExistsError` → 409
+- `ReadOnlyModeError` → 500 with read-only context
+
+Stack traces are included only in development/test environments.
 
 ### Common Error Codes
 
 | Code | HTTP Status | Meaning |
 | --- | --- | --- |
-| `VALIDATION_FAILED` | 400 | Input doesn't match schema or business rules |
-| `UNAUTHORIZED` | 401 | Missing or invalid authentication token |
-| `FORBIDDEN` | 403 | Authenticated but not authorized for this action |
-| `NOT_FOUND` | 404 | Resource doesn't exist |
-| `CONFLICT` | 409 | Operation conflicts with current state (e.g., already exists) |
-| `UNPROCESSABLE_ENTITY` | 422 | Request is valid but semantically incorrect |
-| `INTERNAL_SERVER_ERROR` | 500 | Service encountered unexpected error |
+| `ModelValidationError` | 400 | Input doesn't match schema or FluentValidation rules |
+| `ResourceNotFound` | 404 | Resource doesn't exist |
+| `InvalidOperation` | 400 | Business logic constraint violated |
+| `ResourceExists` / exception type | 409 | Resource already exists |
+| `NotAuthorized` | 403 | Not authorized for action |
+| `FailedDependency` | 424 | Downstream service error |
+| `Gone` | 410 | Resource has been removed |
+| `NotImplemented` | 501 | Endpoint not yet implemented |
 
 ---
 
-## How to Handle Validation Errors
+## How to Handle Error Responses
 
-### For VALIDATION_FAILED (400)
+### For Validation Errors (400)
 
-1. Check the `details` array for each field error
+1. Check the `errors` dictionary for field-level messages
 2. Show the user the specific error message
 3. Let them correct the input
 4. Retry the request
 
 **Frontend example**:
 ```typescript
-if (response.code === 'VALIDATION_FAILED') {
-  const errors = response.details.reduce((acc, err) => {
-    acc[err.field] = err.message;
-    return acc;
-  }, {});
+if (response.status === 400) {
+  const body = await response.json();
+  // body.errors is a Record<string, string[]>
+  const fieldErrors: Record<string, string> = {};
+  for (const [field, messages] of Object.entries(body.errors)) {
+    fieldErrors[field] = (messages as string[])[0];
+  }
   
   // Show errors in form next to fields
-  form.setErrors(errors);
+  form.setErrors(fieldErrors);
 }
 ```
 
-### For BUSINESS_RULE_VIOLATION (422)
+### For Business Rule Violations (400)
 
 Business rules are often recoverable but require additional steps:
 
-1. Parse the `details` to understand what's blocking
+1. Parse `error.code` and `error.message` from the ProblemDetails response
 2. Either:
    - Fix the prerequisite (delete active positions first, etc.)
    - Take an alternate action (update instead of delete)
    - Contact someone with higher permissions
 
-**Example**:
+**Example** (returned via `FusionApiError.InvalidOperation`):
 ```json
 {
-  "code": "BUSINESS_RULE_VIOLATION",
-  "message": "Cannot delete context with active positions",
-  "details": {
-    "activePositionCount": 3,
-    "alternatives": ["archive", "move_positions_to_other_context"]
-  }
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+  "title": "Invalid operation",
+  "status": 400,
+  "detail": "Cannot delete context with active positions",
+  "error": {
+    "code": "InvalidOperation",
+    "message": "Cannot delete context with active positions"
+  },
+  "traceId": "...",
+  "timestamp": "..."
 }
 ```
 
-### For CONFLICT (409)
+### For Conflict (409)
 
 Resource already exists or state changed:
 
@@ -155,13 +222,20 @@ Resource already exists or state changed:
 **Optimistic lock pattern**:
 ```json
 Request: PUT /contexts/{id}
-Body: { "title": "New Title", "version": 5 }
+Headers: { "If-Match": "\"etag-value\"" }
+Body: { "title": "New Title" }
 
 Response: 409 Conflict
 {
-  "code": "VERSION_MISMATCH",
-  "message": "Resource was modified; current version is 6",
-  "details": { "currentVersion": 6 }
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.8",
+  "title": "Resource version does not match",
+  "status": 409,
+  "error": {
+    "code": "IncorrectETag",
+    "message": "ETag did not match, the resource might have been updated. Refresh and try again."
+  },
+  "traceId": "...",
+  "timestamp": "..."
 }
 ```
 

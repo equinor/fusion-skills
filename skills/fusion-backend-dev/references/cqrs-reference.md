@@ -129,9 +129,8 @@ public class CreateContextCommand : IRequest<ContextDto>
 public class UpdateContextCommand : IRequest<ContextDto>
 {
     public string ContextId { get; set; }
-    public string Title { get; set; }  // Optional
-    public DateTime? EndDate { get; set; }  // Optional
-    // Only changed fields included
+    public string? Title { get; set; }  // Optional — null means unchanged
+    public DateTime? EndDate { get; set; }  // Optional — null means unchanged
 }
 
 // Handler responsibilities:
@@ -345,7 +344,8 @@ public async Task<bool> Handle(
     DeleteContextCommand request,
     CancellationToken cancellationToken)
 {
-    DbFusionContext? context = await _db.Contexts.FindAsync(request.ContextId);
+    DbFusionContext context = await _db.Contexts.FindAsync(request.ContextId)
+        ?? throw new NotFoundException($"Context {request.ContextId} not found");
     
     context.IsArchived = true;
     context.ArchivedAt = DateTime.UtcNow;
