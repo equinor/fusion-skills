@@ -165,19 +165,34 @@ Common patterns include:
 
 ## Pagination
 
-Endpoints supporting large result sets use cursor-based pagination:
+Endpoints supporting large result sets use OData-style offset pagination with `$top` and `$skip`. The standard paged response envelope is:
 
 ```json
 {
-  "data": [ /* items */ ],
-  "pageInfo": {
-    "hasNextPage": true,
-    "nextCursor": "eyJwYWdlIjogMn0="
-  }
+  "totalCount": 245,
+  "count": 50,
+  "@nextPage": "/api/v1/resources?$top=50&$skip=50",
+  "@prevPage": null,
+  "value": [ /* items */ ]
 }
 ```
 
-Query with `?first=50&after={cursor}` to fetch next page.
+| Field | Description |
+| --- | --- |
+| `totalCount` | Total matching items (ignoring paging) |
+| `count` | Items in this page |
+| `@nextPage` | Relative URL for next page (`null` when on last page) |
+| `@prevPage` | Relative URL for previous page (omitted on first page) |
+| `value` | Array of result items |
+
+**Common query parameters**:
+- `$top=50` — page size (max varies by endpoint, e.g. 100 for notifications)
+- `$skip=0` — offset into result set
+- `$filter=field eq 'value'` — OData filter (allowed fields declared per endpoint)
+- `$search=term` — full-text search (where supported)
+- `$orderby=field asc` — sort order (where supported)
+
+> **Note:** Not all endpoints support pagination. Some return the full collection directly as an array. Check the target endpoint's OpenAPI/Swagger spec for the actual response shape and supported query parameters.
 
 ---
 
