@@ -334,12 +334,15 @@ public async Task<PositionDto> Handle(
     CreatePositionCommand request,
     CancellationToken cancellationToken)
 {
-    // Check if already exists (idempotent key)
-    DbPosition? existing = await _db.Positions
-        .FirstOrDefaultAsync(p => p.ExternalId == request.ExternalId, cancellationToken);
-    
-    if (existing != null)
-        return _mapper.Map<PositionDto>(existing);  // Return existing
+    // Check if already exists only when an idempotent key was provided
+    if (!string.IsNullOrWhiteSpace(request.ExternalId))
+    {
+        DbPosition? existing = await _db.Positions
+            .FirstOrDefaultAsync(p => p.ExternalId == request.ExternalId, cancellationToken);
+
+        if (existing != null)
+            return _mapper.Map<PositionDto>(existing);  // Return existing
+    }
     
     // Create new
     DbPosition position = new DbPosition { ... };
