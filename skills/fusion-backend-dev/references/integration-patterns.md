@@ -133,16 +133,25 @@ X-Fusion-Delivery-Id: {uuid}
 
 ### Signature Validation
 
-The receiver validates the signature:
+The receiver validates the signature using the raw request body bytes:
 
 ```csharp
 byte[] keyBytes = System.Text.Encoding.UTF8.GetBytes(secret);
-byte[] bodyBytes = System.Text.Encoding.UTF8.GetBytes(requestBody);
-byte[] computedSignature;
 
-using (HMACSHA256 hmac = new System.Security.Cryptography.HMACSHA256(keyBytes))
+// Read raw body bytes to ensure signature matches exactly
+request.EnableBuffering();
+byte[] bodyBytes;
+using (var bodyStream = new System.IO.MemoryStream())
 {
-  computedSignature = hmac.ComputeHash(bodyBytes);
+    await request.Body.CopyToAsync(bodyStream);
+    bodyBytes = bodyStream.ToArray();
+    request.Body.Position = 0;
+}
+
+byte[] computedSignature;
+using (var hmac = new System.Security.Cryptography.HMACSHA256(keyBytes))
+{
+    computedSignature = hmac.ComputeHash(bodyBytes);
 }
 
 string headerValue = request.Headers["X-Fusion-Signature"].ToString();
@@ -150,16 +159,14 @@ const string signaturePrefix = "sha256=";
 
 if (!headerValue.StartsWith(signaturePrefix, StringComparison.Ordinal))
 {
-  // Missing or malformed signature; reject it
-  return 401 Unauthorized;
+    return Results.Unauthorized();  // Missing or malformed signature
 }
 
 byte[] providedSignature = Convert.FromHexString(headerValue.Substring(signaturePrefix.Length));
 
 if (!System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(computedSignature, providedSignature))
 {
-  // Request may be spoofed; reject it
-  return 401 Unauthorized;
+    return Results.Unauthorized();  // Request may be spoofed
 }
 ```
 

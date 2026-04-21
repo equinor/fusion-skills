@@ -251,7 +251,7 @@ Response: 400 Bad Request
   "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
   "title": "One or more validation errors occurred.",
   "status": 400,
-  "error": { "code": "ModelValidationError", "message": "Model contained 1 errors" },
+  "error": { "code": "ModelValidationError", "message": "Model contained 1 error" },
   "errors": { "startDate": ["Must be before end date"] },
   "traceId": "..."
 }

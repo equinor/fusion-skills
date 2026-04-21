@@ -32,7 +32,7 @@ Fusion services return errors as RFC 7807 `ProblemDetails` with Fusion-specific 
   "status": 400,
   "error": {
     "code": "ModelValidationError",
-    "message": "Model contained 1 errors"
+    "message": "Model contained 1 error"
   },
   "errors": {
     "email": ["Email format is invalid"]
@@ -73,7 +73,11 @@ The access token is a JWT obtained from Azure AD. Scope required depends on the 
 }
 ```
 
-**Required scope**: `api://{resource-app-id}/.default` (verify the actual resource App ID URI for the People service in your environment)
+**Required scope**:
+- Delegated (user token): `api://{resource-app-id}/user_impersonation`
+- App-only (client credentials): `api://{resource-app-id}/.default`
+
+Verify the actual resource App ID URI for the People service in your environment.
 
 **Authentication**: Azure AD access token
 
@@ -96,7 +100,11 @@ The access token is a JWT obtained from Azure AD. Scope required depends on the 
 }
 ```
 
-**Required scope**: `api://{resource-app-id}/.default` (verify the actual resource App ID URI for the Org service)
+**Required scope**:
+- Delegated: `api://{resource-app-id}/user_impersonation`
+- App-only: `api://{resource-app-id}/.default`
+
+Verify the actual resource App ID URI for the Org service in your environment.
 
 ---
 
@@ -116,7 +124,11 @@ The access token is a JWT obtained from Azure AD. Scope required depends on the 
 }
 ```
 
-**Required scope**: `api://{resource-app-id}/.default` (verify the actual resource App ID URI for the Context service)
+**Required scope**:
+- Delegated: `api://{resource-app-id}/user_impersonation`
+- App-only: `api://{resource-app-id}/.default`
+
+Verify the actual resource App ID URI for the Context service in your environment.
 
 ---
 

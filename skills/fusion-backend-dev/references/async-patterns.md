@@ -140,7 +140,13 @@ Events can be delivered multiple times. Your handler must be idempotent:
 // ❌ NOT idempotent:
 public void Handle(PositionAssigned @event)
 {
-  DbPosition position = _db.Positions.Add(@event.Data);
+  DbPosition position = new DbPosition
+  {
+    PositionId = @event.Data.PositionId,
+    PersonId = @event.Data.PersonId,
+    Title = @event.Data.Title
+  };
+  _db.Positions.Add(position);
   _db.SaveChanges();
 }
 
@@ -150,7 +156,13 @@ public void Handle(PositionAssigned @event)
   DbPosition? existing = _db.Positions.Find(@event.Data.PositionId);
   if (existing == null)
   {
-    _db.Positions.Add(@event.Data);
+    DbPosition position = new DbPosition
+    {
+      PositionId = @event.Data.PositionId,
+      PersonId = @event.Data.PersonId,
+      Title = @event.Data.Title
+    };
+    _db.Positions.Add(position);
     _db.SaveChanges();
   }
   // If already processed, no-op
