@@ -181,7 +181,7 @@ public class GetContextQuery : IRequest<ContextDto>
 ```csharp
 public class ListContextsQuery : IRequest<List<ContextDto>>
 {
-    public string Type { get; set; }  // Optional filter
+    public string? Type { get; set; }  // Optional filter
     public bool IncludeArchived { get; set; }
     public int? Take { get; set; }  // Pagination
     public int? Skip { get; set; }
@@ -192,11 +192,11 @@ public class ListContextsQuery : IRequest<List<ContextDto>>
 
 ### Fluent Builder Pattern
 
-Some queries support fluent building:
+Some queries support fluent building (illustrative pseudo-code — actual query classes vary by service):
 
 ```csharp
-// Usage:
-GetContextQuery query = new GetContextQuery(contextId)
+// Fluent builder query example:
+GetContextQuery query = new GetContextQuery { ContextId = contextId }
     .WithPositions()
     .WithManager()
     .WithResponsibilities();

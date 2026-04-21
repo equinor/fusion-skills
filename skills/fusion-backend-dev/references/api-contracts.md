@@ -43,7 +43,6 @@ Fusion services return errors as RFC 7807 `ProblemDetails` with Fusion-specific 
 ```
 
 > See [validation-patterns.md](./validation-patterns.md) for the full error format reference, including domain errors, authorization errors, and retry guidance.
-```
 
 ### Authorization Header
 
@@ -74,7 +73,7 @@ The access token is a JWT obtained from Azure AD. Scope required depends on the 
 }
 ```
 
-**Required scope**: `api://fusion-people/.default`
+**Required scope**: `api://{resource-app-id}/.default` (verify the actual resource App ID URI for the People service in your environment)
 
 **Authentication**: Azure AD access token
 
@@ -97,7 +96,7 @@ The access token is a JWT obtained from Azure AD. Scope required depends on the 
 }
 ```
 
-**Required scope**: `api://fusion-org/.default`
+**Required scope**: `api://{resource-app-id}/.default` (verify the actual resource App ID URI for the Org service)
 
 ---
 
@@ -117,7 +116,7 @@ The access token is a JWT obtained from Azure AD. Scope required depends on the 
 }
 ```
 
-**Required scope**: `api://fusion-context/.default`
+**Required scope**: `api://{resource-app-id}/.default` (verify the actual resource App ID URI for the Context service)
 
 ---
 

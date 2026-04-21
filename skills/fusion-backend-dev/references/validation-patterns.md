@@ -18,11 +18,11 @@ Fusion services validate all input before processing. Validation happens in laye
 
 Before business logic runs, all input is validated:
 
-```csharp
-// Backend service rule example:
-"Email must be a valid format"
-"Name must be 1-200 characters"
-"StartDate must be before EndDate"
+```text
+// Backend service validation rules:
+Email must be a valid format
+Name must be 1-200 characters
+StartDate must be before EndDate
 ```
 
 **Error response** (ProblemDetails with validation extensions):
@@ -52,11 +52,11 @@ Before business logic runs, all input is validated:
 
 After model validation passes, business rules are checked:
 
-```csharp
-// Example rules:
-"Cannot assign position holder outside hiring period"
-"Cannot delete context with active positions"
-"Cannot modify archived context"
+```text
+// Example business rules:
+Cannot assign position holder outside hiring period
+Cannot delete context with active positions
+Cannot modify archived context
 ```
 
 **Error response** (via `FusionApiError.InvalidOperation` or thrown as domain exception):

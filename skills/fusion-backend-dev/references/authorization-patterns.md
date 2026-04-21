@@ -59,10 +59,10 @@ public class MustBeContextManagerRequirement : IAuthorizationRequirement
 
 | Scenario | Requirement | How to satisfy |
 | --- | --- | --- |
-| Read Context | `CanReadContext` | Any authenticated user with delegated `api://fusion-context/user_impersonation` scope |
+| Read Context | `CanReadContext` | Any authenticated user with delegated `api://{context-resource-app-id}/user_impersonation` scope |
 | Modify Context | `IsContextManager` | Must have "ContextManager" role in that context OR hold a position in it |
 | Delete Position | `CanDeletePosition` | Must be HR admin OR context manager where position exists |
-| View Person | `CanViewPerson` | Any authenticated user with delegated `api://fusion-people/user_impersonation` scope |
+| View Person | `CanViewPerson` | Any authenticated user with delegated `api://{people-resource-app-id}/user_impersonation` scope |
 
 > **Note:** Use `.default` scopes only for client-credentials (app-only) flows. For delegated (on-behalf-of-user) flows, use service-specific scopes like `user_impersonation`.
 
@@ -183,8 +183,8 @@ Before calling an endpoint, understand what you can do:
   "name": "John Doe",
   "email": "john.doe@equinor.com",
   "roles": ["engineer", "approver"],
-  "scp": "api://{resource-app-id}/.default",
-  "aud": "{app-client-id}"
+  "scp": "user_impersonation",
+  "aud": "{resource-app-id}"
 }
 ```
 
