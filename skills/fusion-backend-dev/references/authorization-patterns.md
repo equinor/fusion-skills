@@ -20,10 +20,11 @@ The token is obtained from Azure AD using the Fusion app registration:
 
 | Service | Scope |
 | --- | --- |
-| People | `api://{resource-app-id}/people` |
-| Org | `api://{resource-app-id}/org` |
-| Context | `api://{resource-app-id}/context` |
+| People | `api://{resource-app-id}/user_impersonation` |
+| Org | `api://{resource-app-id}/user_impersonation` |
+| Context | `api://{resource-app-id}/user_impersonation` |
 
+> Delegated scope names are defined by each service's Azure AD app registration. `user_impersonation` is a common pattern, but you must verify the actual delegated scope exposed by the target service before requesting a token.
 **Application scope** (client credentials / app-only access):
 
 | Flow | Scope |
