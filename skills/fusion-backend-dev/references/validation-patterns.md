@@ -33,7 +33,7 @@ Before business logic runs, all input is validated:
   "status": 400,
   "error": {
     "code": "ModelValidationError",
-    "message": "Model contained 2 error",
+    "message": "Model contained 2 errors",
     "errors": [
       { "property": "email", "message": "Email must be a valid email address" },
       { "property": "startDate", "message": "Start date must be before end date" }
@@ -79,7 +79,7 @@ After model validation passes, business rules are checked:
 
 ## Error Response Format
 
-All Fusion services return errors as RFC 7807 `ProblemDetails` with Fusion-specific extensions. The envelope is always the same; what varies is the `error` extension content.
+Fusion services built on the shared infrastructure libraries return errors as RFC 7807 `ProblemDetails` with Fusion-specific extensions. The envelope is consistent across services that use this pattern; what varies is the `error` extension content. Error envelopes may differ in services that predate this convention or use custom middleware.
 
 ### Validation errors (400)
 
@@ -92,7 +92,7 @@ FluentValidation failures produce a `ProblemDetails` with both a legacy `error` 
   "status": 400,
   "error": {
     "code": "ModelValidationError",
-    "message": "Model contained 2 error",
+    "message": "Model contained 2 errors",
     "errors": [
       { "property": "email", "message": "Email must be a valid email address", "attemptedValue": "bad" },
       { "property": "startDate", "message": "Must be before end date" }

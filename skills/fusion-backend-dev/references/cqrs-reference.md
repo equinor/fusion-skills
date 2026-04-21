@@ -243,15 +243,17 @@ public class CreatePositionCommand : IRequest<PositionDto>, ITrackableRequest
 
 ### Validation Errors
 
-Command fails in validation phase:
+Command fails in validation phase (ProblemDetails envelope):
 
 ```
 Response: 400 Bad Request
 {
-  "code": "VALIDATION_FAILED",
-  "details": [
-    { "field": "startDate", "message": "Must be before end date" }
-  ]
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+  "title": "One or more validation errors occurred.",
+  "status": 400,
+  "error": { "code": "ModelValidationError", "message": "Model contained 1 errors" },
+  "errors": { "startDate": ["Must be before end date"] },
+  "traceId": "..."
 }
 ```
 
@@ -262,8 +264,11 @@ Command fails in authorization phase:
 ```
 Response: 403 Forbidden
 {
-  "code": "FORBIDDEN",
-  "message": "Only context managers can create positions"
+  "type": "https://docs.fusion-dev.net/development/api/errors/#403",
+  "title": "User is not authorized to access data",
+  "status": 403,
+  "error": { "code": "Forbidden", "message": "Only context managers can create positions" },
+  "traceId": "..."
 }
 ```
 
@@ -274,13 +279,19 @@ Handler executes but business rule check fails:
 ```csharp
 if (context.IsArchived)
 {
-  throw new BusinessRuleException("Cannot modify archived context");
+  throw new InvalidOperationException("Cannot modify archived context");
 }
+```
 
-// Response: 422 Unprocessable Entity
+```
+Response: 400 Bad Request
 {
-  "code": "BUSINESS_RULE_VIOLATION",
-  "message": "Cannot modify archived context"
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+  "title": "Invalid operation",
+  "status": 400,
+  "detail": "Cannot modify archived context",
+  "error": { "code": "InvalidOperation", "message": "Cannot modify archived context" },
+  "traceId": "..."
 }
 ```
 
@@ -291,9 +302,11 @@ Handler crashes or unhandled exception:
 ```
 Response: 500 Internal Server Error
 {
-  "code": "INTERNAL_SERVER_ERROR",
-  "message": "An unexpected error occurred",
-  "traceId": "uuid-for-logs"  // Share with support
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+  "title": "Unexpected error",
+  "status": 500,
+  "error": { "code": "UnexpectedError", "message": "An unexpected error occurred" },
+  "traceId": "00-abc123..."  // Share with support
 }
 ```
 

@@ -59,10 +59,12 @@ public class MustBeContextManagerRequirement : IAuthorizationRequirement
 
 | Scenario | Requirement | How to satisfy |
 | --- | --- | --- |
-| Read Context | `CanReadContext` | Any authenticated user with `api://fusion-context/.default` scope |
+| Read Context | `CanReadContext` | Any authenticated user with delegated `api://fusion-context/user_impersonation` scope |
 | Modify Context | `IsContextManager` | Must have "ContextManager" role in that context OR hold a position in it |
 | Delete Position | `CanDeletePosition` | Must be HR admin OR context manager where position exists |
-| View Person | `CanViewPerson` | Any authenticated user with `api://fusion-people/.default` scope |
+| View Person | `CanViewPerson` | Any authenticated user with delegated `api://fusion-people/user_impersonation` scope |
+
+> **Note:** Use `.default` scopes only for client-credentials (app-only) flows. For delegated (on-behalf-of-user) flows, use service-specific scopes like `user_impersonation`.
 
 ---
 
@@ -108,16 +110,26 @@ Check role claims in your token to understand what you can do.
 - Ask context manager to assign role if needed
 - Check if user is responsible (position holder, manager, etc.)
 
-### 400 Bad Request with authorization detail
+### 403 Forbidden with authorization detail
 
-**Cause**: Authorization requirement validation failed
+**Cause**: Request is authenticated, but the caller does not satisfy an authorization requirement
 
-**Response example**:
+**Response example** (ProblemDetails with Fusion `error` extension):
 ```json
 {
-  "code": "REQUIREMENT_NOT_MET",
-  "message": "User must be context manager",
-  "details": { "requirement": "IsContextManager" }
+  "type": "https://docs.fusion-dev.net/development/api/errors/#403",
+  "title": "User is not authorized to access data",
+  "status": 403,
+  "detail": "User must be context manager",
+  "error": {
+    "code": "Forbidden",
+    "message": "User must be context manager",
+    "accessRequirements": [
+      { "code": "IsContextManager", "description": "Must be context manager", "outcome": "Failed", "wasEvaluated": true }
+    ]
+  },
+  "traceId": "...",
+  "timestamp": "..."
 }
 ```
 

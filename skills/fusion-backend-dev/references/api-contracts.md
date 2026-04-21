@@ -23,21 +23,26 @@ DELETE /api/v{major}/{id}                # Resource deletion
 
 ### Error Response Format
 
-All errors return a standard JSON shape:
+Fusion services return errors as RFC 7807 `ProblemDetails` with Fusion-specific extensions:
 
 ```json
 {
-  "code": "VALIDATION_FAILED",           // Machine-readable error code
-  "message": "One or more validation errors occurred",  // Human-readable message
-  "details": [                           // Optional: structured error details
-    {
-      "field": "email",
-      "code": "INVALID_FORMAT",
-      "message": "Email format is invalid"
-    }
-  ],
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+  "title": "One or more validation errors occurred.",
+  "status": 400,
+  "error": {
+    "code": "ModelValidationError",
+    "message": "Model contained 1 errors"
+  },
+  "errors": {
+    "email": ["Email format is invalid"]
+  },
+  "traceId": "...",
   "timestamp": "2026-04-17T10:30:00Z"
 }
+```
+
+> See [validation-patterns.md](./validation-patterns.md) for the full error format reference, including domain errors, authorization errors, and retry guidance.
 ```
 
 ### Authorization Header
