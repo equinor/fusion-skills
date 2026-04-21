@@ -141,13 +141,14 @@ See `references/` for deeper pattern documentation:
 ## Safety & constraints
 
 Never:
-- Describe backend API behavior you cannot verify in retrieved source code
-- Claim a pattern exists when search returns no evidence
-- Invent examples of code that doesn't exist in the repository
+- Describe real backend API behavior or repository-specific implementation details as fact unless you can verify them in retrieved source code or clearly cited repository documentation
+- Claim a pattern exists in a repository when search returns no evidence
+- Present illustrative pseudo-code, C#, JSON, or payload examples as if they were retrieved source code
 - Suggest modifying a backend service — that's out of scope
 
 Always:
-- Capture and cite the source file path when showing code
+- Clearly label illustrative examples as examples/pseudo-code when they are explanatory rather than retrieved from source
+- Capture and cite repository, file path, and line references when showing real code or summarizing behavior evidenced by MCP search results
 - State explicitly which repository the pattern comes from
 - Note when a pattern exists in one service but not others (services have variation)
 - Offer to escalate to `fusion-services-develop` skill (available in the [fusion-core-services](https://github.com/equinor/fusion-core-services) repo) if the user wants to implement changes
