@@ -181,14 +181,15 @@ catch (PoisonMessage ex)
 
 ### Ordering Guarantees
 
-Service Bus provides **per-partition ordering**:
+Don't assume messages arrive in order.
 
-- Events for same context arrive in order
-- Events for different contexts may be out of order
+- Events for the same context may still be delivered out of order
+- Events for different contexts may be interleaved or out of order
 - Don't assume global ordering
 
-**If you need strict ordering**: Use partition key (`contextId`) to route related events to same partition.
+**If you need strict ordering**: Use an explicit ordering strategy such as Service Bus Sessions (for example, `sessionId = contextId`) so related events are processed FIFO within that session.
 
+**Tradeoffs**: Sessions require session-aware consumers and can reduce parallelism for events that share the same session.
 ---
 
 ## Async APIs (Polling)
