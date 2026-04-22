@@ -75,9 +75,11 @@ When Fusion services call external systems (outside Equinor):
 ### Pattern: API Keys & Secrets
 
 Credentials stored in:
-- **Key Vault** (Azure Key Vault) — for production
-- **Configuration** (appsettings.json) — for development only
+- **Key Vault** (Azure Key Vault) — for production and development
+- **User secrets** (`dotnet user-secrets`) — for local development (never committed to source control)
 - **Environment variables** — for containerized deployment
+
+> **Warning:** Never store secrets in `appsettings.json` or other files tracked by source control, even for development. Use `dotnet user-secrets` or environment variables instead.
 
 **As a consumer**: You don't see the keys. They're managed by the service team.
 

@@ -171,22 +171,36 @@ Authorization: ApiKey {api-key}
 
 Before calling an endpoint, understand what you can do:
 
-1. **Get your token**: Request from Azure AD with `api://{service}/.default` scope
+1. **Get your token**: Request from Azure AD with the appropriate scope:
+   - **Delegated** (user flow): `api://{resource-app-id}/user_impersonation` (or the specific delegated scope exposed by the service)
+   - **App-only** (client credentials): `api://{resource-app-id}/.default`
 2. **Decode the token**: Use jwt.ms or similar to see your roles/claims
 3. **Check the endpoint docs**: Look for "Required role" or "Requirement" field
 4. **Verify you have that role**: If not, ask your manager or context manager to assign it
 
 ### Example Token Claims
 
+**Delegated token** (user acting via an app):
 ```json
 {
   "oid": "person-object-id",
   "name": "John Doe",
   "email": "john.doe@equinor.com",
-  "roles": ["engineer", "approver"],
   "scp": "user_impersonation",
   "aud": "{resource-app-id}"
 }
 ```
 
-The `roles` array shows what you can do globally. Per-context roles are usually returned in API responses.
+**App-only token** (client credentials, no user context):
+```json
+{
+  "oid": "service-principal-object-id",
+  "appid": "{client-app-id}",
+  "roles": ["Application.ReadWrite"],
+  "aud": "{resource-app-id}"
+}
+```
+
+> **Key difference:** Delegated tokens carry `scp` (delegated permissions); app-only tokens carry `roles` (application permissions). A single token will not contain both.
+
+Per-context roles (e.g. ContextManager, Approver) are Fusion-level concepts returned in API responses, not Azure AD token claims.

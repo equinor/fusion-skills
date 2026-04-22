@@ -86,35 +86,42 @@ Several Fusion services expose subscription endpoints that create a Service Bus 
 
 ### Connecting with the SAS Token
 
-Use the returned connection details to create a Service Bus client:
+Use the returned connection details to create a Service Bus client.
+The `endpoint` is an `sb://` URI — extract the host for `ServiceBusClient`:
 
 ```csharp
+// Parse the sb:// endpoint to get the host name
+var endpointUri = new Uri(connection.Endpoint);
+
 var client = new ServiceBusClient(
-    endpoint.Host,
+    endpointUri.Host,
     new AzureSasCredential(connection.Token.TokenValue));
 
-var processor = client.CreateProcessor(connection.Path, new ServiceBusProcessorOptions
-{
-    MaxConcurrentCalls = 1
-});
+// connection.Path is the full subscription path: "{topic}/subscriptions/{name}"
+var processor = client.CreateProcessor(
+    connection.Path,
+    new ServiceBusProcessorOptions { MaxConcurrentCalls = 1 });
 
 processor.ProcessMessageAsync += async (args) =>
 {
     string body = args.Message.Body.ToString();
     // Body is a CloudEvent v1.0 JSON; deserialize accordingly
-    CloudEventV1 cloudEvent = JsonConvert.DeserializeObject<CloudEventV1>(body);
+    var cloudEvent = JsonConvert.DeserializeObject<CloudEventV1>(body);
     // Process the event...
 };
 
 processor.ProcessErrorAsync += async (args) =>
 {
-    // Handle errors; SAS token expiry appears as UnauthorizedAccessException
+    if (args.Exception is UnauthorizedAccessException)
+    {
+        // SAS token expired — renew by calling the subscription endpoint again
+    }
 };
 
 await processor.StartProcessingAsync();
 ```
 
-> **Token renewal:** SAS tokens expire. When `UnauthorizedAccessException` occurs, call the subscription endpoint again to get a fresh token and reconnect.
+> **Token renewal:** SAS tokens expire. When `UnauthorizedAccessException` occurs, stop the processor, call the subscription endpoint again to get a fresh token, and reconnect with a new client.
 
 ### Filtering Events
 
