@@ -183,6 +183,11 @@ catch (FormatException)
     return Results.Unauthorized();  // Malformed signature
 }
 
+if (providedSignature.Length != computedSignature.Length)
+{
+    return Results.Unauthorized();  // Signature length mismatch
+}
+
 if (!System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(
     computedSignature, providedSignature))
 {

@@ -223,7 +223,7 @@ Endpoints supporting large result sets use OData-style offset pagination with `$
 - Changed field type or semantics
 - New mandatory query parameter
 
-**Action**: New major version (e.g., `api-version=4.0`), old version remains for compatibility window (usually 2 versions or 6 months)
+**Action**: New major version (e.g., `api-version=4.0`); keep the old version available according to the target service's documented compatibility or deprecation policy
 
 ### Non-Breaking Changes
 - New optional field

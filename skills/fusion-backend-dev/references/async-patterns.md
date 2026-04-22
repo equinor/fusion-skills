@@ -97,12 +97,28 @@ var client = new ServiceBusClient(
     endpointUri.Host,
     new AzureSasCredential(connection.Token.TokenValue));
 
-// connection.Path is the full subscription path: "{topic}/Subscriptions/{name}"
+// connection.Path is the full subscription path: "{topic}/subscriptions/{name}"
 // Use the topic + subscription overload for ServiceBusProcessor
-var pathSegments = connection.Path.Split("/Subscriptions/");
+const string subscriptionSegment = "/subscriptions/";
+var subscriptionIndex = connection.Path.IndexOf(subscriptionSegment, StringComparison.OrdinalIgnoreCase);
+if (subscriptionIndex < 0)
+{
+    throw new InvalidOperationException(
+        $"Unexpected Service Bus subscription path format: '{connection.Path}'.");
+}
+
+var topicName = connection.Path[..subscriptionIndex];
+var subscriptionName = connection.Path[(subscriptionIndex + subscriptionSegment.Length)..];
+
+if (string.IsNullOrWhiteSpace(topicName) || string.IsNullOrWhiteSpace(subscriptionName))
+{
+    throw new InvalidOperationException(
+        $"Unexpected Service Bus subscription path format: '{connection.Path}'.");
+}
+
 var processor = client.CreateProcessor(
-    pathSegments[0],  // topic name
-    pathSegments[1],  // subscription name
+    topicName,
+    subscriptionName,
     new ServiceBusProcessorOptions { MaxConcurrentCalls = 1 });
 
 processor.ProcessMessageAsync += async (args) =>
