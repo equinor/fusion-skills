@@ -26,16 +26,18 @@ public interface IPeopleApiClient
 
 ### How Services Find Each Other
 
-Services discover other services via **service discovery**:
+Fusion services resolve other services via **configuration and the Fusion service discovery client**:
 
 ```
-1. Service startup → Register with discovery service (Consul, Kubernetes)
-2. Need to call People API → Query discovery for People service URL
-3. Discovery returns → Current URL(s) for People API
-4. Service calls → People API at discovered URL
+1. Service startup → Load base URLs from config / Key Vault
+2. Need to call People API → Use IFusionServiceDiscovery to get the endpoint
+3. Discovery returns → Current URL for People API
+4. Service calls → People API via typed HTTP client
 ```
 
-**Why this matters**: Services can move without breaking things. Discovery handles routing.
+Base URLs are managed through Azure App Configuration and Key Vault, not runtime service registries.
+
+**Why this matters**: Services have stable, centrally managed endpoints. The typed HTTP client handles auth, retries, and timeouts.
 
 ### Authentication Between Services
 

@@ -97,9 +97,12 @@ var client = new ServiceBusClient(
     endpointUri.Host,
     new AzureSasCredential(connection.Token.TokenValue));
 
-// connection.Path is the full subscription path: "{topic}/subscriptions/{name}"
+// connection.Path is the full subscription path: "{topic}/Subscriptions/{name}"
+// Use the topic + subscription overload for ServiceBusProcessor
+var pathSegments = connection.Path.Split("/Subscriptions/");
 var processor = client.CreateProcessor(
-    connection.Path,
+    pathSegments[0],  // topic name
+    pathSegments[1],  // subscription name
     new ServiceBusProcessorOptions { MaxConcurrentCalls = 1 });
 
 processor.ProcessMessageAsync += async (args) =>

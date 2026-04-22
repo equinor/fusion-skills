@@ -6,20 +6,30 @@ All Fusion backend services follow a consistent REST API pattern:
 
 ### Base Pattern
 
+Routes use absolute paths without a version prefix. API version is supplied via query string or header — not as a URL segment.
+
 ```
-GET    /api/v{major}/                    # Endpoint root
-POST   /api/v{major}/                    # Resource creation
-PUT    /api/v{major}/{id}                # Resource replacement
-PATCH  /api/v{major}/{id}                # Resource partial update
-DELETE /api/v{major}/{id}                # Resource deletion
+GET    /resources                        # List resources
+GET    /resources/{id}                   # Get single resource
+POST   /resources                        # Create resource
+PATCH  /resources/{id}                   # Partial update
+DELETE /resources/{id}                   # Delete resource
 ```
+
+Version negotiation: `?api-version=3.0` (query string) or `api-version: 3.0` (request header).
 
 ### Versioning Strategy
 
+Fusion services use `Asp.Versioning` with a custom `HeaderOrQueryVersionReader`. Version is negotiated via:
+
+- **Query string**: `?api-version=3.0` (preferred)
+- **Request header**: `api-version: 3.0`
+
+`AssumeDefaultVersionWhenUnspecified` is enabled, so unversioned requests receive the default version.
+
+Version levels:
 - **Major version**: Incompatible changes (breaking changes to response shape, required fields, semantics)
-- **Minor version** (via header): Non-breaking enhancements (new optional fields, new endpoints, new operations)
-- **Version in URL** (`/api/v3/`): Always required; defines minimum compatibility level
-- **Version in header** (`Api-Version: 3.1`): Optional; enables minor-version selection within a major version
+- **Minor version**: Non-breaking enhancements (new optional fields, new endpoints)
 
 ### Error Response Format
 
@@ -60,18 +70,23 @@ The access token is a JWT obtained from Azure AD. Scope required depends on the 
 
 ### People Service
 
-**Endpoint**: `GET /api/v3/persons/{personId}`
+**Endpoint**: `GET /persons/{personId}?api-version=3.0`
 
-**Response** (simplified):
+Route attribute: `[HttpGet("/persons/{personId}")]` with `[MapToApiVersion("3.0")]`. Also supports `GET /persons/me`.
+
+**Response** (illustrative — verify exact shape in the service's Swagger/OpenAPI spec):
 ```json
 {
-  "id": "bbe7b3e5-b1da-4a3f-a0b8-7f7f8f8f8f8f",
+  "azureUniqueId": "bbe7b3e5-b1da-4a3f-a0b8-7f7f8f8f8f8f",
   "name": "John Doe",
-  "email": "john.doe@equinor.com",
-  "roles": ["engineer", "reviewer"],
-  "phone": "+47 40 00 00 00"
+  "mail": "john.doe@equinor.com",
+  "accountType": "Employee",
+  "department": "Engineering",
+  "fullDepartment": "TDI PRD ENG TSE"
 }
 ```
+
+Supports OData expansion: `?$expand=roles,positions,contracts,manager` (v3) and additionally `companies` (v4).
 
 **Required scope**:
 - Delegated (user token): `api://{resource-app-id}/user_impersonation`
@@ -83,44 +98,48 @@ Verify the actual resource App ID URI for the People service in your environment
 
 ---
 
-### Org Service
+### LineOrg Service
 
-**Endpoint**: `GET /api/v2/org-units/{orgUnitId}`
+**Endpoint**: `GET /org-units/{orgUnitId}`
 
-**Response** (simplified):
+The Org service handles projects, positions, and contracts (`/projects/{id}/positions/...`). The org-unit hierarchy (departments, management chain) is served by the **LineOrg** service.
+
+**Response** (illustrative — verify exact shape in the service's Swagger/OpenAPI spec):
 ```json
 {
-  "id": "a-uuid",
+  "sapId": "51234",
   "name": "Engineering",
-  "parentId": "parent-uuid",
-  "children": [
-    { "id": "child-uuid", "name": "Subsystems" }
-  ],
-  "manager": { "id": "person-id", "name": "Jane Smith" }
+  "fullDepartment": "TDI PRD ENG TSE",
+  "shortName": "TSE",
+  "level": 5,
+  "children": []
 }
 ```
+
+Supports OData expansion: `?$expand=children,management`.
 
 **Required scope**:
 - Delegated: `api://{resource-app-id}/user_impersonation`
 - App-only: `api://{resource-app-id}/.default`
 
-Verify the actual resource App ID URI for the Org service in your environment.
+Verify the actual resource App ID URI for the LineOrg service in your environment.
 
 ---
 
 ### Context Service
 
-**Endpoint**: `GET /api/v1/contexts/{contextId}`
+**Endpoint**: `GET /contexts/{id}?api-version=1.0`
 
-**Response** (simplified):
+Route attribute: `[HttpGet("/contexts/{id}")]` with `[ApiVersion("1.0")]`. Also supports `GET /contexts` with OData filter/search and `GET /contexts/{id}/relations`.
+
+**Response** (illustrative — verify exact shape in the service's Swagger/OpenAPI spec):
 ```json
 {
   "id": "ctx-uuid",
   "title": "Project Alpha",
-  "type": "ProjectDeliveryContext",
+  "type": { "id": "ProjectMaster", "isCustom": false },
   "externalId": "external-ref",
-  "startDate": "2026-01-01",
-  "endDate": "2027-12-31"
+  "isActive": true
 }
 ```
 
@@ -171,7 +190,7 @@ Endpoints supporting large result sets use OData-style offset pagination with `$
 {
   "totalCount": 245,
   "count": 50,
-  "@nextPage": "/api/v1/resources?$top=50&$skip=50",
+  "@nextPage": "/resources?$top=50&$skip=50&api-version=1.0",
   "@prevPage": null,
   "value": [ /* items */ ]
 }
@@ -204,7 +223,7 @@ Endpoints supporting large result sets use OData-style offset pagination with `$
 - Changed field type or semantics
 - New mandatory query parameter
 
-**Action**: New major version `/api/v4/` endpoint, old version remains for compatibility window (usually 2 versions or 6 months)
+**Action**: New major version (e.g., `api-version=4.0`), old version remains for compatibility window (usually 2 versions or 6 months)
 
 ### Non-Breaking Changes
 - New optional field
