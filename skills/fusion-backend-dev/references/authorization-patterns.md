@@ -87,7 +87,8 @@ Fusion services assign roles per user per resource. Example: roles in a context:
 - **Contributor**: Can edit owned resources; read access to context
 - **Viewer**: Read-only access to context and positions
 
-Check role claims in your token to understand what you can do.
+Check your token's delegated `scp` claim or app roles to confirm coarse service/application permissions.
+For per-context Fusion roles such as `ContextManager`, `Approver`, or `Contributor`, use the relevant Fusion endpoint(s) or resource responses, because those roles are determined within Fusion and are not Azure AD token claims.
 
 ---
 

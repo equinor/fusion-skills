@@ -282,15 +282,18 @@ Some long-running operations use polling:
 
 **Example**:
 ```
-POST /api/v1/contexts → 202 Accepted
+POST /api/contexts?api-version=1.0 → 202 Accepted
 { "operationId": "op-uuid" }
 
-GET /api/v1/contexts/op-uuid → 
+GET /api/contexts/op-uuid?api-version=1.0 →
 { "status": "InProgress", "progress": 45 }
 
 // Later...
-GET /api/v1/contexts/op-uuid →
+GET /api/contexts/op-uuid?api-version=1.0 →
 { "status": "Completed", "contextId": "ctx-uuid" }
+
+// Alternatively, send the version in a header:
+// api-version: 1.0
 ```
 
 ---
