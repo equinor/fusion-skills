@@ -162,7 +162,21 @@ if (!headerValue.StartsWith(signaturePrefix, StringComparison.Ordinal))
     return Results.Unauthorized();  // Missing or malformed signature
 }
 
-byte[] providedSignature = Convert.FromHexString(headerValue.Substring(signaturePrefix.Length));
+string providedSignatureHex = headerValue.Substring(signaturePrefix.Length);
+if (providedSignatureHex.Length != computedSignature.Length * 2)
+{
+    return Results.Unauthorized();  // Malformed signature length
+}
+
+byte[] providedSignature;
+try
+{
+    providedSignature = Convert.FromHexString(providedSignatureHex);
+}
+catch (FormatException)
+{
+    return Results.Unauthorized();  // Malformed signature encoding
+}
 
 if (!System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(computedSignature, providedSignature))
 {

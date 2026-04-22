@@ -222,12 +222,13 @@ Resource already exists or state changed:
 2. Decide: overwrite (send version), merge, or error to user
 
 **Optimistic lock pattern**:
-```json
+```text
 Request: PUT /contexts/{id}
 Headers: { "If-Match": "\"etag-value\"" }
 Body: { "title": "New Title" }
+```
 
-Response: 409 Conflict
+```json
 {
   "type": "https://tools.ietf.org/html/rfc7231#section-6.5.8",
   "title": "Resource version does not match",

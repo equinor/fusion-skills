@@ -2,7 +2,7 @@
 
 ## Request Authentication
 
-All Fusion services require an Azure AD access token in the Authorization header:
+Most Fusion services require an Azure AD access token in the Authorization header (see [API Key Authentication](#api-key-authentication-special-cases) for exceptions):
 
 ```
 Authorization: Bearer {jwt_token}
