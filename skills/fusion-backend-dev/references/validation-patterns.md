@@ -246,14 +246,18 @@ Body: { "title": "New Title" }
 
 ## Retry Strategy
 
-Services support idempotent retries for transient failures:
+Retries are only safe for operations that can be repeated without side effects:
+- Inherently idempotent methods (`GET`, `HEAD`)
+- Write operations protected by an idempotency key, `ETag`/`If-Match`, or explicit deduplication
+
+Avoid automatic retries for non-idempotent writes (e.g. `POST`/command operations) unless the API contract explicitly guarantees safe retry.
 
 | Status | Retryable? | Strategy |
 | --- | --- | --- |
 | 400, 401, 403, 404, 422 | ❌ No | Fix the request; retrying won't help |
 | 409 | ⚠️ Depends | Do not blindly retry version/state conflicts; fetch current state, resolve the conflict, then retry only with an updated request. Use backoff only for explicitly transient conflicts |
-| 429, 503, 504 | ✅ Yes | Wait and retry (exponential backoff) |
-| 500 | ✅ Maybe | Retry once; if still fails, likely needs investigation |
+| 429, 503, 504 | ✅ Conditional | Retry with exponential backoff only for idempotent or deduplication-protected requests |
+| 500 | ✅ Conditional | Retry once only if the operation is idempotent or protected; if it still fails, investigate |
 
 **Recommended backoff**:
 ```

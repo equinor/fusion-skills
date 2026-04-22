@@ -107,38 +107,44 @@ PersonDto fusion = mapper.Map<PersonDto>(sapPerson);
 
 ## Webhook Handling
 
-When external systems call Fusion (Fusion receives webhooks):
+> **Note:** The following describes webhook patterns observed in the Fusion ecosystem. Specific header names, signature formats, and registration endpoints vary by service and external system. Always verify the webhook contract in the target service's documentation or source code.
 
-### Webhook Registration
+### Receiving Webhooks from External Systems
 
-```
-PUT /api/v1/webhooks
-{
-  "url": "https://external-system.com/fusion-updates",
-  "events": ["ContextCreated", "PositionAssigned"],
-  "secret": "webhook-secret"  // For signature validation
-}
-```
-
-### Webhook Delivery
+Some Fusion services receive webhooks from external systems (e.g. CommonLib). The external system delivers events to a registered callback URL:
 
 ```
-POST https://external-system.com/fusion-updates
+POST https://{fusion-host}/api/webhook/inbound
 Content-Type: application/json
-X-Fusion-Signature: sha256={hmac_signature}
-X-Fusion-Delivery-Id: {uuid}
+x-commonlib-sig: {signature}  // Signature header name varies by provider
 
 { /* event body */ }
 ```
 
-### Signature Validation
+The receiving service should validate the signature header against a shared secret. In practice, the specific header name and signature algorithm depend on the external provider's webhook contract.
 
-The receiver validates the signature using the raw request body bytes:
+### Registering Webhooks
+
+Webhook registration is typically managed by the external system's API, not Fusion's. For example, Fusion's CommonLib integration subscribes via the external system's endpoint:
+
+```json
+{
+  "callbackUrl": "https://{fusion-host}/api/webhook/inbound",
+  "secret": "{shared-secret}",
+  "library": "ProjectMaster",
+  "enabled": true
+}
+```
+
+### Signature Validation (Illustrative)
+
+The following illustrates a general HMAC signature validation pattern. The specific algorithm (SHA-1, SHA-256), header name, and signature format depend on the provider:
 
 ```csharp
+// Illustrative pattern — verify actual header name, algorithm, and format
+// with the specific webhook provider's documentation
 byte[] keyBytes = System.Text.Encoding.UTF8.GetBytes(secret);
 
-// Read raw body bytes to ensure signature matches exactly
 request.EnableBuffering();
 byte[] bodyBytes;
 using (var bodyStream = new System.IO.MemoryStream())
@@ -148,39 +154,35 @@ using (var bodyStream = new System.IO.MemoryStream())
     request.Body.Position = 0;
 }
 
+// Algorithm depends on provider (HMACSHA1, HMACSHA256, etc.)
 byte[] computedSignature;
 using (var hmac = new System.Security.Cryptography.HMACSHA256(keyBytes))
 {
     computedSignature = hmac.ComputeHash(bodyBytes);
 }
 
-string headerValue = request.Headers["X-Fusion-Signature"].ToString();
-const string signaturePrefix = "sha256=";
+string headerValue = request.Headers["x-provider-signature"].ToString();
 
-if (!headerValue.StartsWith(signaturePrefix, StringComparison.Ordinal))
+if (string.IsNullOrEmpty(headerValue))
 {
-    return Results.Unauthorized();  // Missing or malformed signature
+    return Results.Unauthorized();  // Missing signature
 }
 
-string providedSignatureHex = headerValue.Substring(signaturePrefix.Length);
-if (providedSignatureHex.Length != computedSignature.Length * 2)
-{
-    return Results.Unauthorized();  // Malformed signature length
-}
-
+// Compare using constant-time comparison to prevent timing attacks
 byte[] providedSignature;
 try
 {
-    providedSignature = Convert.FromHexString(providedSignatureHex);
+    providedSignature = Convert.FromHexString(headerValue);
 }
 catch (FormatException)
 {
-    return Results.Unauthorized();  // Malformed signature encoding
+    return Results.Unauthorized();  // Malformed signature
 }
 
-if (!System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(computedSignature, providedSignature))
+if (!System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(
+    computedSignature, providedSignature))
 {
-    return Results.Unauthorized();  // Request may be spoofed
+    return Results.Unauthorized();  // Signature mismatch
 }
 ```
 

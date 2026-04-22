@@ -2,78 +2,142 @@
 
 ## Event Publishing
 
-Fusion services publish events to Service Bus when important things happen:
+Fusion services publish events to Azure Service Bus topics using `IEventNotificationClient`. Events follow the [CloudEvents v1.0](https://github.com/cloudevents/spec/blob/v1.0/spec.md) specification.
 
-### Event Types
+### Event Type Categories
 
-| Event | Service | Scenario |
-| --- | --- | --- |
-| `PersonUpdated` | People | Person name, email, or roles change |
-| `PersonDeleted` | People | Person account archived |
-| `ContextCreated` | Context | New project/initiative context |
-| `ContextModified` | Context | Context properties changed |
-| `PositionAssigned` | Context | New position holder assigned |
-| `PositionUnassigned` | Context | Position holder removed |
-| `ApprovalRequested` | Approvals | New approval needed |
-| `ApprovalCompleted` | Approvals | Approval given/rejected |
+Event types use a dotted naming convention: `com.equinor.fusion.{domain}.{type}`.
 
-### Event Format
+| Category | Type name | Service | Sub-types (in payload) |
+| --- | --- | --- | --- |
+| People | `com.equinor.fusion.people.profile` | People | `ProfileUpdated`, `UserRemoved` |
+| People | `com.equinor.fusion.people.security` | People | `RolesUpdated` |
+| Context | `com.equinor.fusion.context.context` | Context | `Created`, `Modified`, `Deleted` |
+| Context | `com.equinor.fusion.context.relation` | Context | Relation changes |
+| Org | `com.equinor.fusion.org.position` | Org | `PersonAssigned`, `PersonUnassigned`, `PositionCreated`, `PositionUpdated`, `PositionRemoved` |
+| Org | `com.equinor.fusion.org.project` | Org | `ProjectCreated`, `ProjectUpdated`, `ProjectRemoved` |
+| Org | `com.equinor.fusion.org.contract` | Org | `ContractCreated`, `ContractUpdated`, `ContractRemoved` |
+
+### Event Format (CloudEvents v1.0)
 
 ```json
 {
-  "eventType": "PositionAssigned",
-  "eventId": "uuid",
-  "timestamp": "2026-04-17T10:30:00Z",
+  "specversion": "1.0",
+  "id": "{event-id}",
   "source": "fusion-context-service",
-  "data": {
-    "contextId": "ctx-uuid",
-    "positionId": "pos-uuid",
-    "personId": "person-uuid",
-    "title": "Project Manager",
-    "startDate": "2026-04-17",
-    "endDate": "2027-04-17"
-  },
-  "version": "1.0"
+  "type": "com.equinor.fusion.context.context",
+  "time": "2026-04-17T10:30:00Z",
+  "datacontenttype": "application/json",
+  "fusionCategory": "optional-category",
+  "data": "{ /* JSON-serialized payload string */ }"
 }
 ```
+
+> **Note:** The `data` field is a JSON-serialized string, not a nested object. Deserialize it separately to access the typed payload.
 
 ---
 
 ## Event Subscription
 
-### Azure Service Bus Subscription
+### Subscription API Pattern
 
-To receive events:
+Several Fusion services expose subscription endpoints that create a Service Bus subscription and return connection details with a SAS token. Only application users (service principals) can subscribe.
 
-1. **Get Service Bus endpoint**: Provided in project setup
-2. **Create subscription**: Subscribe to the event topic (e.g., `fusion.context-events`)
-3. **Implement receiver**: Handle incoming messages
+**Known subscription endpoints:**
 
-**Example subscriptions**:
-- `fusion.context-events` → all context events
-- `fusion.people-events` → all person events
+| Service | Endpoint | Topic |
+| --- | --- | --- |
+| Context | `PUT /subscriptions/contexts` | `context-sub` |
+| ContractPersonnel | `PUT /subscriptions/contracts` | `contractpersonnel-sub` |
+| FusionTasks | `PUT /subscriptions/fusiontasks` | `fusiontask-sub` |
+| Roles V2 | `PUT /subscriptions/roles-v2` | `role-v2-sub` |
 
-### Filtering Events
-
-Most subscriptions support filters:
-
-```
-eventType = 'PositionAssigned'
-source = 'fusion-context-service'
-```
-
-### Message Format on Bus
-
-```
+**Request:**
+```json
 {
-  "body": { /* event JSON */ },
-  "properties": {
-    "eventType": "PositionAssigned",
-    "timestamp": "2026-04-17T10:30:00Z",
-    "contentType": "application/json"
+  "id": "optional-guid",
+  "identifier": "my-app-name",
+  "type": "Persistent",
+  "typeFilter": ["com.equinor.fusion.org.position"]
+}
+```
+
+- `type`: `"Persistent"` (auto-deletes after 14 days idle) or `"Transient"` (auto-deletes after 5 minutes idle)
+- `typeFilter`: Optional array of event type names for SQL filter on the `type` message property
+- `identifier`: Your application name; used to generate a recognizable subscription name
+
+**Response:**
+```json
+{
+  "id": "subscription-guid",
+  "handlerName": "context-sub",
+  "connection": {
+    "endpoint": "sb://namespace.servicebus.windows.net",
+    "path": "topic/subscriptions/subscription-name",
+    "token": {
+      "audience": "https://namespace.servicebus.windows.net/path",
+      "tokenValue": "SharedAccessSignature sr=...&sig=...&se=...&skn=SubscribersKey",
+      "tokenType": "servicebus.windows.net:sastoken",
+      "expiresAtUtc": "2026-04-17T12:30:00Z"
+    }
   }
 }
 ```
+
+### Connecting with the SAS Token
+
+Use the returned connection details to create a Service Bus client:
+
+```csharp
+var client = new ServiceBusClient(
+    endpoint.Host,
+    new AzureSasCredential(connection.Token.TokenValue));
+
+var processor = client.CreateProcessor(connection.Path, new ServiceBusProcessorOptions
+{
+    MaxConcurrentCalls = 1
+});
+
+processor.ProcessMessageAsync += async (args) =>
+{
+    string body = args.Message.Body.ToString();
+    // Body is a CloudEvent v1.0 JSON; deserialize accordingly
+    CloudEventV1 cloudEvent = JsonConvert.DeserializeObject<CloudEventV1>(body);
+    // Process the event...
+};
+
+processor.ProcessErrorAsync += async (args) =>
+{
+    // Handle errors; SAS token expiry appears as UnauthorizedAccessException
+};
+
+await processor.StartProcessingAsync();
+```
+
+> **Token renewal:** SAS tokens expire. When `UnauthorizedAccessException` occurs, call the subscription endpoint again to get a fresh token and reconnect.
+
+### Filtering Events
+
+Subscriptions support SQL filters on Service Bus message properties:
+
+```
+type = 'com.equinor.fusion.org.position'
+app = 'my-app-id'
+```
+
+These filters are set via `typeFilter` in the subscription request or managed by the service when creating the subscription.
+
+### Service Bus Message Properties
+
+Messages on the bus carry these `ApplicationProperties` (available for filtering):
+
+| Property | Description |
+| --- | --- |
+| `type` | Event type name (e.g. `com.equinor.fusion.org.position`) |
+| `app` | App context identifier |
+| `origin` | Event origin |
+| `category` | Event category |
+| `batch-id` | Batch identifier (when events are sent as a batch) |
 
 ---
 
@@ -109,24 +173,16 @@ When operations span multiple services:
 
 ### Pattern: Webhook Delivery
 
-When external system needs webhooks (not pub/sub):
+When an external system needs event notifications via HTTP callbacks:
 
 ```
-1. External system registers webhook URL with Fusion
-2. Event occurs in Fusion
-3. Fusion makes HTTP POST to webhook URL
-4. External system processes the request
+1. External system registers webhook URL (via the provider's webhook API)
+2. Event occurs in the source system
+3. Source system makes HTTP POST to the registered callback URL
+4. Receiver validates signature and processes the event
 ```
 
-**Contract**: 
-```
-POST {webhook_url}
-Content-Type: application/json
-X-Fusion-Event-Type: PositionAssigned
-X-Fusion-Signature: hmac-sha256
-
-{ /* event body */ }
-```
+> **Note:** Webhook header names, signature formats, and registration APIs vary by provider. Always check the specific provider's documentation for the exact contract. See [integration-patterns.md](./integration-patterns.md) for an illustrative signature validation pattern.
 
 ---
 
