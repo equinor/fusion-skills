@@ -137,7 +137,7 @@ Controllers typically produce these via `FusionApiError` static factory methods.
 - `FusionApiError.FailedDependency(code, message)` → 424
 - `FusionApiError.IncorrectETag(message)` → 409
 
-> **Note:** Exact method signatures may vary across service versions. Verify available factory methods in the target service's source or via MCP `search_backend_code`.
+> **Note:** Exact method signatures may vary across service versions. Verify available factory methods in the target service's source or via MCP `mcp_fusion_search_backend_code`.
 
 ### Unhandled exceptions (500, middleware-caught)
 
