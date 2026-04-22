@@ -1,7 +1,7 @@
 {
   "name": "fusion-skills",
   "private": true,
-  "version": "0.19.2",
+  "version": "0.20.0",
   "devDependencies": {
     "@biomejs/biome": "^2.4.10",
     "@graphql-codegen/cli": "^6.2.1",

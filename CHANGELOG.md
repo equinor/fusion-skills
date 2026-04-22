@@ -2,6 +2,68 @@
 
 All notable changes to this repository are documented in this file.
 
+## v0.20.0
+
+### Minor
+
+__🎯 [feat(skills): add fusion-backend-dev shared skill for API consumption patterns #143](https://github.com/equinor/fusion-skills/pull/143)<br/>
+🗂️ [3c02e1d](https://github.com/equinor/fusion-skills/commit/3c02e1d348a4de8ee9a0fd5a088ff18c0019dc2b)<br/>
+📦 fusion-backend-dev@0.1.0__
+
+Add new shared skill for consuming and understanding Fusion backend services
+
+- Comprehensive references on API contracts, versioning, and error handling
+- Authorization patterns covering Azure AD, RBAC, and error scenarios
+- Validation layer patterns, error codes, and retry strategies
+- Async patterns for events, webhooks, polling, and idempotent processing
+- Integration patterns for cross-service calls, resilience, and caching
+- CQRS reference guide for command/query patterns and handlers
+- Follow-up questions asset for clarifying ambiguous requests
+- Integrates with fusion-research skill for code discovery via MCP
+- Published as active skill; suitable for shared consumption across teams
+
+Used by backend API consumption, service integration, and backend contract understanding workflows.
+
+---
+
+__🎯 [feat(skills): add fusion-backend-dev shared skill for API consumption patterns #143](https://github.com/equinor/fusion-skills/pull/143)<br/>
+🗂️ [3c02e1d](https://github.com/equinor/fusion-skills/commit/3c02e1d348a4de8ee9a0fd5a088ff18c0019dc2b)<br/>
+📦 fusion-research@0.4.0__
+
+Add backend-code routing support to fusion-research.
+
+- Add backend-code domain classification and agent dispatch guidance
+- Add backend-code research agent for C# and backend service implementation questions
+- Add backend-code query reference with evidence-first search lanes
+- Extend compatibility and MCP suggestions with backend code search support
+
+### Patch
+
+__🎯 [feat(skills): add fusion-backend-dev shared skill for API consumption patterns #143](https://github.com/equinor/fusion-skills/pull/143)<br/>
+🗂️ [3c02e1d](https://github.com/equinor/fusion-skills/commit/3c02e1d348a4de8ee9a0fd5a088ff18c0019dc2b)<br/>
+📦 fusion-mcp@0.1.3__
+
+Document backend code tools in the Fusion MCP setup guide.
+
+- Add `search_backend_code` to retrieval tool examples
+- Add `get_backend_symbol` and `list_backend_projects` in the available backend tooling list
+
+---
+
+__🎯 [feat(fusion-package-scribe): add experimental skill for monorepo TSDoc and README documentation #141](https://github.com/equinor/fusion-skills/pull/141)<br/>
+🗂️ [e84644f](https://github.com/equinor/fusion-skills/commit/e84644f868bc8f879823d71b1121e2c5d9844438)<br/>
+📦 fusion-package-scribe@0.0.1__
+
+Add new experimental skill for systematic TSDoc and README documentation across TypeScript monorepo packages
+
+- Orchestrator-based workflow: discover packages, generate TSDoc, rewrite READMEs, review, commit
+- Three agent modes: orchestrator (batch planning), documenter (per-package writing), reviewer (review council)
+- Repo-aware standards discovery with built-in defaults fallback
+- Review council validates intent extraction, code comprehension, user-facing quality, and retrieval fitness
+- Token budget guidance and batch strategy for large monorepo sweeps
+
+resolves equinor/fusion-core-tasks#702
+
 ## v0.19.2
 
 ### Patch
