@@ -129,7 +129,7 @@ Domain-specific errors use the same `ProblemDetails` envelope with an `error` ex
 }
 ```
 
-Controllers produce these via `FusionApiError` static factory methods (defined in `fusion-libraries`):
+Controllers typically produce these via `FusionApiError` static factory methods. The following are common patterns observed in fusion-libraries (`Fusion.AspNetCore` namespace) and fusion-core-services controllers:
 - `FusionApiError.NotFound(resource, message)` → 404
 - `FusionApiError.InvalidOperation(code, message)` → 400
 - `FusionApiError.ResourceExists(resource, message, exception)` → 409
@@ -137,15 +137,17 @@ Controllers produce these via `FusionApiError` static factory methods (defined i
 - `FusionApiError.FailedDependency(code, message)` → 424
 - `FusionApiError.IncorrectETag(message)` → 409
 
+> **Note:** Exact method signatures may vary across service versions. Verify available factory methods in the target service's source or via MCP `search_backend_code`.
+
 ### Unhandled exceptions (500, middleware-caught)
 
-The `ApiExceptionMiddleware` catches unhandled exceptions and maps known types:
+Services commonly use an exception middleware (e.g. `ApiExceptionMiddleware`) that catches unhandled exceptions and maps known types to HTTP status codes. Typical mappings include:
 - `NotFoundError` → 404
-- `NotAuthorizedError` → 403 (includes `accessRequirements` in the error)
+- `NotAuthorizedError` → 403 (may include `accessRequirements` in the error)
 - `ResourceExistsError` → 409
 - `ReadOnlyModeError` → 500 with read-only context
 
-Stack traces are included only in development/test environments.
+> These exception types and mappings are illustrative of the pattern used in fusion-libraries and fusion-core-services. Not all services implement every mapping — check the target service's middleware configuration.
 
 ### Common Error Codes
 
