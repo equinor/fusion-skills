@@ -234,6 +234,12 @@ Main Copilot skill gate for the Fusion ecosystem — cross-domain router. USE FO
 
 ---
 
+**👍 [`fusion-backend-dev@0.1.0`](skills/fusion-backend-dev/SKILL.md)**
+
+Guides consumption and understanding of Fusion backend services, APIs, and patterns for frontend/client developers, integrators, and architects. Shows reference implementations, explains architectural decisions, and clarifies contracts. USE FOR: understanding Fusion backend APIs, learning implementation patterns, exploring reference code, choosing the right integration point, and understanding authorization/validation/async patterns. DO NOT USE FOR: modifying backend services, creating new endpoints, database changes, or backend-specific development (use fusion-services-develop or backend service repo instead).
+
+---
+
 **⚙️ [`fusion-code-conventions@0.1.2`](skills/.system/fusion-code-conventions/SKILL.md)**
 
 Applies and explains code conventions across TypeScript, React, C#, and Markdown. Enforces naming rules, file naming patterns, TSDoc and XML doc standards, inline comment intent (the *why*, not the *what*), code structure, error handling, async patterns, and dead code policy. Also enforces ADR and contributor doc decisions, and flags decisions that appear stale or misaligned with current tooling. USE FOR: convention questions, code review against project standards, applying naming rules, auditing intent comments, checking TSDoc completeness, enforcing recorded ADR decisions, and flagging stale architectural decisions. DO NOT USE FOR: security vulnerability scanning, performance profiling, runtime debugging, or generating net-new code without a review target.
@@ -306,15 +312,21 @@ Plan and break down user-story issues into ordered, traceable task issue drafts 
 
 ---
 
-**🧪 [`fusion-mcp@0.1.2`](skills/.experimental/fusion-mcp/SKILL.md)**
+**🧪 [`fusion-mcp@0.1.3`](skills/.experimental/fusion-mcp/SKILL.md)**
 
 Explain what Fusion MCP is and guide users through setting it up when they need Fusion-aware MCP capabilities in Copilot workflows.
 
 ---
 
-**⚙️ [`fusion-research@0.3.0`](skills/.system/fusion-research/SKILL.md)**
+**🧪 [`fusion-package-scribe@0.0.1`](skills/.experimental/fusion-package-scribe/SKILL.md)**
 
-Source-backed research orchestrator for the Fusion ecosystem. Routes to the correct research agent based on question type. Returns source-backed evidence only; will not invent Framework behavior, component APIs, skill catalog relationships, or platform guidance. USE FOR: any research question needing source-backed evidence about Fusion Framework APIs, EDS components, the Fusion skill catalog, or Fusion platform documentation. DO NOT USE FOR: implementing code changes, installing or editing skills, MCP setup or troubleshooting, or inventing Fusion behavior without evidence.
+Systematically improves TSDoc and README documentation across packages in a TypeScript monorepo. Discovers public API surfaces, generates or improves TSDoc on all exports, rewrites READMEs to a consistent retrieval-friendly structure, and commits each package independently. USE FOR: monorepo-wide documentation passes, single-package doc improvements, TSDoc generation on public exports, README standardization, review council quality checks. DO NOT USE FOR: runtime code changes, security scanning, API reference site generation, non-TypeScript languages.
+
+---
+
+**⚙️ [`fusion-research@0.4.0`](skills/.system/fusion-research/SKILL.md)**
+
+Source-backed research orchestrator for the Fusion ecosystem. Routes to the correct research agent based on question type. Returns source-backed evidence only; will not invent Framework behavior, component APIs, skill catalog relationships, platform guidance, or backend implementation details. USE FOR: any research question needing source-backed evidence about Fusion Framework APIs, EDS components, the Fusion skill catalog, Fusion platform documentation, or backend service implementation. DO NOT USE FOR: implementing code changes, installing or editing skills, MCP setup or troubleshooting, or inventing Fusion behavior without evidence.
 
 ---
 
