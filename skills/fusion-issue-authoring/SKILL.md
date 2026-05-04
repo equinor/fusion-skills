@@ -40,6 +40,10 @@ Typical triggers:
 - "help me structure this work item"
 - "update this issue"
 - "maintain/clean up this issue"
+- "add this as a sub-issue"
+- "set parent issue"
+- "link this issue as a child"
+- "establish parent relationship"
 
 ## When not to use
 
