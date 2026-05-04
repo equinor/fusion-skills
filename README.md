@@ -312,7 +312,7 @@ Plan and break down user-story issues into ordered, traceable task issue drafts 
 
 ---
 
-**🧪 [`fusion-mcp@0.1.3`](skills/.experimental/fusion-mcp/SKILL.md)**
+**🧪 [`fusion-mcp@1.0.0`](skills/.experimental/fusion-mcp/SKILL.md)**
 
 Explain what Fusion MCP is and guide users through setting it up when they need Fusion-aware MCP capabilities in Copilot workflows.
 
