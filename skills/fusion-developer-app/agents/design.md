@@ -15,8 +15,8 @@ Design ground truth comes from the `equinor-design-system` system skill. When th
 
 ## MCP tooling
 
-- Use **`mcp_fusion_search_eds`** for EDS component questions: tokens, props, usage examples, and layout primitives (e.g. `Typography`, `Button`, `Icon`, `Progress`).
-- Use **`mcp_fusion_search_framework`** for Fusion Portal shell and Fusion-specific component questions (e.g. `SideSheet`, `TopBar`, how the portal wraps the app, navigation zones).
+- Use **`mcp_fusion_search_eds`** for EDS component questions: tokens, props, usage examples, and layout primitives (e.g. `Typography`, `Button`, `Icon`, `Progress`, `TopBar`).
+- Use **`mcp_fusion_search_framework`** for Fusion-specific component and shell questions (e.g. `SideSheet` from `@equinor/fusion-react-side-sheet`, how the portal wraps the app, navigation zones, module APIs).
 
 ## Process
 
