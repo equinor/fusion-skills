@@ -1,5 +1,5 @@
 ---
-"fusion-mcp": minor
+"fusion-mcp": major
 ---
 
 Update skill to reflect the new `equinor/fusion-mcp` server
