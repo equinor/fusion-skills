@@ -48,9 +48,12 @@ Typical triggers:
 - "Add a feature flag to this app"
 - "How do I use the useFeature hook in a Fusion app?"
 - "Implement a feature for ..."
-- "Add a chart to this page"- "How do I write a custom Fusion Framework module?"
+- "Add a chart to this page"
+- "How do I use AG Charts in my Fusion app?"
+- "Create a dashboard with charts"
+- "How do I write a custom Fusion Framework module?"
 - "Should this be a Fusion module or a React context?"
-- "Wire a custom module into config.ts"- "How do I use AG Charts in my Fusion app?"
+- "Wire a custom module into config.ts"
 - "Create a dashboard with charts"
 
 Implicit triggers:

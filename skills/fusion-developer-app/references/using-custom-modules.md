@@ -104,14 +104,14 @@ src/
     myModule/
       index.ts       — module definition + exports
       MyApiClient.ts — implementation
-  config.ts          — registermodule here
+  config.ts          — register module here
 ```
 
 ## Common pitfalls
 
 - **Naming conflicts**: the module `name` must not collide with built-in Fusion module names (`http`, `auth`, `context`, `navigation`, `featureFlag`, `settings`, `bookmarks`, `analytics`). Use a unique name specific to your app or domain.
 - **Accessing modules outside React**: `useAppModule` is a hook and cannot be called outside components. For route loaders or non-React contexts, access the framework instance directly via `framework.modules.<name>`.
-- **Config not awaited**: the `initialize` callback receives a `Promise<config>` — always `await config` before reading config values.
+- **Config not awaited**: the `initialize` callback receives a `Promise<IMyModuleConfig>` — always `await config` before reading config values.
 - **Over-engineering**: if only one component needs the behavior, a hook or React context is simpler. Use a module when multiple disconnected parts of the app share the same infrastructure.
 
 ## When to use `fusion-research` first
