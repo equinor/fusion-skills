@@ -2,6 +2,64 @@
 
 All notable changes to this repository are documented in this file.
 
+## v1.0.1
+
+### Patch
+
+__🎯 [docs(fusion-issue-authoring): clarify sub_issue_id requires object ID, not issue number #153](https://github.com/equinor/fusion-skills/pull/153)<br/>
+🗂️ [3911da5](https://github.com/equinor/fusion-skills/commit/3911da5922ab0b392d6c9b93a284ce0746870364)<br/>
+📦 fusion-issue-authoring@0.3.4__
+
+Clarify sub_issue_id requires object ID, not issue number
+
+- Promote the ID vs number distinction to a prominent warning block above the example
+- Add a `gh api` command showing how to retrieve the object ID
+- Add a troubleshooting table covering 404, invalid input, and silent-failure modes
+- Clarify that `after_id`/`before_id` in reprioritize are also object IDs
+- Add sub-issue linking activation cues to SKILL.md triggers
+
+resolves equinor/fusion-skills#79
+
+---
+
+__🎯 [fix: strengthen devil's advocate pass for task-planning workflow #156](https://github.com/equinor/fusion-skills/pull/156)<br/>
+🗂️ [3ed5296](https://github.com/equinor/fusion-skills/commit/3ed52962820549c21ddbec57df01273c5c930749)<br/>
+📦 fusion-issue-authoring@0.3.4__
+
+Strengthen devil's-advocate agent for task-planning context
+
+Expands the devil's advocate with:
+- Auto-escalation to interrogator mode when a task-planning pass surfaces two or more architecture-ambiguity signals (no user trigger required)
+- Extended Task concerns in moderate mode: premature decomposition, implicit cross-task contracts, and tasks that hide unresolved architecture assumptions
+- New "Task-planning context" section in interrogator mode with four targeted decision branches: premature decomposition, implicit contracts, sequencing pressure, and hidden assumptions
+
+resolves equinor/fusion-skills#132
+
+---
+
+__🎯 [fix: strengthen devil's advocate pass for task-planning workflow #156](https://github.com/equinor/fusion-skills/pull/156)<br/>
+🗂️ [3ed5296](https://github.com/equinor/fusion-skills/commit/3ed52962820549c21ddbec57df01273c5c930749)<br/>
+📦 fusion-issue-task-planning@0.1.6__
+
+Add explicit devil's-advocate review step before task draft generation
+
+Inserts a new step 6 that inspects the proposed task set for architecture-ambiguity signals before any drafts are generated. When two or more signals are present (unresolved design decisions, implicit backend/frontend contracts, vague sequencing, contested ownership), the workflow automatically routes to interrogator mode without requiring a user trigger. In draft-only mode with unresolved ambiguities, an `⚠ Ambiguity warning` block is emitted at the top of the plan preview.
+
+resolves equinor/fusion-skills#132
+
+---
+
+__🎯 [fix(fusion-skills): guard warden report mode against pasted-instructions misinterpretation #155](https://github.com/equinor/fusion-skills/pull/155)<br/>
+🗂️ [c34401b](https://github.com/equinor/fusion-skills/commit/c34401b4edf327971ad952db4bcbd6e17a830423)__
+
+Guard warden report mode against treating pasted skill instructions as implementation requests
+
+- Add detection signal to intent classification table: pasted SKILL.md/agent content alongside failure description routes to report mode, not implementation
+- Add "Pasted instructions guard" step to Mode: Report Step 1 — explicitly states pasted instructions are failure evidence, not a request to execute or apply them; prohibits modifying skill instructions/docs/changesets or files outside `.tmp/` in report mode while explicitly allowing the required `.tmp/BUG-*.md` draft
+- Add matching safety boundary: never treat pasted skill instructions or workflow steps as a direct implementation request
+
+resolves equinor/fusion-skills#131
+
 ## v1.0.0
 
 ### Major

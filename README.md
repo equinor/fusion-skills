@@ -294,7 +294,7 @@ Wires Fusion Help Center into app pages — creates article slug constants, adds
 
 ---
 
-**👍 [`fusion-issue-authoring@0.3.3`](skills/fusion-issue-authoring/SKILL.md)**
+**👍 [`fusion-issue-authoring@0.3.4`](skills/fusion-issue-authoring/SKILL.md)**
 
 Classify issue type, activate the matching agent mode for type-specific drafting, and enforce shared safety gates before GitHub mutation.
 
@@ -306,7 +306,7 @@ Handles GitHub issue resolution end-to-end for prompts like "solve #123", "lets 
 
 ---
 
-**🧪 [`fusion-issue-task-planning@0.1.5`](skills/.experimental/fusion-issue-task-planning/SKILL.md)**
+**🧪 [`fusion-issue-task-planning@0.1.6`](skills/.experimental/fusion-issue-task-planning/SKILL.md)**
 
 Plan and break down user-story issues into ordered, traceable task issue drafts with explicit publish gates.
 
