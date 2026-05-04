@@ -127,6 +127,7 @@ Follow `references/styled-components.md`, `references/styling-with-eds.md`, `ref
 - Extend EDS with `styled()` for customization.
 - Use `@equinor/fusion-react-*` for domain needs not in EDS (person display/selection, side sheets, progress).
 - Inline `style` props: one-off tweaks only.
+- For page/view structure (shell composition, layout zones, empty/loading states), invoke `agents/design.md`. For component-level EDS styling, invoke `agents/styling.md`.
 
 ### Step 5 — Wire up data fetching (when applicable)
 
@@ -188,12 +189,13 @@ Use `assets/review-checklist.md` as post-generation checklist.
 
 ## Helper agents
 
-Five optional helpers in `agents/`. Use for focused review or mid-implementation guidance. Runtimes without skill-local agents apply criteria inline.
+Optional helpers in `agents/`. Use for focused review or mid-implementation guidance. Runtimes without skill-local agents apply criteria inline.
 
 Companion skill: `fusion-research` for source-backed Fusion ecosystem research when implementation is blocked by uncertainty.
 
 - **`agents/framework.md`** — Fusion Framework integration: modules, HTTP clients, bootstrap, runtime config, settings, bookmarks, analytics. **Prefers `mcp_fusion_search_framework`**; falls back to `mcp_fusion_search_docs`. Consult when wiring `config.ts`, `app.config.ts`, or framework module access.
 - **`agents/styling.md`** — EDS component selection, styled-components, design tokens, accessibility. **Prefers `mcp_fusion_search_eds`**. Consult when building/modifying visual components.
+- **`agents/design.md`** — page/view structure: Fusion Portal shell composition, layout zones, side panel usage, empty/loading state patterns. References `equinor-design-system` for layout ground truth. Delegates component-level checks to `agents/styling.md`. Consult when scaffolding new pages or layout wrappers.
 - **`agents/data-display.md`** — AG Grid vs AG Charts, module setup, column defs, chart options, integrated charting. **Prefers `mcp_fusion_search_framework`**. Consult for grids, charts, dashboards. Use `assets/charts-decision-matrix.md` for library selection.
 - **`agents/person-components.md`** — `@equinor/fusion-react-person`: `PersonAvatar`, `PersonCard`, `PersonListItem`, `PersonPicker`, `PeoplePicker`, `PeopleViewer`, `PersonCell` (AG Grid). DOM event pattern, valueGetter setup, pitfalls. Consult for any person display, search, or selection UI.
 - **`agents/code-quality.md`** — delegates convention checks (naming, TSDoc, TS strictness, intent comments) to `fusion-code-conventions`, aggregates findings. Run on every new/modified file before finalizing.
