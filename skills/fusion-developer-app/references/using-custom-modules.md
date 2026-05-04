@@ -24,6 +24,8 @@ Every custom module must implement the `IModule` interface from `@equinor/fusion
 ```typescript
 import type { IModule } from '@equinor/fusion-framework-module';
 
+export const MODULE_NAME = 'myModule' as const; // Unique module key — must not conflict with built-in modules
+
 export interface IMyModuleConfig {
   // Configuration shape for your module
   apiBaseUrl: string;
@@ -35,7 +37,7 @@ export interface IMyModule {
 }
 
 export const module: IModule<IMyModule, IMyModuleConfig> = {
-  name: 'myModule', // Unique module key — must not conflict with built-in modules
+  name: MODULE_NAME,
   initialize: async ({ config, instance }): Promise<IMyModule> => {
     const cfg = await config;
     const client = new MyApiClient(cfg.apiBaseUrl);
@@ -72,10 +74,11 @@ Use `useAppModule` from `@equinor/fusion-framework-react-app` with the module na
 ```typescript
 import { useAppModule } from '@equinor/fusion-framework-react-app';
 import type { IMyModule } from '../modules/myModule';
+import { MODULE_NAME } from '../modules/myModule';
 
 const MyFeatureComponent = () => {
   // Type the module by its interface
-  const myModule = useAppModule<IMyModule>('myModule');
+  const myModule = useAppModule<IMyModule>(MODULE_NAME);
   const client = myModule.getClient();
 
   // Use the client in a React Query hook or useEffect
