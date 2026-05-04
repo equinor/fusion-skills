@@ -79,7 +79,7 @@ Classify request as `Bug`, `Feature`, `User Story`, or `Task`, then activate the
 
 If ambiguous, ask only essential clarifying questions.
 
-Devil's advocate pass: `agents/devils-advocate.agent.md` is always active in moderate mode — it surfaces the 2–3 most important concerns after classification without interrupting flow. When the user asks to be "grilled", says "stress-test this", or when scope/criteria gaps are significant, escalate to interrogator mode for a full structured interview before the type-specific agent. The devil's advocate returns confirmed decisions and noted risks, then hands off to the type-specific drafting agent.
+Devil's advocate pass: `agents/devils-advocate.agent.md` is always active in moderate mode — it surfaces the 2–3 most important concerns after classification without interrupting flow. When the user asks to be "grilled", says "stress-test this", when scope/criteria gaps are significant, or when invoked from `fusion-issue-task-planning` with two or more architecture-ambiguity signals present, escalate to interrogator mode for a full structured interview before the type-specific agent. The devil's advocate returns confirmed decisions and noted risks, then hands off to the type-specific drafting agent.
 
 ### Step 2 — Resolve repository and template
 
