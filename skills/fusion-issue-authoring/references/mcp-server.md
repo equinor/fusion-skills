@@ -171,12 +171,13 @@ Only include `type` when issue types are supported.
 
 ### Add a sub-issue to a parent issue
 
-> **`sub_issue_id` is the GitHub object ID, NOT the issue number.**
+> **`sub_issue_id` is the GitHub database ID (REST `id`), NOT the issue number.**
 >
 > | Format | Example | Used in URLs / UI? |
 > |---|---|---|
 > | Issue number | `#79`, `79` | Yes |
-> | Object ID | `3969391411` | No — internal only |
+> | Database ID (REST `id`) | `3969391411` | No — internal only |
+> | GraphQL node ID (`node_id`) | `I_kwDO...` | No — different identifier, not used here |
 >
 > **Always retrieve the object ID before calling `sub_issue_write`.**
 >
