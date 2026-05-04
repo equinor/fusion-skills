@@ -156,6 +156,98 @@ Person components use **custom DOM events**, not standard React callback signatu
 />
 ```
 
+#### Display a person card
+
+`PersonCard` renders full person details — name, department, positions, active tasks, and manager — resolved automatically from the Fusion People API by `azureId`.
+
+```typescript
+import { PersonCard } from '@equinor/fusion-react-person';
+
+const OwnerCard = ({ azureId }: { azureId: string }) => (
+  <PersonCard azureId={azureId} />
+);
+```
+
+Use `PersonCard` wherever you need a full-detail person view (e.g. a details panel or a hover popover). Prefer `PersonAvatar` for compact inline display.
+
+#### Display a person list item
+
+`PersonListItem` renders a compact single-row person entry suited for lists. Action buttons are optional children.
+
+```typescript
+import { PersonListItem } from '@equinor/fusion-react-person';
+import { Button } from '@equinor/eds-core-react';
+
+// Display only
+const AssigneeRow = ({ azureId }: { azureId: string }) => (
+  <PersonListItem azureId={azureId} />
+);
+
+// With an action button
+const ReviewerRow = ({
+  azureId,
+  onRemove,
+}: {
+  azureId: string;
+  onRemove: () => void;
+}) => (
+  <PersonListItem azureId={azureId}>
+    <Button variant="ghost_icon" onClick={onRemove}>
+      Remove
+    </Button>
+  </PersonListItem>
+);
+```
+
+#### Person column in an AG Grid (PersonCell)
+
+`PersonCell` is an AG Grid cell renderer from `@equinor/fusion-react-person`. It renders an inline avatar + name row inside a grid column. The cell value must be an `azureId` string.
+
+```typescript
+import { PersonCell } from '@equinor/fusion-react-person';
+import type { ColDef } from '@equinor/fusion-framework-react-ag-grid/community';
+
+interface WorkItem {
+  id: string;
+  title: string;
+  ownerAzureId: string;
+}
+
+const columnDefs: ColDef<WorkItem>[] = [
+  { field: 'title', headerName: 'Title', flex: 2 },
+  {
+    field: 'ownerAzureId',
+    headerName: 'Owner',
+    width: 200,
+    cellRenderer: PersonCell,
+  },
+];
+```
+
+If the `azureId` is nested inside the row object, use `valueGetter` to extract it:
+
+```typescript
+{
+  headerName: 'Owner',
+  width: 200,
+  cellRenderer: PersonCell,
+  valueGetter: ({ data }) => data?.owner?.azureId,
+}
+```
+
+### Decision guide: which person component?
+
+| UI need | Component |
+|---|---|
+| Compact inline display (avatar only, hover for details) | `PersonAvatar` |
+| Full person detail view (card, panel, popover) | `PersonCard` |
+| One-line person row in a list | `PersonListItem` |
+| Person row with action buttons | `PersonListItem` with children |
+| Pick a single person | `PersonPicker` or `PersonSelect` |
+| Pick multiple people | `PeoplePicker` |
+| Display a selected set of people | `PeopleViewer` |
+| Person column in an AG Grid | `PersonCell` |
+
 ## Decision guide: EDS vs Fusion React
 
 | Need | Use |

@@ -162,6 +162,7 @@ Identify which module the user needs, then read only the matching reference:
 | AG Charts (standalone) | `references/using-ag-charts.md` |
 | AG Grid integrated charts | `references/using-ag-grid-charts.md` |
 | EDS + Fusion React components | `references/using-fusion-react-components.md` |
+| Person display / search / selection | `references/using-fusion-react-components.md` → `agents/person-components.md` |
 | Settings | `references/using-settings.md` |
 | Bookmarks | `references/using-bookmarks.md` |
 | Analytics | `references/using-analytics.md` |
@@ -203,6 +204,7 @@ This skill also has a companion skill, `fusion-research`, for source-backed Fusi
 - **`agents/framework.md`** — reviews Fusion Framework integration: module configuration, HTTP clients, bootstrap lifecycle, runtime config, settings, bookmarks, analytics, and hook usage. **Prefers `mcp_fusion_search_framework`** for API lookups; falls back to `mcp_fusion_search_docs` for general platform guidance. Consult when wiring up `config.ts`, `app.config.ts`, or any component that accesses framework modules.
 - **`agents/styling.md`** — reviews EDS component selection, styled-components patterns, design token usage, and accessibility. **Prefers `mcp_fusion_search_eds`** for component docs, props, and examples. Consult when building or modifying visual components.
 - **`agents/data-display.md`** — reviews data display implementation: choosing between AG Grid (tabular) and AG Charts (visual), module setup, column definitions, chart options, integrated charting, and combined grid+chart pages. **Prefers `mcp_fusion_search_framework`** for AG Grid and AG Charts package lookups and cookbook examples. Consult when building grids, charts, dashboards, or any data presentation view. Use `assets/charts-decision-matrix.md` for chart library selection guidance.
+- **`agents/person-components.md`** — guides component selection and usage for `@equinor/fusion-react-person`: `PersonAvatar`, `PersonCard`, `PersonListItem`, `PersonPicker`, `PeoplePicker`, `PeopleViewer`, and `PersonCell` (AG Grid). Covers the custom DOM event pattern, `PersonCell` valueGetter setup, and common pitfalls. Consult when adding any person display, search, or selection UI.
 - **`agents/code-quality.md`** — delegates convention checks (naming, TSDoc, TypeScript strictness, intent comments) to `fusion-code-conventions`, then aggregates findings in Fusion app context. Run on every new or modified file before finalizing.
 
 ## Safety & constraints
