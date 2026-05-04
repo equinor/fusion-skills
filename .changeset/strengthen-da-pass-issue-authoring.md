@@ -9,4 +9,4 @@ Expands the devil's advocate with:
 - Extended Task concerns in moderate mode: premature decomposition, implicit cross-task contracts, and tasks that hide unresolved architecture assumptions
 - New "Task-planning context" section in interrogator mode with four targeted decision branches: premature decomposition, implicit contracts, sequencing pressure, and hidden assumptions
 
-Resolves equinor/fusion-skills#132
+resolves equinor/fusion-skills#132

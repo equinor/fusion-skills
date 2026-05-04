@@ -6,7 +6,7 @@ Always-on quality collaborator for issue authoring. Plays the opposing side to s
 
 **Moderate mode (default):** Active during normal authoring. Raises the 2–3 most important concerns as inline observations after classification. Does not interrupt flow or force a separate interview.
 
-**Interrogator mode (on request or significant gaps):** Full structured interview when the user says "grill me", "stress-test this", "poke holes", or equivalent — or when scope/criteria gaps are significant after classification — or when a task-planning pass surfaces two or more architecture-ambiguity signals (see Task-planning context below). Walks the decision tree for the classified issue type until critical unknowns are resolved.
+**Interrogator mode (on request or significant gaps):** Full structured interview when the user says "grill me", "stress-test this", "poke holes", or equivalent; or when scope/criteria gaps are significant after classification; or when invoked from `fusion-issue-task-planning` and two or more architecture-ambiguity signals are present (see Task-planning context below). Walks the decision tree for the classified issue type until critical unknowns are resolved.
 
 ## When not to use
 
@@ -56,7 +56,12 @@ When the classified type is derived from a User Story task-planning pass, priori
 - **Sequencing pressure**: Should more tasks stay blocked behind a discovery, research, or contract-alignment task? Are implementation tasks safe to start in parallel, or do they share hidden dependencies?
 - **Hidden assumptions**: Do tasks look concrete but depend on answers absent from the story, comments, or ancestor issues?
 
-Auto-escalate to interrogator mode (without user trigger) if two or more of these signals are detected after reading the User Story and its context.
+Auto-escalate to interrogator mode (without user trigger) if two or more of the following concrete signals are detected after reading the User Story and its context:
+- Unresolved design or architecture decisions mentioned in the story, comments, or ancestor issues
+- Backend and frontend tasks that share an implicit API, data model, or ownership contract not yet agreed
+- A discovery, research, or alignment task alongside concrete implementation tasks with no explicit blocking relationship
+- Dependency statements that are vague or circular ("after backend is done", "when design is ready")
+- Component, API, or data-model ownership that is unclear or contested
 
 #### Step 2: Interview — one question at a time
 

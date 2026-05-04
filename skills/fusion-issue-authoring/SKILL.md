@@ -24,7 +24,7 @@ This skill uses internal agent modes for type-specific drafting logic:
 - `agents/feature.agent.md`: feature-focused scope and acceptance structure
 - `agents/user-story.agent.md`: role/workflow/scenario-driven story structure
 - `agents/task.agent.md`: checklist-first task decomposition and dependency planning
-- `agents/devils-advocate.agent.md`: always-on quality collaborator that raises key concerns after classification (moderate mode) and runs a full structured interview when explicitly asked or when scope/criteria gaps are significant (interrogator mode)
+- `agents/devils-advocate.agent.md`: always-on quality collaborator that raises key concerns after classification (moderate mode) and runs a full structured interview when explicitly asked, when scope/criteria gaps are significant, or when invoked from `fusion-issue-task-planning` with two or more architecture-ambiguity signals present (interrogator mode)
 
 Agent modes are activated internally based on issue type classification. Users never reference agent files directly. Shared gates (labels, assignee confirmation, draft review, publish confirmation, and mutation sequencing) remain in this skill.
 

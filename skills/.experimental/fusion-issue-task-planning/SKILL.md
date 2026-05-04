@@ -94,10 +94,12 @@ Execute in order and state assumptions explicitly.
      - A discovery, research, or alignment task alongside concrete implementation tasks with no explicit blocking relationship
      - Dependency statements that are vague or circular ("after backend is done", "when design is ready")
      - Component, API, or data-model ownership that is unclear or contested
-   - If two or more signals are present, route the task set through `agents/devils-advocate.agent.md` (via `fusion-issue-authoring`) in **interrogator mode** automatically — no user trigger required.
-   - If zero or one signal is present, route in **moderate mode** and surface up to 3 concerns before continuing.
-   - Do not proceed to draft generation until either the devil's advocate confirms the split is sound or the user explicitly accepts the listed risks.
-   - In `draft-only` mode with unresolved major ambiguities: continue to draft but emit an `⚠ Ambiguity warning` block at the top of the plan preview listing the unresolved items.
+   - If two or more signals are present:
+     - `orchestrated` mode: route through `fusion-issue-authoring` → `agents/devils-advocate.agent.md` in **interrogator mode** automatically — no user trigger required.
+     - `direct-subordinate` or `inline` mode: run an inline DA checklist using the same five signals above; surface findings as a structured `⚠ Ambiguity checklist` and require the user to resolve or explicitly accept each before draft generation.
+   - If zero or one signal is present, run in **moderate mode**: surface up to 3 concerns and continue after the user acknowledges.
+   - **Publish gate** (all modes): do not publish tasks until either the devil's advocate confirms the split is sound or the user explicitly accepts the listed risks.
+   - **Draft-only exception**: in `draft-only` mode, draft generation may proceed even with unresolved ambiguities, but emit an `⚠ Ambiguity warning` block at the top of the plan preview listing each unresolved item. Publication remains blocked until risks are accepted.
 
 7. Generate task issue drafts
    - `orchestrated`: route through `fusion-issue-authoring` with issue type `Task`
