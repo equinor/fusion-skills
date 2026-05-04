@@ -14,7 +14,7 @@ No Docker, no API keys, no local clone required.
 
 Click the link below to add Fusion MCP to your VS Code configuration:
 
-**[Install Fusion MCP (Prod)](vscode:mcp/install?%7B%22name%22%3A%22fusion-mcp%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.api.fusion.equinor.com%2Fmcp%22%2C%22oauth%22%3A%7B%22clientId%22%3A%22fe06d016-0e42-452e-a3d7-f08325037122%22%7D%7D)**
+**[Install Fusion MCP (Prod)](vscode:mcp/install?%7B%22name%22%3A%22fusion-mcp%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.api.fusion.equinor.com%2Fmcp%22%7D)**
 
 ## Manual setup
 
@@ -25,10 +25,7 @@ Open the VS Code Command Palette and run **MCP: Open User Configuration**, then 
   "servers": {
     "fusion-mcp": {
       "type": "http",
-      "url": "https://mcp.api.fusion.equinor.com/mcp",
-      "oauth": {
-        "clientId": "fe06d016-0e42-452e-a3d7-f08325037122"
-      }
+      "url": "https://mcp.api.fusion.equinor.com/mcp"
     }
   }
 }
@@ -51,7 +48,7 @@ Open the VS Code Command Palette and run **MCP: Open User Configuration**, then 
 
 ## Troubleshooting quick map
 
-- Sign-in prompt not appearing: verify `oauth.clientId` in config and that VS Code is signed in with an Equinor account.
+- Sign-in prompt not appearing: verify the `fusion-mcp` server entry is enabled in VS Code MCP settings and that you are signed in with an Equinor account.
 - `401 Unauthorized`: re-authenticate via VS Code account settings; ensure your Equinor Entra account is active.
 - `tools/list` returns empty: verify the `fusion-mcp` server entry is enabled in VS Code MCP settings and reload the MCP server.
 - Partial tool behavior: check VS Code Output > Copilot for error details and restart the MCP server.

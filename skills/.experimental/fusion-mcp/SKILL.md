@@ -59,7 +59,7 @@ If details are missing, ask concise follow-up questions first.
    - no Docker, no API keys, no local clone needed
    - VS Code authenticates via Microsoft Entra (Equinor account)
    - use the one-click install link for prod (see `references/vscode-mcp-config.md`)
-   - or manual config with `"type": "http"` and `oauth.clientId` (see `references/vscode-mcp-config.md`)
+   - or manual config with `"type": "http"` and the server URL (see `references/vscode-mcp-config.md`)
    - do not suggest local Docker, GHCR, or self-hosted alternatives unless the user has an explicit operational need
 3. Describe the authentication flow:
    - on first tool invocation VS Code prompts the user to sign in with their Equinor Entra account
