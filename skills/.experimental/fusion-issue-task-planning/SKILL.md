@@ -87,17 +87,29 @@ Execute in order and state assumptions explicitly.
    - For each task include objective, scope boundary, deliverable, verification method, and mapped AC references.
    - Prefer independently verifiable slices.
 
-6. Generate task issue drafts
+6. Run devil's-advocate review before drafting
+   - Inspect the proposed task set for architecture-ambiguity signals:
+     - Unresolved design or architecture decisions mentioned in the story, comments, or ancestor issues
+     - Backend and frontend tasks that share an implicit API, data model, or ownership contract not yet agreed
+     - A discovery, research, or alignment task alongside concrete implementation tasks with no explicit blocking relationship
+     - Dependency statements that are vague or circular ("after backend is done", "when design is ready")
+     - Component, API, or data-model ownership that is unclear or contested
+   - If two or more signals are present, route the task set through `agents/devils-advocate.agent.md` (via `fusion-issue-authoring`) in **interrogator mode** automatically — no user trigger required.
+   - If zero or one signal is present, route in **moderate mode** and surface up to 3 concerns before continuing.
+   - Do not proceed to draft generation until either the devil's advocate confirms the split is sound or the user explicitly accepts the listed risks.
+   - In `draft-only` mode with unresolved major ambiguities: continue to draft but emit an `⚠ Ambiguity warning` block at the top of the plan preview listing the unresolved items.
+
+7. Generate task issue drafts
    - `orchestrated`: route through `fusion-issue-authoring` with issue type `Task`
    - `direct-subordinate`: invoke `fusion-issue-author-task` in draft-only mode and output explicit publish instructions that delegate final mutation to `fusion-issue-authoring`
    - `inline`: write `.tmp/TASK-<nn>-<slug>.md` drafts using the minimal built-in structure from step 1
    - Keep drafts local until explicit publish approval.
 
-7. Generate plan preview
+8. Generate plan preview
    - Write `.tmp/USER-STORY-TASK-PLAN-<context>.md` from `assets/task-plan-template.md`.
    - Include summary, traceability, ordered tasks, draft paths, publish plan, assumptions, risks.
 
-8. Publish only after explicit confirmation
+9. Publish only after explicit confirmation
    - Require explicit confirmation in the same turn.
    - Stop if unresolved assumptions remain.
    - Delegate publish execution to `fusion-issue-authoring` and prefer sub-agent invocation for task issue creation/update/linking.
@@ -108,7 +120,7 @@ Execute in order and state assumptions explicitly.
    - Do not call MCP write tools directly from this skill in publish mode.
    - Hard fail publish mode if delegated execution returns unresolved item-level failures.
 
-9. Repair mode for already-created tasks
+10. Repair mode for already-created tasks
    - If tasks were created but are missing `Issue Type` or parent linkage, delegate repair to `fusion-issue-authoring` and prefer sub-agent invocation.
    - Provide per-issue repair intent (`set type=Task`, add missing parent links, preserve order) and require verification results from the delegated run.
    - Repair mode must be idempotent: skip already-correct issues and fix only missing metadata.
