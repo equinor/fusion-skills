@@ -15,8 +15,8 @@ Design ground truth comes from `equinor-design-system` system skill. When instal
 
 ## MCP tooling
 
-- Use **`mcp_fusion_search_framework`** for Fusion Portal shell/module questions (e.g. `SideSheet`, `TopBar`, navigation zones, how portal wraps the app).
-- Use **`mcp_fusion_search_eds`** for EDS layout primitives and design token lookups.
+- Use **`mcp_fusion_search_eds`** for EDS component questions: tokens, props, usage examples, and layout primitives (e.g. `Typography`, `Button`, `Icon`, `Progress`).
+- Use **`mcp_fusion_search_framework`** for Fusion Portal shell/Fusion-specific component questions (e.g. `SideSheet`, `TopBar`, navigation zones, how portal wraps the app).
 
 ## Process
 
@@ -47,12 +47,12 @@ Verify layout follows three-zone convention from `equinor-design-system`:
 |---|---|---|
 | Main content | `<main>` or app root `<div>` spanning full available area | Custom flexbox wrapper that clips or limits available height |
 | Side panel | `@equinor/fusion-react-side-sheet` | Custom `position: fixed` or `position: absolute` right panel |
-| Spacing | `--eds-spacing-*` tokens | Arbitrary `margin: 24px`, `padding: 16px` raw pixel values |
+| Spacing | `--eds-spacing-*` / `--eds-container-space-*` tokens | Arbitrary `margin: 24px`, `padding: 16px` raw pixel values |
 
-For spacing violations, identify specific token (refer to `equinor-design-system` spacing table):
-- `var(--eds-spacing-comfortable-x-small)` — tight gaps
-- `var(--eds-spacing-comfortable-medium)` — standard content padding
-- `var(--eds-spacing-comfortable-large)` — section separation
+For spacing violations, identify specific token (refer to `equinor-design-system` spacing table or `mcp_fusion_search_eds`):
+- `var(--eds-spacing-horizontal-sm)` / `var(--eds-spacing-vertical-sm)` — tight gaps (8px)
+- `var(--eds-container-space-horizontal)` / `var(--eds-container-space-vertical)` — container padding
+- `var(--eds-page-space-horizontal)` / `var(--eds-page-space-vertical)` — page-level padding
 
 ### Step 4: Check structural anti-patterns
 
@@ -60,7 +60,7 @@ Flag:
 
 - **Nested full-page scrollable containers** — page content wrapped in `overflow-y: auto` when browser scroll is intended. Deliberate AG Grid or fixed-height table regions are acceptable.
 - **Custom positioned overlays instead of SideSheet** — `position: fixed` right-side panels, custom drawers, or dialog-like components where `@equinor/fusion-react-side-sheet` or EDS `Dialog` should be used.
-- **Shadow or color outside EDS tokens** — raw `box-shadow`, hex codes, or named CSS colors instead of `--eds-elevation-*` and `--eds-color-*` tokens.
+- **Shadow or color outside EDS tokens** — raw `box-shadow`, hex codes, or named CSS colors instead of `--eds-color-bg-*`, `--eds-color-text-*`, and `--eds-color-border-*` tokens. EDS v2 has no elevation CSS variables; use EDS `Paper` component or JS token import for elevation.
 - **Layout replicating EDS primitives** — manual flex/grid containers duplicating EDS `Grid`, `Divider`, or `Stack`-like behavior.
 
 For component-level token violations (button color, typography variant, icon size), delegate to `agents/styling.md`.
@@ -71,7 +71,7 @@ Verify correct state patterns:
 
 | State | Expected pattern | Anti-pattern |
 |---|---|---|
-| Loading | EDS `Progress.Circular` or `Progress.Dots` — centered in content area | Blank screen, spinner in corner, or `display: none` |
+| Loading | EDS `Progress.Circular` or `Progress.Dots` (`import { Progress } from '@equinor/eds-core-react'`) — centered in content area | Blank screen, spinner in corner, or `display: none` |
 | Empty (no data) | `Typography` + optional primary action `Button` — centered or top-aligned | Omitted state (user sees nothing), custom illustration without text |
 | Error | `Typography` with danger semantic color + retry action | Raw `alert()`, uncaught exception, or blank component |
 
