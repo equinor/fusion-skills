@@ -31,45 +31,71 @@ This file is a **subordinate lookup reference**. There are no workflow steps. Co
 
 ## Color tokens
 
-Use **EDS CSS custom properties** (`--eds-color-*`) for all color values. Never use raw hex, rgb(), or named CSS colors in Fusion app code.
+Use **EDS CSS custom properties** (`--eds-color-*`) for all color values. Never use raw hex, rgb(), or named CSS colors in Fusion app code. All tokens below are from `@equinor/eds-tokens` v2.x (the version Fusion apps depend on).
 
-### Primary interactive colors
+> Token naming pattern: `--eds-color-<layer>-<semantic>-<variant>`
+> - `bg` = background fill
+> - `text` = foreground text / icon
+> - `border` = stroke / divider
 
-| Purpose | EDS token |
-|---|---|
-| Primary action (button, link) | `--eds-interactive-primary` |
-| Hover state | `--eds-interactive-primary__hover` |
-| Pressed/active state | `--eds-interactive-primary__active` |
-| Disabled foreground | `--eds-interactive-disabled__text` |
-| Disabled background | `--eds-interactive-disabled__fill` |
-
-### Semantic colors
+### Background tokens
 
 | Purpose | EDS token |
 |---|---|
-| Success / positive | `--eds-feedback-success` |
-| Warning | `--eds-feedback-warning` |
-| Danger / error | `--eds-feedback-danger` |
-| Informational | `--eds-feedback-info` |
+| Page / app canvas | `--eds-color-bg-canvas` |
+| Surface (card, panel) | `--eds-color-bg-surface` |
+| Input field background | `--eds-color-bg-input` |
+| Floating surface (dropdown, tooltip) | `--eds-color-bg-floating` |
+| Backdrop / modal scrim | `--eds-color-bg-backdrop` |
+| Primary action fill (default) | `--eds-color-bg-fill-emphasis-default` |
+| Primary action fill (hover) | `--eds-color-bg-fill-emphasis-hover` |
+| Primary action fill (active) | `--eds-color-bg-fill-emphasis-active` |
+| Muted fill (default) | `--eds-color-bg-fill-muted-default` |
+| Muted fill (hover) | `--eds-color-bg-fill-muted-hover` |
+| Disabled surface | `--eds-color-bg-disabled` |
+| Success surface (subtle bg) | `--eds-color-bg-success-surface` |
+| Success fill (emphasis) | `--eds-color-bg-success-fill-emphasis-default` |
+| Warning surface | `--eds-color-bg-warning-surface` |
+| Warning fill (emphasis) | `--eds-color-bg-warning-fill-emphasis-default` |
+| Danger / error surface | `--eds-color-bg-danger-surface` |
+| Danger fill (emphasis) | `--eds-color-bg-danger-fill-emphasis-default` |
+| Info surface | `--eds-color-bg-info-surface` |
+| Info fill (emphasis) | `--eds-color-bg-info-fill-emphasis-default` |
+| Accent surface | `--eds-color-bg-accent-surface` |
+| Accent fill (emphasis) | `--eds-color-bg-accent-fill-emphasis-default` |
 
-### Text colors
+### Text tokens
 
 | Purpose | EDS token |
 |---|---|
-| Primary text | `--eds-text-static-icons__primary-white` (on dark) / `--eds-text-static-icons__tertiary` (subtle) |
-| Default body text | Use `color: var(--eds-text-static-icons__default)` |
-| Disabled text | `--eds-text-static-icons__tertiary` |
+| Primary body text | `--eds-color-text-strong` |
+| Text on emphasis/filled backgrounds | `--eds-color-text-strong-on-emphasis` |
+| Subtle / secondary text | `--eds-color-text-subtle` |
+| Disabled text | `--eds-color-text-disabled` |
+| Link | `--eds-color-text-link` |
+| Success text | `--eds-color-text-success-strong` |
+| Success text (subtle) | `--eds-color-text-success-subtle` |
+| Warning text | `--eds-color-text-warning-strong` |
+| Danger / error text | `--eds-color-text-danger-strong` |
+| Info text | `--eds-color-text-info-strong` |
+| Accent text | `--eds-color-text-accent-strong` |
 
-### UI surface colors
+### Border tokens
 
 | Purpose | EDS token |
 |---|---|
-| App background | `--eds-ui-background__default` |
-| Elevated surface (card, panel) | `--eds-ui-background__light` |
-| Overlay / scrim | `--eds-ui-background__overlay` |
-| Dividers / borders | `--eds-ui-background__medium` |
+| Default divider / border | `--eds-color-border-medium` |
+| Subtle border | `--eds-color-border-subtle` |
+| Strong border | `--eds-color-border-strong` |
+| Focus ring | `--eds-color-border-focus` |
+| Disabled border | `--eds-color-border-disabled` |
+| Success border | `--eds-color-border-success-medium` |
+| Warning border | `--eds-color-border-warning-medium` |
+| Danger border | `--eds-color-border-danger-medium` |
+| Info border | `--eds-color-border-info-medium` |
+| Accent border | `--eds-color-border-accent-medium` |
 
-> **Brand constraint**: Equinor red (`#FF1243`) is used in the primary logo only — never as a UI action or semantic color. Use EDS interactive tokens for all clickable surfaces.
+> **Brand constraint**: Equinor red (`#FF1243`) is used in the primary logo only — never as a UI action or semantic color. Use EDS color tokens for all clickable and semantic surfaces.
 
 ### Token access in code
 
@@ -79,9 +105,23 @@ Prefer EDS CSS custom properties in styled-components over the `@equinor/eds-tok
 import styled from 'styled-components';
 
 const Card = styled.div`
-  background: var(--eds-ui-background__light);
-  border: 1px solid var(--eds-ui-background__medium);
-  color: var(--eds-text-static-icons__default);
+  background: var(--eds-color-bg-surface);
+  border: 1px solid var(--eds-color-border-medium);
+  color: var(--eds-color-text-strong);
+`;
+
+const PrimaryButton = styled.button`
+  background: var(--eds-color-bg-fill-emphasis-default);
+  color: var(--eds-color-text-strong-on-emphasis);
+
+  &:hover {
+    background: var(--eds-color-bg-fill-emphasis-hover);
+  }
+
+  &:disabled {
+    background: var(--eds-color-bg-disabled);
+    color: var(--eds-color-text-disabled);
+  }
 `;
 ```
 
@@ -125,51 +165,55 @@ Equinor brand typeface is **Equinor** (used in marketing). Fusion apps must use 
 
 ## Spacing tokens
 
-Use `--eds-space-*` custom properties for margin and padding. Do not use arbitrary pixel values.
+Use `--eds-spacing-horizontal-<size>` and `--eds-spacing-vertical-<size>` from `@equinor/eds-tokens` v2 for margin, padding, and gap. Do not use arbitrary pixel values.
 
-| Token | Value | Use for |
-|---|---|---|
-| `--eds-space-4` | 4 px | XS gap, icon padding |
-| `--eds-space-8` | 8 px | SM gap, tight list spacing |
-| `--eds-space-12` | 12 px | Inner padding (chips, badges) |
-| `--eds-space-16` | 16 px | MD gap, standard content padding |
-| `--eds-space-24` | 24 px | LG gap, section spacing |
-| `--eds-space-32` | 32 px | XL gap, card-to-card separation |
-| `--eds-space-40` | 40 px | XXL gap, major layout breaks |
-| `--eds-space-48` | 48 px | Section-level whitespace |
+The horizontal and vertical scales share the same size steps but may differ by a few pixels at each step; use the axis-appropriate token (horizontal for left/right, vertical for top/bottom).
+
+| Size | Horizontal value | Vertical value | Use for |
+|---|---|---|---|
+| `4xs` | 2 px | 2 px | Micro gap, tight icon padding |
+| `3xs` | 4 px | 4 px | XS gap |
+| `2xs` | 6 px | 6 px | Small inset padding |
+| `xs` | 8 px | 8 px | SM gap, compact list spacing |
+| `sm` | 12 px | 12 px | Inner padding (chips, badges) |
+| `md` | 16 px | 16 px | Standard content padding |
+| `lg` | 20 px | 20 px | LG gap, section spacing |
+| `xl` | 24 px | 24 px | XL gap, card separation |
+| `2xl` | 28 px | 28 px | Major section break |
+| `3xl` | 32 px | 32 px | Section-level whitespace |
 
 ```typescript
-// Correct
 const Section = styled.section`
-  padding: var(--eds-space-24);
-  margin-bottom: var(--eds-space-16);
-`;
-
-// Wrong
-const Section = styled.section`
-  padding: 24px;   /* arbitrary — use the token */
-  margin-bottom: 16px;
+  padding-inline: var(--eds-spacing-horizontal-md);
+  padding-block: var(--eds-spacing-vertical-lg);
+  gap: var(--eds-spacing-vertical-sm);
 `;
 ```
 
----
-
-## Elevation and shadow tokens
-
-Use `--eds-elevation-*` for shadow levels. Do not write raw `box-shadow` values.
+### Border radius tokens
 
 | Token | Use for |
 |---|---|
-| `--eds-elevation-none` | Flat surface, no elevation |
-| `--eds-elevation-raised` | Cards, inline elevated elements |
-| `--eds-elevation-overlay` | Dropdowns, tooltips, floating elements |
-| `--eds-elevation-raised_overlaying` | Modals, dialogs |
+| `--eds-spacing-border-radius-none` | Square corners (0 px) |
+| `--eds-spacing-border-radius-rounded` | Standard card / button radius |
+| `--eds-spacing-border-radius-pill` | Full pill (tags, chips) |
+
+---
+
+## Elevation and shadow
+
+EDS v2 (`@equinor/eds-tokens` ^2) does not expose elevation as CSS custom properties. For elevated surfaces use the EDS `Paper` component which applies the correct shadow for its variant, or use EDS `Elevation` tokens via the JS object import from `@equinor/eds-tokens` when you need raw values in styled-components.
 
 ```typescript
-const ElevatedCard = styled.div`
-  box-shadow: var(--eds-elevation-raised);
-`;
+import { Paper } from '@equinor/eds-core-react';
+
+// Prefer Paper for cards/panels — elevation is handled automatically
+<Paper elevation="raised">
+  <CardContent />
+</Paper>
 ```
+
+If you need raw `box-shadow` values from JS (rare): import from `@equinor/eds-tokens`, not hardcoded values.
 
 ---
 
