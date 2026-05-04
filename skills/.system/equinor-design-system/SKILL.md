@@ -190,13 +190,13 @@ const Section = styled.section`
 `;
 ```
 
-### Border radius tokens
+### Border radius
 
-| Token | Use for |
+| Token / value | Use for |
 |---|---|
-| `--eds-spacing-border-radius-none` | Square corners (0 px) |
-| `--eds-spacing-border-radius-rounded` | Standard card / button radius |
-| `--eds-spacing-border-radius-pill` | Full pill (tags, chips) |
+| `--eds-shape-corners-border-radius` | Standard rounded corners (cards, buttons) |
+| `border-radius: 0` | Sharp / square corners |
+| `border-radius: 9999px` | Full pill (tags, chips) |
 
 ---
 
@@ -219,18 +219,16 @@ If you need raw `box-shadow` values from JS (rare): import from `@equinor/eds-to
 
 ## Icon usage
 
-Use `@equinor/eds-icons` with the EDS `Icon` component. Do not import SVGs directly or use third-party icon sets.
+Use `@equinor/eds-icons` with the EDS `Icon` component. Do not import SVGs directly or use third-party icon sets. Always pass icon data via the `data` prop — do not use the `name` string prop. Icon names from `@equinor/eds-icons` are in `snake_case`.
 
 ```typescript
 import { Icon } from '@equinor/eds-core-react';
 import { add, close, settings } from '@equinor/eds-icons';
 
-// Register icons once (e.g. in App.tsx or a global setup file)
-Icon.add({ add, close, settings });
-
-// Use the registered name string
-<Icon name="add" />
-<Icon name="close" size={16} />
+// Pass icon data object via the `data` prop; provide `title` for accessibility
+<Icon data={add} title="Add" />
+<Icon data={close} title="Close" size={16} />
+<Icon data={settings} title="Settings" />
 ```
 
 Icon sizes follow a fixed scale: `16`, `24` (default), `32`, `40`, `48`. Do not set arbitrary sizes.
@@ -252,7 +250,7 @@ Fusion Portal apps run inside the Fusion Portal shell, which owns the top naviga
 ### Layout constraints
 
 - **Do not** add outer `margin` or `padding` to the root app component — the portal shell provides the content inset.
-- Use `--eds-space-*` tokens for internal section spacing.
+- Use `--eds-spacing-horizontal-<size>` / `--eds-spacing-vertical-<size>` tokens for internal section spacing.
 - **Do not** use fixed `height` on the root container — allow content to stretch to the available viewport height.
 - **Do not** create custom scrollable containers that wrap the full page — the browser scroll is the standard scroll surface.
 - Nested scrollable regions are acceptable for fixed-height grid/table areas, but must be deliberate and clearly bounded.
@@ -261,9 +259,9 @@ Fusion Portal apps run inside the Fusion Portal shell, which owns the top naviga
 
 | State | Pattern |
 |---|---|
-| Loading | EDS `CircularProgress` or Fusion `ProgressIndicator` centered in content area |
+| Loading | EDS `CircularProgress` or `@equinor/fusion-react-progress-indicator` `ProgressIndicator` centered in content area |
 | Empty (no data) | EDS `Typography` + optional EDS `Button` for a primary action; centered or top-aligned |
-| Error | EDS `Typography variant="body_short"` with red semantic color + retry action |
+| Error | EDS `Typography variant="body_short"` colored with `--eds-color-text-danger-strong` + retry action |
 
 ---
 
