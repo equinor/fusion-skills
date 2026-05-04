@@ -49,6 +49,10 @@ Typical triggers:
 - "How do I use the useFeature hook in a Fusion app?"
 - "Implement a feature for ..."
 - "Add a chart to this page"
+- "How do I add a people picker to my Fusion app?"
+- "Show a person's name and avatar"
+- "Let users search and select an assignee"
+- "Add a person column to an AG Grid"
 - "How do I use AG Charts in my Fusion app?"
 - "Create a dashboard with charts"
 - "How do I write a custom Fusion Framework module?"
@@ -166,7 +170,7 @@ Identify which module the user needs, then read only the matching reference:
 | AG Charts (standalone) | `references/using-ag-charts.md` |
 | AG Grid integrated charts | `references/using-ag-grid-charts.md` |
 | EDS + Fusion React components | `references/using-fusion-react-components.md` |
-| Person display / search / selection | `references/using-fusion-react-components.md` → `agents/person-components.md` |
+| People service (search, display, pick) | `references/using-people-service.md` |
 | Settings | `references/using-settings.md` |
 | Bookmarks | `references/using-bookmarks.md` |
 | Analytics | `references/using-analytics.md` |
