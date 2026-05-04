@@ -63,13 +63,22 @@ Refer to `references/using-fusion-react-components.md` for complete copy-pasteab
 
 Key patterns to reinforce:
 
-**Person components resolve people data automatically** — pass `azureId` (preferred) or `upn`. Do not pass name strings or fetch people data manually.
+**Display components resolve people data automatically** — `PersonAvatar`, `PersonCard`, `PersonListItem`, and `PersonCell` accept an `azureId` (preferred) or `upn` prop. Do not pass name strings or fetch people data manually.
 
-**Event pattern** — person picker/selector components fire custom DOM events, not standard React callbacks. Always access the person via `e.detail`:
+**Picker and viewer components work with `PersonInfo` objects** — `PersonPicker`, `PeoplePicker`, and `PeopleViewer` accept a `person` (`PersonInfo`) or `people` (`PersonInfo[]`) prop. Do not pass raw `azureId`/`upn` strings to these components.
+
+**Picker/selector event pattern** — person picker/selector components fire custom DOM events, not standard React callbacks. Always access the person via `e.detail`:
 ```typescript
 onPersonAdded={(e: PersonAddedEvent) => {
   const person: PersonInfo = e.detail;
 }}
+```
+
+**`person-click` DOM event** — display components (`PersonCard`, `PersonListItem`, `PersonCell`) fire a `person-click` custom DOM event when the user clicks the person element. Access the clicked person via `e.detail`:
+```typescript
+element.addEventListener('person-click', (e: PersonClickEvent) => {
+  const person: PersonInfo = e.detail;
+});
 ```
 
 **`PersonCell` in AG Grid** — the cell renderer reads the cell value as an `azureId` string. If the `azureId` is nested, use `valueGetter` to extract it:

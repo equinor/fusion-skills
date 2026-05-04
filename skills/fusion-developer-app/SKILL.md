@@ -197,7 +197,7 @@ Use `assets/review-checklist.md` as a comprehensive post-generation checklist.
 
 ## Helper agents
 
-This skill includes four optional helper agents in `agents/`. Use them for focused review after implementing changes, or consult them during implementation for specific guidance. If the runtime does not support skill-local agents, apply the same review criteria inline.
+This skill includes five optional helper agents in `agents/`. Use them for focused review after implementing changes, or consult them during implementation for specific guidance. If the runtime does not support skill-local agents, apply the same review criteria inline.
 
 This skill also has a companion skill, `fusion-research`, for source-backed Fusion ecosystem research. Use it when implementation work is blocked by uncertainty about framework behavior, EDS component APIs, or skill catalog questions.
 
