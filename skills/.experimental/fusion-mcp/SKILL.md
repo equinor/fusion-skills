@@ -54,7 +54,6 @@ If details are missing, ask concise follow-up questions first.
    - Fusion-oriented MCP capabilities for retrieval and workflow support
    - hosted as a managed service — no local infrastructure required for most developers
    - retrieval tools: `search`, `search_framework`, `search_docs`, `search_eds`, `search_indexes`, `search_backend_code`
-   - backend code tools: `get_backend_symbol`, `list_backend_projects`
    - tool surface may evolve over time
 2. Guide the user to set up the **hosted production server** — this is the only recommended path:
    - no Docker, no API keys, no local clone needed
@@ -80,7 +79,7 @@ If details are missing, ask concise follow-up questions first.
 7. When MCP setup fails, MCP behavior is incorrect, or the user asks to file a bug, produce a bug report draft from `assets/bug-report-template.md`.
    - default target repository: `equinor/fusion-mcp`
    - include concrete repro steps, expected vs actual behavior, and troubleshooting already attempted
-   - include non-sensitive environment details (OS, VS Code version, Docker version, image tag, transport mode)
+   - include non-sensitive environment details (OS, VS Code version, MCP server URL, Entra account type)
    - never include secrets, tokens, or raw credential values
 8. For uncertainty or repo-private constraints, state assumptions explicitly and link to authoritative docs instead of guessing.
 

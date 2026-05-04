@@ -3,6 +3,8 @@
 Use these snippets when users need direct MCP requests to verify or explore the hosted Fusion MCP server (`https://mcp.api.fusion.equinor.com/mcp`).
 
 > **Note:** In VS Code, tool invocations are handled automatically. Raw JSON-RPC is useful for direct debugging or scripted smoke tests.
+>
+> **Auth:** The hosted server requires an OAuth bearer token. Raw requests without a valid token will receive `401 Unauthorized`. Use an authenticated HTTP client (for example VS Code REST Client with an Entra token, or `curl` with `Authorization: Bearer <token>`) — or invoke tools through VS Code where auth is handled automatically.
 
 ---
 
