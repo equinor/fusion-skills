@@ -51,6 +51,10 @@ Typical triggers:
 - "Add a chart to this page"
 - "How do I use AG Charts in my Fusion app?"
 - "Create a dashboard with charts"
+- "How do I write a custom Fusion Framework module?"
+- "Should this be a Fusion module or a React context?"
+- "Wire a custom module into config.ts"
+- "Create a dashboard with charts"
 
 Implicit triggers:
 - The user asks to build something in `src/`
@@ -169,6 +173,7 @@ Identify which module the user needs, then read only the matching reference:
 | Runtime config / environment | `references/using-assets-and-environment.md` |
 | Feature flags | `references/using-feature-flags.md` |
 | General framework modules | `references/using-framework-modules.md` |
+| Custom module authoring | `references/using-custom-modules.md` |
 
 - Add module setup in `config.ts` using the `AppModuleInitiator` callback.
 - Access modules in components via hooks: `useAppModule`, `useHttpClient`, `useCurrentContext`.
