@@ -15,8 +15,8 @@ Design ground truth comes from the `equinor-design-system` system skill. When th
 
 ## MCP tooling
 
-- Use **`mcp_fusion_search_eds`** for Fusion Portal shell component questions (e.g. `SideSheet`, `TopBar`) and EDS layout primitives.
-- Use **`mcp_fusion_search_framework`** for Fusion shell and module questions (e.g. how the portal wraps the app, navigation zones).
+- Use **`mcp_fusion_search_eds`** for EDS component questions: tokens, props, usage examples, and layout primitives (e.g. `Typography`, `Button`, `Icon`, `Progress`).
+- Use **`mcp_fusion_search_framework`** for Fusion Portal shell and Fusion-specific component questions (e.g. `SideSheet`, `TopBar`, how the portal wraps the app, navigation zones).
 
 ## Process
 
@@ -47,12 +47,12 @@ Verify layout follows the three-zone convention from `equinor-design-system`:
 |---|---|---|
 | Main content | `<main>` or app root `<div>` spanning full available area | Custom flexbox wrapper that clips or limits available height |
 | Side panel | `@equinor/fusion-react-side-sheet` | Custom `position: fixed` or `position: absolute` right panel |
-| Spacing | `--eds-space-*` tokens | Arbitrary `margin: 24px`, `padding: 16px` raw pixel values |
+| Spacing | `--eds-spacing-*` / `--eds-container-space-*` tokens | Arbitrary `margin: 24px`, `padding: 16px` raw pixel values |
 
-For spacing violations, identify the specific token to use (refer to `equinor-design-system` spacing table):
-- `var(--eds-space-8)` for tight gaps
-- `var(--eds-space-16)` for standard content padding
-- `var(--eds-space-24)` for section separation
+For spacing violations, identify the specific token to use (refer to `equinor-design-system` spacing table or `mcp_fusion_search_eds`):
+- `var(--eds-spacing-horizontal-sm)` / `var(--eds-spacing-vertical-sm)` — 8px tight gaps
+- `var(--eds-container-space-horizontal)` / `var(--eds-container-space-vertical)` — container padding (responds to `data-space-proportions`)
+- `var(--eds-page-space-horizontal)` / `var(--eds-page-space-vertical)` — page-level padding
 
 ### Step 4: Check structural anti-patterns
 
@@ -60,7 +60,7 @@ Flag:
 
 - **Nested full-page scrollable containers** — wrapping the entire page content in an `overflow-y: auto` div when the browser scroll is the intended scroll surface. Deliberate AG Grid or fixed-height table regions are acceptable.
 - **Custom positioned overlays instead of SideSheet** — `position: fixed` right-side panels, custom drawers, or custom dialog-like components where `@equinor/fusion-react-side-sheet` or an EDS `Dialog` should be used.
-- **Shadow or color applied outside EDS tokens** — raw `box-shadow` values, hex color codes, or named CSS colors instead of `--eds-elevation-*` and `--eds-color-*` / `--eds-ui-background__*` tokens.
+- **Shadow or color applied outside EDS tokens** — raw `box-shadow` values, hex color codes, or named CSS colors instead of `--eds-color-bg-*`, `--eds-color-text-*`, and `--eds-color-border-*` tokens. EDS v2 has no elevation CSS variables; use the EDS `Paper` component or the JS token import pattern for elevation instead.
 - **Layout that replicates EDS layout primitives** — manual flex/grid containers that duplicate EDS `Grid`, `Divider`, or `Stack`-like EDS component behavior.
 
 For component-level token violations (individual button color, typography variant, icon size), delegate to `agents/styling.md` instead of flagging here.
@@ -71,7 +71,7 @@ Verify the correct state patterns are used:
 
 | State | Expected pattern | Anti-pattern |
 |---|---|---|
-| Loading | EDS `CircularProgress` or Fusion `ProgressIndicator` — centered in the content area | Blank white screen, spinner in a corner, or `display: none` |
+| Loading | EDS `Progress.Circular` (`import { Progress } from '@equinor/eds-core-react'`) — centered in the content area | Blank white screen, spinner in a corner, or `display: none` |
 | Empty (no data) | `Typography` + optional primary action `Button` — centered or top-aligned | Omitted state (user sees nothing), custom illustration without text |
 | Error | `Typography` with danger semantic color + retry action | Raw `alert()`, uncaught exception, or blank component |
 
