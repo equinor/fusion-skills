@@ -56,6 +56,8 @@ Collect before publishing:
 - Issue intent/context
 - Issue type (Bug, Feature, User Story, Task)
 - Existing issue number/url when updating
+- Project placement intent (add to project or skip) and target project selection when applicable
+- Project stage/status intent when project placement is selected (for example Backlog, Doing, Done)
 - Repository label set (or confirmation that labels are intentionally skipped). Cache the full label set per repository for the active session and filter locally instead of validating labels one by one. Prefer host session memory when available; otherwise use a `.tmp/` cache file that is never committed.
 - Parent/related issue links and dependency direction (sub-issue vs blocking)
 - Assignee preference (assign to user, specific person, or leave unassigned). Reuse cached assignee-candidate results for the active session and skip candidate searches when the user already gave `@me` or an exact login.
@@ -106,6 +108,9 @@ Before writing, check user preferences and session memory for a preferred draft 
 Before mutation, confirm:
 - labels (only labels that exist in the target repo)
 - assignee intent (`@me`, specific login, or unassigned)
+- project intent (add to project or skip)
+- project target when project intent is "add"
+- stage/status intent when project placement is selected
 
 Shared gate cache policy:
 - On the first label lookup for `owner/repo`, fetch the repository label set once and cache it for the active session. Prefer `/memories/session/<owner>-<repo>-labels.json` when the host exposes session memory; otherwise use `.tmp/issue-authoring-labels-<owner>-<repo>.json`.
@@ -120,13 +125,19 @@ Shared gate cache policy:
 After explicit confirmation, execute MCP mutations in this order:
 1. `mcp_github::issue_write` create/update with the full known payload (`title`, `body`, and include `labels`, `assignees`, `type` only when supported)
 2. Optional single follow-up `mcp_github::issue_write` only when required fields were unknown in step 1 and become available later
-3. `mcp_github::sub_issue_write` only when relationship/order changes are requested
-4. `mcp_github::add_issue_comment` only when blocker/status notes are explicitly requested
+3. Project placement mutation only when requested by user (add issue to selected project and set requested stage/status when supported)
+4. `mcp_github::sub_issue_write` only when relationship/order changes are requested
+5. `mcp_github::add_issue_comment` only when blocker/status notes are explicitly requested
 
 If mutation fails due to missing MCP server/auth/config:
 - explain the failure clearly
 - guide user to setup steps in `references/mcp-server.md`
 - retry after user confirms setup is complete
+
+If project/stage mutation is requested but not supported by available MCP tools:
+- explain the limitation clearly
+- ask whether to continue with issue creation/update without project placement
+- provide a follow-up path to add project/stage after publish
 
 Rate-limit behavior:
 - Detect and report rate-limit failures clearly (`API rate limit exceeded`, `secondary rate limit`, GraphQL quota exhaustion).
@@ -172,6 +183,8 @@ Fallback template locations:
 - Template source used (repository template path or fallback asset path)
 - Proposed title, body summary, and labels
 - Issue type plan
+- Project placement plan (project or skip)
+- Stage/status plan when project placement is selected
 - Dependency plan (order + proposed sub-issue/blocking links)
 - Assignee plan (who will be assigned, or explicit unassigned decision)
 - Explicit status: `Awaiting user content approval` before any publish/update command

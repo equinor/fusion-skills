@@ -17,6 +17,9 @@ Use the smallest set of questions needed to draft a useful issue.
 - What are the success criteria?
 - Which labels from this repository should be applied (or should we skip labels)?
 - Should this be assigned, and if so to whom (`@me` or specific login)?
+- Should this issue be added to a project?
+- If yes, which project should it be added to?
+- If added to a project, which stage/status should it start in (for example Backlog, Doing, Done)?
 
 ## Draft review gate (before publish/update)
 
