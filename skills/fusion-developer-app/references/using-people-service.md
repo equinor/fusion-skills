@@ -17,7 +17,7 @@ For most cases, the `@equinor/fusion-react-person` components handle people serv
 
 ## The preferred path: let components resolve people
 
-All `@equinor/fusion-react-person` components resolve person data from the Fusion People API using only an `azureId`. This is the correct approach for the vast majority of use cases.
+All `@equinor/fusion-react-person` components resolve person data from the Fusion People API using an `azureId` (preferred) or a `upn`. Prefer `azureId` — it is stable, unambiguous, and the approach recommended for the vast majority of use cases.
 
 ```typescript
 import { PersonAvatar, PersonCard, PersonListItem } from '@equinor/fusion-react-person';
@@ -55,7 +55,7 @@ Do not cache or persist resolved `PersonInfo` objects — they can become stale 
 When users need to select one or more people, use the picker components. They query the Fusion People API automatically on input.
 
 ```typescript
-import { PersonPicker, PeoplePicker, type PersonInfo } from '@equinor/fusion-react-person';
+import { PersonPicker, type PersonInfo } from '@equinor/fusion-react-person';
 import { useState } from 'react';
 
 // Single-person picker
@@ -102,7 +102,11 @@ const AssigneeField = ({
 By default, person search excludes system accounts. If your app needs to include them (e.g. service principal selection), pass `systemAccounts={true}` to the picker:
 
 ```typescript
-<PersonPicker systemAccounts={true} … />
+<PersonPicker
+  systemAccounts={true}
+  onPersonAdded={(e) => onSelect(e.detail.azureId)}
+  onPersonRemoved={() => onSelect('')}
+/>
 ```
 
 ## Non-goals
