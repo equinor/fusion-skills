@@ -145,6 +145,7 @@ Follow `references/styled-components.md`, `references/styling-with-eds.md`, and 
 - Extend EDS components with `styled()` when customization is needed.
 - Use Fusion React components (`@equinor/fusion-react-*`) for domain-specific needs not covered by EDS — person display/selection, Fusion side sheets, and progress indicators.
 - Inline `style` props are acceptable for one-off tweaks only.
+- For page/view structure review (shell composition, layout zones, empty/loading states), invoke `agents/design.md`. For component-level EDS token and styling review, invoke `agents/styling.md`.
 
 ### Step 5 — Wire up data fetching (when applicable)
 
@@ -211,7 +212,8 @@ This skill includes five optional helper agents in `agents/`. Use them for focus
 This skill also has a companion skill, `fusion-research`, for source-backed Fusion ecosystem research. Use it when implementation work is blocked by uncertainty about framework behavior, EDS component APIs, or skill catalog questions.
 
 - **`agents/framework.md`** — reviews Fusion Framework integration: module configuration, HTTP clients, bootstrap lifecycle, runtime config, settings, bookmarks, analytics, and hook usage. **Prefers `mcp_fusion_search_framework`** for API lookups; falls back to `mcp_fusion_search_docs` for general platform guidance. Consult when wiring up `config.ts`, `app.config.ts`, or any component that accesses framework modules.
-- **`agents/styling.md`** — reviews EDS component selection, styled-components patterns, design token usage, and accessibility. **Prefers `mcp_fusion_search_eds`** for component docs, props, and examples. Consult when building or modifying visual components.
+- **`agents/styling.md`** — reviews EDS component selection, styled-components patterns, design token usage, and accessibility at the **component level**. **Prefers `mcp_fusion_search_eds`** for component docs, props, and examples. Consult when building or modifying individual visual components.
+- **`agents/design.md`** — reviews **page and view structure**: Fusion Portal shell composition, layout zone nesting, side panel usage, empty/loading state patterns, and structural anti-patterns. References `equinor-design-system` for token and layout ground truth. Delegates component-level checks to `agents/styling.md`. Consult when scaffolding new pages, route-level components, or any layout wrapper.
 - **`agents/data-display.md`** — reviews data display implementation: choosing between AG Grid (tabular) and AG Charts (visual), module setup, column definitions, chart options, integrated charting, and combined grid+chart pages. **Prefers `mcp_fusion_search_framework`** for AG Grid and AG Charts package lookups and cookbook examples. Consult when building grids, charts, dashboards, or any data presentation view. Use `assets/charts-decision-matrix.md` for chart library selection guidance.
 - **`agents/person-components.md`** — guides component selection and usage for `@equinor/fusion-react-person`: `PersonAvatar`, `PersonCard`, `PersonListItem`, `PersonPicker`, `PeoplePicker`, `PeopleViewer`, and `PersonCell` (AG Grid). Covers the custom DOM event pattern, `PersonCell` valueGetter setup, and common pitfalls. Consult when adding any person display, search, or selection UI.
 - **`agents/code-quality.md`** — delegates convention checks (naming, TSDoc, TypeScript strictness, intent comments) to `fusion-code-conventions`, then aggregates findings in Fusion app context. Run on every new or modified file before finalizing.
