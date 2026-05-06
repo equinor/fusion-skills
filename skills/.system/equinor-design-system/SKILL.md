@@ -3,7 +3,7 @@ name: equinor-design-system
 description: 'Authoritative, machine-readable EDS design rules for color tokens, typography, spacing, elevation, icons, and page layout zones. USE FOR: looking up correct EDS CSS custom properties, typography variant names, spacing tokens, shadow/elevation tokens, icon usage rules, and Fusion Portal page layout conventions. This is a lookup reference consumed by other skills and agents — it has no standalone workflow. DO NOT USE FOR: React component props or usage examples (use fusion-research + mcp_fusion_search_eds), general Copilot coding tasks, or Fusion Framework API questions.'
 license: MIT
 metadata:
-  version: "0.0.0"
+  version: "0.1.0"
   status: experimental
   owner: "@equinor/fusion-core"
   role: subordinate

@@ -2,6 +2,71 @@
 
 All notable changes to this repository are documented in this file.
 
+## v1.1.0
+
+### Minor
+
+__🎯 [feat(fusion-developer-app): add custom module authoring reference (#753) #753](https://github.com/equinor/fusion-skills/pull/753)<br/>
+🗂️ [88878fe](https://github.com/equinor/fusion-skills/commit/88878fe1c7d4fbfdd6b49139f3718e68d8e5aad7)<br/>
+📦 fusion-developer-app@0.2.0__
+
+Add custom Fusion Framework module authoring reference
+
+- Add `references/using-custom-modules.md` covering the IModule contract, wiring into `config.ts`, accessing via `useAppModule`, module lifecycle, file structure, and common pitfalls (naming conflicts, outside-React access, un-awaited config)
+- Update `SKILL.md` Step 6 module table with a `using-custom-modules.md` entry
+- Add custom-module-related activation triggers
+
+resolves equinor/fusion-core-tasks#753
+
+---
+
+__🎯 [feat: add equinor-design-system subordinate system skill (#859) #859](https://github.com/equinor/fusion-skills/pull/859)<br/>
+🗂️ [cbd9e9d](https://github.com/equinor/fusion-skills/commit/cbd9e9dd561a8f4eff9ca78ad50a9943d735a214)<br/>
+📦 equinor-design-system@0.1.0__
+
+Add equinor-design-system system skill
+
+New `.system` subordinate skill encoding authoritative EDS design rules for agents:
+- Color tokens (interactive, semantic, text, surface) with brand constraints
+- Typography variant hierarchy and usage rules
+- Spacing token reference (`--eds-spacing-horizontal-<size>` / `--eds-spacing-vertical-<size>`)
+- Elevation: no CSS vars in EDS v2; guidance to use `Paper` component or JS token import
+- Icon usage rules via `@equinor/eds-icons` + `<Icon data={...} />` (accessibility: `title` required)
+- Fusion Portal three-zone page layout conventions, empty/loading state patterns
+
+Consumed by other skills and agents as a ground-truth lookup reference, not as a standalone workflow.
+
+resolves equinor/fusion-core-tasks#859
+
+---
+
+__🎯 [feat(fusion-developer-app): add people service reference #160](https://github.com/equinor/fusion-skills/pull/160)<br/>
+🗂️ [0428056](https://github.com/equinor/fusion-skills/commit/042805616fba13256265b1622c0cdd344f59197a)<br/>
+📦 fusion-developer-app@0.2.0__
+
+Add Fusion Framework people service reference
+
+- Add `references/using-people-service.md` covering the preferred `azureId`-only integration pattern, picker components, `PersonCell` for AG Grid, and guidance on what NOT to do (manual API calls, caching PersonInfo)
+- Update `SKILL.md` Step 6 module table with a `using-people-service.md` entry
+- Add people-related activation triggers to the skill description
+
+resolves equinor/fusion-core-tasks#748
+
+---
+
+__🎯 [feat(fusion-developer-app): add person components agent and reference (#858) #858](https://github.com/equinor/fusion-skills/pull/858)<br/>
+🗂️ [50bfdf6](https://github.com/equinor/fusion-skills/commit/50bfdf6451059951e94e8ec4b69fdc33e77d4c7a)<br/>
+📦 fusion-developer-app@0.2.0__
+
+Add person component training wheels to fusion-developer-app
+
+- Expand `references/using-fusion-react-components.md` with `PersonCard`, `PersonListItem`, and `PersonCell` (AG Grid) usage examples
+- Add a decision guide table covering all person components and their intended use cases
+- Add new `agents/person-components.md` helper agent covering component selection, the custom DOM event pattern, `PersonCell` valueGetter setup, and common pitfalls
+- Update `SKILL.md` helper agents section and Step 6 module table to reference the new agent
+
+resolves equinor/fusion-core-tasks#858
+
 ## v1.0.1
 
 ### Patch

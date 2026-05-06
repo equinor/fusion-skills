@@ -228,6 +228,12 @@ In this repository, use `fusion-<skill-name>` as the default skill naming conven
 - `skills/.system/` ⚙️ internal/system skills and shared building blocks
 
 <!-- skills-table:start -->
+**⚙️ [`equinor-design-system@0.1.0`](skills/.system/equinor-design-system/SKILL.md)**
+
+Authoritative, machine-readable EDS design rules for color tokens, typography, spacing, elevation, icons, and page layout zones. USE FOR: looking up correct EDS CSS custom properties, typography variant names, spacing tokens, shadow/elevation tokens, icon usage rules, and Fusion Portal page layout conventions. This is a lookup reference consumed by other skills and agents — it has no standalone workflow. DO NOT USE FOR: React component props or usage examples (use fusion-research + mcp_fusion_search_eds), general Copilot coding tasks, or Fusion Framework API questions.
+
+---
+
 **👍 [`fusion@0.1.0`](skills/fusion/SKILL.md)**
 
 Main Copilot skill gate for the Fusion ecosystem — cross-domain router. USE FOR: routing between different Fusion domains (skills, issues, PRs, reviews) when the right domain skill is unclear; getting install guidance for missing skills. DO NOT USE FOR: skill lifecycle operations (use fusion-skills directly), tasks where a specific Fusion skill is already active.
@@ -258,7 +264,7 @@ Review dependency PRs with structured research, existing-PR-discussion capture, 
 
 ---
 
-**👍 [`fusion-developer-app@0.1.0`](skills/fusion-developer-app/SKILL.md)**
+**👍 [`fusion-developer-app@0.2.0`](skills/fusion-developer-app/SKILL.md)**
 
 Guides feature development in Fusion Framework React apps, including app-scoped framework research needed to choose the right hooks, modules, packages, and integration patterns before implementation. USE FOR: building new features, adding components or pages, creating hooks and services, wiring up API endpoints, extending Fusion module configuration, and answering app implementation questions about which Fusion Framework surface to use. DO NOT USE FOR: issue authoring, skill authoring, CI/CD configuration, backend service changes, or general Fusion documentation that is not tied to app implementation.
 
