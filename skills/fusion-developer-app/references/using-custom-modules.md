@@ -1,25 +1,25 @@
 # Authoring Custom Fusion Framework Modules
 
-How to package reusable cross-cutting behavior as a Fusion Framework module in a React app — the module lifecycle, configuration pattern, and when a custom module is the right tool.
+Reusable cross-cutting modules: lifecycle, configuration, usage.
 
 **Fusion docs**: [Fusion Framework modules](https://docs.equinor.com/fusion-framework/)
-**Cookbook**: See the custom module cookbook example in the Fusion Framework source (`packages/modules/`)
+**Cookbook**: Custom module cookbook in Fusion Framework source (`packages/modules/`)
 
 ## When to use a custom module
 
-A custom Fusion Framework module is appropriate when:
-- You need reusable, cross-cutting behavior that multiple components or routes need access to
-- The behavior depends on the Fusion bootstrap lifecycle (needs access to the framework instance at startup)
-- You want to decouple infrastructure concerns (caching, subscriptions, service clients) from component code
+Use when:
+- cross-cutting behavior needed by multiple components/routes
+- depends on Fusion bootstrap lifecycle (needs framework instance at startup)
+- decouple infrastructure (caching, subscriptions, service clients) from components
 
-A custom module is **not** appropriate for:
-- Single-component-only state — use React state or context instead
-- Data fetching that only one page needs — use a React Query hook in that page
-- Generic utility functions — use a plain TypeScript module
+Not appropriate for:
+- single-component state — use React state/context
+- single-page data fetching — use React Query hook
+- generic utilities — use plain TypeScript module
 
 ## Module contract
 
-Every custom module must implement the `IModule` interface from `@equinor/fusion-framework-module`:
+Implement `IModule` from `@equinor/fusion-framework-module`:
 
 ```typescript
 import type { IModule } from '@equinor/fusion-framework-module';
@@ -48,7 +48,7 @@ export const module: IModule<IMyModule, IMyModuleConfig> = {
 
 ## Wiring a custom module into an app
 
-Register the module in `src/config.ts` using the `AppModuleInitiator` callback:
+Register in `src/config.ts`:
 
 ```typescript
 import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
@@ -69,7 +69,7 @@ export const configure: AppModuleInitiator = (configurator) => {
 
 ## Accessing a custom module in components
 
-Use `useAppModule` from `@equinor/fusion-framework-react-app` with the module name key:
+Use `useAppModule` with module name key:
 
 ```typescript
 import { useAppModule } from '@equinor/fusion-framework-react-app';
@@ -85,21 +85,21 @@ const MyFeatureComponent = () => {
 };
 ```
 
-> Only call `useAppModule` inside React components or custom hooks — it is a React hook and must follow React rules.
+> `useAppModule` is a hook — only inside components/hooks.
 
 ## Module lifecycle
 
-Fusion Framework initializes modules before the React app mounts. The lifecycle is:
+Modules initialized before React mounts:
 
-1. `initialize` — called once at bootstrap with the merged config and a reference to the parent framework instance
-2. Module is stored in the framework instance under its `name` key
-3. Components access the module via `useAppModule(name)` after mount
+1. `initialize` — called once at bootstrap with merged config and parent framework instance
+2. Module stored in framework instance under `name` key
+3. Components access via `useAppModule(name)` after mount
 
-There is no `destroy` lifecycle on most modules. If your module opens subscriptions or connections, clean them up in your components (e.g. via `useEffect` cleanup).
+No `destroy` lifecycle on most modules. Clean up subscriptions in components via `useEffect`.
 
 ## File structure
 
-A conventional custom module lives alongside the app source:
+Module lives alongside app source:
 
 ```
 src/
@@ -112,13 +112,13 @@ src/
 
 ## Common pitfalls
 
-- **Naming conflicts**: the module `name` must not collide with built-in Fusion module names (`http`, `auth`, `context`, `navigation`, `featureFlag`, `settings`, `bookmarks`, `analytics`). Use a unique name specific to your app or domain.
-- **Accessing modules outside React**: `useAppModule` is a hook and cannot be called outside components. For route loaders or non-React contexts, access the framework instance directly via `framework.modules.<name>`.
-- **Config not awaited**: the `initialize` callback receives a `Promise<IMyModuleConfig>` — always `await config` before reading config values.
-- **Over-engineering**: if only one component needs the behavior, a hook or React context is simpler. Use a module when multiple disconnected parts of the app share the same infrastructure.
+- **Naming conflicts**: `name` must not collide with built-in Fusion modules (`http`, `auth`, `context`, `navigation`, `featureFlag`, `settings`, `bookmarks`, `analytics`).
+- **Outside React**: `useAppModule` is a hook — can't call outside components. Loaders/non-React: use `framework.modules.<name>`.
+- **Config not awaited**: `initialize` receives `Promise<IMyModuleConfig>` — always `await config`.
+- **Over-engineering**: single-component need? Use hook/context instead.
 
 ## When to use `fusion-research` first
 
-If uncertain about specific module API signatures, available module names, or how built-in module configuration works, use `fusion-research` with `mcp_fusion_search_framework` to get source-backed evidence before implementing.
+Uncertain about API signatures or built-in module config? Use `fusion-research` with `mcp_fusion_search_framework` first.
 
 Example query: `mcp_fusion_search_framework` → `"IModule initialize configure AppModuleInitiator custom module"`

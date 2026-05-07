@@ -1,7 +1,6 @@
 # VS Code MCP config quick reference (Fusion MCP)
 
-This guide is a distilled setup reference based on the upstream Fusion MCP README.
-Use it when the user asks for a concrete VS Code MCP config example.
+Distilled setup reference based on the upstream Fusion MCP README.
 
 ## Prerequisites
 
@@ -33,10 +32,10 @@ Open the VS Code Command Palette and run **MCP: Open User Configuration**, then 
 
 ## Authentication flow
 
-1. On first tool invocation VS Code detects that the server requires authentication
-2. VS Code prompts you to sign in with your Equinor Microsoft Entra account
-3. After sign-in, tokens are managed automatically — silent renewal when possible, interactive prompt when needed
-4. Access is controlled by your existing Fusion role assignments
+1. First tool invocation: VS Code detects authentication required
+2. VS Code prompts sign-in with Equinor Microsoft Entra account
+3. After sign-in, tokens managed automatically — silent renewal when possible, interactive prompt when needed
+4. Access controlled by your existing Fusion role assignments
 
 ## Verification checklist
 

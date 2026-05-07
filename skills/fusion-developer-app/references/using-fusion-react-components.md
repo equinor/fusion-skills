@@ -1,13 +1,13 @@
 # Fusion React Components
 
-Domain-specific React components from the `@equinor/fusion-react-components` monorepo that complement EDS. These components integrate with Fusion platform APIs and provide functionality not covered by `@equinor/eds-core-react`.
+Domain-specific React components complementing EDS. Integrate with Fusion platform APIs — functionality not in `@equinor/eds-core-react`.
 
 **Repository**: [equinor/fusion-react-components](https://github.com/equinor/fusion-react-components)
 **Storybook**: [equinor.github.io/fusion-react-components](https://equinor.github.io/fusion-react-components/)
 
 ## When to use
 
-Use `@equinor/fusion-react-*` packages when the feature requires **Fusion-specific** UI that EDS does not provide — for example, person/people selection backed by the Fusion People API. Always check `@equinor/eds-core-react` first; reach for fusion-react only when EDS has no equivalent.
+Use `@equinor/fusion-react-*` when EDS has no equivalent. Check EDS first.
 
 ## Packages
 
@@ -19,7 +19,7 @@ Use `@equinor/fusion-react-*` packages when the feature requires **Fusion-specif
 
 ## Person components (`@equinor/fusion-react-person`)
 
-The most commonly used package. All components resolve person data via the **Fusion People API** — pass an `azureId` or `upn` and the component handles fetching.
+Most used package. Pass `azureId`/`upn`; components handle fetch.
 
 ### Component catalog
 
@@ -158,7 +158,7 @@ Person components use **custom DOM events**, not standard React callback signatu
 
 #### Display a person card
 
-`PersonCard` renders full person details — name, department, positions, active tasks, and manager — resolved automatically from the Fusion People API by `azureId`.
+`PersonCard` renders full person details (name, department, positions, tasks, manager) resolved from Fusion People API by `azureId`.
 
 ```typescript
 import { PersonCard } from '@equinor/fusion-react-person';
@@ -168,11 +168,11 @@ const OwnerCard = ({ azureId }: { azureId: string }) => (
 );
 ```
 
-Use `PersonCard` wherever you need a full-detail person view (e.g. a details panel or a hover popover). Prefer `PersonAvatar` for compact inline display.
+Use `PersonCard` for full-detail views. Prefer `PersonAvatar` for compact inline display.
 
 #### Display a person list item
 
-`PersonListItem` renders a compact single-row person entry suited for lists. Action buttons are optional children.
+`PersonListItem` renders a compact single-row entry. Action buttons optional.
 
 ```typescript
 import { PersonListItem } from '@equinor/fusion-react-person';
@@ -199,9 +199,9 @@ const ReviewerRow = ({
 );
 ```
 
-#### Person column in an AG Grid (PersonCell)
+#### Person column in AG Grid (PersonCell)
 
-`PersonCell` is an AG Grid cell renderer from `@equinor/fusion-react-person`. It renders an inline avatar + name row inside a grid column. The cell value must be an `azureId` string.
+`PersonCell` is an AG Grid cell renderer: avatar + name inline. Cell value must be `azureId` string.
 
 ```typescript
 import { PersonCell } from '@equinor/fusion-react-person';
@@ -224,7 +224,7 @@ const columnDefs: ColDef<WorkItem>[] = [
 ];
 ```
 
-If the `azureId` is nested inside the row object, use `valueGetter` to extract it:
+If `azureId` is nested in the row object, use `valueGetter` to extract it:
 
 ```typescript
 {

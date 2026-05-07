@@ -1,23 +1,23 @@
 # Using the Fusion People Service
 
-How to integrate the Fusion People API in a Fusion Framework React app — discovering people, resolving person details, and choosing the right integration approach.
+Fusion People API: people discovery, person details, integration.
 
-**Source**: `@equinor/fusion-react-person` (UI components) + Fusion Framework people service (API access)
+**Source**: `@equinor/fusion-react-person` + Fusion Framework people service
 **Storybook**: [equinor.github.io/fusion-react-components — person](https://equinor.github.io/fusion-react-components/?path=/docs/person-docs--docs)
 
 ## When to use the people service
 
-Reach for the people service when your app needs to:
-- Let users search and pick people (assignees, owners, reviewers)
-- Display a person's name, avatar, department, or role
-- Show a manager or reporting relationship
-- Render a person column in an AG Grid table
+Use when:
+- search/pick people (assignees, owners, reviewers)
+- display name, avatar, department, role
+- show manager/reporting relationship
+- person column in AG Grid
 
-For most cases, the `@equinor/fusion-react-person` components handle people service integration automatically — you provide an `azureId` and the component resolves the rest.
+Most cases: `@equinor/fusion-react-person` components handle it — provide `azureId`, they resolve the rest.
 
 ## The preferred path: let components resolve people
 
-All `@equinor/fusion-react-person` components resolve person data from the Fusion People API using an `azureId` (preferred) or a `upn`. Prefer `azureId` — it is stable, unambiguous, and the approach recommended for the vast majority of use cases.
+Components resolve via `azureId` (preferred) or `upn`. `azureId` is stable, unambiguous.
 
 ```typescript
 import { PersonAvatar, PersonCard, PersonListItem } from '@equinor/fusion-react-person';
@@ -28,13 +28,13 @@ import { PersonAvatar, PersonCard, PersonListItem } from '@equinor/fusion-react-
 <PersonListItem azureId={item.ownerAzureId} />
 ```
 
-Do **not** fetch person data manually and pass it as props unless you have a specific reason — the components handle loading, caching, and error states internally.
+Don't fetch person data manually and pass as props — components handle loading, caching, errors.
 
 See `references/using-fusion-react-components.md` for full component usage examples (pickers, card, list item, ag-grid cell).
 
 ## Storing person references
 
-Store only the `azureId` in your app's data model. Resolve display information at render time via components.
+Store only `azureId` in data model. Resolve display at render via components.
 
 ```typescript
 // Data layer — store azureId only
@@ -48,11 +48,11 @@ interface WorkItem {
 <PersonCard azureId={item.ownerAzureId} />
 ```
 
-Do not cache or persist resolved `PersonInfo` objects — they can become stale and the components will re-resolve from the API.
+Don't cache or persist resolved `PersonInfo` objects — components re-resolve from the API.
 
 ## People search via PersonPicker / PeoplePicker
 
-When users need to select one or more people, use the picker components. They query the Fusion People API automatically on input.
+For user selection, use picker components — query API automatically on input.
 
 ```typescript
 import { PersonPicker, type PersonInfo } from '@equinor/fusion-react-person';
@@ -99,7 +99,7 @@ const AssigneeField = ({
 
 ## System accounts
 
-By default, person search excludes system accounts. If your app needs to include them (e.g. service principal selection), pass `systemAccounts={true}` to the picker:
+Person search excludes system accounts by default. To include (e.g. service principals):
 
 ```typescript
 <PersonPicker

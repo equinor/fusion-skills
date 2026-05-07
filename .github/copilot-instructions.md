@@ -25,6 +25,18 @@ Repository-wide guidance for Copilot in this repository.
 - SKILL.md files above 300 lines trigger a CI warning — consider moving content to `references/`.
 - See `contribute/02-skill-structure-and-content.md` for the cross-platform size rationale and progressive disclosure guidance.
 
+## SKILL.md prose style
+
+Write skill prose for minimal token cost. Every token in SKILL.md is loaded into context on activation.
+
+- Drop articles (a/an/the), filler (just/really/basically/simply), and hedging
+- Use fragments: "Run tests before commit" not "You should always run tests before committing"
+- Short synonyms: "fix" not "implement a solution for", "use" not "utilize"
+- State actions directly — drop "you should", "remember to", "make sure to"
+- Merge redundant bullets; keep one example when multiple show the same pattern
+- Never modify code blocks, inline code, paths, URLs, or technical terms
+- To compress any `skills/**/*.md` file, use the `caveman-compress` skill (`.agents/skills/caveman-compress`): `/caveman:compress skills/<name>/SKILL.md`
+
 ## Maintainer docs
 
 - For maintainer workflow and policy context, use `contribute/README.md` and the topic files in `contribute/`.

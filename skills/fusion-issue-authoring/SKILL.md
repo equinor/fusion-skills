@@ -30,39 +30,32 @@ Agent modes are activated internally based on issue type classification. Users n
 
 ## When to use
 
-Use this skill when you need to turn ideas, bugs, feature requests, or user needs into clear, actionable GitHub issues.
-Use it as the top-level router for both creating and updating issues.
+Use when turning ideas, bugs, feature requests, or user needs into clear, actionable GitHub issues, and as top-level router for creating and updating issues.
 
 Typical triggers:
 - "create an issue"
 - "draft a ticket"
 - "turn this into a GitHub issue"
 - "help me structure this work item"
-- "update this issue"
-- "maintain/clean up this issue"
-- "add this as a sub-issue"
-- "set parent issue"
-- "link this issue as a child"
-- "establish parent relationship"
+- "update / maintain / clean up this issue"
+- "add this as a sub-issue / set parent issue / link as child"
 
 ## When not to use
 
-Do not use this skill for:
 - Implementing code changes
-- Pull request authoring or review
-- General research tasks not resulting in an issue draft
+- PR authoring or review
+- General research not resulting in an issue draft
 - Mutating GitHub state without explicit user confirmation
 
 ## Required inputs
 
 Collect before publishing:
-- Target repository for issue creation/update
-- Issue intent/context
-- Issue type (Bug, Feature, User Story, Task)
-- Existing issue number/url when updating
-- Repository label set (or confirmation that labels are intentionally skipped). Cache the full label set per repository for the active session and filter locally instead of validating labels one by one. Prefer host session memory when available; otherwise use a `.tmp/` cache file that is never committed.
+- Target repository
+- Issue intent/context and type (Bug, Feature, User Story, Task)
+- Existing issue number/URL when updating
+- Repository label set (or confirmation labels are intentionally skipped). Cache full label set per repo for session; filter locally. Prefer host session memory; otherwise `.tmp/` cache file (never committed).
 - Parent/related issue links and dependency direction (sub-issue vs blocking)
-- Assignee preference (assign to user, specific person, or leave unassigned). Reuse cached assignee-candidate results for the active session and skip candidate searches when the user already gave `@me` or an exact login.
+- Assignee preference (`@me`, specific person, or unassigned). Reuse cached assignee-candidate results; skip searches when user gave `@me` or exact login.
 
 If required details are missing, ask concise clarifying questions from `references/questions.md`.
 If issue destination is unclear, ask explicitly where the issue should be created/updated before drafting mutation commands.
