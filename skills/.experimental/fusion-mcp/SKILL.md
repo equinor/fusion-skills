@@ -55,13 +55,14 @@ If details are missing, ask concise follow-up questions first.
    - hosted as a managed service — no local infrastructure required for most developers
    - retrieval tools: `search`, `search_framework`, `search_docs`, `search_eds`, `search_indexes`, `search_backend_code`
    - tool surface may evolve over time
-2. Guide the user to set up the **hosted production server** — this is the only recommended path:
+2. Guide the user to set up the **hosted production server** — this is the default and recommended path for most users:
    - no Docker, no API keys, no local clone needed
    - VS Code authenticates via Microsoft Entra (Equinor account)
    - use the one-click install link for prod (see `references/vscode-mcp-config.md`)
    - or manual config with `"type": "http"` and the server URL (see `references/vscode-mcp-config.md`)
-   - do not suggest local Docker, GHCR, or self-hosted alternatives unless the user has an explicit operational need
+   - only suggest local Docker, GHCR, or self-hosted alternatives if the user states an explicit operational need (e.g., air-gapped environment, custom build)
 3. Describe the authentication flow:
+   - an active Equinor Entra account is required; if the user does not have one, inform them that access is limited to Equinor employees/contractors and they should contact their Fusion team lead for provisioning
    - on first tool invocation VS Code prompts the user to sign in with their Equinor Entra account
    - tokens are managed automatically; silent renewal when possible, interactive prompt when needed
    - access is controlled by existing Fusion role assignments
@@ -71,11 +72,19 @@ If details are missing, ask concise follow-up questions first.
    - run one non-destructive `tools/call` against an available tool
    - pass criteria: call response is non-empty (`content` or `structuredContent` contains data)
    - note: do not hard-code a fixed tool list; tool inventory can change between versions
-5. Troubleshoot in documented order:
-   - Entra sign-in prompt not appearing -> verify `oauth.clientId` in config and that VS Code is signed in with an Equinor account
-   - `401 Unauthorized` -> re-authenticate via VS Code account settings; ensure Equinor Entra account is active
-   - `tools/list` returns empty or tool call fails -> verify the MCP server entry is selected/enabled in VS Code and retry after reloading the MCP server
-   - partial tool behavior -> check VS Code Output > Copilot for error details and restart the MCP server
+5. Troubleshoot in documented order (check each condition, apply the action, then move to the next only if the issue persists):
+   1. **Sign-in prompt not appearing**
+      - Check: VS Code does not show an Entra login prompt on first tool call.
+      - Fix: Verify `oauth.clientId` is present in the MCP config and that VS Code is signed in with an Equinor account.
+   2. **`401 Unauthorized` response**
+      - Check: Tool calls return a 401 status.
+      - Fix: Re-authenticate via VS Code account settings; ensure the Equinor Entra account is active and not expired.
+   3. **`tools/list` returns empty or tool call fails**
+      - Check: No tools appear after initialization or calls error out.
+      - Fix: Verify the MCP server entry is selected/enabled in VS Code MCP settings, then reload the MCP server.
+   4. **Partial or unexpected tool behavior**
+      - Check: Some calls succeed but others return errors or incomplete data.
+      - Fix: Open VS Code Output > Copilot for error details, then restart the MCP server.
 7. When MCP setup fails, MCP behavior is incorrect, or the user asks to file a bug, produce a bug report draft from `assets/bug-report-template.md`.
    - default target repository: `equinor/fusion-mcp`
    - include concrete repro steps, expected vs actual behavior, and troubleshooting already attempted
@@ -88,7 +97,7 @@ If details are missing, ask concise follow-up questions first.
 Return:
 - short explanation of Fusion MCP and when to use it
 - hosted prod setup steps tailored to the user environment
-- minimal validation checklist with concrete pass criteria
+- validation checklist: run `initialize` (expect success response), run `tools/list` (expect at least one tool), run one `tools/call` (expect non-empty `content` or `structuredContent`)
 - troubleshooting steps mapped to observed error symptoms
 - bug report draft (when setup fails/misbehaves or user requests) using `assets/bug-report-template.md` with default target `equinor/fusion-mcp`
 - script snippets when user asks for copy/paste automation aids
