@@ -14,9 +14,7 @@ Apply this guidance when handling issue and pull request workflows, including is
 - Create temporary PR body drafts in `.tmp/` using issue/context-specific names (for example `.tmp/pr-body-issue-402-issue-automation-reliability.md`) and edit with the user before submission.
 - Do not use a generic shared filename like `.tmp/pr-body.md` for new PR drafts.
 - Ask which base branch to target.
-- Propose a likely default base branch when asking:
-  - usually the repository default branch (for example `main`),
-  - but if the current branch is clearly cut from another branch (for example `next` or a feature branch), suggest that branch instead.
+- Propose a likely default base branch when asking: usually the repository default branch (for example `main`). If the current branch was created directly from another branch (for example `next` or a feature branch), suggest that branch instead.
 - Assume head ref is the current branch unless the user explicitly requests another head branch.
 - Follow up by asking whether related issues should be linked.
 - Ask whether the PR should be assigned to the user.
@@ -32,12 +30,20 @@ Apply this guidance when handling issue and pull request workflows, including is
 
 ## Required checks before PR update/create
 
+### Code quality
+
 - Run lint/format checks before commit operations (`bun run biome:check`; optionally `bun run biome:fix` first).
 - Check current branch changes and summarize staged/unstaged scope.
 - Check code and docs against repository guides (`CONTRIBUTING.md`, `contribute/`, and relevant `.github/instructions/*.instructions.md`).
 - Confirm validation commands run.
+
+### Changesets
+
 - Keep changesets single-scope: each `.changeset/*.md` file must describe one skill/package change only.
 - If multiple skills/packages changed, split into multiple `.changeset/*.md` files (one entry per file).
+
+### Issue references
+
 - Use lower-case issue-closing keywords consistently in changeset and PR text when closure is intended.
 - Prefer `resolves owner/repo#123`; use `fixes owner/repo#123` or `closes owner/repo#123` only when those verbs are more accurate.
 

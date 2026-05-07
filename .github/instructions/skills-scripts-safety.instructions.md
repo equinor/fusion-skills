@@ -8,14 +8,16 @@ Apply this guidance when authoring, reviewing, or changing scripts under `skills
 
 Purpose: guardrail script authoring for downstream users. Treat scripts as blueprint artifacts: consuming agents may adapt how they execute or apply them, so safety must be encoded in intent, constraints, and documentation.
 
-## Guard-dog mode (mandatory)
+## Mandatory rules
+
+### Guard-dog mode
 
 - Assume script changes are risky until proven safe for downstream execution.
-- Block unsafe patterns; do not “wave through” questionable behavior.
+- Block unsafe patterns; do not approve patterns that lack explicit validation or documentation of safety.
 - If safety is unclear, ask for clarification or require safer alternatives.
 - Keep recommendations minimal, explicit, and security-first.
 
-## Authoring-time threat model (mandatory)
+### Authoring-time threat model
 
 - Evaluate scripts as distributed artifacts, not local one-off helpers.
 - Assume scripts may run in unknown environments with real credentials present.
@@ -23,7 +25,7 @@ Purpose: guardrail script authoring for downstream users. Treat scripts as bluep
 - Minimize blast radius if a user runs the script with elevated permissions.
 - Require explicit documentation of risks, side effects, and prerequisites.
 
-## Safety baseline (mandatory)
+### Safety baseline
 
 - Assume hostile or malformed input by default.
 - Validate and sanitize all external inputs before use.
@@ -33,7 +35,7 @@ Purpose: guardrail script authoring for downstream users. Treat scripts as bluep
 - Avoid hidden network access and undocumented side effects.
 - Encode non-negotiable safety constraints in comments/docs so adapted execution still preserves intent.
 
-## Defensive checks (mandatory)
+### Defensive checks
 
 - Prefer safe defaults and fail-closed behavior.
 - Fail fast with actionable, non-sensitive error messages.
@@ -42,7 +44,7 @@ Purpose: guardrail script authoring for downstream users. Treat scripts as bluep
 - Keep behavior deterministic and auditable.
 - Prefer idempotent and bounded operations so adapted execution reduces risk.
 
-## Distribution and install safety (mandatory)
+### Distribution and install safety
 
 - Do not rely on implicit local state that consumers may not have.
 - Avoid commands that modify global machine state unless explicitly documented and justified.

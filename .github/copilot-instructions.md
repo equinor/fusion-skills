@@ -4,15 +4,17 @@ Repository-wide guidance for Copilot in this repository.
 
 ## Scope
 
-- Keep this file concise and global.
+- Keep this file under 100 lines and applicable to all repository contexts.
 - Put detailed, domain-specific rules in `.github/instructions/*.instructions.md`.
 
 ## Path-specific instructions
 
-- For skill authoring and updates in `skills/**`, follow `.github/instructions/skills-authoring.instructions.md`.
-- For scripts inside skills (`skills/**/scripts/**`), follow `.github/instructions/skills-scripts-safety.instructions.md`.
-- For repository script changes in `scripts/**`, follow `.github/instructions/scripts-code-rules.instructions.md`.
-- For pull request preparation and updates, follow `.github/instructions/pr-workflow.instructions.md`.
+| Path | Instructions file |
+| --- | --- |
+| `skills/**` | `.github/instructions/skills-authoring.instructions.md` |
+| `skills/**/scripts/**` | `.github/instructions/skills-scripts-safety.instructions.md` |
+| `scripts/**` | `.github/instructions/scripts-code-rules.instructions.md` |
+| Pull request prep/updates | `.github/instructions/pr-workflow.instructions.md` |
 
 ## Skill discovery defaults
 
@@ -34,7 +36,7 @@ Write skill prose for minimal token cost. Every token in SKILL.md is loaded into
 - Short synonyms: "fix" not "implement a solution for", "use" not "utilize"
 - State actions directly — drop "you should", "remember to", "make sure to"
 - Merge redundant bullets; keep one example when multiple show the same pattern
-- Never modify code blocks, inline code, paths, URLs, or technical terms
+- In SKILL.md files, never modify code blocks, inline code, paths, URLs, or technical terms
 - To compress any `skills/**/*.md` file, use the `caveman-compress` skill (`.agents/skills/caveman-compress`): `/caveman:compress skills/<name>/SKILL.md`
 
 ## Maintainer docs

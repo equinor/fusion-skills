@@ -6,13 +6,13 @@ applyTo: "skills/**"
 
 Apply this guidance when creating or modifying skills in `skills/**`.
 This file intentionally keeps only repository-specific overrides.
-Keep repository-only naming, ownership, release, validation, and local-example guidance here rather than in the installable skill package.
+Repository-specific naming, ownership, release, validation, and local-example rules are grouped below.
 Use `skills/fusion-skill-authoring/SKILL.md` as the canonical authoring workflow.
 
 ## Precedence
 
-- Follow `skills/fusion-skill-authoring/SKILL.md` for end-to-end skill authoring behavior.
-- If any instruction conflicts with this file, this file takes precedence for this repository.
+- Use `skills/fusion-skill-authoring/SKILL.md` for end-to-end skill authoring workflow and behavior.
+- Where any rule in that file conflicts with a rule in this file, this file's rule takes precedence for this repository.
 
 ## Repository overrides
 
@@ -41,7 +41,7 @@ Author the portable skill package first, then layer these repository rules on to
 
 ## Required validation
 
-Run from repository root after skill authoring updates:
+Run from repository root after making changes to skill metadata or functionality:
 
 ```bash
 npx -y skills add . --list

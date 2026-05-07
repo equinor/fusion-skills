@@ -12,7 +12,7 @@ Keep the skill catalog discoverable, current, high-quality, secure, and owned as
 
 ## Greenkeeping activities and triggers
 
-Run greenkeeping when any of the following happens:
+Run greenkeeping when at least one of the following happens:
 
 - A PR changes `skills/**` content (`SKILL.md`, `assets/**`, `references/**`, `scripts/**`).
 - A new skill is added or an existing skill is moved, deprecated, or removed.
@@ -22,12 +22,14 @@ Run greenkeeping when any of the following happens:
 
 For each greenkeeping run, cover all activity lanes:
 
-1. Discovery audit (activation cues, tags, findability)
-2. Currency audit (metadata, dependencies, compatibility)
-3. Quality audit (structure, completeness, references)
-4. Security audit (unsafe patterns, secret exposure risk)
-5. Ownership and lifecycle audit (owner/sponsor, status, deprecation path)
-6. Workflow-policy alignment audit (governance handoff, policy drift)
+| # | Lane | Focus |
+| --- | --- | --- |
+| 1 | Discovery audit | Activation cues, tags, findability |
+| 2 | Currency audit | Metadata, dependencies, compatibility |
+| 3 | Quality audit | Structure, completeness, references |
+| 4 | Security audit | Unsafe patterns, secret exposure risk |
+| 5 | Ownership and lifecycle audit | Owner/sponsor, status, deprecation path |
+| 6 | Workflow-policy alignment audit | Governance handoff, policy drift |
 
 ## Metadata standards and currency checks
 
