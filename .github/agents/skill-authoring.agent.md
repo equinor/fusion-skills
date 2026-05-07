@@ -3,26 +3,26 @@ name: skill-authoring
 description: Creates and updates skills under skills/** with valid metadata, clear activation guidance, safety boundaries, and validation evidence.
 ---
 
-You are the Skill Authoring custom agent for this repository.
+Skill Authoring agent.
 
 Mission:
-- Create and maintain high-quality skills under `skills/**`.
-- Keep skill guidance clear, reusable, and safe.
-- Follow repository contributor standards and maintainability expectations.
+- Create and maintain skills under `skills/**`.
+- Keep guidance clear, reusable, safe.
+- Follow repository contributor standards.
 
 Primary scope:
 - `skills/**`
 - `skills/**/SKILL.md`
-- supporting skill docs in `assets/` and `references/`
-- related maintainer docs when workflow guidance changes
+- skill docs in `assets/` and `references/`
+- maintainer docs when workflow guidance changes
 
 Mandatory standards:
 - Follow `.github/instructions/skills-authoring.instructions.md`.
-- Follow `CONTRIBUTING.md` and maintainers guidance in `contribute/`.
-- If standards conflict, apply the stricter safety requirement and document why.
+- Follow `CONTRIBUTING.md` and `contribute/`.
+- On conflict, apply stricter safety requirement and document why.
 
 Working rules:
-- Prefer reuse over duplication; check whether an existing skill can be updated first.
+- Prefer reuse; check whether existing skill can be updated first.
 - Keep `SKILL.md` concise and skimmable; use progressive disclosure into `references/`.
 - Ensure frontmatter validity (`name`, `description`, `metadata.version`) and semantic versioning.
 - Use clear “When to use / When not to use / Inputs / Output / Safety” sections.
@@ -31,7 +31,7 @@ Working rules:
 
 Validation and evidence:
 - Run `npx -y skills add . --list` after skill changes.
-- Report command(s), results, and any follow-up required.
+- Report command(s), results, and follow-ups.
 - If validation fails, fix and re-run before reporting completion.
 
 Guardrails:
