@@ -1,10 +1,10 @@
 # MCP JSON-RPC payload snippets
 
-Use these snippets when users need direct MCP requests to verify or explore the hosted Fusion MCP server (`https://mcp.api.fusion.equinor.com/mcp`).
+Direct MCP request snippets for verifying/exploring the Fusion MCP server (`https://mcp.api.fusion.equinor.com/mcp`).
 
 > **Note:** In VS Code, tool invocations are handled automatically. Raw JSON-RPC is useful for direct debugging or scripted smoke tests.
 >
-> **Auth:** The hosted server requires an OAuth bearer token. Raw requests without a valid token will receive `401 Unauthorized`. Use an authenticated HTTP client (for example VS Code REST Client with an Entra token, or `curl` with `Authorization: Bearer <token>`) — or invoke tools through VS Code where auth is handled automatically.
+> **Auth:** OAuth bearer token required; `401` without valid token. Use authenticated client (VS Code REST Client with Entra token, or `curl` with `Authorization: Bearer <token>`) — or VS Code where auth is automatic.
 
 ---
 
@@ -23,7 +23,7 @@ Use these snippets when users need direct MCP requests to verify or explore the 
 
 ## `initialize`
 
-Initialize an MCP session and receive server capabilities.
+Initialize session, receive capabilities.
 
 ```json
 {
@@ -92,9 +92,7 @@ Expected response shape:
 
 ## `tools/call` → `search`
 
-**Generic search against any configured index.**
-
-Use when you know exactly which index to target and want full control over parameters. For most cases prefer the index-specific tools (`search_framework`, `search_docs`, etc.) which apply the correct index and promoted field filters automatically.
+**Generic search against any configured index.** Use when you know the exact index. Prefer index-specific tools (`search_framework`, `search_docs`, etc.) for most cases.
 
 Required: `index`, `query`
 
@@ -154,9 +152,7 @@ Expected response shape:
 
 ## `tools/call` → `search_framework`
 
-**Search the Fusion Framework index.**
-
-Covers TypeScript source (TSDoc), markdown docs, Storybook stories, and cookbooks from the `equinor/fusion-framework` repository. Supports promoted field filters for precise scoping.
+**Search the Fusion Framework index.** Covers TypeScript source (TSDoc), markdown docs, Storybook stories, and cookbooks from `equinor/fusion-framework`. Supports promoted field filters.
 
 Required: `query`
 
@@ -193,9 +189,7 @@ Required: `query`
 
 ## `tools/call` → `search_docs`
 
-**Search Fusion platform documentation.**
-
-Covers platform guidance, architecture decision records (ADRs), blog posts, and incident reports from the Fusion documentation site.
+**Search Fusion platform documentation.** Covers platform guidance, ADRs, blog posts, and incident reports.
 
 Required: `query`
 
@@ -228,9 +222,7 @@ Required: `query`
 
 ## `tools/call` → `search_backend_code`
 
-**Search .NET/C# source from Fusion backend services.**
-
-Covers backend service code indexed from Fusion repositories. Supports filtering by repository, service/project, declaration kind (class, interface, method, etc.), and namespace.
+**Search .NET/C# source from Fusion backend services.** Filters: repository, service/project, declaration kind, namespace.
 
 Required: `query`
 
@@ -264,9 +256,7 @@ Required: `query`
 
 ## `tools/call` → `search_eds`
 
-**Search the Equinor Design System (EDS) index.**
-
-Covers EDS component documentation, props, usage examples, and accessibility guidance.
+**Search the Equinor Design System (EDS) index.** Covers component docs, props, usage examples, and accessibility guidance.
 
 Required: `query`
 

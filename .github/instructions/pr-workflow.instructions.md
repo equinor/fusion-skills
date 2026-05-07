@@ -4,21 +4,19 @@ applyTo: "**"
 
 # Pull request workflow instructions
 
-Apply this guidance when handling issue and pull request workflows, including issue intake, branch/PR preparation, PR updates, and PR finalization.
+Apply when handling issue/PR workflows: intake, branch/PR prep, updates, finalization.
 
 ## Required PR flow
 
 - Use `.github/pull_request_template.md` as the PR structure.
-- For PR and issue work, ask whether to use a dedicated `git worktree` before any other workflow questions (for example before branch, base branch, PR body, or PR creation steps).
-- Trigger this question immediately when issue intent is detected, including references like `#123`, `issue 123`, or a GitHub issue URL.
-- Create temporary PR body drafts in `.tmp/` using issue/context-specific names (for example `.tmp/pr-body-issue-402-issue-automation-reliability.md`) and edit with the user before submission.
-- Do not use a generic shared filename like `.tmp/pr-body.md` for new PR drafts.
+- For PR/issue work, ask whether to use `git worktree` before any other workflow questions (before branch, base branch, PR body, or PR creation steps).
+- Trigger immediately when issue intent detected — `#123`, `issue 123`, or GitHub issue URL.
+- Draft PR body in `.tmp/` with issue/context-specific names (e.g. `.tmp/pr-body-issue-402-issue-automation-reliability.md`); edit with user before submission.
+- Don't use generic `.tmp/pr-body.md` for new PR drafts.
 - Ask which base branch to target.
-- Propose a likely default base branch when asking:
-  - usually the repository default branch (for example `main`),
-  - but if the current branch is clearly cut from another branch (for example `next` or a feature branch), suggest that branch instead.
-- Assume head ref is the current branch unless the user explicitly requests another head branch.
-- Follow up by asking whether related issues should be linked.
+- Propose likely default base branch: usually repo default (`main`). If current branch was created from another (`next`, feature branch), suggest that instead.
+- Assume head ref is current branch unless user requests otherwise.
+- Ask whether related issues should be linked.
 - Ask whether the PR should be assigned to the user.
 - Ask whether the PR should be opened as draft or ready for review.
 - Create or update the PR body from that temporary file.
@@ -32,36 +30,44 @@ Apply this guidance when handling issue and pull request workflows, including is
 
 ## Required checks before PR update/create
 
+### Code quality
+
 - Run lint/format checks before commit operations (`bun run biome:check`; optionally `bun run biome:fix` first).
 - Check current branch changes and summarize staged/unstaged scope.
-- Check code and docs against repository guides (`CONTRIBUTING.md`, `contribute/`, and relevant `.github/instructions/*.instructions.md`).
+- Check code and docs against `CONTRIBUTING.md`, `contribute/`, and relevant `.github/instructions/*.instructions.md`.
 - Confirm validation commands run.
+
+### Changesets
+
 - Keep changesets single-scope: each `.changeset/*.md` file must describe one skill/package change only.
 - If multiple skills/packages changed, split into multiple `.changeset/*.md` files (one entry per file).
+
+### Issue references
+
 - Use lower-case issue-closing keywords consistently in changeset and PR text when closure is intended.
 - Prefer `resolves owner/repo#123`; use `fixes owner/repo#123` or `closes owner/repo#123` only when those verbs are more accurate.
 
 ## Issue closure vs reference guidance
 
-GitHub automatically closes issues when a PR body or commit message includes closure keywords targeting that issue.
+GitHub auto-closes issues when PR body or commit message includes closure keywords.
 
 **Close an issue:**
-- Use in PR body when this PR directly resolves/fixes/closes the issue it's linked to.
+- Use in PR body when PR directly resolves/fixes/closes the linked issue.
 - Use closure keywords: `resolves`, `fixes`, or `closes` (lowercase).
 - Example: `Resolves equinor/fusion-core-tasks#123`
 - Result: GitHub closes the issue when PR merges.
-- Use when: The PR implements the complete solution to the issue's acceptance criteria.
+- Use when: PR fully implements the issue's acceptance criteria.
 
 **Reference an issue without closing:**
-- Use in PR body when the PR is related to or contributes to an issue but does not fully resolve it (e.g., part of a multi-step plan, planning phase, sub-task phase).
+- Use in PR body when PR relates to but doesn't fully resolve the issue (multi-step plan, planning phase, sub-task).
 - Use plain text: `Related to:`, `Refs:`, or `See:` (no closure keyword).
 - Example: `Related to: equinor/fusion-core-tasks#123` or `Refs: equinor/fusion-core-tasks#123`
-- Result: GitHub links the PR to the issue but does not auto-close.
-- Use when: The issue is a parent/planning task with multiple PRs or sub-issues, or when closure is explicitly not intended.
+- Result: GitHub links PR to issue but does not auto-close.
+- Use when: parent/planning task with multiple PRs, or closure not intended.
 
 **Changesets and issue references:**
-- Changesets document version bumps and are released independently from issue closure.
-- Include issue references in changeset bodies to document why the change was made.
+- Changesets document version bumps, released independently from issue closure.
+- Include issue references in changeset bodies to document why.
 - Use `resolves` (lowercase) in changeset body when the change directly resolves that issue.
 - Example changeset format:
   ```markdown
@@ -76,11 +82,11 @@ GitHub automatically closes issues when a PR body or commit message includes clo
   
   Resolves equinor/fusion-core-tasks#123
   ```
-- Changeset closure references do not auto-close issues; only PR body references do (when PR merges).
+- Changeset references don't auto-close issues; only PR body references do (on merge).
 
 ## Policy gaps that review workflows must surface as findings
 
-Review-oriented workflows (including agent-driven reviews) must explicitly flag the following as findings when they are detected. These are not optional suggestions — each gap must appear in the review output so the author can address it before merge.
+Review workflows must explicitly flag these as findings — not suggestions. Each gap must appear in review output before merge.
 
 **Missing or incomplete changesets:**
 - A skill or package changed without a corresponding `.changeset/*.md` file.
