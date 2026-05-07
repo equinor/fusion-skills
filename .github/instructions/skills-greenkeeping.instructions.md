@@ -4,11 +4,11 @@ applyTo: "skills/**"
 
 # Skills greenkeeping instructions
 
-Apply this guidance when maintaining existing skills in `skills/**`.
+Apply when maintaining skills in `skills/**`.
 
 ## Goal
 
-Keep the skill catalog discoverable, current, high-quality, secure, and owned as it grows.
+Keep skill catalog discoverable, current, high-quality, secure, owned.
 
 ## Greenkeeping activities and triggers
 
@@ -33,13 +33,13 @@ For each greenkeeping run, cover all activity lanes:
 
 ## Metadata standards and currency checks
 
-Each skill must retain required frontmatter from baseline standards:
+Required frontmatter:
 
 - `name`
 - `description`
 - `metadata.version`
 
-Greenkeeping additionally requires ownership metadata:
+Required ownership metadata:
 
 - `metadata.owner` (required): primary accountable maintainer.
   - Use a stable GitHub identity (`@user` or `@org/team`).
@@ -58,7 +58,7 @@ Discovery and currency checks:
 
 ## Quality gates and validation checklist
 
-Before completion, verify each touched skill against this checklist:
+Verify each touched skill:
 
 - Includes clear “When to use” and “When not to use” guidance.
 - Declares required inputs and expected outputs.
@@ -129,14 +129,14 @@ When reporting completion, include:
 
 ## Workflow-policy alignment audit
 
-Mutation-capable skills (those that can commit, push, rebase, open or update PRs) must stay portable and defer repository-specific policy to repo-local instructions. Check each mutation-capable skill for:
+Mutation-capable skills must stay portable and defer to repo-local instructions. Check each for:
 
 - **Governance handoff section exists**: the skill includes a "Repository-policy handoff" section (or equivalent) that explicitly defers commit, validation, changeset, and PR rules to repo-local instructions.
 - **No duplicated repo policy**: the skill does not re-encode repository-specific commit message conventions, changeset scope rules, PR template requirements, or validation command lists that belong in repo-local instructions.
 - **References are valid**: any references to repo-local files (`.github/instructions/`, `contribute/`, `CONTRIBUTING.md`) resolve to files that actually exist. Run `bun run validate:governance` to check programmatically.
 - **Advisors and agents align**: skill-local agent/advisor files that handle source-control mutations also defer to repo-local instructions rather than encoding their own policy.
 
-Flag skills that encode repository-specific workflow policy inline as findings and propose either a handoff rewrite or a reference cleanup.
+Flag inline policy as findings; propose handoff rewrite or reference cleanup.
 
 ## Guardrails
 

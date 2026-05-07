@@ -4,7 +4,7 @@ applyTo: "scripts/**"
 
 # Scripts engineering instructions
 
-When changing files under `scripts/**`, follow `contribute/06-scripts-code-rules.md` as the mandatory standard.
+When changing `scripts/**`, follow `contribute/06-scripts-code-rules.md`.
 
 ## Required behavior
 
@@ -16,7 +16,7 @@ When changing files under `scripts/**`, follow `contribute/06-scripts-code-rules
 
 ### Code quality
 
-- Treat scripts as production tooling for CI and release workflows.
+- Treat as production tooling for CI and release.
 - Keep one primary responsibility per file/module.
 - Avoid unnecessary third-party dependencies.
 - Validate inputs and fail with actionable errors.
