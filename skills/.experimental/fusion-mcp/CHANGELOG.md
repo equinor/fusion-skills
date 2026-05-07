@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.0.1 - 2026-05-07
+
+### patch
+
+- [#170](https://github.com/equinor/fusion-skills/pull/170) [`5e43223`](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8) - Apply caveman-compress prose style to SKILL.md and references.
+
+
+  - Drop articles, filler, hedging from SKILL.md activation body
+  - Compress mcp-call-snippets and vscode-mcp-config references
+
+- [#168](https://github.com/equinor/fusion-skills/pull/168) [`6c56986`](https://github.com/equinor/fusion-skills/commit/6c56986a322214a89bddb6e549c4cdf8622a9025) - Fix diagnostic issues in fusion-mcp SKILL.md
+
+
+  - Resolve contradiction between "only recommended path" and exception clause for self-hosted alternatives
+  - Replace ambiguous "minimal validation checklist" with explicit three-step validation criteria
+  - Restructure troubleshooting from flat bullets into numbered Check/Fix substeps to reduce cognitive load
+  - Add coverage for users without an Equinor Entra account
+
 ## 1.0.0 - 2026-05-04
 
 ### major

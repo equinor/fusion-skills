@@ -240,73 +240,73 @@ Main Copilot skill gate for the Fusion ecosystem — cross-domain router. USE FO
 
 ---
 
-**👍 [`fusion-backend-dev@0.1.0`](skills/fusion-backend-dev/SKILL.md)**
+**👍 [`fusion-backend-dev@0.1.1`](skills/fusion-backend-dev/SKILL.md)**
 
 Guides consumption and understanding of Fusion backend services, APIs, and patterns for frontend/client developers, integrators, and architects. Shows reference implementations, explains architectural decisions, and clarifies contracts. USE FOR: understanding Fusion backend APIs, learning implementation patterns, exploring reference code, choosing the right integration point, and understanding authorization/validation/async patterns. DO NOT USE FOR: modifying backend services, creating new endpoints, database changes, or backend-specific development (use fusion-services-develop or backend service repo instead).
 
 ---
 
-**⚙️ [`fusion-code-conventions@0.1.2`](skills/.system/fusion-code-conventions/SKILL.md)**
+**⚙️ [`fusion-code-conventions@0.1.3`](skills/.system/fusion-code-conventions/SKILL.md)**
 
 Applies and explains code conventions across TypeScript, React, C#, and Markdown. Enforces naming rules, file naming patterns, TSDoc and XML doc standards, inline comment intent (the *why*, not the *what*), code structure, error handling, async patterns, and dead code policy. Also enforces ADR and contributor doc decisions, and flags decisions that appear stale or misaligned with current tooling. USE FOR: convention questions, code review against project standards, applying naming rules, auditing intent comments, checking TSDoc completeness, enforcing recorded ADR decisions, and flagging stale architectural decisions. DO NOT USE FOR: security vulnerability scanning, performance profiling, runtime debugging, or generating net-new code without a review target.
 
 ---
 
-**🧪 [`fusion-core-services@0.0.1`](skills/.experimental/fusion-core-services/SKILL.md)**
+**🧪 [`fusion-core-services@0.0.2`](skills/.experimental/fusion-core-services/SKILL.md)**
 
 Guides integrations across Fusion Core service APIs from a single installable skill. USE FOR: service discovery across apps, people, context, roles, notifications, reports, tasks, and other Fusion Core APIs; cross-service integration planning; choosing the right endpoint/model guidance for a workflow. DO NOT USE FOR: modifying Fusion backend source code, non-Fusion APIs, or generic cloud architecture work without a Fusion service integration target.
 
 ---
 
-**🧪 [`fusion-dependency-review@0.1.3`](skills/.experimental/fusion-dependency-review/SKILL.md)**
+**🧪 [`fusion-dependency-review@0.1.4`](skills/.experimental/fusion-dependency-review/SKILL.md)**
 
 Review dependency PRs with structured research, existing-PR-discussion capture, multi-lens analysis (security, code quality, impact), and a repeatable verdict template. USE FOR: dependency update PRs, Renovate/Dependabot PRs, library upgrade reviews, "review this dependency PR", "should we merge this update". DO NOT USE FOR: feature PRs, application code reviews, dependency automation/bot configuration, or unattended merge without confirmation.
 
 ---
 
-**👍 [`fusion-developer-app@0.2.0`](skills/fusion-developer-app/SKILL.md)**
+**👍 [`fusion-developer-app@0.3.0`](skills/fusion-developer-app/SKILL.md)**
 
 Guides feature development in Fusion Framework React apps, including app-scoped framework research needed to choose the right hooks, modules, packages, and integration patterns before implementation. USE FOR: building new features, adding components or pages, creating hooks and services, wiring up API endpoints, extending Fusion module configuration, and answering app implementation questions about which Fusion Framework surface to use. DO NOT USE FOR: issue authoring, skill authoring, CI/CD configuration, backend service changes, or general Fusion documentation that is not tied to app implementation.
 
 ---
 
-**👍 [`fusion-developer-portal@0.0.1`](skills/fusion-developer-portal/SKILL.md)**
+**👍 [`fusion-developer-portal@0.0.2`](skills/fusion-developer-portal/SKILL.md)**
 
 Guides development of Fusion portal shells — scaffolding, module configuration, app loading, routing, header/context integration, analytics, and deployment using the Fusion Framework CLI portal commands. USE FOR: create portal, scaffold portal, configure portal modules, portal app loading, portal routing, portal header, context selector, portal analytics, portal telemetry, portal manifest, ffc portal dev, portal deployment, embed apps in portal. DO NOT USE FOR: app-level feature development (use fusion-app-react-dev), backend service changes, Fusion Help Center integration, skill authoring.
 
 ---
 
-**🧪 [`fusion-github-review-resolution@0.1.6`](skills/.experimental/fusion-github-review-resolution/SKILL.md)**
+**🧪 [`fusion-github-review-resolution@0.1.7`](skills/.experimental/fusion-github-review-resolution/SKILL.md)**
 
 Resolves unresolved GitHub PR review threads end-to-end: evaluates whether each review comment is correct, applies a targeted fix when valid, replies with rationale when not, commits, and resolves the thread. USE FOR: unresolved review threads, PR review feedback, changes requested PRs, PR review URLs (#pullrequestreview-...), fix the review comments, close the open threads, address PR feedback. DO NOT USE FOR: summarizing feedback without code changes, creating new PRs, or read-only branches.
 
 ---
 
-**👍 [`fusion-help-api@0.0.2`](skills/fusion-help-api/SKILL.md)**
+**👍 [`fusion-help-api@0.0.3`](skills/fusion-help-api/SKILL.md)**
 
 Guides developers and admins through direct interaction with the Fusion Help REST API — reading articles, FAQs, release notes, searching content, and managing help documentation programmatically. USE FOR: fetch help articles from API, integrate help content in app, search help content, manage help documentation via API, automate help content, build help tooling. DO NOT USE FOR: using the fhelp CLI tool (use fusion-help-docs skill), modifying Fusion.Services.Help backend code, or non-help-API tasks.
 
 ---
 
-**👍 [`fusion-help-docs@0.0.1`](skills/fusion-help-docs/SKILL.md)**
+**👍 [`fusion-help-docs@0.0.2`](skills/fusion-help-docs/SKILL.md)**
 
 Guides app teams through authoring, structuring, and publishing help documentation (articles, release notes, FAQs) using the fusion-help-cli. USE FOR: write help articles, create release notes, set up help docs, publish documentation, sync articles, configure help config file, maintain app help content. DO NOT USE FOR: building the CLI itself, modifying Fusion.Services.Help internals, or non-documentation tasks.
 
 ---
 
-**👍 [`fusion-help-integration@0.0.1`](skills/fusion-help-integration/SKILL.md)**
+**👍 [`fusion-help-integration@0.0.2`](skills/fusion-help-integration/SKILL.md)**
 
 Wires Fusion Help Center into app pages — creates article slug constants, adds useHelpCenter hook, and connects PageLayout props so users can open contextual help articles. USE FOR: add help button to page, wire useHelpCenter, create helpArticles constants, integrate Fusion Help in app, connect PageLayout to help center, add openHelpArticle to page. DO NOT USE FOR: authoring markdown help articles (use fusion-help-docs), direct Help REST API calls (use fusion-help-api), modifying @fra/ui shared components.
 
 ---
 
-**👍 [`fusion-issue-authoring@0.3.4`](skills/fusion-issue-authoring/SKILL.md)**
+**👍 [`fusion-issue-authoring@0.3.5`](skills/fusion-issue-authoring/SKILL.md)**
 
 Classify issue type, activate the matching agent mode for type-specific drafting, and enforce shared safety gates before GitHub mutation.
 
 ---
 
-**🧪 [`fusion-issue-solving@0.1.6`](skills/.experimental/fusion-issue-solving/SKILL.md)**
+**🧪 [`fusion-issue-solving@0.1.7`](skills/.experimental/fusion-issue-solving/SKILL.md)**
 
 Handles GitHub issue resolution end-to-end for prompts like "solve #123", "lets solve #123", "work on #123", "work on https://github.com/owner/repo/issues/123", or by pasting a direct GitHub issue URL as the request. USE FOR: solve #123, continue work on issue #123, work on https://github.com/owner/repo/issues/123, paste a GitHub issue URL for implementation work. DO NOT USE FOR: issue drafting only, PR review only, or non-implementation research.
 
@@ -318,37 +318,37 @@ Plan and break down user-story issues into ordered, traceable task issue drafts 
 
 ---
 
-**🧪 [`fusion-mcp@1.0.0`](skills/.experimental/fusion-mcp/SKILL.md)**
+**🧪 [`fusion-mcp@1.0.1`](skills/.experimental/fusion-mcp/SKILL.md)**
 
 Explain what Fusion MCP is and guide users through setting it up when they need Fusion-aware MCP capabilities in Copilot workflows.
 
 ---
 
-**🧪 [`fusion-package-scribe@0.0.1`](skills/.experimental/fusion-package-scribe/SKILL.md)**
+**🧪 [`fusion-package-scribe@0.0.2`](skills/.experimental/fusion-package-scribe/SKILL.md)**
 
 Systematically improves TSDoc and README documentation across packages in a TypeScript monorepo. Discovers public API surfaces, generates or improves TSDoc on all exports, rewrites READMEs to a consistent retrieval-friendly structure, and commits each package independently. USE FOR: monorepo-wide documentation passes, single-package doc improvements, TSDoc generation on public exports, README standardization, review council quality checks. DO NOT USE FOR: runtime code changes, security scanning, API reference site generation, non-TypeScript languages.
 
 ---
 
-**⚙️ [`fusion-research@0.4.0`](skills/.system/fusion-research/SKILL.md)**
+**⚙️ [`fusion-research@0.4.1`](skills/.system/fusion-research/SKILL.md)**
 
 Source-backed research orchestrator for the Fusion ecosystem. Routes to the correct research agent based on question type. Returns source-backed evidence only; will not invent Framework behavior, component APIs, skill catalog relationships, platform guidance, or backend implementation details. USE FOR: any research question needing source-backed evidence about Fusion Framework APIs, EDS components, the Fusion skill catalog, Fusion platform documentation, or backend service implementation. DO NOT USE FOR: implementing code changes, installing or editing skills, MCP setup or troubleshooting, or inventing Fusion behavior without evidence.
 
 ---
 
-**⚙️ [`fusion-rule-author@0.1.0`](skills/.system/fusion-rule-author/SKILL.md)**
+**⚙️ [`fusion-rule-author@0.1.1`](skills/.system/fusion-rule-author/SKILL.md)**
 
 Support skill providing the workflow, templates, and references for AI coding assistant rule authoring. Invoked by fusion-rules gateway agents — not intended for direct use.
 
 ---
 
-**👍 [`fusion-rules@0.1.0`](skills/fusion-rules/SKILL.md)**
+**👍 [`fusion-rules@0.1.1`](skills/fusion-rules/SKILL.md)**
 
 Entrypoint for AI coding assistant rule authoring across GitHub Copilot, Cursor, and Claude Code. USE FOR: setting up rules, reviewing existing rules, scaffolding instruction files, or asking which editor format to use. DO NOT USE FOR: authoring skills (SKILL.md), agent definitions (.agent.md), or CI enforcement of rule files.
 
 ---
 
-**👍 [`fusion-skill-authoring@0.3.3`](skills/fusion-skill-authoring/SKILL.md)**
+**👍 [`fusion-skill-authoring@0.3.4`](skills/fusion-skill-authoring/SKILL.md)**
 
 Creates or modernizes repository skills with clear activation cues, purposeful support files, and practical review loops. USE FOR: creating a new skill, tightening an existing skill, improving discovery wording, and structuring references/assets/optional helper agents when they genuinely add value. DO NOT USE FOR: product-code changes, routine copy edits outside skills/, or documentation that should not become an installable skill.
 

@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.3.0 - 2026-05-07
+
+### minor
+
+- [#860](https://github.com/equinor/fusion-skills/pull/860) [`96f1768`](https://github.com/equinor/fusion-skills/commit/96f1768e3f1cdf988caa4a398776d8753b4cb77f) - Add design agent to fusion-developer-app
+
+
+  - Add `agents/design.md` helper agent covering Fusion Portal shell composition, layout zone nesting, side panel usage (SideSheet), empty/loading state patterns, and structural anti-patterns
+  - Update `SKILL.md` Step 4 to reference `design.md` for page/view structure review and `styling.md` for component-level checks
+  - Update helper agents section to include `design.md` with clear scope boundary vs `styling.md`
+
+  Agent references `equinor-design-system` system skill for authoritative token and layout zone ground truth, and delegates component-level EDS checks to `agents/styling.md`.
+
+  resolves equinor/fusion-core-tasks#860
+
+### patch
+
+- [#170](https://github.com/equinor/fusion-skills/pull/170) [`5e43223`](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8) - Apply caveman-compress prose style to SKILL.md and all references.
+
+
+  - Drop articles, filler, hedging from SKILL.md activation body
+  - Compress all using-*.md, configure-*.md, styled-components, styling-with-eds, project-structure references
+
 ## 0.2.0 - 2026-05-05
 
 ### minor

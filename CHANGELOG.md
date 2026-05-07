@@ -2,6 +2,239 @@
 
 All notable changes to this repository are documented in this file.
 
+## v1.2.0
+
+### Minor
+
+__🎯 [feat(fusion-developer-app): add design layout agent (#860) #860](https://github.com/equinor/fusion-skills/pull/860)<br/>
+🗂️ [96f1768](https://github.com/equinor/fusion-skills/commit/96f1768e3f1cdf988caa4a398776d8753b4cb77f)<br/>
+📦 fusion-developer-app@0.3.0__
+
+Add design agent to fusion-developer-app
+
+- Add `agents/design.md` helper agent covering Fusion Portal shell composition, layout zone nesting, side panel usage (SideSheet), empty/loading state patterns, and structural anti-patterns
+- Update `SKILL.md` Step 4 to reference `design.md` for page/view structure review and `styling.md` for component-level checks
+- Update helper agents section to include `design.md` with clear scope boundary vs `styling.md`
+
+Agent references `equinor-design-system` system skill for authoritative token and layout zone ground truth, and delegates component-level EDS checks to `agents/styling.md`.
+
+resolves equinor/fusion-core-tasks#860
+
+### Patch
+
+__🎯 [docs: apply caveman compression to all skill and instruction prose #170](https://github.com/equinor/fusion-skills/pull/170)<br/>
+🗂️ [5e43223](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8)<br/>
+📦 fusion-backend-dev@0.1.1__
+
+Apply caveman-compress prose style to SKILL.md and all references.
+
+- Drop articles, filler, hedging from SKILL.md activation body
+- Compress authorization-patterns, validation-patterns, integration-patterns, async-patterns, cqrs-reference, api-contracts references
+
+---
+
+__🎯 [docs: apply caveman compression to all skill and instruction prose #170](https://github.com/equinor/fusion-skills/pull/170)<br/>
+🗂️ [5e43223](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8)<br/>
+📦 fusion-code-conventions@0.1.3__
+
+Apply caveman-compress prose style to SKILL.md and all convention references.
+
+- Drop articles, filler, hedging from SKILL.md activation body
+- Compress typescript, react, csharp, markdown convention references
+
+---
+
+__🎯 [docs: apply caveman compression to all skill and instruction prose #170](https://github.com/equinor/fusion-skills/pull/170)<br/>
+🗂️ [5e43223](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8)<br/>
+📦 fusion-core-services@0.0.2__
+
+Apply caveman-compress prose style to SKILL.md.
+
+- Drop articles, filler, hedging from SKILL.md activation body
+
+---
+
+__🎯 [docs: apply caveman compression to all skill and instruction prose #170](https://github.com/equinor/fusion-skills/pull/170)<br/>
+🗂️ [5e43223](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8)<br/>
+📦 fusion-dependency-review@0.1.4__
+
+Apply caveman-compress prose style to SKILL.md, agents, and references.
+
+- Drop articles, filler, hedging from SKILL.md activation body
+- Compress research-advisor and verdict-advisor agent files
+- Compress instructions and questions references
+
+---
+
+__🎯 [docs: apply caveman compression to all skill and instruction prose #170](https://github.com/equinor/fusion-skills/pull/170)<br/>
+🗂️ [5e43223](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8)<br/>
+📦 fusion-developer-app@0.3.0__
+
+Apply caveman-compress prose style to SKILL.md and all references.
+
+- Drop articles, filler, hedging from SKILL.md activation body
+- Compress all using-*.md, configure-*.md, styled-components, styling-with-eds, project-structure references
+
+---
+
+__🎯 [docs: apply caveman compression to all skill and instruction prose #170](https://github.com/equinor/fusion-skills/pull/170)<br/>
+🗂️ [5e43223](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8)<br/>
+📦 fusion-developer-portal@0.0.2__
+
+Apply caveman-compress prose style to SKILL.md and references.
+
+- Drop articles, filler, hedging from SKILL.md activation body
+- Compress portal-architecture reference
+
+---
+
+__🎯 [docs: apply caveman compression to all skill and instruction prose #170](https://github.com/equinor/fusion-skills/pull/170)<br/>
+🗂️ [5e43223](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8)<br/>
+📦 fusion-github-review-resolution@0.1.7__
+
+Apply caveman-compress prose style to SKILL.md.
+
+- Drop articles, filler, hedging from SKILL.md activation body
+
+---
+
+__🎯 [docs: apply caveman compression to all skill and instruction prose #170](https://github.com/equinor/fusion-skills/pull/170)<br/>
+🗂️ [5e43223](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8)<br/>
+📦 fusion-help-api@0.0.3__
+
+Apply caveman-compress prose style to SKILL.md and references.
+
+- Drop articles, filler, hedging from SKILL.md activation body
+- Compress integration-patterns reference
+
+---
+
+__🎯 [docs: apply caveman compression to all skill and instruction prose #170](https://github.com/equinor/fusion-skills/pull/170)<br/>
+🗂️ [5e43223](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8)<br/>
+📦 fusion-help-docs@0.0.2__
+
+Apply caveman-compress prose style to SKILL.md and references.
+
+- Drop articles, filler, hedging from SKILL.md activation body
+- Compress cli-reference reference
+
+---
+
+__🎯 [docs: apply caveman compression to all skill and instruction prose #170](https://github.com/equinor/fusion-skills/pull/170)<br/>
+🗂️ [5e43223](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8)<br/>
+📦 fusion-help-integration@0.0.2__
+
+Apply caveman-compress prose style to SKILL.md and references.
+
+- Drop articles, filler, hedging from SKILL.md activation body
+- Compress wiring-pattern and shared-ui-props references
+
+---
+
+__🎯 [docs: apply caveman compression to all skill and instruction prose #170](https://github.com/equinor/fusion-skills/pull/170)<br/>
+🗂️ [5e43223](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8)<br/>
+📦 fusion-issue-authoring@0.3.5__
+
+Apply caveman-compress prose style to SKILL.md and references.
+
+- Drop articles, filler, hedging from SKILL.md activation body
+- Compress instructions, mcp-server, questions references
+
+---
+
+__🎯 [docs: apply caveman compression to all skill and instruction prose #170](https://github.com/equinor/fusion-skills/pull/170)<br/>
+🗂️ [5e43223](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8)<br/>
+📦 fusion-issue-solving@0.1.7__
+
+Apply caveman-compress prose style to SKILL.md.
+
+- Drop articles, filler, hedging from SKILL.md activation body
+
+---
+
+__🎯 [docs: apply caveman compression to all skill and instruction prose #170](https://github.com/equinor/fusion-skills/pull/170)<br/>
+🗂️ [5e43223](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8)<br/>
+📦 fusion-mcp@1.0.1__
+
+Apply caveman-compress prose style to SKILL.md and references.
+
+- Drop articles, filler, hedging from SKILL.md activation body
+- Compress mcp-call-snippets and vscode-mcp-config references
+
+---
+
+__🎯 [docs: apply caveman compression to all skill and instruction prose #170](https://github.com/equinor/fusion-skills/pull/170)<br/>
+🗂️ [5e43223](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8)<br/>
+📦 fusion-package-scribe@0.0.2__
+
+Apply caveman-compress prose style to SKILL.md and references.
+
+- Drop articles, filler, hedging from SKILL.md activation body
+- Compress batch-strategy, readme-template, tsdoc-checklist references
+
+---
+
+__🎯 [docs: apply caveman compression to all skill and instruction prose #170](https://github.com/equinor/fusion-skills/pull/170)<br/>
+🗂️ [5e43223](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8)<br/>
+📦 fusion-research@0.4.1__
+
+Apply caveman-compress prose style to references.
+
+- Compress backend-code.query and framework.query references
+
+---
+
+__🎯 [docs: apply caveman compression to all skill and instruction prose #170](https://github.com/equinor/fusion-skills/pull/170)<br/>
+🗂️ [5e43223](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8)<br/>
+📦 fusion-rule-author@0.1.1__
+
+Apply caveman-compress prose style to SKILL.md.
+
+- Drop articles, filler, hedging from SKILL.md activation body
+
+---
+
+__🎯 [docs: apply caveman compression to all skill and instruction prose #170](https://github.com/equinor/fusion-skills/pull/170)<br/>
+🗂️ [5e43223](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8)<br/>
+📦 fusion-rules@0.1.1__
+
+Apply caveman-compress prose style to SKILL.md.
+
+- Drop articles, filler, hedging from SKILL.md activation body
+
+---
+
+__🎯 [docs: apply caveman compression to all skill and instruction prose #170](https://github.com/equinor/fusion-skills/pull/170)<br/>
+🗂️ [5e43223](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8)<br/>
+📦 fusion-skill-authoring@0.3.4__
+
+Apply caveman-compress prose style to SKILL.md and references.
+
+- Drop articles, filler, hedging from SKILL.md activation body
+- Compress skill-authoring-platform-references reference
+
+---
+
+__🎯 [docs: apply caveman compression to all skill and instruction prose #170](https://github.com/equinor/fusion-skills/pull/170)<br/>
+🗂️ [5e43223](https://github.com/equinor/fusion-skills/commit/5e432232917b2b1642431d80cf1698bbefe80ee8)__
+
+Apply caveman-compress prose style to references.
+
+- Compress skill-catalog and sync-workflows references
+
+---
+
+__🎯 [fix(fusion-mcp): resolve SKILL.md diagnostics #168](https://github.com/equinor/fusion-skills/pull/168)<br/>
+🗂️ [6c56986](https://github.com/equinor/fusion-skills/commit/6c56986a322214a89bddb6e549c4cdf8622a9025)<br/>
+📦 fusion-mcp@1.0.1__
+
+Fix diagnostic issues in fusion-mcp SKILL.md
+
+- Resolve contradiction between "only recommended path" and exception clause for self-hosted alternatives
+- Replace ambiguous "minimal validation checklist" with explicit three-step validation criteria
+- Restructure troubleshooting from flat bullets into numbered Check/Fix substeps to reduce cognitive load
+- Add coverage for users without an Equinor Entra account
+
 ## v1.1.0
 
 ### Minor
