@@ -4,7 +4,7 @@ description: 'Guides developers and admins through direct interaction with the F
 license: MIT
 compatibility: Requires authenticated HTTP client with Fusion bearer token. Works with any language or framework that can make REST calls.
 metadata:
-  version: "0.0.2"
+  version: "0.0.3"
   status: active
   owner: "@equinor/fusion-core"
   tags:

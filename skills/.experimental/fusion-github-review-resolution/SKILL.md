@@ -4,7 +4,7 @@ description: "Resolves unresolved GitHub PR review threads end-to-end: evaluates
 license: MIT
 compatibility: Requires GitHub MCP server or gh CLI, and git.
 metadata:
-   version: "0.1.6"
+   version: "0.1.7"
    status: experimental
    owner: "@equinor/fusion-core"
    tags:
