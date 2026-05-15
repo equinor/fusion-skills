@@ -1,6 +1,6 @@
 ---
 name: fusion-devtools
-description: 'Use Fusion DevTools CLI (fdev) for API testing, token acquisition, service discovery, and person lookup during development. USE FOR: calling Fusion REST APIs, getting access tokens as JSON, discovering services and environments, resolving persons, managing access roles, triggering Azure Functions. DO NOT USE FOR: modifying backend service code, deploying services, infrastructure changes, CI/CD pipeline configuration, or Service Bus operations.'
+description: 'Use Fusion DevTools CLI (fdev) for API testing, token acquisition, service discovery, and person lookup during development. USE FOR: calling Fusion REST APIs, getting access tokens as JSON, discovering services and environments, resolving persons, PIM role activation. DO NOT USE FOR: modifying backend service code, deploying services, infrastructure changes, CI/CD pipeline configuration, or Service Bus operations.'
 license: MIT
 compatibility: >
   Requires fdev installed as a .NET global tool (dotnet tool install --global fusion-devtools).
@@ -130,7 +130,7 @@ Output format:
 {
   "accessToken": "eyJ...",
   "expiresOn": "2026-05-15T12:00:00+00:00",
-  "expiresOnUnix": 1736942400,
+  "expiresOnUnix": 1778990400,
   "scope": "api://app-id/.default",
   "tokenType": "Bearer"
 }
@@ -224,6 +224,16 @@ See `references/` for detailed command options and workflow recipes:
 
 - `command-reference.md` — compact command cheat sheet with all options
 - `agentic-patterns.md` — common agentic workflow recipes
+
+### 6 — Activate PIM role
+
+Elevate Azure access when needed for admin operations:
+
+```bash
+fdev pim azure activate
+```
+
+**Safety: always confirm with the user before running PIM activation — this grants elevated access.**
 
 ## Safety
 

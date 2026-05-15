@@ -23,10 +23,10 @@ When an agent needs a bearer token to pass to curl, httpie, or another HTTP clie
 ```bash
 # Extract token for use in other commands
 TOKEN=$(fdev get-access-token --service-key people | jq -r '.accessToken')
+BASE_URL=$(fdev disc env list fprd -json | jq -r '.[] | select(.key=="people") | .uri')
 
 # Use with curl
-curl -H "Authorization: Bearer $TOKEN" \
-  "https://pro-s-people-fprd.azurewebsites.net/persons/me?api-version=3.0"
+curl -H "Authorization: Bearer $TOKEN" "$BASE_URL/persons/me?api-version=3.0"
 ```
 
 Use case: agent needs to call an endpoint not yet in service discovery, or needs fine-grained control over the HTTP request.
@@ -77,15 +77,17 @@ Use case: debugging environment-specific issues, verifying deployments.
 When an agent generates a request payload and needs to send it:
 
 ```bash
-# Write payload to temp file, then send
-cat > /tmp/search.json << 'EOF'
+# Write payload to temp file, send, then clean up
+TMPFILE=$(mktemp /tmp/fdev-body.XXXXXX.json)
+cat > "$TMPFILE" << 'EOF'
 {
   "searchString": "test",
   "top": 5
 }
 EOF
 
-fdev rest people '/persons/search?api-version=3.0' -m post -b @/tmp/search.json
+fdev rest people '/persons/search?api-version=3.0' -m post -b @"$TMPFILE"
+rm -f "$TMPFILE"
 ```
 
 Use case: complex request bodies that are easier to construct as files than inline JSON.

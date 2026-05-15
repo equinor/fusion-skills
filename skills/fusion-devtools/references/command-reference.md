@@ -72,7 +72,9 @@ fdev pim azure activate               # Activate eligible Azure PIM role
 
 **Safety: always confirm with user before running PIM activation.**
 
-## Common service keys
+## Common service keys (examples — verify with discovery)
+
+These are typical service keys. Keys may change as services are added, renamed, or retired. Always verify with `fdev disc env list <env> -json | jq '.[].key'`.
 
 | Key | Service | Typical path prefix |
 |---|---|---|
