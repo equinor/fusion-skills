@@ -20,8 +20,10 @@ Use case: before generating client code or types, verify the actual API contract
 
 When an agent needs a bearer token to pass to curl, httpie, or another HTTP client:
 
+> Prefer `fdev rest` with `--url` when possible — it handles tokens internally without exposing them. Use the variable approach only when another tool must make the HTTP call.
+
 ```bash
-# Extract token for use in other commands
+# Extract token for use in other commands (short-lived, local shell variable only)
 TOKEN=$(fdev get-access-token --service-key people | jq -r '.accessToken')
 BASE_URL=$(fdev disc env list fprd -json | jq -r '.[] | select(.key=="people") | .uri')
 

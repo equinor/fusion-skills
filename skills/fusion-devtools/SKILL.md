@@ -3,7 +3,8 @@ name: fusion-devtools
 description: 'Use Fusion DevTools CLI (fdev) for API testing, token acquisition, service discovery, and person lookup during development. USE FOR: calling Fusion REST APIs, getting access tokens as JSON, discovering services and environments, resolving persons, PIM role activation. DO NOT USE FOR: modifying backend service code, deploying services, infrastructure changes, CI/CD pipeline configuration, or Service Bus operations.'
 license: MIT
 compatibility: >
-  Requires fdev installed as a .NET global tool (dotnet tool install --global fusion-devtools).
+  Requires fdev installed as a .NET global tool
+  (dotnet tool install --global --add-source "https://statoil-proview.pkgs.visualstudio.com/Fusion%20-%20Packages/_packaging/Fusion-Public/nuget/v3/index.json" fusion-devtools).
   Requires Azure AD login (fdev login).
   Works best alongside fusion-backend-dev for understanding API contracts before calling them.
 metadata:
@@ -130,7 +131,7 @@ Output format:
 {
   "accessToken": "eyJ...",
   "expiresOn": "2026-05-15T12:00:00+00:00",
-  "expiresOnUnix": 1747310400,
+  "expiresOnUnix": 1778846400,
   "scope": "api://app-id/.default",
   "tokenType": "Bearer"
 }
@@ -143,6 +144,7 @@ Output format:
 fdev disc envs
 
 # List services in an environment (JSON output)
+# Note: disc subcommand uses single-dash flags (-json, -out) — this is by design
 fdev disc env list fprd -json
 
 # List services showing key and URI
@@ -197,7 +199,7 @@ If not installed, show the install command from Prerequisites. If authentication
 | Call a Fusion API and see the response | `fdev rest <service> '<path>'` |
 | Get a token for scripting/piping | `fdev get-access-token --service-key <key>` |
 | Find available services | `fdev disc env list <env>` |
-| Find service base URL and scope | `fdev disc env list <env> -json \| jq '.[] \| select(.key=="<key>")'` |
+| Find service base URL and scope | `fdev disc env list <env> -json` then filter by key |
 | Look up a person | `fdev persons resolve <email>` |
 | Quick clipboard token | `fdev token` |
 
@@ -236,6 +238,7 @@ See `references/` for detailed command options and workflow recipes:
 
 ## Safety
 
+- This skill is mutation-capable. Repository-local workflow instructions take precedence over inline guidance when they conflict.
 - Never expose raw access tokens in output shown to users — truncate or redact when displaying
 - Always quote paths containing `?` in shell commands to prevent glob expansion
 - Use `--no-auth` only for genuinely public endpoints
