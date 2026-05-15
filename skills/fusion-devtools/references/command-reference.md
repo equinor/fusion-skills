@@ -97,7 +97,6 @@ Use `fdev disc env list fprd -json | jq '.[].key'` to get the full list of servi
 | `ci` | Test / Development | `https://fusion.ci.fusion-dev.net` |
 | `fqa` | QA / Pre-production | `https://fusion.fqa.fusion-dev.net` |
 | `fprd` | Production | `https://fusion.equinor.com` |
-| `pr-<n>` | PR preview (ephemeral) | Varies |
 
 ## Global options
 

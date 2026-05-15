@@ -130,7 +130,7 @@ Output format:
 {
   "accessToken": "eyJ...",
   "expiresOn": "2026-05-15T12:00:00+00:00",
-  "expiresOnUnix": 1778990400,
+  "expiresOnUnix": 1747310400,
   "scope": "api://app-id/.default",
   "tokenType": "Bearer"
 }
@@ -159,7 +159,17 @@ fdev persons resolve user@equinor.com
 fdev persons search "John"
 ```
 
-### 5 — Get a raw JWT token (clipboard)
+### 5 — Activate PIM role
+
+Elevate Azure access when needed for admin operations:
+
+```bash
+fdev pim azure activate
+```
+
+**Safety: always confirm with the user before running PIM activation — this grants elevated access.**
+
+### 6 — Get a raw JWT token (clipboard)
 
 For quick clipboard-based token workflows (existing command):
 
@@ -214,7 +224,6 @@ fdev rest people '/persons/me?api-version=3.0' --no-cache
 | `ci` | Continuous integration / development | Least stable, latest changes |
 | `fqa` | Quality assurance | Pre-production validation |
 | `fprd` | Production | Default environment |
-| `pr-<number>` | Pull request preview | Ephemeral, created per PR |
 
 Default environment is `fprd` for all commands. Override with `-e <env>`.
 
@@ -224,16 +233,6 @@ See `references/` for detailed command options and workflow recipes:
 
 - `command-reference.md` — compact command cheat sheet with all options
 - `agentic-patterns.md` — common agentic workflow recipes
-
-### 6 — Activate PIM role
-
-Elevate Azure access when needed for admin operations:
-
-```bash
-fdev pim azure activate
-```
-
-**Safety: always confirm with the user before running PIM activation — this grants elevated access.**
 
 ## Safety
 
