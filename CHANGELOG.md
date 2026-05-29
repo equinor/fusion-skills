@@ -2,6 +2,26 @@
 
 All notable changes to this repository are documented in this file.
 
+## v1.3.0
+
+### Minor
+
+__🎯 [feat(fusion-devtools): add skill for Fusion DevTools CLI (fdev) #176](https://github.com/equinor/fusion-skills/pull/176)<br/>
+🗂️ [7da00f3](https://github.com/equinor/fusion-skills/commit/7da00f300c8a24d6fc02fba800179c4155101fad)<br/>
+📦 fusion-devtools@0.1.0__
+
+Add fusion-devtools skill for Fusion DevTools CLI (fdev)
+
+Covers REST API calls, token acquisition, service discovery, person lookup, PIM activation, and environment mapping.
+
+### Patch
+
+__🎯 [feat(fusion-devtools): add skill for Fusion DevTools CLI (fdev) #176](https://github.com/equinor/fusion-skills/pull/176)<br/>
+🗂️ [7da00f3](https://github.com/equinor/fusion-skills/commit/7da00f300c8a24d6fc02fba800179c4155101fad)<br/>
+📦 fusion-backend-dev@0.1.2__
+
+Add fusion-devtools to skill dependencies
+
 ## v1.2.0
 
 ### Minor

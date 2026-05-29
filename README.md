@@ -240,7 +240,7 @@ Main Copilot skill gate for the Fusion ecosystem — cross-domain router. USE FO
 
 ---
 
-**👍 [`fusion-backend-dev@0.1.1`](skills/fusion-backend-dev/SKILL.md)**
+**👍 [`fusion-backend-dev@0.1.2`](skills/fusion-backend-dev/SKILL.md)**
 
 Guides consumption and understanding of Fusion backend services, APIs, and patterns for frontend/client developers, integrators, and architects. Shows reference implementations, explains architectural decisions, and clarifies contracts. USE FOR: understanding Fusion backend APIs, learning implementation patterns, exploring reference code, choosing the right integration point, and understanding authorization/validation/async patterns. DO NOT USE FOR: modifying backend services, creating new endpoints, database changes, or backend-specific development (use fusion-services-develop or backend service repo instead).
 
@@ -273,6 +273,12 @@ Guides feature development in Fusion Framework React apps, including app-scoped 
 **👍 [`fusion-developer-portal@0.0.2`](skills/fusion-developer-portal/SKILL.md)**
 
 Guides development of Fusion portal shells — scaffolding, module configuration, app loading, routing, header/context integration, analytics, and deployment using the Fusion Framework CLI portal commands. USE FOR: create portal, scaffold portal, configure portal modules, portal app loading, portal routing, portal header, context selector, portal analytics, portal telemetry, portal manifest, ffc portal dev, portal deployment, embed apps in portal. DO NOT USE FOR: app-level feature development (use fusion-app-react-dev), backend service changes, Fusion Help Center integration, skill authoring.
+
+---
+
+**👍 [`fusion-devtools@0.1.0`](skills/fusion-devtools/SKILL.md)**
+
+Use Fusion DevTools CLI (fdev) for API testing, token acquisition, service discovery, and person lookup during development. USE FOR: calling Fusion REST APIs, getting access tokens as JSON, discovering services and environments, resolving persons, PIM role activation. DO NOT USE FOR: modifying backend service code, deploying services, infrastructure changes, CI/CD pipeline configuration, or Service Bus operations.
 
 ---
 
