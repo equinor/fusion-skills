@@ -10,6 +10,7 @@ metadata:
   skills:
     - fusion-research
     - fusion-code-conventions
+    - fusion-devtools
   tags:
     - fusion-backend
     - api-consumption
