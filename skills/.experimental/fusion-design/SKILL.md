@@ -4,6 +4,8 @@ description: 'Looks up Fusion Design Guidelines and applies them to any frontend
 license: MIT
 metadata:
   version: "0.0.0"
+  status: experimental
+  owner: "@equinor/fusion-core"
   tags:
     - design
     - fusion-framework
