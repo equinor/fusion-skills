@@ -264,6 +264,12 @@ Review dependency PRs with structured research, existing-PR-discussion capture, 
 
 ---
 
+**🧪 [`fusion-design@0.1.0`](skills/.experimental/fusion-design/SKILL.md)**
+
+Looks up Fusion Design Guidelines and applies them to any frontend code in the Fusion ecosystem. USE FOR: layout, spacing, component usage, interaction patterns, any UI implementation decision. DO NOT USE FOR: backend changes, CI/CD, skill authoring, data layer logic.
+
+---
+
 **👍 [`fusion-developer-app@0.3.0`](skills/fusion-developer-app/SKILL.md)**
 
 Guides feature development in Fusion Framework React apps, including app-scoped framework research needed to choose the right hooks, modules, packages, and integration patterns before implementation. USE FOR: building new features, adding components or pages, creating hooks and services, wiring up API endpoints, extending Fusion module configuration, and answering app implementation questions about which Fusion Framework surface to use. DO NOT USE FOR: issue authoring, skill authoring, CI/CD configuration, backend service changes, or general Fusion documentation that is not tied to app implementation.
