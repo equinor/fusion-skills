@@ -8,7 +8,8 @@ import { findSkillFiles } from "../list-skills/find-skill-files";
  * @returns Sorted repository-relative skill directory paths.
  */
 export function discoverLocalSkills(repoRoot: string): string[] {
-  const skillRoots = [join(repoRoot, "skills"), join(repoRoot, ".agents", "skills")];
+  // Only scan skills/ — CLI does not scan .agents/skills/ so we exclude it.
+  const skillRoots = [join(repoRoot, "skills")];
   return (
     skillRoots
       .flatMap((root) => findSkillFiles(root))
@@ -16,8 +17,7 @@ export function discoverLocalSkills(repoRoot: string): string[] {
       .map((skillFile) => skillFile.replace(/[/\\]SKILL\.md$/, ""))
       // Convert each value into the shape expected by downstream code.
       .map((skillDir) => relative(repoRoot, skillDir))
-      // Exclude deprecated skills — CLI does not list them.
-      .filter((skillDir) => !skillDir.includes(".deprecated"))
+      // Note: deprecated skills are intentionally included — the CLI lists them in its "Found N" count.
       .sort()
   );
 }
