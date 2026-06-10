@@ -2,6 +2,20 @@
 
 All notable changes to this repository are documented in this file.
 
+## v1.4.0
+
+### Minor
+
+__🎯 [feat(fusion-design): add experimental design skill draft + fusion-developer-app design agent #178](https://github.com/equinor/fusion-skills/pull/178)<br/>
+🗂️ [e6e7e1f](https://github.com/equinor/fusion-skills/commit/e6e7e1f0e7964965b9e63c489c4da6a31f13de9c)<br/>
+📦 fusion-design@0.1.0__
+
+Add experimental `fusion-design` skill
+
+New skill that looks up Fusion Design Guidelines and applies them to frontend code in the Fusion ecosystem. Covers layout, spacing, component usage, and interaction patterns. Supports app-local `DESIGN.md` overrides.
+
+Refs: equinor/fusion-core-tasks#860
+
 ## v1.3.0
 
 ### Minor
