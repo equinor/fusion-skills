@@ -1,6 +1,8 @@
 # validate-skills
 
-Validates that discovered local skills match the count reported by the skills CLI.
+Validates that discovered local catalog skills match the count reported by the skills CLI.
+
+Local discovery scans `skills/` recursively, including hidden catalog lanes such as `skills/.deprecated`, `skills/.experimental`, and `skills/.system`. It does not scan `.agents/skills`, because those are local agent installs rather than repository catalog entries reported by `npx skills add . --list`.
 
 When a skill uses `metadata.skills` as companion-skill metadata, the external skills CLI can omit that skill from `--list` output. The validator tolerates this known exclusion pattern by reconciling the mismatch against local frontmatter.
 

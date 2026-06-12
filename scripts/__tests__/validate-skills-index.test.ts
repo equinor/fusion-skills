@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from "bun:test";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { discoverLocalSkills } from "../validate-skills/discover-local-skills";
 import { extractCliSkillIds } from "../validate-skills/extract-cli-skill-ids";
 import { findCompanionSkillMetadataEntries } from "../validate-skills/find-companion-skill-metadata-entries";
 import { getSkillIdFromDir } from "../validate-skills/get-skill-id-from-dir";
@@ -20,6 +21,31 @@ describe("validate-skills index helpers", () => {
     expect(getSkillIdFromDir("skills/fusion-alpha")).toBe("fusion-alpha");
     expect(getSkillIdFromDir("skills/.experimental/fusion-beta")).toBe("fusion-beta");
     expect(getSkillIdFromDir("skills/.curated/fusion-gamma")).toBe("fusion-gamma");
+  });
+
+  it("discovers catalog skills from all skills lanes without local agent installs", () => {
+    const repoRoot = mkdtempSync(join(tmpdir(), "validate-skills-"));
+    tempDirs.push(repoRoot);
+
+    const skillDirs = [
+      "skills/fusion-visible",
+      "skills/.deprecated/fusion-legacy",
+      "skills/.experimental/fusion-preview",
+      "skills/.system/fusion-support",
+      ".agents/skills/custom-local-only",
+    ];
+
+    for (const skillDir of skillDirs) {
+      mkdirSync(join(repoRoot, skillDir), { recursive: true });
+      writeFileSync(join(repoRoot, skillDir, "SKILL.md"), "---\nname: test\n---\n", "utf8");
+    }
+
+    expect(discoverLocalSkills(repoRoot)).toEqual([
+      "skills/.deprecated/fusion-legacy",
+      "skills/.experimental/fusion-preview",
+      "skills/.system/fusion-support",
+      "skills/fusion-visible",
+    ]);
   });
 
   it("extracts skill ids from representative CLI output lines", () => {
