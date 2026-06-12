@@ -1,11 +1,11 @@
 # EDS Typography
 
-Source: `docs/guidelines/eds-typography.md`
+Source: https://eds.equinor.com/
 
 ## Rules
 
 - **Always** use `<Typography>` from `@equinor/eds-core-react` for all text — headings, body, captions.
-- **Never** use bare HTML elements (`<h1>`–`<h6>`, `<p>`, `<span>` without styling).
+- **Never** use bare HTML elements (`<h1>`–`<h6>`, `<p>`, `<span>`) — always use `<Typography>` regardless of styling.
 - **Never** hardcode font sizes, weights, or line heights in CSS or `style` props.
 
 ## Import
