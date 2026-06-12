@@ -20,11 +20,13 @@ Any time you are writing or reviewing frontend code in the Fusion ecosystem and 
 
 ## Instructions
 
-This skill is a lookup. Read the relevant reference file, then apply the rules.
+This skill is a lookup. Read **all** reference files before writing any code — they define mandatory requirements, not optional styling.
 
 ### 1. Read the references
 
-> **Note:** Reference files are not yet published. This section will be populated once `references/` is committed.
+| Topic | File |
+|---|---|
+| EDS Typography | `references/eds-typography.md` |
 
 ### 2. Check for a local `DESIGN.md`
 
