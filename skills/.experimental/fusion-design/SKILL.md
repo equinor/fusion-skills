@@ -27,6 +27,7 @@ This skill is a lookup. Read **all** reference files before writing any code —
 | Topic | File |
 |---|---|
 | EDS Typography | `references/eds-typography.md` |
+| Navigation — Sidemenu | `references/navigation-sidemenu.md` |
 
 ### 2. Check for a local `DESIGN.md`
 
