@@ -1,7 +1,5 @@
 # Navigation — Sidemenu
 
-Source: `docs/guidelines/navigation/navigation-sidemenu.md`
-
 ## Rules
 
 - **Use a sidemenu when the app has 3 or more distinct sections** — for fewer than 3 sections, use tabs instead.
