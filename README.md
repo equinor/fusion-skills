@@ -264,7 +264,7 @@ Review dependency PRs with structured research, existing-PR-discussion capture, 
 
 ---
 
-**🧪 [`fusion-design@0.1.0`](skills/.experimental/fusion-design/SKILL.md)**
+**🧪 [`fusion-design@0.1.1`](skills/.experimental/fusion-design/SKILL.md)**
 
 Looks up Fusion Design Guidelines and applies them to any frontend code in the Fusion ecosystem. USE FOR: layout, spacing, component usage, interaction patterns, any UI implementation decision. DO NOT USE FOR: backend changes, CI/CD, skill authoring, data layer logic.
 
