@@ -2,6 +2,30 @@
 
 All notable changes to this repository are documented in this file.
 
+## v1.4.1
+
+### Patch
+
+__🎯 [feat: add EDS typography reference to fusion-design skill #180](https://github.com/equinor/fusion-skills/pull/180)<br/>
+🗂️ [e7ca6c1](https://github.com/equinor/fusion-skills/commit/e7ca6c18b72a3313c5c21d3febc30a54594a5a8a)<br/>
+📦 fusion-design@0.1.1__
+
+Add EDS typography reference
+
+- Add `references/eds-typography.md` with EDS typography rules
+- Update SKILL.md to list the reference and clarify all references are mandatory
+
+---
+
+__🎯 [feat(skill): add sidemenu navigation reference to fusion-design #182](https://github.com/equinor/fusion-skills/pull/182)<br/>
+🗂️ [6c262c3](https://github.com/equinor/fusion-skills/commit/6c262c3cc2c100b3ce1598cfcd70c88a4fd54207)<br/>
+📦 fusion-design@0.1.1__
+
+Add sidemenu navigation reference
+
+- Add `references/navigation-sidemenu.md` with sidemenu structure, hierarchy, and breadcrumb rules
+- Update SKILL.md reference table to include the new navigation reference
+
 ## v1.4.0
 
 ### Minor
