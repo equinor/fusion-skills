@@ -25,7 +25,7 @@ Static analyzers flag `TOKEN=$(...)` combined with `Authorization: Bearer $TOKEN
 
 ### What the skill does NOT do
 
-- Does not store, log, or transmit tokens outside the local shell session
+- Does not store or log tokens outside the local shell session
 - Does not hardcode credentials or secrets anywhere in the skill files
 - Does not execute code — it is documentation only (no scripts)
 - Does not make network requests itself; it describes CLI usage patterns
@@ -37,4 +37,4 @@ The token is a short-lived Azure AD bearer token obtained interactively via `fde
 
 ### Reporting a vulnerability
 
-If you believe you've found a genuine security issue, open a GitHub issue in [equinor/fusion-skills](https://github.com/equinor/fusion-skills) with the label `security`.
+Do not create a public GitHub issue. Follow the Equinor Responsible Disclosure Policy at https://www.equinor.com/about-us/csirt.
