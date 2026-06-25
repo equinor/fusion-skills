@@ -58,7 +58,7 @@ dotnet tool update --global \
   Fusion.Infra.Cli
 ```
 
-Auth uses `DefaultAzureCredentials` automatically (picks up `az login` session). Pass `-t <token>` to override.
+Auth uses `DefaultAzureCredential` automatically (picks up `az login` session). Pass `-t <token>` to override.
 
 ## Core workflow — provision a database
 

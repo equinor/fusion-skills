@@ -56,7 +56,7 @@ Update to latest:
 froles --update
 ```
 
-Auth uses `DefaultAzureCredentials` automatically (picks up `az login` session). Pass `-t <token>` to override.
+Auth uses `DefaultAzureCredential` automatically (picks up `az login` session). Pass `-t <token>` to override.
 
 ## Core workflow — deploy a role config
 
@@ -135,7 +135,7 @@ The `create` command reconciles each resource type against its natural key:
 | Access roles | `systemIdentifier` + `name` | Create if missing; patch if changed |
 | Roles / claimable roles | `name` | Create if missing; patch if changed; access role mappings fully reconciled |
 | Bindings | `identifier` | Patch all fields; diff shows role/group additions and removals |
-| Role assignments | `roleName` + `source` + `externalIdentifier` | Create if missing; skip if exists |
+| Role assignments | `roleIdentifier` + `source` + `externalIdentifier` | Create if missing; skip if exists |
 
 **Important**: Access role mappings on roles/claimable roles are **fully reconciled** — mappings absent from the config are removed. Only access roles belonging to systems declared in the config file are managed.
 

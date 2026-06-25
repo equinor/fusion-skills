@@ -241,7 +241,7 @@ A direct role assignment for a specific identity.
 }
 ```
 
-**Unique key**: `roleName` + `source` + `externalIdentifier`
+**Unique key**: `roleIdentifier` + `source` + `externalIdentifier`
 **Behaviour**: Create if missing; skip if exists. No partial updates.
 
 **Example:**

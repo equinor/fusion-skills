@@ -135,10 +135,10 @@ finf database provision -f db-config.json \
   "environment": "fqa",
   "sqlPermission": {
     "owners": [
-      { "clientId": "5a842df8-3238-415d-b168-9f16a6a6031b" }
+      { "clientId": "<app-registration-client-id>" }
     ],
     "contributors": [
-      { "clientId": "5a842df8-3238-415d-b168-9f16a6a6031b" }
+      { "clientId": "<app-registration-client-id>" }
     ]
   },
   "accessControl": {
