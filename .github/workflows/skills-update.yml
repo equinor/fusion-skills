@@ -127,7 +127,7 @@ jobs:
       # Fetch full git history to support accurate diff detection of changes
       # (needed to calculate which skills were added/modified)
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0  # Full history for accurate git diff
 
@@ -332,7 +332,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -438,7 +438,7 @@ jobs:
       # STEP 1: Checkout repository
       # -------------------------------------------------------------------
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       # -------------------------------------------------------------------
       # STEP 2: Evaluate prior pull request state
