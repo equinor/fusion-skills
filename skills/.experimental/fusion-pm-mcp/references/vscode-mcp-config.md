@@ -1,6 +1,6 @@
 # VS Code MCP config quick reference (Fusion PM MCP)
 
-Distilled setup reference based on the upstream Fusion PM MCP README.
+Distilled setup reference based on the upstream Fusion PM MCP README, with the tool inventory validated against the live server rather than assumed from published docs — see the Validation checklist below for how to confirm the current tool surface via `tools/list`.
 
 ## Prerequisites
 
@@ -50,7 +50,7 @@ No one-click install link is published for this server — use the manual config
 ## Validation checklist
 
 - Run `initialize` and confirm a successful response.
-- Run `tools/list` and compare against the actual returned names — the current tool surface is: `api_get_issue`, `api_get_parent_issue`, `api_get_child_issues`, `api_get_issue_comments`, `api_list_milestones`, `api_get_milestone`, `api_upsert_issue`, `api_close`, `api_get_metadata_schema`, `api_get_pull_request`, `api_get_pr_comments`, `api_get_pr_reviews`, `api_get_pr_review`, `api_get_review_comments`, `api_resolve_review_comment`. Don't assume a fixed list — this has drifted from published docs before; trust the live `tools/list` response over any doc, including this one.
+- Run `tools/list` and compare against the actual returned names (see the tool inventory in the skill's `SKILL.md`). Don't assume a fixed list — this has drifted from published docs before; trust the live `tools/list` response over any doc, including this one and `SKILL.md`.
 - Pick one non-destructive tool (e.g. `api_list_milestones` or `api_get_issue`) and confirm a non-empty result.
 
 ## Troubleshooting quick map
