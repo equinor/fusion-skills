@@ -35,7 +35,7 @@ Open the VS Code Command Palette and run **MCP: Open User Configuration**, then 
 }
 ```
 
-Use `"url": "https://mcp.test.api.fusion-dev.net/mcp"` and `"clientId": "a0327fa6-975f-4ac6-a340-d173bf6b4658"` for NonProd instead.
+Use `"url": "https://mcp.test.api.fusion-dev.net/mcp"` and `"clientId": "a0327fa6-975f-4ac6-a340-d173bf6b4658"` for NonProd instead. If you want both Prod and NonProd configured side-by-side, give the NonProd entry a distinct server name (e.g. `fusion-mcp-nonprod`) instead of reusing `fusion-mcp` — otherwise it overwrites your Prod entry.
 
 ## Authentication flow
 
