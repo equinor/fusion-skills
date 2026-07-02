@@ -103,7 +103,7 @@ Repository-specific prefix rules, ownership/lifecycle requirements, release poli
 
 ### Step 1 — Check for installed-copy provenance before editing
 
-Before editing an existing `SKILL.md` (or its `references/`, `assets/`, `agents/`), check `skills-lock.json` at the repository root. If an entry's `skillPath` matches the target and its `source` differs from the current repository, the target is an **installed copy**, not the canonical source.
+Before editing an existing `SKILL.md` (or its `references/`, `assets/`, `agents/`), check `skills-lock.json` at the repository root. Its `skillPath` values are relative to the local skills root (e.g. `caveman-compress/SKILL.md`), not absolute or fully-qualified paths — strip any leading skills-root segment (such as `.agents/skills/` or `skills/`) from the target file's path before comparing. If a stripped entry's `skillPath` matches the target this way and its `source` differs from the current repository, the target is an **installed copy**, not the canonical source.
 
 **If it is an installed copy:**
 - Do not edit in place — local edits are overwritten on the next `npx skills update` and never reach other consumers.
