@@ -6,7 +6,7 @@ compatibility: >
   Requires finf installed as a .NET global tool from the Fusion-Public NuGet feed.
   Requires Azure CLI login (az login) or explicit token via -t flag.
 metadata:
-  version: "0.0.0"
+  version: "0.0.1"
   status: active
   owner: "@equinor/fusion-core"
   tags:

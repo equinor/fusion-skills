@@ -288,7 +288,7 @@ Use Fusion DevTools CLI (fdev) for API testing, token acquisition, service disco
 
 ---
 
-**🧪 [`fusion-github-review-resolution@0.1.7`](skills/.experimental/fusion-github-review-resolution/SKILL.md)**
+**🧪 [`fusion-github-review-resolution@0.1.8`](skills/.experimental/fusion-github-review-resolution/SKILL.md)**
 
 Resolves unresolved GitHub PR review threads end-to-end: evaluates whether each review comment is correct, applies a targeted fix when valid, replies with rationale when not, commits, and resolves the thread. USE FOR: unresolved review threads, PR review feedback, changes requested PRs, PR review URLs (#pullrequestreview-...), fix the review comments, close the open threads, address PR feedback. DO NOT USE FOR: summarizing feedback without code changes, creating new PRs, or read-only branches.
 
@@ -312,6 +312,12 @@ Wires Fusion Help Center into app pages — creates article slug constants, adds
 
 ---
 
+**👍 [`fusion-infra-cli@0.0.1`](skills/fusion-infra-cli/SKILL.md)**
+
+Provision and migrate Fusion databases using the fusion-infra-cli (finf). USE FOR: provision a database for a service, run SQL migrations, provision PR-specific ephemeral databases, check database state. DO NOT USE FOR: application code changes, service deployments, role management, or infrastructure other than databases.
+
+---
+
 **👍 [`fusion-issue-authoring@0.3.5`](skills/fusion-issue-authoring/SKILL.md)**
 
 Classify issue type, activate the matching agent mode for type-specific drafting, and enforce shared safety gates before GitHub mutation.
@@ -330,7 +336,7 @@ Plan and break down user-story issues into ordered, traceable task issue drafts 
 
 ---
 
-**🧪 [`fusion-mcp@1.0.1`](skills/.experimental/fusion-mcp/SKILL.md)**
+**🧪 [`fusion-mcp@1.0.2`](skills/.experimental/fusion-mcp/SKILL.md)**
 
 Explain what Fusion MCP is and guide users through setting it up when they need Fusion-aware MCP capabilities in Copilot workflows.
 
@@ -342,9 +348,21 @@ Systematically improves TSDoc and README documentation across packages in a Type
 
 ---
 
+**🧪 [`fusion-pm-mcp@0.1.0`](skills/.experimental/fusion-pm-mcp/SKILL.md)**
+
+Explain what Fusion PM MCP is and guide setup of the hosted HTTP+OAuth server for its GitHub project-management retrieval tools. USE FOR: setting up or troubleshooting Fusion PM MCP, understanding its issue/PR/milestone tools, filing a setup bug. DO NOT USE FOR: implementing changes to the fusion-pm-mcp service itself, GitHub issue authoring/triage workflows, or general Fusion Framework/docs/EDS retrieval — use `fusion-mcp` for that.
+
+---
+
 **⚙️ [`fusion-research@0.4.1`](skills/.system/fusion-research/SKILL.md)**
 
 Source-backed research orchestrator for the Fusion ecosystem. Routes to the correct research agent based on question type. Returns source-backed evidence only; will not invent Framework behavior, component APIs, skill catalog relationships, platform guidance, or backend implementation details. USE FOR: any research question needing source-backed evidence about Fusion Framework APIs, EDS components, the Fusion skill catalog, Fusion platform documentation, or backend service implementation. DO NOT USE FOR: implementing code changes, installing or editing skills, MCP setup or troubleshooting, or inventing Fusion behavior without evidence.
+
+---
+
+**👍 [`fusion-roles-cli@0.0.1`](skills/fusion-roles-cli/SKILL.md)**
+
+Deploy and manage Fusion Roles V2 configuration using the fusion-roles-cli (froles). USE FOR: deploy role config from a JSON file, create roles/bindings/assignments, export current role state, inspect role assignments. DO NOT USE FOR: database provisioning, application code changes, Azure AD group management outside role bindings, or Roles V1 management.
 
 ---
 
@@ -360,7 +378,7 @@ Entrypoint for AI coding assistant rule authoring across GitHub Copilot, Cursor,
 
 ---
 
-**👍 [`fusion-skill-authoring@0.3.4`](skills/fusion-skill-authoring/SKILL.md)**
+**👍 [`fusion-skill-authoring@0.3.5`](skills/fusion-skill-authoring/SKILL.md)**
 
 Creates or modernizes repository skills with clear activation cues, purposeful support files, and practical review loops. USE FOR: creating a new skill, tightening an existing skill, improving discovery wording, and structuring references/assets/optional helper agents when they genuinely add value. DO NOT USE FOR: product-code changes, routine copy edits outside skills/, or documentation that should not become an installable skill.
 

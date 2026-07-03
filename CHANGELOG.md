@@ -2,6 +2,113 @@
 
 All notable changes to this repository are documented in this file.
 
+## v1.5.0
+
+### Minor
+
+__🎯 [fix(skills): correct fusion-mcp/fusion-pm-mcp setup guidance, add installed-copy provenance check #197](https://github.com/equinor/fusion-skills/pull/197)<br/>
+🗂️ [380c0a1](https://github.com/equinor/fusion-skills/commit/380c0a18d417f1c8003b91eae127ec9d8b450622)<br/>
+📦 fusion-pm-mcp@0.1.0__
+
+Add fusion-pm-mcp skill for GitHub project-management MCP setup
+
+New experimental skill covering the `fusion-pm-mcp` server — a caching proxy
+over the GitHub REST API exposing issue/PR/milestone tools. Guides users
+through the hosted HTTP+OAuth setup (the recommended path for consumers),
+validation, and troubleshooting.
+
+Includes:
+- SKILL.md with hosted setup guidance, tool inventory, and troubleshooting
+- references/vscode-mcp-config.md with the hosted config snippet
+- assets/bug-report-template.md for filing setup failures against
+  `equinor/fusion-pm-mcp`
+
+### Patch
+
+__🎯 [fix(skills): correct fusion-mcp/fusion-pm-mcp setup guidance, add installed-copy provenance check #197](https://github.com/equinor/fusion-skills/pull/197)<br/>
+🗂️ [380c0a1](https://github.com/equinor/fusion-skills/commit/380c0a18d417f1c8003b91eae127ec9d8b450622)<br/>
+📦 fusion-github-review-resolution@0.1.8__
+
+Skip the worktree question when already on the PR's head branch
+
+Step 1 now checks whether the current checkout's branch matches the PR's head
+branch before asking about a dedicated git worktree. If they match, the skill
+proceeds directly instead of asking a redundant question; the worktree
+question is only asked when the branch differs or the workspace is on a
+shared/long-lived branch.
+
+---
+
+__🎯 [feat: add fusion-infra-cli and fusion-roles-cli skills #194](https://github.com/equinor/fusion-skills/pull/194)<br/>
+🗂️ [e01e200](https://github.com/equinor/fusion-skills/commit/e01e2001214e42a3bd1f5153561073a5c70e4f4e)<br/>
+📦 fusion-infra-cli@0.0.1__
+
+Add fusion-infra-cli skill for database provisioning
+
+New skill covering the `finf` CLI tool for provisioning and migrating Fusion
+databases. Primary use case is deploying databases via CI/CD pipelines.
+
+Includes:
+- SKILL.md with core workflows for provision, migrate, PR databases
+- references/db-config-schema.md with the full provisioning config JSON schema
+
+---
+
+__🎯 [fix(skills): correct fusion-mcp/fusion-pm-mcp setup guidance, add installed-copy provenance check #197](https://github.com/equinor/fusion-skills/pull/197)<br/>
+🗂️ [380c0a1](https://github.com/equinor/fusion-skills/commit/380c0a18d417f1c8003b91eae127ec9d8b450622)<br/>
+📦 fusion-mcp@1.0.2__
+
+Fix outdated hosted-server config
+
+The one-click install links and manual JSON config were missing the required
+`oauth.clientId` field, and only covered Prod (no NonProd link). Both are now
+aligned with the upstream README.
+
+---
+
+__🎯 [feat: add fusion-infra-cli and fusion-roles-cli skills #194](https://github.com/equinor/fusion-skills/pull/194)<br/>
+🗂️ [e01e200](https://github.com/equinor/fusion-skills/commit/e01e2001214e42a3bd1f5153561073a5c70e4f4e)<br/>
+📦 fusion-roles-cli@0.0.1__
+
+Add fusion-roles-cli skill for role config deployment
+
+New skill covering the `froles` CLI tool for deploying Fusion Roles V2
+configuration from JSON config files.
+
+Includes:
+- SKILL.md with core workflows for create, dry-run, export
+- references/role-config-schema.md with the full JSON schema for all resource
+  types (scope types, access roles, roles, claimable roles, bindings,
+  role assignments, claimable role assignments)
+
+---
+
+__🎯 [fix(skills): correct fusion-mcp/fusion-pm-mcp setup guidance, add installed-copy provenance check #197](https://github.com/equinor/fusion-skills/pull/197)<br/>
+🗂️ [380c0a1](https://github.com/equinor/fusion-skills/commit/380c0a18d417f1c8003b91eae127ec9d8b450622)<br/>
+📦 fusion-skill-authoring@0.3.5__
+
+Detect installed-copy provenance before editing an existing skill
+
+Adds a new Step 1 that checks `skills-lock.json` before editing an existing
+`SKILL.md` or its supporting files. If the target matches a locked entry whose
+`source` differs from the current repository, it is an installed copy — the
+skill now surfaces the source repo and redirects there (or offers to draft an
+issue) instead of silently editing a copy that would be overwritten on the
+next update.
+
+---
+
+__🎯 [fix(skills): correct fusion-mcp/fusion-pm-mcp setup guidance, add installed-copy provenance check #197](https://github.com/equinor/fusion-skills/pull/197)<br/>
+🗂️ [380c0a1](https://github.com/equinor/fusion-skills/commit/380c0a18d417f1c8003b91eae127ec9d8b450622)__
+
+Clarify installed-copy safety guidance in the entrypoint
+
+The entrypoint's Safety section now states explicitly that installed skill
+files are copies (per `skills-lock.json`), and points to `author.agent.md`
+(content fixes, redirects to `fusion-skill-authoring`) and `warden.agent.md`
+(failure reports) instead of editing them in place. This is visible even when
+`fusion-skill-authoring` itself is not installed alongside `fusion-skills`.
+
 ## v1.4.1
 
 ### Patch
