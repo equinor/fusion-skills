@@ -28,6 +28,9 @@ This skill is a lookup. Read **all** reference files before writing any code —
 |---|---|
 | EDS Typography | `references/eds-typography.md` |
 | Navigation — Sidemenu | `references/navigation-sidemenu.md` |
+| Navigation — Tabs | `references/navigation-tabs.md` |
+| Layout — Content area patterns | `references/layout.md` |
+| Spacing | `references/spacing.md` |
 
 ### 2. Check for a local `DESIGN.md`
 
