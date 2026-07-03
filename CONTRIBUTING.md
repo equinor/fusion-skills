@@ -57,6 +57,12 @@ Use the `fusion-issue-authoring` skill to draft and publish issues — it enforc
 
 Do not report security vulnerabilities via GitHub issues or `fusion-issue-authoring`; always follow [SECURITY.md](SECURITY.md) and Equinor CSIRT guidance instead.
 
+## Found a bug or improvement in an installed skill?
+
+If you're working in a repository that *consumes* skills from here, the files under its local skills folder (e.g. `.agents/skills/`) are **copies**, not the source — check that repository's `skills-lock.json` for each skill's `source`. Don't edit the local copy directly: those changes are silently overwritten on the next `npx skills update` and never reach other consumers.
+
+Instead, open an issue or PR here in `equinor/fusion-skills`. The `fusion-skill-authoring` skill checks `skills-lock.json` provenance automatically and will redirect you here if you try to edit an installed copy in place. If a skill misbehaved rather than needing a content change, use the `fusion-skills` skill's `warden` agent (report mode) to capture a triage-ready bug report.
+
 ## Full contribution guide
 
 Use the full maintainer workflow in [contribute/README.md](contribute/README.md).
