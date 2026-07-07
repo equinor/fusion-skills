@@ -30,8 +30,12 @@ This skill is a lookup. Read **all** reference files before writing any code —
 | Navigation — Sidemenu | `references/navigation-sidemenu.md` |
 | Navigation — Tabs | `references/navigation-tabs.md` |
 | Layout — Content area patterns | `references/layout.md` |
+| Layout — Centered content | `references/layout-centered-content.md` |
 | Spacing | `references/spacing.md` |
 | Actions — Action bar, destructive actions, button placement | `references/actions.md` |
+| Empty states | `references/empty-states.md` |
+| Error messages | `references/error-messages.md` |
+| Contextual help (ℹ / ? icons, density) | `references/contextual-help.md` |
 
 ### 2. Check for a local `DESIGN.md`
 
