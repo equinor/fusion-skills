@@ -31,6 +31,7 @@ This skill is a lookup. Read **all** reference files before writing any code —
 | Navigation — Tabs | `references/navigation-tabs.md` |
 | Layout — Content area patterns | `references/layout.md` |
 | Spacing | `references/spacing.md` |
+| Actions — Action bar, destructive actions, button placement | `references/actions.md` |
 
 ### 2. Check for a local `DESIGN.md`
 

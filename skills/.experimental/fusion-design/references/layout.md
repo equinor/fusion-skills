@@ -36,6 +36,7 @@ Content stretches edge to edge, capped at `1584px` on wide screens. Always maint
 
 - Dashboards, card layouts, list views, multi-column tables
 - Internal padding: use page/view spacing variables from the spacing reference — `--eds-spacing-inset-xl-vertical-squared` (vertical) and `--eds-spacing-inset-xl-horizontal` (horizontal). Never hardcode pixel values.
+- **Data tables and lists must fill the full content width** — set `width: 100%` on the table/list. EDS `Table` (and a plain `<table>`) sizes to its content by default, so without this it collapses to a narrow column on the left and wastes the horizontal space that makes dense data scannable.
 - If a **single** viewport-filling component (AG Grid, map) occupies the entire area, use **C — Viewport-fill** instead
 - Never use zero padding — content must not touch the edges
 
