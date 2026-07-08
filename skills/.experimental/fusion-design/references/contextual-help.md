@@ -4,8 +4,10 @@ Two icons provide contextual help; both supplement good labelling — neither re
 
 | Icon | Level | Behaviour | Use for |
 |---|---|---|---|
-| **Info (ℹ)** | Content-level titles — section headings, form labels, card/table headers | Hover/click → short inline tooltip | Explaining a specific field or term the user may not understand |
+| **Info (ℹ)** | Content-level titles — section headings, form labels, card/table headers | Hover/focus → short inline tooltip (**not** clickable) | Explaining a specific field or term the user may not understand |
 | **Help (?)** | Page `h1` only | Click → opens the Fusion Help Center side sheet | Linking the page to a help article |
+
+The ℹ icon is **hover/focus only** — a plain EDS `Tooltip`, no click-to-toggle. Only the `?` icon responds to a click (it opens the Help Center).
 
 ---
 
