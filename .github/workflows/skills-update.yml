@@ -565,8 +565,10 @@ jobs:
       # -------------------------------------------------------------------
       # STEP 4: Remove the deprecated skill
       # -------------------------------------------------------------------
-      # Use the skills CLI to remove the skill — it knows the correct
-      # install path and handles skills-lock.json cleanup.
+      # Use the skills CLI to remove the skill's installed files, then prune
+      # the entry from skills-lock.json ourselves. The CLI removes the files
+      # under .agents/skills/ but does NOT update skills-lock.json, so the
+      # lockfile entry must be deleted explicitly to fully remove the skill.
       - name: Remove deprecated skill
         if: steps.pr_state.outputs.blocked != 'true'
         shell: bash
@@ -575,7 +577,17 @@ jobs:
         run: |
           set -euo pipefail
           npx -y skills remove "$SKILL" -y
-          echo "Removed $SKILL via skills CLI"
+          echo "Removed $SKILL files via skills CLI"
+
+          lockfile="skills-lock.json"
+          if [ -f "$lockfile" ] && jq -e --arg s "$SKILL" '.skills | has($s)' "$lockfile" >/dev/null 2>&1; then
+            tmp=$(mktemp)
+            jq --arg s "$SKILL" 'del(.skills[$s])' "$lockfile" > "$tmp"
+            mv "$tmp" "$lockfile"
+            echo "Removed $SKILL entry from $lockfile"
+          else
+            echo "No $SKILL entry found in $lockfile — nothing to prune."
+          fi
 
       # -------------------------------------------------------------------
       # STEP 4b: Install successor skill (if available)
