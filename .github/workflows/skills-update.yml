@@ -580,14 +580,35 @@ jobs:
           echo "Removed $SKILL files via skills CLI"
 
           lockfile="skills-lock.json"
-          if [ -f "$lockfile" ] && jq -e --arg s "$SKILL" '.skills | has($s)' "$lockfile" >/dev/null 2>&1; then
-            tmp=$(mktemp)
-            jq --arg s "$SKILL" 'del(.skills[$s])' "$lockfile" > "$tmp"
-            mv "$tmp" "$lockfile"
-            echo "Removed $SKILL entry from $lockfile"
-          else
-            echo "No $SKILL entry found in $lockfile — nothing to prune."
+          if [ ! -f "$lockfile" ]; then
+            echo "No $lockfile present — nothing to prune."
+            exit 0
           fi
+
+          # Query whether the entry exists, distinguishing a genuine "absent
+          # key" (jq -e exit code 1) from real failures such as invalid JSON or
+          # a missing jq binary (exit code >1). Swallowing the latter as "no
+          # entry" would silently leave a stale lockfile entry behind.
+          set +e
+          jq -e --arg s "$SKILL" '.skills | has($s)' "$lockfile" >/dev/null
+          jq_status=$?
+          set -e
+
+          case "$jq_status" in
+            0)
+              tmp=$(mktemp)
+              jq --arg s "$SKILL" 'del(.skills[$s])' "$lockfile" > "$tmp"
+              mv "$tmp" "$lockfile"
+              echo "Removed $SKILL entry from $lockfile"
+              ;;
+            1)
+              echo "No $SKILL entry found in $lockfile — nothing to prune."
+              ;;
+            *)
+              echo "::error::Failed to inspect $lockfile (jq exit $jq_status) — refusing to skip lockfile pruning." >&2
+              exit "$jq_status"
+              ;;
+          esac
 
       # -------------------------------------------------------------------
       # STEP 4b: Install successor skill (if available)
