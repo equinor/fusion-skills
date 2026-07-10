@@ -4,8 +4,8 @@
     "caveman-compress": {
       "source": "JuliusBrussee/caveman",
       "sourceType": "github",
-      "skillPath": "caveman-compress/SKILL.md",
-      "computedHash": "25520dcbf1cc98a372ea9e53abc6a5be20ebf1c7bcbc2008cdc9a118de0311c6"
+      "skillPath": "skills/caveman-compress/SKILL.md",
+      "computedHash": "84517cd4cf7a49d8d2bc1baf00f61bc359306c6ad9389756b6937eff958bd374"
     }
   }
 }

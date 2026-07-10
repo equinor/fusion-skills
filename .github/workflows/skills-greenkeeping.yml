@@ -283,7 +283,8 @@ jobs:
           DEPRECATED_DATE: ${{ steps.metadata.outputs.deprecated_date }}
         run: |
           set -euo pipefail
-          body="pr-body.md"
+          mkdir -p .tmp
+          body=".tmp/pr-body.md"
 
           {
             echo "## Why"
@@ -328,7 +329,7 @@ jobs:
           branch: "chore/greenkeeping/remove-${{ matrix.skill }}"
           delete-branch: true
           title: "chore: remove deprecated skill `${{ matrix.skill }}`"
-          body-path: pr-body.md
+          body-path: .tmp/pr-body.md
           labels: |
             chore
             greenkeeping
