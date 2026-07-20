@@ -32,6 +32,8 @@ An empty state communicates that no content is available yet — on first use, a
 | **Banner** | Contextual, non-disruptive notice — e.g. missing permissions or a setup step. |
 | **Dialog** | The empty state requires immediate action/awareness — first-time setup, critical missing config, onboarding. |
 
+> **"Message" is a pattern, not an importable component.** `@equinor/eds-core-react` has **no `Message` export** — build it as a composition of EDS primitives: a centred container with an informational `Icon`, `Typography` for the title/body, and at most one (two total) `Button`. For the other two rows, use the real EDS components: `Banner` (with `BannerIcon`/`BannerMessage`/`BannerActions`) and `Dialog`.
+
 ## Common contexts
 
 | Context | Copy angle |

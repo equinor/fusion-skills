@@ -4,6 +4,19 @@ An error message tells the user something went wrong, why, and what to do next. 
 
 ---
 
+## Anatomy & layout
+
+A page/section/region error is a **vertically composed panel** — not a single horizontal strip. Grounded in the anatomy in `docs/patterns/error-messages.md`:
+
+1. **Error icon** + **Title** on the top row. The title is a real heading (EDS `Typography` `variant="h5"`/`h6` or bold), e.g. `Shared reports failed to load` — never just body text.
+2. **Subheading (optional)** — only when a detail needs emphasis (e.g. the cause).
+3. **Body** — what happened, why, and the next step (EDS `Typography` body).
+4. **Primary action** — a **contained** EDS `Button` (`variant="contained"`, primary) guiding resolution, e.g. `Try again` or `Contact support`. **Not** a ghost/text link.
+5. **Error ID row** — the ID in a subtle container with a **Copy** button beside it.
+6. **Show details** — a toggle revealing technical context (status code, correlation ID).
+
+Lay these out **stacked vertically**, left-aligned. Do not cram title + body + actions into one horizontal line.
+
 ## Placement
 
 - **Show the error where the problem is** — inline, next to or in place of the element/region that failed. Not as a global overlay.
@@ -31,6 +44,23 @@ An error message tells the user something went wrong, why, and what to do next. 
 - **Preserve user input** after an error — never clear the form. Highlight the problematic field while keeping the entry.
 - **Provide escalation affordances:** an **Error ID**, a **Copy** button, and a **Show details** control for technical context.
 - **Confirm when resolved** — once fixed (by user or system), show a clear confirmation (`Connection restored. Changes synced.`).
+
+## Components & buttons
+
+- **Default: the composed anatomy panel above** — build it from EDS primitives (`Icon` + `Typography` title/body + a contained `Button` + the Error ID row). This is the layout in the guideline's anatomy image.
+- **Buttons:** the **primary action is a contained `Button`** (filled, primary). Secondary affordances — **Copy**, **Show details** — are `ghost` buttons. Never make the primary resolution action a ghost/text link.
+- **`Dialog`** — only for critical, blocking errors.
+- **`Banner`** — a compact inline notice for brief, low-detail messages. Prefer the composed panel for anything with a title + body + Error ID + details. If you do use `Banner`: **`BannerMessage` is itself a `Typography` (`<p>`)** — do **not** nest block `Typography` inside it (a `<p>` in a `<p>` is invalid HTML and throws a hydration error that tsc/build/`check.sh` miss); pass plain text to `BannerMessage`.
+
+```tsx
+// ✅ Primary action is a contained Button; Copy / Show details are ghost
+<Button variant="contained" onClick={onRetry}>Try again</Button>
+<Button variant="ghost" onClick={onCopy}>Copy</Button>
+<Button variant="ghost" onClick={toggleDetails}>Show details</Button>
+
+// ❌ Wrong — primary resolution action as a ghost/link crammed into a Banner row
+<BannerActions><Button variant="ghost">Try again</Button></BannerActions>
+```
 
 ## Accessibility
 
