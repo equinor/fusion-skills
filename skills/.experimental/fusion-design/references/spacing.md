@@ -65,4 +65,4 @@ Do **not** expand size abbreviations — `md` is correct, `medium` is not; `xl` 
 - Never write `padding: 16px`, `gap: 24px`, or similar hardcoded values — use the variables above
 - Match the variable tier to the element context: page → `xl`, container → `md`, interactive → `xs`
 - Use `--eds-spacing-inset-*` for padding on layout containers; use `--eds-spacing-vertical/horizontal-*` for gaps between elements
-- For border-radius use `--eds-spacing-border-radius-rounded` (subtle) or `--eds-spacing-border-radius-pill` (full pill) — do **not** invent names like `--eds-shape-corners-*` or `--eds-shape-border-radius-*`
+- For border-radius use `--eds-shape-corners-border-radius` (standard rounded) or `border-radius: 9999px` (full pill) — do **not** invent names like `--eds-spacing-border-radius-*` or `--eds-shape-border-radius-*`
