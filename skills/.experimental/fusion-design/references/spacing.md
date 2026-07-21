@@ -46,7 +46,7 @@ Applied to interactive elements — buttons, toggles, clickable icons.
 | Horizontal padding | `--eds-spacing-inset-xs-horizontal` |
 | Vertical gap | `--eds-spacing-vertical-xs` |
 | Horizontal gap | `--eds-spacing-horizontal-xs` |
-| Icon gap | `--eds-icon-$(icon-size)-gap-horizontal` |
+| Icon gap | `--eds-spacing-horizontal-xs` |
 
 ---
 
