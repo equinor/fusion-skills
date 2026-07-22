@@ -1,4 +1,7 @@
-import ts from "typescript";
+// TypeScript 7 removed the programmatic compiler API. This script requires the
+// TS6 compiler API (createSourceFile, AST traversal, etc.) which is pinned via
+// the `typescript-compiler-api` package alias in package.json.
+import ts from "typescript-compiler-api";
 import type { IntentCommentIssue } from "./types";
 
 const INTENT_TARGET_REGEX =

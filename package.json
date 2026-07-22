@@ -11,7 +11,8 @@
     "@types/node": "^26.1.1",
     "biome": "^0.3.3",
     "graphql": "^17.0.2",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "typescript-compiler-api": "npm:typescript@^6"
   },
   "scripts": {
     "postinstall": "bun run scripts/postinstall/index.ts",
