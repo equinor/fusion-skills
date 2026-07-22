@@ -228,7 +228,8 @@ jobs:
           set -euo pipefail
 
           # Initialize PR body with header and summary
-          cat << EOF > pr-body.md
+          mkdir -p .tmp
+          cat << EOF > .tmp/pr-body.md
           ## Skills Upgrade
 
           Automated run of \`npx skills update\` to update agent skills to their latest versions.
@@ -243,28 +244,28 @@ jobs:
 
           # For each changed skill, append its name and CHANGELOG details
           jq -r '.[]' <<< "$CHANGED_SKILLS" | while read -r skill; do
-            echo "- **$skill**" >> pr-body.md
+            echo "- **$skill**" >> .tmp/pr-body.md
 
             changelog=".agents/skills/$skill/CHANGELOG.md"
             if [ -f "$changelog" ]; then
-              echo "  <details><summary>CHANGELOG additions for $skill</summary>" >> pr-body.md
-              echo "" >> pr-body.md
+              echo "  <details><summary>CHANGELOG additions for $skill</summary>" >> .tmp/pr-body.md
+              echo "" >> .tmp/pr-body.md
 
               # Two modes depending on whether this is a new or existing file:
               if git ls-files --error-unmatch "$changelog" >/dev/null 2>&1; then
                 # Existing file: show only new additions (lines starting with +)
-                git diff -U0 -- "$changelog" | sed -n '/^+[^+]/p' | sed 's/^+//' | sed '/^# Changelog$/d' >> pr-body.md 2>/dev/null || true
+                git diff -U0 -- "$changelog" | sed -n '/^+[^+]/p' | sed 's/^+//' | sed '/^# Changelog$/d' >> .tmp/pr-body.md 2>/dev/null || true
               else
                 # New file: show full content (minus header)
-                sed '/^# Changelog$/d' "$changelog" >> pr-body.md
+                sed '/^# Changelog$/d' "$changelog" >> .tmp/pr-body.md
               fi
 
-              echo "" >> pr-body.md
-              echo "</details>" >> pr-body.md
+              echo "" >> .tmp/pr-body.md
+              echo "</details>" >> .tmp/pr-body.md
             else
-              echo "  _No changelog updates found_" >> pr-body.md
+              echo "  _No changelog updates found_" >> .tmp/pr-body.md
             fi
-            echo "" >> pr-body.md
+            echo "" >> .tmp/pr-body.md
           done
 
       # -----------------------------------------------------------------------
@@ -284,7 +285,7 @@ jobs:
           branch: chore/skills-upgrade
           delete-branch: true  # Clean up branch after PR merge
           title: "chore(skills): upgrade agent skills"
-          body-path: pr-body.md
+          body-path: .tmp/pr-body.md
           labels: |
             chore
             skills
