@@ -264,7 +264,7 @@ Review dependency PRs with structured research, existing-PR-discussion capture, 
 
 ---
 
-**🧪 [`fusion-design@0.1.1`](skills/.experimental/fusion-design/SKILL.md)**
+**🧪 [`fusion-design@0.1.2`](skills/.experimental/fusion-design/SKILL.md)**
 
 Looks up Fusion Design Guidelines and applies them to any frontend code in the Fusion ecosystem. USE FOR: layout, spacing, component usage, interaction patterns, any UI implementation decision. DO NOT USE FOR: backend changes, CI/CD, skill authoring, data layer logic.
 
@@ -282,7 +282,7 @@ Guides development of Fusion portal shells — scaffolding, module configuration
 
 ---
 
-**👍 [`fusion-devtools@0.1.0`](skills/fusion-devtools/SKILL.md)**
+**👍 [`fusion-devtools@0.1.1`](skills/fusion-devtools/SKILL.md)**
 
 Use Fusion DevTools CLI (fdev) for API testing, token acquisition, service discovery, and person lookup during development. USE FOR: calling Fusion REST APIs, getting access tokens as JSON, discovering services and environments, resolving persons, PIM role activation. DO NOT USE FOR: modifying backend service code, deploying services, infrastructure changes, CI/CD pipeline configuration, or Service Bus operations.
 
