@@ -9,3 +9,4 @@ Add action and layout references; fix typography and table-width guidance
 - `references/eds-typography.md`: document the grouped-variant trap — `cell_header`/`cell_text` require `group="table"` (passes typecheck but crashes at runtime without it); prefer group-free quick variants
 - `references/layout.md`: data tables and lists must fill the full content width (`width: 100%`) in the full-width pattern
 - `SKILL.md`: add `actions.md` to the references table
+- `SKILL.md`: add a "Non-negotiable invariants" section so agents honour "all text uses `<Typography>`" and "all spacing uses EDS spacing variables" from the skill entry point, before reading references

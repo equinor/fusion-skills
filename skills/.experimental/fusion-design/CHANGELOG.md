@@ -1,15 +1,5 @@
 # Changelog
 
-## 0.1.2 - 2026-07-21
-
-### patch
-
-- Elevate EDS Typography and spacing rules to top-level non-negotiable invariants in SKILL.md
-
-
-  - Add a "Non-negotiable invariants" section so agents honour "all text uses `<Typography>`" and "all spacing uses EDS spacing variables" from the skill entry point, before reading references
-  - Prevents bare `<h1>`/placeholder text leaking when references are only partially read
-
 ## 0.1.1 - 2026-06-16
 
 ### patch

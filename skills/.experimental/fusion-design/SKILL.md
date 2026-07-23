@@ -3,7 +3,7 @@ name: fusion-design
 description: 'Looks up Fusion Design Guidelines and applies them to any frontend code in the Fusion ecosystem. USE FOR: layout, spacing, component usage, interaction patterns, any UI implementation decision. DO NOT USE FOR: backend changes, CI/CD, skill authoring, data layer logic.'
 license: MIT
 metadata:
-  version: "0.1.2"
+  version: "0.1.1"
   status: experimental
   owner: "@equinor/fusion-core"
   tags:
