@@ -23,6 +23,23 @@ npx skills add equinor/fusion-skills \
 For GitHub Copilot project installs, skills are placed in `.agents/skills`.
 See https://skills.sh for CLI behavior and agent support details.
 
+### Install a complete developer profile with APM
+
+[APM](https://microsoft.github.io/apm/) installs a composed profile containing skills, custom agents, scoped instructions, and Fusion MCP configuration. Install the [APM CLI](https://microsoft.github.io/apm/getting-started/quick-start/), then choose one profile:
+
+```bash
+# Shared issue, PR review, research, validation, and reporting workflows
+apm install equinor/fusion-skills/apm/fusion-developer#<release-tag> --target copilot
+
+# Shared workflows plus Fusion Framework React development
+apm install equinor/fusion-skills/apm/fusion-developer-app#<release-tag> --target copilot
+
+# Shared workflows plus Fusion backend service development
+apm install equinor/fusion-skills/apm/fusion-developer-services#<release-tag> --target copilot
+```
+
+Replace `<release-tag>` with a repository release containing the packages, for example `v1.6.0`. See [APM packages](apm/README.md) for profile contents and composition.
+
 ### Project-first workflow (recommended)
 
 > [!TIP]
