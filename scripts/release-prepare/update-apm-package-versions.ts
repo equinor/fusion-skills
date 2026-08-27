@@ -24,35 +24,36 @@ export function updateApmPackageVersions(repoRoot: string, newVersion: string): 
   }
 
   // Only immediate package directories participate in the lockstep release contract.
-  return (
-    readdirSync(packagesDir, { withFileTypes: true })
-      // Exclude files such as apm/README.md from package discovery.
-      .filter((entry) => entry.isDirectory())
-      // Carry stable package names instead of filesystem directory entries.
-      .map((entry) => entry.name)
-      .sort()
-      // Update valid APM manifests and return only package names that own one.
-      .filter((packageName) => {
-        const manifestPath = join(packagesDir, packageName, "apm.yml");
-        // Non-APM package directories are outside this helper's ownership.
-        if (!existsSync(manifestPath)) {
-          return false;
-        }
+  const packageNames = readdirSync(packagesDir, { withFileTypes: true })
+    // Exclude files such as apm/README.md from package discovery.
+    .filter((entry) => entry.isDirectory())
+    // Carry stable package names instead of filesystem directory entries.
+    .map((entry) => entry.name)
+    .sort();
+  const updatedPackages: string[] = [];
 
-        const content = readFileSync(manifestPath, "utf8");
-        const matches = content.match(VERSION_LINE_PATTERN) ?? [];
-        // Ambiguous manifests fail before release automation rewrites content.
-        if (matches.length !== 1) {
-          throw new Error(`${manifestPath} must contain exactly one top-level version field`);
-        }
+  for (const packageName of packageNames) {
+    const manifestPath = join(packagesDir, packageName, "apm.yml");
+    // Non-APM package directories are outside this helper's ownership.
+    if (!existsSync(manifestPath)) {
+      continue;
+    }
 
-        const versionedContent = content
-          // Align package identity with the root release.
-          .replace(VERSION_LINE_PATTERN, `version: "${newVersion}"`)
-          // Keep explicitly managed internal dependencies on the same release tag.
-          .replace(RELEASE_MANAGED_REF_PATTERN, `$1v${newVersion}$2`);
-        writeFileSync(manifestPath, versionedContent);
-        return true;
-      })
-  );
+    const content = readFileSync(manifestPath, "utf8");
+    const matches = content.match(VERSION_LINE_PATTERN) ?? [];
+    // Ambiguous manifests fail before release automation rewrites content.
+    if (matches.length !== 1) {
+      throw new Error(`${manifestPath} must contain exactly one top-level version field`);
+    }
+
+    const versionedContent = content
+      // Align package identity with the root release.
+      .replace(VERSION_LINE_PATTERN, `version: "${newVersion}"`)
+      // Keep explicitly managed internal dependencies on the same release tag.
+      .replace(RELEASE_MANAGED_REF_PATTERN, `$1v${newVersion}$2`);
+    writeFileSync(manifestPath, versionedContent, "utf8");
+    updatedPackages.push(packageName);
+  }
+
+  return updatedPackages;
 }
