@@ -32,6 +32,7 @@ export function updateApmPackageVersions(repoRoot: string, newVersion: string): 
     .sort();
   const updatedPackages: string[] = [];
 
+  // Update each discovered manifest once while preserving deterministic result ordering.
   for (const packageName of packageNames) {
     const manifestPath = join(packagesDir, packageName, "apm.yml");
     // Non-APM package directories are outside this helper's ownership.
