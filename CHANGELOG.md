@@ -2,6 +2,22 @@
 
 All notable changes to this repository are documented in this file.
 
+## v1.5.2
+
+### Minor
+
+__🎯 [feat(apm): add composable developer profiles #219](https://github.com/equinor/fusion-skills/pull/219)<br/>
+🗂️ [4940a42](https://github.com/equinor/fusion-skills/commit/4940a423a798d0cb91792dfb4b7af2da132d3c42)__
+
+Add composable APM packages for shared, application, and service development workflows.
+
+- Add a shared `fusion-developer` package for issue authoring, planning and solving, dependency and PR review, API verification, research, conventions, skill self-reporting, and delivery reporting
+- Chain application and service profiles through the shared package
+- Install pinned track-specific skills without duplicating common dependencies
+- Deploy track-level GitHub Copilot agents and scoped instructions
+- Configure the hosted Fusion MCP server with VS Code OAuth
+- Document local package installation and package ownership boundaries
+
 ## v1.5.1
 
 ### Patch
