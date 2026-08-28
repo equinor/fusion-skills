@@ -7,6 +7,7 @@ Outputs:
 - updates per-skill `skills/<skill>/CHANGELOG.md`
 - updates root `README.md` skills list from discovered `skills/**/SKILL.md` (including type/icon from directory prefixes, for example 🧪 for `skills/.experimental/`)
 - bumps root `package.json` version
+- aligns `apm/*/apm.yml` versions with the root package version
 - updates root `CHANGELOG.md` under latest `## v<package_version>` using grouped `### Major|Minor|Patch` sections with entry separators and package lists
 - removes processed `.changeset/*.md`
 
@@ -22,7 +23,10 @@ flowchart TD
   F --> G[Update skills/<skill>/SKILL.md version]
   G --> H[Update skills/<skill>/CHANGELOG.md]
   H --> I[Bump root package.json]
-  I --> J[Update root CHANGELOG.md]
-  J --> K[Delete processed changesets]
-  K --> L[Done]
+  I --> J[Update APM package versions]
+  J --> K[Update root CHANGELOG.md]
+  K --> L[Delete processed changesets]
+  L --> M[Done]
 ```
+
+APM package versions and release-managed dependency refs use the computed root release version.

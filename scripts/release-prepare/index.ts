@@ -15,6 +15,7 @@ import type { GroupedNotes, NoteEntry } from "./release-notes-format";
 import { type RootReleaseEntry, renderRootReleaseNotes } from "./root-release-notes-format";
 import type { BumpType } from "./semver";
 import { extractMetadataVersion } from "./skill-version";
+import { updateApmPackageVersions } from "./update-apm-package-versions";
 import { updateMetadataVersion } from "./update-metadata-version";
 import { updateReadmeSkillsTable } from "./update-readme-skills-table";
 import { upsertSkillChangelog } from "./upsert-skill-changelog";
@@ -226,6 +227,8 @@ function main(): void {
     .trim();
   const newPackageVersion = updatePackageVersion(packageJsonPath, highestReleaseBump.value);
   console.log(`Bumped package.json version to ${newPackageVersion} (${highestReleaseBump.value})`);
+  const updatedApmPackages = updateApmPackageVersions(repoRoot, newPackageVersion);
+  console.log(`Updated ${updatedApmPackages.length} APM package manifest(s).`);
   updateRootChangelog(changelogPath, newPackageVersion, releaseContent);
   console.log(`Updated ${changelogPath} with ## v${newPackageVersion}`);
   const skillCount = updateReadmeSkillsTable(repoRoot);
