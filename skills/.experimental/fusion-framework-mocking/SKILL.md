@@ -4,7 +4,7 @@ description: 'Guides seeding deterministic Fusion Framework module state in test
 license: MIT
 compatibility: Requires a Fusion Framework app or module graph consuming @equinor/fusion-framework packages. Each module's mock lives at its own `/mock` subpath (e.g. @equinor/fusion-framework-module-msal/mock) and has no test-runner dependency; assertions and call-spying are the test runner's job (Vitest's `vi`, `bun:test`'s `spyOn`, or Node's `t.mock.method`).
 metadata:
-  version: "0.0.0"
+  version: "0.1.0"
   status: experimental
   owner: "@equinor/fusion-core"
   skills:

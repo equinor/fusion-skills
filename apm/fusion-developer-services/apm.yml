@@ -1,5 +1,5 @@
 name: fusion-developer-services
-version: "1.5.2"
+version: "1.6.0"
 description: Fusion service development toolkit for GitHub Copilot
 author: Equinor Fusion
 license: MIT
@@ -9,19 +9,19 @@ dependencies:
   apm:
     - git: equinor/fusion-skills
       path: apm/fusion-developer
-      ref: v1.5.2 # release-managed
+      ref: v1.6.0 # release-managed
     - git: equinor/fusion-skills
       path: skills/fusion-backend-dev
-      ref: v1.5.2 # release-managed
+      ref: v1.6.0 # release-managed
     - git: equinor/fusion-skills
       path: skills/.experimental/fusion-core-services
-      ref: v1.5.2 # release-managed
+      ref: v1.6.0 # release-managed
     - git: equinor/fusion-skills
       path: skills/fusion-infra-cli
-      ref: v1.5.2 # release-managed
+      ref: v1.6.0 # release-managed
     - git: equinor/fusion-skills
       path: skills/fusion-roles-cli
-      ref: v1.5.2 # release-managed
+      ref: v1.6.0 # release-managed
   mcp:
     - name: fusion-mcp
       registry: false

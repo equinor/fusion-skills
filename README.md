@@ -287,9 +287,9 @@ Looks up Fusion Design Guidelines and applies them to any frontend code in the F
 
 ---
 
-**👍 [`fusion-developer-app@0.3.0`](skills/fusion-developer-app/SKILL.md)**
+**👍 [`fusion-developer-app@0.4.0`](skills/fusion-developer-app/SKILL.md)**
 
-Guides feature development in Fusion Framework React apps, including app-scoped framework research needed to choose the right hooks, modules, packages, and integration patterns before implementation. USE FOR: building new features, adding components or pages, creating hooks and services, wiring up API endpoints, extending Fusion module configuration, and answering app implementation questions about which Fusion Framework surface to use. DO NOT USE FOR: issue authoring, skill authoring, CI/CD configuration, backend service changes, or general Fusion documentation that is not tied to app implementation.
+Guides feature development in Fusion Framework React apps, including app-scoped framework research, test authoring, and test-time mocking needed to choose and verify the right integration patterns. USE FOR: building features, components, pages, hooks, services, API integrations, module configuration, and their tests. DO NOT USE FOR: issue authoring, skill authoring, CI/CD configuration, backend service changes, or general Fusion documentation unrelated to app implementation.
 
 ---
 
@@ -302,6 +302,18 @@ Guides development of Fusion portal shells — scaffolding, module configuration
 **👍 [`fusion-devtools@0.1.1`](skills/fusion-devtools/SKILL.md)**
 
 Use Fusion DevTools CLI (fdev) for API testing, token acquisition, service discovery, and person lookup during development. USE FOR: calling Fusion REST APIs, getting access tokens as JSON, discovering services and environments, resolving persons, PIM role activation. DO NOT USE FOR: modifying backend service code, deploying services, infrastructure changes, CI/CD pipeline configuration, or Service Bus operations.
+
+---
+
+**🧪 [`fusion-framework-mocking@0.1.0`](skills/.experimental/fusion-framework-mocking/SKILL.md)**
+
+Guides seeding deterministic Fusion Framework module state in tests — mockFramework, mockAppModules, and module-owned enableXMock helpers (msal, service-discovery, context, bookmark, feature-flag, analytics, telemetry, http, app) — while keeping each module''s real configurator, provider, validation, and lifecycle. USE FOR: signing in a mock user, seeding context/bookmarks/feature-flags, faking HTTP/OpenAPI responses, choosing a mock boundary, adding a mock for a custom module. DO NOT USE FOR: configuring vitest.config.ts, rendering React components/hooks, or Vitest Browser Mode setup (use fusion-framework-testing); dev-server-time API mocking/proxying in dev-server.config.ts (use fusion-developer-app); backend/service-repo mocking.
+
+---
+
+**🧪 [`fusion-framework-testing@0.1.0`](skills/.experimental/fusion-framework-testing/SKILL.md)**
+
+Guides writing and running Vitest tests for Fusion Framework React apps with @equinor/fusion-framework-vitest-plugin-react-app — choosing a testing layer, configuring vitest.config.ts and Browser Mode, rendering with test/render/renderAppHook/renderAppComponent/testApp fixtures, and troubleshooting or migrating a suite. USE FOR: writing a new app/component/hook test, setting up vitest.config.ts for a Fusion app, choosing between app/framework/module/HTTP test layers, composing or overriding test fixtures, diagnosing a failing Fusion app test. DO NOT USE FOR: seeding module-specific mock state (auth, context, bookmarks, feature flags, HTTP) — use fusion-framework-mocking; dev-server-time API mocking/proxying (use fusion-developer-app); non-Fusion test suites; backend/service-repo tests.
 
 ---
 
