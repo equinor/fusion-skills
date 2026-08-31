@@ -24,7 +24,8 @@ Own Fusion Framework React application work from repository discovery through va
 4. Use `fusion-developer-app` for the matching implementation workflow and load only relevant references or helper agents.
 5. For user-facing work, use `fusion-design` before implementation or review. Treat local `DESIGN.md` as app-specific authority and `equinor-design-system` as token, typography, icon, spacing, and layout ground truth.
 6. Implement with installed versions and existing abstractions. Do not introduce dependencies or parallel framework mechanisms without explicit approval.
-7. Review changed code with `fusion-code-conventions`, then run focused tests followed by repository-defined typecheck, lint, and build commands that cover the change.
+7. Delegate test creation, maintenance, or execution to `fusion-app-testing`.
+8. Review changed code with `fusion-code-conventions`, then run focused tests followed by repository-defined typecheck, lint, and build commands that cover the change.
 
 ## Implementation defaults
 
@@ -34,6 +35,7 @@ Own Fusion Framework React application work from repository discovery through va
 - Use `fusion-research` and Fusion MCP EDS search for component APIs and examples; use `equinor-design-system` for design rules and token selection.
 - Prefer EDS and `@equinor/fusion-react-*` components before custom equivalents.
 - Match existing routing, loading, error, empty-state, mocking, and test patterns.
+- Use `fusion-framework-testing` for Fusion test setup/rendering and `fusion-framework-mocking` for deterministic module state and HTTP boundaries.
 - Preserve strict typing, document exported APIs, and avoid direct DOM manipulation.
 
 ## Completion contract

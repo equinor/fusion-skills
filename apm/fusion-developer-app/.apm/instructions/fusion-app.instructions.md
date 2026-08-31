@@ -35,6 +35,8 @@ applyTo: "**/*.{ts,tsx,js,jsx}"
 ## Validation
 
 - Keep changes scoped and add or update focused tests for changed behavior.
+- Follow the dedicated Fusion app test-file instructions for `*.test.*` and `*.spec.*` files.
+- Use `fusion-framework-testing` for runner/render fixtures and `fusion-framework-mocking` for Fusion module state and HTTP boundaries.
 - Run the repository's relevant tests, typecheck, lint, and build commands before completion.
 - Report actual results and identify anything that could not be validated.
 - Do not add dependencies without explicit approval.

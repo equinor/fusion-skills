@@ -14,6 +14,12 @@ dependencies:
       path: skills/fusion-developer-app
       ref: v1.5.2 # release-managed
     - git: equinor/fusion-skills
+      path: skills/.experimental/fusion-framework-testing
+      ref: v1.5.2 # release-managed
+    - git: equinor/fusion-skills
+      path: skills/.experimental/fusion-framework-mocking
+      ref: v1.5.2 # release-managed
+    - git: equinor/fusion-skills
       path: skills/.system/equinor-design-system
       ref: v1.5.2 # release-managed
     - git: equinor/fusion-skills
