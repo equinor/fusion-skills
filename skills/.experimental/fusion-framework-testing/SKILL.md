@@ -4,7 +4,7 @@ description: 'Guides writing and running Vitest tests for Fusion Framework React
 license: MIT
 compatibility: Requires a Fusion Framework React app. Rendering helpers need vitest, playwright, @vitest/browser-playwright, vitest-browser-react, and @equinor/fusion-framework-vitest-plugin-react-app as dev dependencies, plus `playwright install chromium`. React, React DOM, RxJS, and Vite are peer dependencies a Fusion app normally already provides.
 metadata:
-  version: "0.0.0"
+  version: "0.1.0"
   status: experimental
   owner: "@equinor/fusion-core"
   skills:

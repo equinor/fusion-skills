@@ -1,5 +1,5 @@
 name: fusion-developer-app
-version: "1.5.2"
+version: "1.6.0"
 description: Fusion application development toolkit for GitHub Copilot
 author: Equinor Fusion
 license: MIT
@@ -9,22 +9,22 @@ dependencies:
   apm:
     - git: equinor/fusion-skills
       path: apm/fusion-developer
-      ref: v1.5.2 # release-managed
+      ref: v1.6.0 # release-managed
     - git: equinor/fusion-skills
       path: skills/fusion-developer-app
-      ref: v1.5.2 # release-managed
+      ref: v1.6.0 # release-managed
     - git: equinor/fusion-skills
       path: skills/.experimental/fusion-framework-testing
-      ref: v1.5.2 # release-managed
+      ref: v1.6.0 # release-managed
     - git: equinor/fusion-skills
       path: skills/.experimental/fusion-framework-mocking
-      ref: v1.5.2 # release-managed
+      ref: v1.6.0 # release-managed
     - git: equinor/fusion-skills
       path: skills/.system/equinor-design-system
-      ref: v1.5.2 # release-managed
+      ref: v1.6.0 # release-managed
     - git: equinor/fusion-skills
       path: skills/.experimental/fusion-design
-      ref: v1.5.2 # release-managed
+      ref: v1.6.0 # release-managed
   mcp:
     - name: fusion-mcp
       registry: false

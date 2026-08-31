@@ -2,6 +2,52 @@
 
 All notable changes to this repository are documented in this file.
 
+## v1.6.0
+
+### Minor
+
+__🎯 [feat(fusion-framework): add testing and mocking skills #221](https://github.com/equinor/fusion-skills/pull/221)<br/>
+🗂️ [df40bbc](https://github.com/equinor/fusion-skills/commit/df40bbc28a8d9134ad433fe43d7110996e3e6143)<br/>
+📦 fusion-developer-app@0.4.0__
+
+Route Fusion app test work through dedicated testing and mocking skills
+
+Add test authoring and test-time mocking to developer-app discovery cues, companion metadata,
+implementation workflow, and expected output. Preserve direct companion-skill routing for users
+running `fusion-developer-app` without APM through a concise reference and skill-local testing
+agent template.
+
+---
+
+__🎯 [feat(fusion-framework): add testing and mocking skills #221](https://github.com/equinor/fusion-skills/pull/221)<br/>
+🗂️ [df40bbc](https://github.com/equinor/fusion-skills/commit/df40bbc28a8d9134ad433fe43d7110996e3e6143)<br/>
+📦 fusion-framework-mocking@0.1.0__
+
+Add fusion-framework-mocking skill for test-time module and HTTP mocking in Fusion Framework apps
+
+Covers `mockFramework`/`FrameworkMockConfigurator`, `mockAppModules`/`enableAppManifestMock`, each module's own `/mock` entry point (MSAL, Node auth, service discovery, context, bookmarks, feature flags, analytics, telemetry), HTTP middleware mocking with `createRouterMiddleware`/`createOpenApiMockMiddleware`, `@equinor/fusion-openapi-mock`, and registering mocks for custom modules.
+
+---
+
+__🎯 [feat(fusion-framework): add testing and mocking skills #221](https://github.com/equinor/fusion-skills/pull/221)<br/>
+🗂️ [df40bbc](https://github.com/equinor/fusion-skills/commit/df40bbc28a8d9134ad433fe43d7110996e3e6143)<br/>
+📦 fusion-framework-testing@0.1.0__
+
+Add fusion-framework-testing skill for Vitest/Browser Mode testing of Fusion Framework React apps
+
+Covers `@equinor/fusion-framework-vitest-plugin-react-app` install and `defineProject` configuration, `renderAppHook`/`renderAppComponent`/`testApp` fixtures, composing and overriding fixtures with `test.extend`, troubleshooting common setup/browser/network failures, why Browser Mode is the default, choosing another browser provider or `happy-dom`/`jsdom`, and migrating an existing `@testing-library/react` suite.
+
+### Patch
+
+__🎯 [feat(fusion-framework): add testing and mocking skills #221](https://github.com/equinor/fusion-skills/pull/221)<br/>
+🗂️ [df40bbc](https://github.com/equinor/fusion-skills/commit/df40bbc28a8d9134ad433fe43d7110996e3e6143)__
+
+Add Fusion app testing support to the fusion-developer-app APM package
+
+Add a dedicated agent and path-scoped instructions for creating, maintaining, executing, and
+troubleshooting tests. Bundle the Fusion Framework testing and mocking skills and route the main
+app developer agent through the testing agent.
+
 ## v1.5.2
 
 ### Minor
