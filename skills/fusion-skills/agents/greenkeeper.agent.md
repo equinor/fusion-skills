@@ -1,3 +1,7 @@
+---
+description: Manage installed skills and set up automated skill update and discovery workflows.
+---
+
 # Greenkeeper Agent
 
 Use this agent when the user wants to manage their installed skills (install, update, remove) or set up and run automated skill sync/discovery workflows.
