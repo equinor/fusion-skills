@@ -2,6 +2,23 @@
 
 All notable changes to this repository are documented in this file.
 
+## v1.6.1
+
+### Patch
+
+__🎯 [fix(skills): add valid agent frontmatter #223](https://github.com/equinor/fusion-skills/pull/223)<br/>
+🗂️ [22d93c3](https://github.com/equinor/fusion-skills/commit/22d93c3d89eea1bd37a84980c8c183236c305c1f)<br/>
+📦 fusion-code-conventions@0.1.4__
+
+Add valid custom-agent frontmatter so APM parses and integrates the constitution and intent agents.
+
+---
+
+__🎯 [fix(skills): add valid agent frontmatter #223](https://github.com/equinor/fusion-skills/pull/223)<br/>
+🗂️ [22d93c3](https://github.com/equinor/fusion-skills/commit/22d93c3d89eea1bd37a84980c8c183236c305c1f)__
+
+Add valid custom-agent frontmatter so APM parses and integrates the greenkeeper and warden agents.
+
 ## v1.6.0
 
 ### Minor
