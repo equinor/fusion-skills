@@ -13,8 +13,11 @@ Install the [APM CLI](https://microsoft.github.io/apm/getting-started/installati
 
 `fusion-developer-app` and `fusion-developer-services` include `fusion-developer`
 transitively, then add track-specific skills, agents, and instructions.
-`fusion-developer-fullstack` composes both specialized presets. Do not install
-their transitive profiles separately.
+`fusion-developer-fullstack` composes both specialized presets, which already
+include `fusion-developer` transitively. Do not also install
+`fusion-developer`, `fusion-developer-app`, or `fusion-developer-services`
+separately alongside `fusion-developer-fullstack`; that would just add
+redundant, already-included dependencies.
 
 ## Install a preset
 

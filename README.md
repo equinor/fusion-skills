@@ -41,7 +41,7 @@ apm install equinor/fusion-skills/apm/fusion-developer-services#<release-tag> --
 apm install equinor/fusion-skills/apm/fusion-developer-fullstack#<release-tag> --target copilot
 ```
 
-Replace `<release-tag>` with a repository release containing the packages, for example `v1.6.0`. See [APM packages](apm/README.md) for profile contents and composition.
+Replace `<release-tag>` with a repository release containing the packages, for example `v1.7.0` (the first release to include `fusion-developer-fullstack`). See [APM packages](apm/README.md) for profile contents and composition.
 
 ### Project-first workflow (recommended)
 
