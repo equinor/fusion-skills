@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { discoverLocalSkills } from "../validate-skills/discover-local-skills";
 import { extractCliSkillIds } from "../validate-skills/extract-cli-skill-ids";
 import { findCompanionSkillMetadataEntries } from "../validate-skills/find-companion-skill-metadata-entries";
+import { findListedApmManagedSkills } from "../validate-skills/find-listed-apm-managed-skills";
 import { getSkillIdFromDir } from "../validate-skills/get-skill-id-from-dir";
 
 describe("validate-skills index helpers", () => {
@@ -64,6 +65,48 @@ describe("validate-skills index helpers", () => {
       "fusion-core-routing",
       "fusion-task-planner",
     ]);
+  });
+
+  it("finds CLI-listed skills materialized by the root APM lockfile", () => {
+    const repoRoot = mkdtempSync(join(tmpdir(), "validate-skills-"));
+    tempDirs.push(repoRoot);
+
+    writeFileSync(
+      join(repoRoot, "apm.lock.yaml"),
+      `dependencies:
+  - name: caveman-compress
+    deployed_files:
+      - .agents/skills/caveman-compress
+      - .agents/skills/caveman-compress/SKILL.md
+      - .agents/skills/caveman-compress/scripts/validate.py
+  - name: not-listed
+    deployed_files:
+      - .agents/skills/not-listed/SKILL.md
+`,
+      "utf8",
+    );
+
+    const cliOutput = [
+      "◇  Found 30 skills",
+      "│    fusion-core-routing",
+      "│      A description that mentions caveman-compress.",
+      "\u001b[32m│    caveman-compress\u001b[0m",
+    ].join("\n");
+
+    expect(findListedApmManagedSkills(repoRoot, cliOutput)).toEqual(["caveman-compress"]);
+  });
+
+  it("does not infer managed installs without an APM lockfile", () => {
+    const repoRoot = mkdtempSync(join(tmpdir(), "validate-skills-"));
+    tempDirs.push(repoRoot);
+
+    expect(findListedApmManagedSkills(repoRoot, "│    caveman-compress")).toEqual([]);
+  });
+
+  it("rejects a relative repository root when reconciling APM installs", () => {
+    expect(() => findListedApmManagedSkills(".", "│    caveman-compress")).toThrow(
+      "Repository root must be an absolute path.",
+    );
   });
 
   it("finds companion metadata.skills entries excluded by CLI", () => {

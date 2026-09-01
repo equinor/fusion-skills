@@ -1,0 +1,141 @@
+lockfile_version: '2'
+generated_at: '2026-09-01T07:58:35.844619+00:00'
+apm_version: 0.29.0
+dependencies:
+- repo_url: juliusbrussee/caveman
+  materialization_repo_url: JuliusBrussee/caveman
+  name: caveman-compress
+  host: github.com
+  resolved_commit: df2ccd85c94ec3c8289cb62ac020d241ccfb0c60
+  resolved_ref: v2.4.0
+  version: 2.4.0
+  virtual_path: skills/caveman-compress
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/caveman-compress
+  - .agents/skills/caveman-compress/README.md
+  - .agents/skills/caveman-compress/SECURITY.md
+  - .agents/skills/caveman-compress/SKILL.md
+  - .agents/skills/caveman-compress/scripts/__init__.py
+  - .agents/skills/caveman-compress/scripts/__main__.py
+  - .agents/skills/caveman-compress/scripts/benchmark.py
+  - .agents/skills/caveman-compress/scripts/cli.py
+  - .agents/skills/caveman-compress/scripts/compress.py
+  - .agents/skills/caveman-compress/scripts/detect.py
+  - .agents/skills/caveman-compress/scripts/validate.py
+  deployed_file_hashes:
+    .agents/skills/caveman-compress/README.md: sha256:1bf037cb56aa1a899984178cd7c5fafb6053cf92df13ae73bc9dc65403f70d28
+    .agents/skills/caveman-compress/SECURITY.md: sha256:7393f90a3a9953251554a68ad2daef273d8d656d050e2ad47a483e76c8223b2d
+    .agents/skills/caveman-compress/SKILL.md: sha256:377b0b8682d9db1a832c20ee6732ed0f19f55e4f7048955296128244c869c916
+    .agents/skills/caveman-compress/scripts/__init__.py: sha256:429c3e1c5cc5b9705f28d77f303c728304ae68693913ad3d5ce9b5a44c8ee40f
+    .agents/skills/caveman-compress/scripts/__main__.py: sha256:6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279
+    .agents/skills/caveman-compress/scripts/benchmark.py: sha256:6ff5098db623154161503595e3ef513516d1d47bed7c264c7e0378581945767b
+    .agents/skills/caveman-compress/scripts/cli.py: sha256:17edb6b425adc0ea04e35f1e90dfe318ba4232a1b815c5ff7d6cff7d574efea6
+    .agents/skills/caveman-compress/scripts/compress.py: sha256:b704d5b66cf02e1a9c70b1ea67022c07c047e0c8ac6ff0be08e5ba2640bb21d1
+    .agents/skills/caveman-compress/scripts/detect.py: sha256:9f290658f14c5100c46b1bf465ef313559fc90dfd361a9a5a9cb600bf5a2f608
+    .agents/skills/caveman-compress/scripts/validate.py: sha256:8c993f9a0e04ef403abe315333d0ee5d27af5ee22210ea8d8a7c8a1912ff890b
+  content_hash: sha256:8d2171ed49ff92d42e7fa86a8ef5c7a6346ab8b739a72ffb9e8dac02400dbc72
+  constraint: ^2.4.0
+  resolved_tag: v2.4.0
+  resolved_at: '2026-09-01T07:58:34+00:00'
+deployments:
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/caveman-compress
+  runtime: null
+  scope: project
+  owners:
+  - juliusbrussee/caveman/skills/caveman-compress
+  active_owner: juliusbrussee/caveman/skills/caveman-compress
+  content_hash: null
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/caveman-compress/README.md
+  runtime: null
+  scope: project
+  owners:
+  - juliusbrussee/caveman/skills/caveman-compress
+  active_owner: juliusbrussee/caveman/skills/caveman-compress
+  content_hash: sha256:1bf037cb56aa1a899984178cd7c5fafb6053cf92df13ae73bc9dc65403f70d28
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/caveman-compress/SECURITY.md
+  runtime: null
+  scope: project
+  owners:
+  - juliusbrussee/caveman/skills/caveman-compress
+  active_owner: juliusbrussee/caveman/skills/caveman-compress
+  content_hash: sha256:7393f90a3a9953251554a68ad2daef273d8d656d050e2ad47a483e76c8223b2d
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/caveman-compress/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - juliusbrussee/caveman/skills/caveman-compress
+  active_owner: juliusbrussee/caveman/skills/caveman-compress
+  content_hash: sha256:377b0b8682d9db1a832c20ee6732ed0f19f55e4f7048955296128244c869c916
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/caveman-compress/scripts/__init__.py
+  runtime: null
+  scope: project
+  owners:
+  - juliusbrussee/caveman/skills/caveman-compress
+  active_owner: juliusbrussee/caveman/skills/caveman-compress
+  content_hash: sha256:429c3e1c5cc5b9705f28d77f303c728304ae68693913ad3d5ce9b5a44c8ee40f
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/caveman-compress/scripts/__main__.py
+  runtime: null
+  scope: project
+  owners:
+  - juliusbrussee/caveman/skills/caveman-compress
+  active_owner: juliusbrussee/caveman/skills/caveman-compress
+  content_hash: sha256:6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/caveman-compress/scripts/benchmark.py
+  runtime: null
+  scope: project
+  owners:
+  - juliusbrussee/caveman/skills/caveman-compress
+  active_owner: juliusbrussee/caveman/skills/caveman-compress
+  content_hash: sha256:6ff5098db623154161503595e3ef513516d1d47bed7c264c7e0378581945767b
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/caveman-compress/scripts/cli.py
+  runtime: null
+  scope: project
+  owners:
+  - juliusbrussee/caveman/skills/caveman-compress
+  active_owner: juliusbrussee/caveman/skills/caveman-compress
+  content_hash: sha256:17edb6b425adc0ea04e35f1e90dfe318ba4232a1b815c5ff7d6cff7d574efea6
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/caveman-compress/scripts/compress.py
+  runtime: null
+  scope: project
+  owners:
+  - juliusbrussee/caveman/skills/caveman-compress
+  active_owner: juliusbrussee/caveman/skills/caveman-compress
+  content_hash: sha256:b704d5b66cf02e1a9c70b1ea67022c07c047e0c8ac6ff0be08e5ba2640bb21d1
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/caveman-compress/scripts/detect.py
+  runtime: null
+  scope: project
+  owners:
+  - juliusbrussee/caveman/skills/caveman-compress
+  active_owner: juliusbrussee/caveman/skills/caveman-compress
+  content_hash: sha256:9f290658f14c5100c46b1bf465ef313559fc90dfd361a9a5a9cb600bf5a2f608
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/caveman-compress/scripts/validate.py
+  runtime: null
+  scope: project
+  owners:
+  - juliusbrussee/caveman/skills/caveman-compress
+  active_owner: juliusbrussee/caveman/skills/caveman-compress
+  content_hash: sha256:8c993f9a0e04ef403abe315333d0ee5d27af5ee22210ea8d8a7c8a1912ff890b

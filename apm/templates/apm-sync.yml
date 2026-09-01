@@ -1,0 +1,41 @@
+name: APM Sync
+
+on:
+  schedule:
+    - cron: "0 8 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: apm-sync
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    name: Sync APM dependencies
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Update APM dependencies
+        uses: microsoft/apm-action@v1
+        with:
+          apm-version: "0.29.0"
+          update: "true"
+
+      - name: Create update pull request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          branch: chore/apm-sync
+          delete-branch: true
+          commit-message: "chore(apm): sync dependencies"
+          title: "chore(apm): sync dependencies"
+          body: |
+            Automated APM dependency sync.
+
+            APM refreshed dependencies within the constraints in `apm.yml`,
+            updated `apm.lock.yaml`, and redeployed managed agent context.
+            Review the complete diff before merging.
