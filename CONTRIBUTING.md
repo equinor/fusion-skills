@@ -59,9 +59,9 @@ Do not report security vulnerabilities via GitHub issues or `fusion-issue-author
 
 ## Found a bug or improvement in an installed skill?
 
-If you're working in a repository that *consumes* skills from here, the files under its local skills folder (e.g. `.agents/skills/`) are **copies**, not the source — check that repository's `skills-lock.json` for each skill's `source`. Don't edit the local copy directly: those changes are silently overwritten on the next `npx skills update` and never reach other consumers.
+If you're working in a repository that *consumes* skills from here, files under `.agents/skills/` can be materialized APM dependencies rather than source. Check that repository's `apm.yml` and `apm.lock.yaml` for ownership and provenance. Don't edit an APM-managed copy directly: those changes are overwritten by `apm install` or `apm update` and never reach other consumers.
 
-Instead, open an issue or PR here in `equinor/fusion-skills`. The `fusion-skill-authoring` skill checks `skills-lock.json` provenance automatically and will redirect you here if you try to edit an installed copy in place. If a skill misbehaved rather than needing a content change, use the `fusion-skills` skill's `warden` agent (report mode) to capture a triage-ready bug report.
+Instead, open an issue or PR here in `equinor/fusion-skills`. The `fusion-skill-authoring` skill checks dependency provenance and redirects source changes here. If a skill misbehaved rather than needing a content change, use the `fusion-skills` skill's `warden` agent (report mode) to capture a triage-ready bug report.
 
 ## Full contribution guide
 

@@ -7,7 +7,7 @@ This repository uses semantic versioning for both repository releases and indivi
 - **Repository releases**: tag as `vMAJOR.MINOR.PATCH`
 - **Skill metadata**: `metadata.version` is managed by release automation (do not edit manually in non-release PRs)
 - **PR changesets**: when a skill changes, add or update a `.changeset/*.md` entry using `major|minor|patch`
-- **Consumer safety**: encourage pinned installs for production (`npx skills add equinor/fusion-skills@vX.Y.Z`)
+- **Consumer safety**: use APM constraints in `apm.yml`; prefer a compatible range such as `equinor/fusion-skills/apm/fusion-developer#^1.6.1` for reviewed automated updates or an exact tag for fixed installs
 
 SemVer meaning in this repo:
 

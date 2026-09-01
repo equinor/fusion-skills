@@ -9,12 +9,14 @@ Installs the Fusion application-development profile for GitHub Copilot:
 - scoped TypeScript and React instructions,
 - the hosted production Fusion MCP server with VS Code OAuth.
 
-Install from this repository checkout:
+Install the current compatible `1.x` release:
 
 ```bash
-apm install ./apm/fusion-developer-app --target copilot
+apm install equinor/fusion-skills/apm/fusion-developer-app#^1.6.1 --target copilot
 ```
 
-Remote installs can target this package after it is included in a repository release.
-
 This package depends on `fusion-developer` and adds application-specific skills, agents, and TypeScript/React instructions.
+
+For local package development from this repository checkout, use `apm install ./apm/fusion-developer-app --target copilot`.
+
+See the [APM package guide](../README.md) and [`npx skills` migration guide](../MIGRATION.md).
