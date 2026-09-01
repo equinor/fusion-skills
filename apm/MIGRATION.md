@@ -116,13 +116,12 @@ on:
     - cron: "0 8 * * 1"
   workflow_dispatch:
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
   sync:
     uses: equinor/fusion-skills/.github/workflows/apm-sync.yml@main
+    permissions:
+      contents: write
+      pull-requests: write
 ```
 
 Pin `@main` to a Fusion Skills release tag when the reusable workflow itself must remain fixed.

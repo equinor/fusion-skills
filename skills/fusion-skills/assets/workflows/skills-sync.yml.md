@@ -12,13 +12,12 @@ on:
     - cron: '0 8 * * 1' # Weekly, Monday 08:00 UTC
   workflow_dispatch:
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
   sync:
     uses: equinor/fusion-skills/.github/workflows/apm-sync.yml@main
+    permissions:
+      contents: write
+      pull-requests: write
 ```
 
 ## What this does
@@ -45,5 +44,5 @@ Or copy the YAML block above into `.github/workflows/apm-sync.yml`.
 APM updates declared dependencies only. Add newly selected skills explicitly with:
 
 ```bash
-apm install equinor/fusion-skills/skills/<skill>#^1.6.1
+apm install equinor/fusion-skills/skills/<skill>#^1.6.1 --target copilot
 ```

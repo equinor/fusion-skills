@@ -25,13 +25,12 @@ on:
     - cron: '0 8 * * 1' # Weekly, Monday 08:00 UTC
   workflow_dispatch:
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
   sync:
     uses: equinor/fusion-skills/.github/workflows/apm-sync.yml@main
+    permissions:
+      contents: write
+      pull-requests: write
 ```
 
 Pin `@main` to a Fusion Skills release tag when workflow behavior must remain fixed.
@@ -48,13 +47,12 @@ on:
     - cron: '0 8 * * 1' # Weekly, Monday 08:00 UTC
   workflow_dispatch:
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
   sync:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -88,7 +86,7 @@ Discovery remains a review-time decision. After Fusion MCP or the static catalog
 identifies a skill, add that exact dependency:
 
 ```bash
-apm install equinor/fusion-skills/skills/<skill>#^1.6.1
+apm install equinor/fusion-skills/skills/<skill>#^1.6.1 --target copilot
 ```
 
 Review and commit `apm.yml`, `apm.lock.yaml`, and the deployed agent files

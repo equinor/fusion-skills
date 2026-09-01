@@ -28,8 +28,11 @@ Install, update, or remove a specific skill.
 
 1. Confirm the skill name and target agent/client if not already clear.
 2. Call `mcp_fusion_skills` with `intent: install | update | remove` for the advisory command.
-3. Present an APM command in a fenced code block. Dependency references must use `equinor/fusion-skills/skills/<skill>#^1.6.1`. Do not execute it.
-4. If the advisory response contains a legacy Skills CLI command, replace it with the equivalent `apm install`, `apm update`, or `apm uninstall` workflow.
+3. Present an APM command in a fenced code block. Install references must use `equinor/fusion-skills/skills/<skill>#^1.6.1 --target copilot`. Do not execute it.
+4. If the advisory response contains a legacy Skills CLI command, replace it with the equivalent workflow:
+   - install with `apm install`,
+   - update with `apm update`,
+   - remove the dependency from `apm.yml`, then run `apm prune`.
 5. **If Fusion MCP is unavailable:** load `references/skill-catalog.md` and derive the APM command. Suggest installing Fusion MCP for better results.
 
 ---
@@ -81,7 +84,7 @@ Generate an automated APM dependency update workflow for a repository.
 APM does not discover undeclared Fusion skills during `apm update`. For a newly selected skill, provide an explicit dependency install for review:
 
 ```bash
-apm install equinor/fusion-skills/skills/<skill>#^1.6.1
+apm install equinor/fusion-skills/skills/<skill>#^1.6.1 --target copilot
 ```
 
 Do not commit or push without explicit user confirmation.
