@@ -1,0 +1,23 @@
+name: fusion-developer-fullstack
+version: "1.6.1"
+description: Fusion full-stack development toolkit for GitHub Copilot
+author: Equinor Fusion
+license: MIT
+targets:
+  - copilot
+dependencies:
+  apm:
+    - git: equinor/fusion-skills
+      path: apm/fusion-developer-app
+      ref: v1.6.1 # release-managed
+    - git: equinor/fusion-skills
+      path: apm/fusion-developer-services
+      ref: v1.6.1 # release-managed
+  mcp:
+    - name: fusion-mcp
+      registry: false
+      transport: http
+      url: https://mcp.api.fusion.equinor.com/mcp
+      extra:
+        oauth:
+          clientId: fe06d016-0e42-452e-a3d7-f08325037122

@@ -23,6 +23,7 @@ Use a preset when the repository needs a complete Fusion development workflow:
 | General or mixed | `fusion-developer` |
 | Fusion Framework React application | `fusion-developer-app` |
 | Fusion backend service | `fusion-developer-services` |
+| Repository containing both Fusion React and backend service code | `fusion-developer-fullstack` |
 
 Use individual dependencies when the repository needs only a small, explicitly selected set of skills.
 
@@ -32,16 +33,20 @@ Run one command:
 
 ```bash
 # General or mixed repository
-apm install equinor/fusion-skills/apm/fusion-developer#^1.6.1 --target copilot
+apm install equinor/fusion-skills/apm/fusion-developer#^1.7.0 --target copilot
 
 # Fusion Framework React application
-apm install equinor/fusion-skills/apm/fusion-developer-app#^1.6.1 --target copilot
+apm install equinor/fusion-skills/apm/fusion-developer-app#^1.7.0 --target copilot
 
 # Fusion backend service
-apm install equinor/fusion-skills/apm/fusion-developer-services#^1.6.1 --target copilot
+apm install equinor/fusion-skills/apm/fusion-developer-services#^1.7.0 --target copilot
+
+# Combined Fusion application and backend service
+apm install equinor/fusion-skills/apm/fusion-developer-fullstack#^1.7.0 --target copilot
 ```
 
-The application and services presets already include `fusion-developer`.
+The application and services presets already include `fusion-developer`. The
+full-stack preset includes both specialized presets.
 
 ## Option 2: add individual skills
 
@@ -61,7 +66,7 @@ targets:
 
 dependencies:
   apm:
-    - equinor/fusion-skills/apm/fusion-developer#^1.6.1
+    - equinor/fusion-skills/apm/fusion-developer#^1.7.0
     - equinor/fusion-skills/skills/fusion-skill-authoring#^1.6.1
 ```
 
@@ -130,7 +135,7 @@ Pin `@main` to a Fusion Skills release tag when the reusable workflow itself mus
 
 Copy [`templates/apm-sync.yml`](templates/apm-sync.yml) into the consuming repository as `.github/workflows/apm-sync.yml`. The template uses the official `microsoft/apm-action` in update mode and opens a pull request with `peter-evans/create-pull-request`.
 
-Both options run every Monday at 08:00 UTC and support manual dispatch. The action runs non-interactive `apm update --yes`, refreshing only within constraints declared in `apm.yml`; the `#^1.6.1` examples accept compatible `1.x` Fusion Skills releases. Replace the range with an exact tag such as `#v1.6.1` when automated version advancement is not wanted.
+Both options run every Monday at 08:00 UTC and support manual dispatch. The action runs non-interactive `apm update --yes`, refreshing only within constraints declared in `apm.yml`; the preset `#^1.7.0` examples accept compatible `1.x` Fusion Skills releases. Replace the range with an exact tag such as `#v1.7.0` when automated version advancement is not wanted.
 
 For private dependencies, configure authentication as described in the [APM authentication guide](https://microsoft.github.io/apm/getting-started/authentication/) rather than placing tokens in the workflow.
 
