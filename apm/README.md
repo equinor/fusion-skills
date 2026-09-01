@@ -6,7 +6,7 @@ Install the [APM CLI](https://microsoft.github.io/apm/getting-started/installati
 
 | Preset | Purpose |
 | --- | --- |
-| `fusion-developer` | Shared implementation, research, API testing, issue, and PR review workflows |
+| `fusion-developer` | Shared implementation, research, repository greenkeeping, API testing, issue, and PR review workflows |
 | `fusion-developer-app` | Fusion Framework React application development |
 | `fusion-developer-services` | Fusion backend service development and operations |
 
