@@ -25,19 +25,19 @@ Run one command from the repository that should receive the developer context:
 
 ```bash
 # Shared workflows for any Fusion repository
-apm install equinor/fusion-skills/apm/fusion-developer#^1.6.1 --target copilot
+apm install equinor/fusion-skills/apm/fusion-developer#^1.7.0 --target copilot
 
 # Shared workflows plus Fusion Framework React development
-apm install equinor/fusion-skills/apm/fusion-developer-app#^1.6.1 --target copilot
+apm install equinor/fusion-skills/apm/fusion-developer-app#^1.7.0 --target copilot
 
 # Shared workflows plus Fusion backend service development
-apm install equinor/fusion-skills/apm/fusion-developer-services#^1.6.1 --target copilot
+apm install equinor/fusion-skills/apm/fusion-developer-services#^1.7.0 --target copilot
 
 # Combined Fusion application and backend service development
-apm install equinor/fusion-skills/apm/fusion-developer-fullstack#^1.6.1 --target copilot
+apm install equinor/fusion-skills/apm/fusion-developer-fullstack#^1.7.0 --target copilot
 ```
 
-The `^1.6.1` range accepts compatible `1.x` releases. APM resolves the exact release into `apm.lock.yaml`; `apm install` reproduces that lock, while `apm update` advances it within the declared range. Use an exact tag such as `#v1.6.1` instead when updates must never advance automatically.
+The `^1.7.0` range starts with the first release containing all four presets and accepts compatible `1.x` releases. APM resolves the exact release into `apm.lock.yaml`; `apm install` reproduces that lock, while `apm update` advances it within the declared range. Use an exact tag such as `#v1.7.0` instead when updates must never advance automatically.
 
 Commit these generated and deployed files:
 

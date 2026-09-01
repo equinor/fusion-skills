@@ -13,7 +13,7 @@ GitHub Copilot:
 Install the current compatible `1.x` release:
 
 ```bash
-apm install equinor/fusion-skills/apm/fusion-developer-fullstack#^1.6.1 --target copilot
+apm install equinor/fusion-skills/apm/fusion-developer-fullstack#^1.7.0 --target copilot
 ```
 
 This package composes `fusion-developer-app` and `fusion-developer-services`. Both
