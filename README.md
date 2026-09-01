@@ -254,7 +254,7 @@ Authoritative, machine-readable EDS design rules for color tokens, typography, s
 
 ---
 
-**👍 [`fusion@0.1.0`](skills/fusion/SKILL.md)**
+**👍 [`fusion@0.1.1`](skills/fusion/SKILL.md)**
 
 Main Copilot skill gate for the Fusion ecosystem — cross-domain router. USE FOR: routing between different Fusion domains (skills, issues, PRs, reviews) when the right domain skill is unclear; getting install guidance for missing skills. DO NOT USE FOR: skill lifecycle operations (use fusion-skills directly), tasks where a specific Fusion skill is already active.
 
@@ -290,7 +290,7 @@ Looks up Fusion Design Guidelines and applies them to any frontend code in the F
 
 ---
 
-**👍 [`fusion-developer-app@0.4.0`](skills/fusion-developer-app/SKILL.md)**
+**👍 [`fusion-developer-app@0.4.1`](skills/fusion-developer-app/SKILL.md)**
 
 Guides feature development in Fusion Framework React apps, including app-scoped framework research, test authoring, and test-time mocking needed to choose and verify the right integration patterns. USE FOR: building features, components, pages, hooks, services, API integrations, module configuration, and their tests. DO NOT USE FOR: issue authoring, skill authoring, CI/CD configuration, backend service changes, or general Fusion documentation unrelated to app implementation.
 
@@ -410,7 +410,7 @@ Entrypoint for AI coding assistant rule authoring across GitHub Copilot, Cursor,
 
 ---
 
-**👍 [`fusion-skill-authoring@0.3.5`](skills/fusion-skill-authoring/SKILL.md)**
+**👍 [`fusion-skill-authoring@0.3.6`](skills/fusion-skill-authoring/SKILL.md)**
 
 Creates or modernizes repository skills with clear activation cues, purposeful support files, and practical review loops. USE FOR: creating a new skill, tightening an existing skill, improving discovery wording, and structuring references/assets/optional helper agents when they genuinely add value. DO NOT USE FOR: product-code changes, routine copy edits outside skills/, or documentation that should not become an installable skill.
 

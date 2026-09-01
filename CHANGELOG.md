@@ -2,6 +2,67 @@
 
 All notable changes to this repository are documented in this file.
 
+## v1.6.2
+
+### Minor
+
+__🎯 [feat(apm): add repository greenkeeping agent #228](https://github.com/equinor/fusion-skills/pull/228)<br/>
+🗂️ [b0439b7](https://github.com/equinor/fusion-skills/commit/b0439b7ec7ce96305b6208a9914e7981b16360ad)__
+
+Add a repository greenkeeping agent to the shared Fusion developer APM package.
+
+- Audit and maintain workflows, `CODEMAP.md`, README and contributor guidance
+- Assess repository health with prioritized, evidence-backed suggestions
+- Cover dependency upkeep and source-backed migrations with explicit safety gates
+
+---
+
+__🎯 [feat(apm): add fusion-developer-fullstack composed profile #229](https://github.com/equinor/fusion-skills/pull/229)<br/>
+🗂️ [c4ea19c](https://github.com/equinor/fusion-skills/commit/c4ea19c58b7d7d237a0f2fb79fc186c33786bb6d)__
+
+Add a composed Fusion full-stack APM profile for repositories containing application and backend service code.
+
+### Patch
+
+__🎯 [fix(apm): declare MCP OAuth as passthrough config #225](https://github.com/equinor/fusion-skills/pull/225)<br/>
+🗂️ [755d3f8](https://github.com/equinor/fusion-skills/commit/755d3f8b4b546b17bc9120da5defb86e28babaff)__
+
+Declare Fusion MCP OAuth configuration through APM's client-specific `extra` block.
+
+- Preserve VS Code OAuth client configuration
+- Avoid unknown MCP dependency key warnings during APM update and packaging
+
+---
+
+__🎯 [docs(apm): add npx skills migration guide #227](https://github.com/equinor/fusion-skills/pull/227)<br/>
+🗂️ [596c9c1](https://github.com/equinor/fusion-skills/commit/596c9c1f679dbfc536f9cd302143e350d3a23f53)<br/>
+📦 fusion-developer-app@0.4.1__
+
+Install the code conventions dependency through Microsoft APM.
+
+---
+
+__🎯 [docs(apm): add npx skills migration guide #227](https://github.com/equinor/fusion-skills/pull/227)<br/>
+🗂️ [596c9c1](https://github.com/equinor/fusion-skills/commit/596c9c1f679dbfc536f9cd302143e350d3a23f53)<br/>
+📦 fusion@0.1.1__
+
+Use version-bounded Microsoft APM references when routing users to missing Fusion skills.
+
+---
+
+__🎯 [docs(apm): add npx skills migration guide #227](https://github.com/equinor/fusion-skills/pull/227)<br/>
+🗂️ [596c9c1](https://github.com/equinor/fusion-skills/commit/596c9c1f679dbfc536f9cd302143e350d3a23f53)__
+
+Replace legacy skill lifecycle commands and sync workflows with Microsoft APM guidance.
+
+---
+
+__🎯 [docs(apm): add npx skills migration guide #227](https://github.com/equinor/fusion-skills/pull/227)<br/>
+🗂️ [596c9c1](https://github.com/equinor/fusion-skills/commit/596c9c1f679dbfc536f9cd302143e350d3a23f53)<br/>
+📦 fusion-skill-authoring@0.3.6__
+
+Check APM provenance before editing installed skill copies.
+
 ## v1.6.1
 
 ### Patch
