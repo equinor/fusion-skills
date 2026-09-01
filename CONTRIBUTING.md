@@ -38,6 +38,16 @@ All skills are validated automatically in CI — ensure your changes pass:
 - `bun run validate:ownership` — ownership metadata completeness
 - `bun run validate:scripts` — script safety and intent comments
 
+## Repository development tools
+
+This repository manages external agent tools with APM:
+
+- `apm.yml` declares direct dependencies used by maintainers.
+- `apm.lock.yaml` pins exact dependency content.
+- `.agents/skills/` contains APM-deployed copies; don't edit them directly.
+
+After cloning, run `apm install --frozen` to reproduce the locked tools. Use `apm outdated` to inspect available updates and `apm update` to refresh them. The `APM Sync` GitHub Actions workflow runs weekly and opens a pull request when the lockfile or deployed files change.
+
 ## Pull request expectations
 
 Before requesting review, make sure your PR is:

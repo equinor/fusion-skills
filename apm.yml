@@ -1,0 +1,10 @@
+name: fusion-skills-repository
+version: "1.0.0"
+description: Development tools used while maintaining the Fusion Skills catalog
+author: Equinor Fusion
+targets:
+  - copilot
+dependencies:
+  apm:
+    - JuliusBrussee/caveman/skills/caveman-compress#^2.4.0
+includes: []

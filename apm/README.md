@@ -81,6 +81,8 @@ See [Migrate from `npx skills` to APM](MIGRATION.md) for command mapping, safe c
 
 Package versions follow the root `fusion-skills` release version. Internal dependency refs marked `# release-managed` advance to the same repository tag during release preparation.
 
+The root `apm.yml` is separate from the publishable presets under `apm/`. It declares external tools used to maintain this repository. The scheduled `.github/workflows/apm-sync.yml` workflow updates those dependencies and is also callable by consuming repositories.
+
 All three presets configure the hosted production Fusion MCP server in `.vscode/mcp.json`. VS Code requests Equinor Microsoft Entra sign-in on first use; no API key or stored credential is included in a preset.
 
 These directories are source APM packages. A standalone plugin release must first materialize dependencies with `apm install` in an isolated build workspace, then run `apm pack`; `apm lock` alone does not record the deployed-file provenance required for packing transitive skills.

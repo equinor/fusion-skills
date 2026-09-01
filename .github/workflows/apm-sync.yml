@@ -1,6 +1,9 @@
 name: APM Sync
 
 on:
+  schedule:
+    - cron: "0 8 * * 1"
+  workflow_dispatch:
   workflow_call:
     inputs:
       apm-version:
@@ -13,6 +16,10 @@ on:
         required: false
         type: string
         default: chore/apm-sync
+
+concurrency:
+  group: apm-sync
+  cancel-in-progress: true
 
 jobs:
   sync:
@@ -28,13 +35,13 @@ jobs:
       - name: Update APM dependencies
         uses: microsoft/apm-action@v1
         with:
-          apm-version: ${{ inputs.apm-version }}
+          apm-version: ${{ inputs.apm-version || '0.29.0' }}
           update: "true"
 
       - name: Create update pull request
         uses: peter-evans/create-pull-request@v8
         with:
-          branch: ${{ inputs.pr-branch }}
+          branch: ${{ inputs.pr-branch || 'chore/apm-sync' }}
           delete-branch: true
           commit-message: "chore(apm): sync dependencies"
           title: "chore(apm): sync dependencies"
