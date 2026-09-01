@@ -23,6 +23,7 @@ Use a preset when the repository needs a complete Fusion development workflow:
 | General or mixed | `fusion-developer` |
 | Fusion Framework React application | `fusion-developer-app` |
 | Fusion backend service | `fusion-developer-services` |
+| Repository containing both Fusion React and backend service code | `fusion-developer-fullstack` |
 
 Use individual dependencies when the repository needs only a small, explicitly selected set of skills.
 
@@ -39,9 +40,13 @@ apm install equinor/fusion-skills/apm/fusion-developer-app#^1.6.1 --target copil
 
 # Fusion backend service
 apm install equinor/fusion-skills/apm/fusion-developer-services#^1.6.1 --target copilot
+
+# Combined Fusion application and backend service
+apm install equinor/fusion-skills/apm/fusion-developer-fullstack#^1.6.1 --target copilot
 ```
 
-The application and services presets already include `fusion-developer`.
+The application and services presets already include `fusion-developer`. The
+full-stack preset includes both specialized presets.
 
 ## Option 2: add individual skills
 

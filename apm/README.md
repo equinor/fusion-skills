@@ -9,8 +9,12 @@ Install the [APM CLI](https://microsoft.github.io/apm/getting-started/installati
 | `fusion-developer` | Shared implementation, research, repository greenkeeping, API testing, issue, and PR review workflows |
 | `fusion-developer-app` | Fusion Framework React application development |
 | `fusion-developer-services` | Fusion backend service development and operations |
+| `fusion-developer-fullstack` | Combined Fusion Framework React application and backend service development |
 
-`fusion-developer-app` and `fusion-developer-services` include `fusion-developer` transitively, then add track-specific skills, agents, and instructions. Do not install `fusion-developer` separately when using either specialized preset.
+`fusion-developer-app` and `fusion-developer-services` include `fusion-developer`
+transitively, then add track-specific skills, agents, and instructions.
+`fusion-developer-fullstack` composes both specialized presets. Do not install
+their transitive profiles separately.
 
 ## Install a preset
 
@@ -25,6 +29,9 @@ apm install equinor/fusion-skills/apm/fusion-developer-app#^1.6.1 --target copil
 
 # Shared workflows plus Fusion backend service development
 apm install equinor/fusion-skills/apm/fusion-developer-services#^1.6.1 --target copilot
+
+# Combined Fusion application and backend service development
+apm install equinor/fusion-skills/apm/fusion-developer-fullstack#^1.6.1 --target copilot
 ```
 
 The `^1.6.1` range accepts compatible `1.x` releases. APM resolves the exact release into `apm.lock.yaml`; `apm install` reproduces that lock, while `apm update` advances it within the declared range. Use an exact tag such as `#v1.6.1` instead when updates must never advance automatically.
@@ -83,7 +90,9 @@ Package versions follow the root `fusion-skills` release version. Internal depen
 
 The root `apm.yml` is separate from the publishable presets under `apm/`. It declares external tools used to maintain this repository. The scheduled `.github/workflows/apm-sync.yml` workflow updates those dependencies and is also callable by consuming repositories.
 
-All three presets configure the hosted production Fusion MCP server in `.vscode/mcp.json`. VS Code requests Equinor Microsoft Entra sign-in on first use; no API key or stored credential is included in a preset.
+All four presets configure the hosted production Fusion MCP server in
+`.vscode/mcp.json`. VS Code requests Equinor Microsoft Entra sign-in on first use;
+no API key or stored credential is included in a preset.
 
 These directories are source APM packages. A standalone plugin release must first materialize dependencies with `apm install` in an isolated build workspace, then run `apm pack`; `apm lock` alone does not record the deployed-file provenance required for packing transitive skills.
 
