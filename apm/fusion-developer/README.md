@@ -12,6 +12,7 @@ Installs the shared Fusion development profile for GitHub Copilot:
 - structured dependency update review,
 - unresolved pull request review conversation handling,
 - a cross-language Fusion developer agent,
+- a repository greenkeeper for workflows, documentation, migrations, dependencies, and health audits,
 - on-demand implementation and delivery instructions,
 - the hosted production Fusion MCP server with VS Code OAuth.
 
