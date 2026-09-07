@@ -129,9 +129,9 @@ Minimal APIs (.NET 6+): `Program.cs`; endpoints in `Endpoints/` or by feature. `
 - Warning `1591` is suppressed, so comments are generated where present but not required on every member.
 - Use `<summary>`, `<param>`, `<returns>`, `<remarks>`, `<list>` as needed; `<see cref="..."/>` for cross-references.
 - On controller actions and API request/response model properties, these comments aren't just
-  IntelliSense — `Microsoft.AspNetCore.OpenApi`/Swashbuckle surface them directly as the generated
-  OpenAPI document's `summary`/`description` fields. Write them for the API's external callers,
-  not only for other developers reading the source.
+  IntelliSense — when the project enables XML-comment inclusion, `Microsoft.AspNetCore.OpenApi`/
+  Swashbuckle surface them as the generated OpenAPI document's `summary`/`description` fields.
+  Write them for the API's external callers, not only for other developers reading the source.
 
 ## Testing
 
