@@ -60,7 +60,7 @@ export async function createMail(baseUrl: string, payload: NewMailRequest, init?
 	- `WithFusionServiceEndpoint(FusionServiceEndpointKeys.Mail)`
 	- named-client wrapper with typed request models per version
 - Suggested client class: `MailApiClient`
-- Suggested local models: `NewMailRequest`, `MailItem`, `MailStatus`
+- Suggested local models: `NewMailRequest`, `MailItem`, `ApiMailStatus`
 - Prefer explicit serializer options for enum/string handling.
 - Starter shape:
 
@@ -82,7 +82,7 @@ public sealed record NewMailRequest(string Subject, string Body, IReadOnlyList<s
 - `NewMailRequest`
 - `MailItem`
 - `MailTemplateItem`
-- `MailStatus`
+- `ApiMailStatus`
 
 ## Representative model snapshots
 - `NewMailRequest`: `subject`, `body`, `recipients`, optional `fromDisplayName`

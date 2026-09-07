@@ -44,7 +44,7 @@ metadata:
 - fetch the service's live, public OpenAPI document (`https://{service}.api.fusion.equinor.com/openapi/api-v{version}.json`, no JWT required) and read exact type names from `components.schemas` before naming anything — never invent a `Dto`-suffixed name
 - if the consumer is React/frontend, return TypeScript-friendly models and a starter fetch/query pattern
 - if the service exposes `OPTIONS` or other access-probe routes, explain how the client can use them to disable edit/create/delete functionality when the caller lacks write permissions
-- if the consumer is C#, return a typed `HttpClient` example deserializing into the real `Api{Entity}` schema type, with serializer assumptions
+- if the consumer is C#, return a typed `HttpClient` example deserializing into the exact schema type from the live OpenAPI document (commonly `Api{Entity}`, but the live document's name always wins), with serializer assumptions
 
 ## Expected output
 
