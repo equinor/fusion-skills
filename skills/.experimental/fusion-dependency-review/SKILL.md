@@ -133,7 +133,7 @@ If the PR target is resolved, return a structured review containing:
 - Security assessment with evidence
 - Code quality assessment with evidence
 - Impact assessment with evidence
-- Verdict: recommendation, rationale, confidence, merge readiness, and follow-up items
+- Verdict: recommendation, rationale, confidence, readiness, and follow-up items
 - Handoff recommendation when follow-up work should become a tracked issue
 - Explicit action prompt for the maintainer
 
