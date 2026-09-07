@@ -1,5 +1,5 @@
 ---
-"fusion-developer-services": patch
+"fusion-skills": patch
 ---
 
 `fusion-services.instructions.md`: prefer workload identity/federated credentials over client
