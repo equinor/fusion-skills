@@ -2,6 +2,115 @@
 
 All notable changes to this repository are documented in this file.
 
+## v1.6.2
+
+### Minor
+
+__🎯 [feat(apm): add repository greenkeeping agent #228](https://github.com/equinor/fusion-skills/pull/228)<br/>
+🗂️ [b0439b7](https://github.com/equinor/fusion-skills/commit/b0439b7ec7ce96305b6208a9914e7981b16360ad)__
+
+Add a repository greenkeeping agent to the shared Fusion developer APM package.
+
+- Audit and maintain workflows, `CODEMAP.md`, README and contributor guidance
+- Assess repository health with prioritized, evidence-backed suggestions
+- Cover dependency upkeep and source-backed migrations with explicit safety gates
+
+---
+
+__🎯 [feat(apm): add fusion-developer-fullstack composed profile #229](https://github.com/equinor/fusion-skills/pull/229)<br/>
+🗂️ [c4ea19c](https://github.com/equinor/fusion-skills/commit/c4ea19c58b7d7d237a0f2fb79fc186c33786bb6d)__
+
+Add a composed Fusion full-stack APM profile for repositories containing application and backend service code.
+
+### Patch
+
+__🎯 [fix(fusion-backend-dev): replace Dto naming with Fusion Api/Query/Db convention #235](https://github.com/equinor/fusion-skills/pull/235)<br/>
+🗂️ [1fa9fb4](https://github.com/equinor/fusion-skills/commit/1fa9fb4aee0259d87ac89528c0c38a9b1cb7aa4a)<br/>
+📦 fusion-backend-dev@0.1.3__
+
+Document Fusion's endpoint versioning philosophy in `fusion-backend-dev`'s API contracts
+reference: versioning is per endpoint (not per service), only bumped when an endpoint actually
+needs a breaking change, and a non-breaking option — most commonly adding an optional response
+property — is preferred over introducing a new version at all.
+
+---
+
+__🎯 [fix(apm): declare MCP OAuth as passthrough config #225](https://github.com/equinor/fusion-skills/pull/225)<br/>
+🗂️ [755d3f8](https://github.com/equinor/fusion-skills/commit/755d3f8b4b546b17bc9120da5defb86e28babaff)__
+
+Declare Fusion MCP OAuth configuration through APM's client-specific `extra` block.
+
+- Preserve VS Code OAuth client configuration
+- Avoid unknown MCP dependency key warnings during APM update and packaging
+
+---
+
+__🎯 [fix(fusion-backend-dev): replace Dto naming with Fusion Api/Query/Db convention #235](https://github.com/equinor/fusion-skills/pull/235)<br/>
+🗂️ [1fa9fb4](https://github.com/equinor/fusion-skills/commit/1fa9fb4aee0259d87ac89528c0c38a9b1cb7aa4a)<br/>
+📦 fusion-backend-dev@0.1.3__
+
+Fix `fusion-backend-dev` reference docs using invented `Dto`-suffixed type names
+(`PositionDto`, `ContextDto`, `PersonDto`, `SAPPersonDto`, `MinimalPersonDto`) instead of Fusion's
+actual naming convention.
+
+- `references/cqrs-reference.md`: rename examples to `Api{Entity}`, and add a naming-convention
+  section explaining `Db{Entity}`/`Query{Entity}`/`Api{Entity}` and the optional `Query` layer
+  `fusion-core-services` inserts between handler and controller.
+- `references/integration-patterns.md`: rename the Fusion People API example to `ApiPersonV3`
+  (matching the real, versioned contract), fix an inconsistent `SAPPersonDto` reference, and label
+  the illustrative model shape explicitly as illustrative.
+- `SKILL.md`: fix a stale `fusion-services-develop` cross-reference (no such skill/agent exists;
+  the correct escalation target is the `fusion-services-developer` agent).
+
+Resolves the naming issue reported while validating the skill against
+`equinor/fusion-pss-subsea-catalog`.
+
+---
+
+__🎯 [fix(fusion-backend-dev): replace Dto naming with Fusion Api/Query/Db convention #235](https://github.com/equinor/fusion-skills/pull/235)<br/>
+🗂️ [1fa9fb4](https://github.com/equinor/fusion-skills/commit/1fa9fb4aee0259d87ac89528c0c38a9b1cb7aa4a)<br/>
+📦 fusion-backend-dev@0.1.3__
+
+Link the new fusion-docs backend service guides from the service-development skill and agent.
+
+- `fusion-backend-dev/SKILL.md`: point to the fusion-docs
+  [New Backend Service Checklist](https://docs.fusion.equinor.com/docs/developer/api/new-service-checklist)
+  when a user needs to set up or deploy a new standalone backend API, instead of improvising the
+  app-registration/roles/database/deployment sequence.
+- `apm/fusion-developer-services` agent workflow: add the same checklist as the first stop when
+  working in a new standalone backend repository with no existing conventions to follow.
+
+---
+
+__🎯 [docs(apm): add npx skills migration guide #227](https://github.com/equinor/fusion-skills/pull/227)<br/>
+🗂️ [596c9c1](https://github.com/equinor/fusion-skills/commit/596c9c1f679dbfc536f9cd302143e350d3a23f53)<br/>
+📦 fusion-developer-app@0.4.1__
+
+Install the code conventions dependency through Microsoft APM.
+
+---
+
+__🎯 [docs(apm): add npx skills migration guide #227](https://github.com/equinor/fusion-skills/pull/227)<br/>
+🗂️ [596c9c1](https://github.com/equinor/fusion-skills/commit/596c9c1f679dbfc536f9cd302143e350d3a23f53)<br/>
+📦 fusion@0.1.1__
+
+Use version-bounded Microsoft APM references when routing users to missing Fusion skills.
+
+---
+
+__🎯 [docs(apm): add npx skills migration guide #227](https://github.com/equinor/fusion-skills/pull/227)<br/>
+🗂️ [596c9c1](https://github.com/equinor/fusion-skills/commit/596c9c1f679dbfc536f9cd302143e350d3a23f53)__
+
+Replace legacy skill lifecycle commands and sync workflows with Microsoft APM guidance.
+
+---
+
+__🎯 [docs(apm): add npx skills migration guide #227](https://github.com/equinor/fusion-skills/pull/227)<br/>
+🗂️ [596c9c1](https://github.com/equinor/fusion-skills/commit/596c9c1f679dbfc536f9cd302143e350d3a23f53)<br/>
+📦 fusion-skill-authoring@0.3.6__
+
+Check APM provenance before editing installed skill copies.
+
 ## v1.6.1
 
 ### Patch

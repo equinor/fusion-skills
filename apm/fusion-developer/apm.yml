@@ -1,5 +1,5 @@
 name: fusion-developer
-version: "1.6.1"
+version: "1.6.2"
 description: Shared Fusion developer workflow toolkit for GitHub Copilot
 author: Equinor Fusion
 license: MIT
@@ -9,34 +9,34 @@ dependencies:
   apm:
     - git: equinor/fusion-skills
       path: skills/.system/fusion-research
-      ref: v1.6.1 # release-managed
+      ref: v1.6.2 # release-managed
     - git: equinor/fusion-skills
       path: skills/.experimental/fusion-mcp
-      ref: v1.6.1 # release-managed
+      ref: v1.6.2 # release-managed
     - git: equinor/fusion-skills
       path: skills/.system/fusion-code-conventions
-      ref: v1.6.1 # release-managed
+      ref: v1.6.2 # release-managed
     - git: equinor/fusion-skills
       path: skills/fusion-devtools
-      ref: v1.6.1 # release-managed
+      ref: v1.6.2 # release-managed
     - git: equinor/fusion-skills
       path: skills/fusion-skills
-      ref: v1.6.1 # release-managed
+      ref: v1.6.2 # release-managed
     - git: equinor/fusion-skills
       path: skills/fusion-issue-authoring
-      ref: v1.6.1 # release-managed
+      ref: v1.6.2 # release-managed
     - git: equinor/fusion-skills
       path: skills/.experimental/fusion-issue-solving
-      ref: v1.6.1 # release-managed
+      ref: v1.6.2 # release-managed
     - git: equinor/fusion-skills
       path: skills/.experimental/fusion-issue-task-planning
-      ref: v1.6.1 # release-managed
+      ref: v1.6.2 # release-managed
     - git: equinor/fusion-skills
       path: skills/.experimental/fusion-dependency-review
-      ref: v1.6.1 # release-managed
+      ref: v1.6.2 # release-managed
     - git: equinor/fusion-skills
       path: skills/.experimental/fusion-github-review-resolution
-      ref: v1.6.1 # release-managed
+      ref: v1.6.2 # release-managed
   mcp:
     - name: fusion-mcp
       registry: false
