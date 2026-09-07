@@ -238,9 +238,9 @@ try
 }
 catch (SAPUnavailableException)
 {
-  // SAP is down; use cached data or return minimal response
-  ApiPersonV3? cached = _cache.Get(personId);
-  return cached ?? new ApiPersonSummary();
+  // SAP is down; fall back to whatever is already cached under the same key used by the
+  // Cache Pattern below, or null if nothing is cached yet.
+  return _cache.Get<ApiPersonV3>($"person:{personId}");
 }
 ```
 
