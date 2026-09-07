@@ -1,5 +1,5 @@
 ---
-"fusion-skills": patch
+"fusion-backend-dev": patch
 ---
 
 Fix `fusion-backend-dev` reference docs using invented `Dto`-suffixed type names

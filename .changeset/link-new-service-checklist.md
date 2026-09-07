@@ -1,5 +1,5 @@
 ---
-"fusion-skills": patch
+"fusion-backend-dev": patch
 ---
 
 Link the new fusion-docs backend service guides from the service-development skill and agent.
