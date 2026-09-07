@@ -81,9 +81,10 @@ Minimal APIs (.NET 6+): `Program.cs`; endpoints in `Endpoints/` or by feature. `
 - **Authorization**: prefer policy/requirement-based over inline role string checks.
 - **API versioning**: `[ApiVersion("X.0")]` + `[MapToApiVersion("X.0")]` from `Asp.Versioning`. Versioned controllers may be split as `partial` classes per version file.
 - **Route naming**: kebab-case path segments (`/orders/{orderId}/line-items`).
-- **Declared status codes**: annotate every action with `[ProducesResponseType]` for each status
-  code it can actually return, including negative paths (`401`, `403`, `404`, `400` with the typed
-  `ProblemDetails`/`ValidationProblemDetails` body) — not just the happy-path `200`/`201`.
+- **Declared status codes**: declare every status code an endpoint can actually return, including negative paths (`401`, `403`, `404`, `400` with the typed
+  `ProblemDetails`/`ValidationProblemDetails` body) — not just the happy-path `200`/`201`. For MVC
+  actions use `[ProducesResponseType]`; for minimal APIs use the route handler builder `.Produces(...)`
+  extensions.
 
 ## API response models
 
