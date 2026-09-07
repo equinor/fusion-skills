@@ -41,9 +41,10 @@ metadata:
 ## Instructions
 
 - map the request to a concrete endpoint group and model family
-- if the consumer is React/frontend, return TypeScript-friendly DTOs and a starter fetch/query pattern
+- fetch the service's live, public OpenAPI document (`https://{service}.api.fusion.equinor.com/openapi/api-v{version}.json`, no JWT required) and read exact type names from `components.schemas` before naming anything — never invent a `Dto`-suffixed name
+- if the consumer is React/frontend, return TypeScript-friendly models and a starter fetch/query pattern
 - if the service exposes `OPTIONS` or other access-probe routes, explain how the client can use them to disable edit/create/delete functionality when the caller lacks write permissions
-- if the consumer is C#, return a typed `HttpClient` example with DTO records and serializer assumptions
+- if the consumer is C#, return a typed `HttpClient` example deserializing into the real `Api{Entity}` schema type, with serializer assumptions
 
 ## Expected output
 
