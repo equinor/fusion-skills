@@ -6,7 +6,7 @@ compatibility: Works best with a web-fetch tool to read live, public OpenAPI doc
   (`https://{service}.api.fusion.equinor.com/openapi/api-v{version}.json`, no JWT required) as the
   source of truth for exact schema/type names, rather than relying solely on the bundled snapshots.
 metadata:
-  version: "0.0.2"
+  version: "0.0.3"
   status: experimental
   owner: "@equinor/fusion-core"
   tags:

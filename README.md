@@ -266,19 +266,19 @@ Guides consumption and understanding of Fusion backend services, APIs, and patte
 
 ---
 
-**⚙️ [`fusion-code-conventions@0.1.4`](skills/.system/fusion-code-conventions/SKILL.md)**
+**⚙️ [`fusion-code-conventions@0.1.5`](skills/.system/fusion-code-conventions/SKILL.md)**
 
 Applies and explains code conventions across TypeScript, React, C#, and Markdown. Enforces naming rules, file naming patterns, TSDoc and XML doc standards, inline comment intent (the *why*, not the *what*), code structure, error handling, async patterns, and dead code policy. Also enforces ADR and contributor doc decisions, and flags decisions that appear stale or misaligned with current tooling. USE FOR: convention questions, code review against project standards, applying naming rules, auditing intent comments, checking TSDoc completeness, enforcing recorded ADR decisions, and flagging stale architectural decisions. DO NOT USE FOR: security vulnerability scanning, performance profiling, runtime debugging, or generating net-new code without a review target.
 
 ---
 
-**🧪 [`fusion-core-services@0.0.2`](skills/.experimental/fusion-core-services/SKILL.md)**
+**🧪 [`fusion-core-services@0.0.3`](skills/.experimental/fusion-core-services/SKILL.md)**
 
 Guides integrations across Fusion Core service APIs from a single installable skill. USE FOR: service discovery across apps, people, context, roles, notifications, reports, tasks, and other Fusion Core APIs; cross-service integration planning; choosing the right endpoint/model guidance for a workflow. DO NOT USE FOR: modifying Fusion backend source code, non-Fusion APIs, or generic cloud architecture work without a Fusion service integration target.
 
 ---
 
-**🧪 [`fusion-dependency-review@0.1.4`](skills/.experimental/fusion-dependency-review/SKILL.md)**
+**🧪 [`fusion-dependency-review@0.1.5`](skills/.experimental/fusion-dependency-review/SKILL.md)**
 
 Review dependency PRs with structured research, existing-PR-discussion capture, multi-lens analysis (security, code quality, impact), and a repeatable verdict template. USE FOR: dependency update PRs, Renovate/Dependabot PRs, library upgrade reviews, "review this dependency PR", "should we merge this update". DO NOT USE FOR: feature PRs, application code reviews, dependency automation/bot configuration, or unattended merge without confirmation.
 

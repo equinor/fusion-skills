@@ -2,6 +2,73 @@
 
 All notable changes to this repository are documented in this file.
 
+## v1.6.3
+
+### Patch
+
+__🎯 [docs: close backend convention gaps found validating against pss-subsea-catalog #237](https://github.com/equinor/fusion-skills/pull/237)<br/>
+🗂️ [a6cc390](https://github.com/equinor/fusion-skills/commit/a6cc3908a11b26454a85484d7def5df1b6a5bd5a)__
+
+`fusion-services.instructions.md`: prefer workload identity/federated credentials over client
+secrets for outbound auth and database access; prefer integration tests over isolated unit tests,
+mocking only true external dependencies at the boundary; use `Fusion.Testing`/
+`Fusion.Testing.Authentication` to simulate an authenticated caller instead of hand-rolling test
+JWTs.
+
+---
+
+__🎯 [docs: close backend convention gaps found validating against pss-subsea-catalog #237](https://github.com/equinor/fusion-skills/pull/237)<br/>
+🗂️ [a6cc390](https://github.com/equinor/fusion-skills/commit/a6cc3908a11b26454a85484d7def5df1b6a5bd5a)<br/>
+📦 fusion-code-conventions@0.1.5__
+
+Close backend-convention gaps found while validating `fusion-developer-services` against
+`equinor/fusion-pss-subsea-catalog`:
+
+- `csharp.conventions.md`: declare `[ProducesResponseType]` for every status code an action can
+  actually return (including negative paths); note that XML doc comments on controller actions and
+  request/response model properties surface in the generated OpenAPI document's `summary`/
+  `description` fields when the project enables XML-comment inclusion (`Microsoft.AspNetCore.OpenApi`/
+  Swashbuckle), not just IntelliSense; prefer a small static factory class for enriched
+  `ProblemDetails` responses so controller actions stay one-liners.
+
+---
+
+__🎯 [fix(fusion-dependency-review): separate confidence from readiness #238](https://github.com/equinor/fusion-skills/pull/238)<br/>
+🗂️ [6ced569](https://github.com/equinor/fusion-skills/commit/6ced569541a5474b34812d88c5b019397d328f78)<br/>
+📦 fusion-dependency-review@0.1.5__
+
+Separate dependency compatibility, evidence confidence, and mechanical merge readiness.
+
+- Allow well-researched major updates to receive high confidence
+- Keep pending checks and approval from incorrectly forcing a hold verdict
+- Add explicit readiness states to review outputs and templates
+
+---
+
+__🎯 [fix(fusion-core-services): prefer live OpenAPI docs, finish Dto naming cleanup #236](https://github.com/equinor/fusion-skills/pull/236)<br/>
+🗂️ [0b92e05](https://github.com/equinor/fusion-skills/commit/0b92e05fe539eccec6b185f78954e554b21f0445)<br/>
+📦 fusion-core-services@0.0.3__
+
+Prefer live, public OpenAPI documents over static snapshots in the experimental
+`fusion-core-services` skill, and finish removing invented `Dto`-suffixed naming from it.
+
+- Every Fusion Core service now publishes its current OpenAPI document publicly, with no JWT
+  required (`https://{service}.api.fusion.equinor.com/openapi/api-v{version}.json`), following the
+  migration off Swashbuckle-generated docs. Added a new instruction step directing the skill to
+  fetch this live document and read exact type names from `components.schemas` before naming
+  anything, treating the bundled `references/*.md`/`assets/*.ts` snapshots as a curated index of
+  what exists rather than the source of truth for exact shapes.
+- Stripped the remaining `Dto` suffix from every suggested type name across all 12 per-service
+  reference files (e.g. `ContextEntityDto` → `ContextEntity`, `NewMailRequestDto` →
+  `NewMailRequest`), and replaced "DTO"-based prose ("Suggested DTOs", "local DTOs", "DTO records")
+  with "local models"/"model records" throughout.
+- Applied the same fix to `contribute/api-skill-template.md` and `api-skill-standards.md` — the
+  meta-templates every per-service reference file (and any future one) is generated from — so the
+  naming issue and the missing live-document guidance don't reintroduce themselves next time a
+  service reference is added.
+
+Follows up on the `Dto`-naming fix already shipped for `fusion-backend-dev` in a separate PR.
+
 ## v1.6.2
 
 ### Minor
