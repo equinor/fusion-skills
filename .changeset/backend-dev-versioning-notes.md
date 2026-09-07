@@ -1,5 +1,5 @@
 ---
-"fusion-skills": patch
+"fusion-backend-dev": patch
 ---
 
 Document Fusion's endpoint versioning philosophy in `fusion-backend-dev`'s API contracts
