@@ -1,5 +1,5 @@
 ---
-"fusion-skills": patch
+"fusion-code-conventions": patch
 ---
 
 Close backend-convention gaps found while validating `fusion-developer-services` against
