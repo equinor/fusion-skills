@@ -103,13 +103,13 @@ public sealed record PersonnelItem(string Id, PersonnelPersonSummary Person);
 
 - `PersonnelItem`: personnel `id` plus nested person identity/contact summary
 - `ContractItem`: contract id, title/reference, project binding
-- `CreatePersonnelRequest`: person reference, start/end dates, and assignment metadata
+- `CreatePersonnelRequestRequest`: person reference, start/end dates, and assignment metadata
 - `RoleAssignment`: personnel/contract role assignment payload
 
 ## Validation highlights
-- `CreatePersonnelRequest.Person` is required
-- `CreatePersonnelRequest.StartDate` is required
-- `CreatePersonnelRequest.EndDate` is required and must be after `StartDate`
+- `CreatePersonnelRequestRequest.Person` is required
+- `CreatePersonnelRequestRequest.StartDate` is required
+- `CreatePersonnelRequestRequest.EndDate` is required and must be after `StartDate`
 
 ## Versioning notes
 - V2 variants exist for selected controller surfaces; preserve versioned contracts in client code.
