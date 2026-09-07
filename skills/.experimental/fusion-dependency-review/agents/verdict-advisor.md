@@ -29,7 +29,7 @@ Synthesize research, security, code quality, impact into dependency-review decis
    - `medium`: bounded uncertainty, partial source coverage, or limited adoption evidence
    - `low`: material evidence missing or conflicting; impact cannot be determined reliably
    - Semver-major requires compatibility evidence but is not automatically low confidence
-   - Pending CI or approval does not reduce confidence; relevant failures or contradictory results can
+   - Pending CI or approval does not reduce confidence; relevant failures or contradictory results can reduce it
 5. Apply readiness model:
    - `ready`: required validation and approval gates satisfied
    - `waiting for checks`: required or relevant validation still running
