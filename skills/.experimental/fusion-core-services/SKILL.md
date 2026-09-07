@@ -61,8 +61,9 @@ Typical triggers:
 - The bundled reference files are a curated index of which services/controllers exist and how to
   approach them — not the source of truth for exact schema/type names, which drift as services
   change. Fetch the live document for the target service(s) and read `components.schemas` for the
-  real type names (always `Api{Entity}` for responses, plain `{Verb}{Entity}Request` names for
-  request bodies — never invent a `Dto`-suffixed name).
+  real type names — responses are commonly `Api{Entity}` and request bodies a plain
+  `{Verb}{Entity}Request` name, but the live document's exact name always wins over any pattern;
+  never invent a `Dto`-suffixed name that isn't actually in `components.schemas`.
 - If the subdomain isn't already known from the service catalog below, resolve it via Fusion
   service discovery rather than guessing, per the platform-wide rule of never hardcoding service
   addresses.
@@ -81,7 +82,7 @@ Typical triggers:
 
 7. Return consumer-ready guidance.
 - For frontend consumers, return TypeScript-friendly models (named after the real schema, not `Dto`-suffixed) and a minimal client/hook pattern.
-- For .NET consumers, return a typed `HttpClient` plan that deserializes directly into the real `Api{Entity}` type from the live document rather than a hand-rolled shadow record, where one is published.
+- For .NET consumers, return a typed `HttpClient` plan that deserializes directly into the real schema type from the live document (commonly `Api{Entity}`, but use whatever `components.schemas` actually names it) rather than a hand-rolled shadow record, where one is published.
 - For cross-service tasks, explain the service sequence and data handoff between services.
 
 ## Service catalog
@@ -115,8 +116,8 @@ Return headings in this order:
 
 Never:
 - invent service ownership, routes, or model fields
-- invent a `Dto`-suffixed type name — use the real name from the live OpenAPI document
-  (`Api{Entity}`, or the exact request-model name in `components.schemas`)
+- invent a `Dto`-suffixed type name, or any name not actually present in the live OpenAPI
+  document's `components.schemas` — use the exact real name, whatever pattern it follows
 - answer from generic SaaS/API assumptions when the bundled Fusion references are specific
 - treat backend subscription routes as normal frontend interaction flows
 

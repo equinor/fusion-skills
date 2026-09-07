@@ -56,7 +56,10 @@ Each API skill must document:
 - capability or `OPTIONS` probe routes when the service exposes them and they affect client behavior
 - endpoint groups (by controller/domain)
 - model clarity map (key request/response model families)
-- known versioning notes
+- known versioning notes — remember versioning is per endpoint, not per service: individual
+  actions move to a new version only when that specific endpoint needs a breaking change, and a
+  non-breaking option (most commonly adding an optional response property) is preferred over
+  bumping the version at all
 - explicit out-of-scope notes (if relevant)
 - consumer integration defaults for React/TypeScript
 - consumer integration defaults for C# `HttpClient`
@@ -109,7 +112,9 @@ Before considering a skill ready:
   schema/type names, treating bundled reference snapshots as an index rather than ground truth
 - priority endpoint/workflow coverage is broad enough that common consumer tasks do not require source spelunking
 - capability-probe or `OPTIONS` routes are documented when the service uses them to expose effective permissions
-- model notes point to concrete model families or packages, using the real schema name (`Api{Entity}` for responses) — never a `Dto`-suffixed name that doesn't exist in the actual API
+- model notes point to concrete model families or packages, using the exact schema name from the
+  live OpenAPI document (commonly `Api{Entity}` for responses, but the live document's name always
+  wins over any pattern) — never a `Dto`-suffixed name that doesn't exist in the actual API
 - exclusions are explicit where scope is deprecated or superseded
 - no generic/non-Fusion assumptions are presented as facts
 - examples are copy/pasteable and include safe defaults

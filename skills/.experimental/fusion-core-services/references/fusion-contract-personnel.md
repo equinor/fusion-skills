@@ -97,15 +97,19 @@ public sealed record PersonnelItem(string Id, PersonnelPersonSummary Person);
 - `RecertificationItem`
 
 ## Representative model snapshots
+
+> Confirm exact request/response type names against this service's live OpenAPI document before
+> shipping — this section is illustrative and may not match the current contract exactly.
+
 - `PersonnelItem`: personnel `id` plus nested person identity/contact summary
 - `ContractItem`: contract id, title/reference, project binding
 - `CreatePersonnelRequest`: person reference, start/end dates, and assignment metadata
 - `RoleAssignment`: personnel/contract role assignment payload
 
 ## Validation highlights
-- `CreatePersonnelRequestRequest.Person` is required
-- `CreatePersonnelRequestRequest.StartDate` is required
-- `CreatePersonnelRequestRequest.EndDate` is required and must be after `StartDate`
+- `CreatePersonnelRequest.Person` is required
+- `CreatePersonnelRequest.StartDate` is required
+- `CreatePersonnelRequest.EndDate` is required and must be after `StartDate`
 
 ## Versioning notes
 - V2 variants exist for selected controller surfaces; preserve versioned contracts in client code.

@@ -38,7 +38,8 @@
 - Suggested client file: `src/api/contextClient.ts`
 - Suggested hook file: `src/features/context/useContextEntity.ts`
 - Prefer local models derived from `ApiContextEntity`, `ApiRelatedContextEntity`, and relation request models.
-- Starter shape:
+- Starter shape (a narrow projection of `ApiContextEntity` for illustration — confirm the full field
+  list against the live OpenAPI document before shipping):
 
 ```ts
 export interface ContextEntity {
@@ -63,7 +64,8 @@ export async function getContextEntity(baseUrl: string, contextId: string, init?
 - Suggested client class: `ContextApiClient`
 - Suggested local models: `ContextEntity`, `ContextRelation`
 - Keep request models for create/update separate from read models.
-- Starter shape:
+- Starter shape (a narrow projection of `ApiContextEntity` for illustration — confirm the full field
+  list against the live OpenAPI document before shipping):
 
 ```csharp
 public sealed class ContextApiClient(HttpClient httpClient)
