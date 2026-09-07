@@ -64,6 +64,9 @@ Typical triggers:
   real type names — responses are commonly `Api{Entity}` and request bodies a plain
   `{Verb}{Entity}Request` name, but the live document's exact name always wins over any pattern;
   never invent a `Dto`-suffixed name that isn't actually in `components.schemas`.
+- If you cannot fetch the live OpenAPI document (no web-fetch tool or network access), explicitly
+  state that limitation, treat bundled references/assets as best-effort, and avoid asserting exact
+  schema/type names or required fields.
 - If the subdomain isn't already known from the service catalog below, resolve it via Fusion
   service discovery rather than guessing, per the platform-wide rule of never hardcoding service
   addresses.
