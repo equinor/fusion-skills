@@ -1,5 +1,5 @@
 ---
-"fusion-skills": patch
+"fusion-core-services": patch
 ---
 
 Prefer live, public OpenAPI documents over static snapshots in the experimental
