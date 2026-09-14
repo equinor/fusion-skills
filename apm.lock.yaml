@@ -1,5 +1,5 @@
 lockfile_version: '2'
-generated_at: '2026-09-07T08:10:57.885705+00:00'
+generated_at: '2026-09-14T08:10:04.766495+00:00'
 apm_version: 0.29.0
 dependencies:
 - repo_url: juliusbrussee/caveman
@@ -38,7 +38,7 @@ dependencies:
   content_hash: sha256:03992853c67dd7c7c864403f8587c2bdd9197c62c87369195d6b6832dfae98d5
   constraint: ^2.4.0
   resolved_tag: v2.6.0
-  resolved_at: '2026-09-07T08:10:53+00:00'
+  resolved_at: '2026-09-14T08:10:02+00:00'
 deployments:
 - kind: project-relative
   target: copilot
