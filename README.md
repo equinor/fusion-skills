@@ -350,7 +350,7 @@ Provision and migrate Fusion databases using the fusion-infra-cli (finf). USE FO
 
 ---
 
-**👍 [`fusion-issue-authoring@0.3.5`](skills/fusion-issue-authoring/SKILL.md)**
+**👍 [`fusion-issue-authoring@0.3.6`](skills/fusion-issue-authoring/SKILL.md)**
 
 Classify issue type, activate the matching agent mode for type-specific drafting, and enforce shared safety gates before GitHub mutation.
 
