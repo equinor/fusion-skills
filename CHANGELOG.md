@@ -2,6 +2,18 @@
 
 All notable changes to this repository are documented in this file.
 
+## v1.6.4
+
+### Patch
+
+__🎯 [fix(issue-authoring): remove story from feature template #249](https://github.com/equinor/fusion-skills/pull/249)<br/>
+🗂️ [6d6759d](https://github.com/equinor/fusion-skills/commit/6d6759dfdc645546833306d34eea1c1378a09253)<br/>
+📦 fusion-issue-authoring@0.3.6__
+
+Remove user-story framing from the Feature fallback template and align Feature agent guidance with the problem-first structure.
+
+Related to: equinor/fusion-core-tasks#2046
+
 ## v1.6.3
 
 ### Patch
