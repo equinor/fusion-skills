@@ -45,14 +45,14 @@ PROMPT="$(section User)"
 # Resolves every skills/... path reachable from an APM package, following nested apm/... dependencies.
 resolve_skill_paths() {
   local pkg="$1"
-  grep -E '^[[:space:]]+path:' "$ROOT/$pkg/apm.yml" | sed -E 's/^[[:space:]]+path:[[:space:]]*//' | while read -r dep; do
+  { grep -E '^[[:space:]]+path:' "$ROOT/$pkg/apm.yml" || true; } | sed -E 's/^[[:space:]]+path:[[:space:]]*//' | while read -r dep; do
     if [[ "$dep" == apm/* ]]; then resolve_skill_paths "$dep"; else echo "$dep"; fi
   done
 }
 resolve_apm_packages() {
   local pkg="$1"
   echo "$pkg"
-  grep -E '^[[:space:]]+path:[[:space:]]*apm/' "$ROOT/$pkg/apm.yml" | sed -E 's/^[[:space:]]+path:[[:space:]]*//' | while read -r dep; do resolve_apm_packages "$dep"; done
+  { grep -E '^[[:space:]]+path:[[:space:]]*apm/' "$ROOT/$pkg/apm.yml" || true; } | sed -E 's/^[[:space:]]+path:[[:space:]]*//' | while read -r dep; do resolve_apm_packages "$dep"; done
 }
 
 install_profile() {
@@ -62,8 +62,8 @@ install_profile() {
     cp -R "$ROOT/$skill" "$ws/.github/skills/$(basename "$skill")"
   done
   resolve_apm_packages "$PROFILE" | sort -u | while read -r pkg; do
-    [[ -d "$ROOT/$pkg/.apm/agents" ]] && cp "$ROOT/$pkg/.apm/agents/"*.md "$ws/.github/agents/"
-    [[ -d "$ROOT/$pkg/.apm/instructions" ]] && cp "$ROOT/$pkg/.apm/instructions/"*.md "$ws/.github/instructions/"
+    if [[ -d "$ROOT/$pkg/.apm/agents" ]]; then cp "$ROOT/$pkg/.apm/agents/"*.md "$ws/.github/agents/"; fi
+    if [[ -d "$ROOT/$pkg/.apm/instructions" ]]; then cp "$ROOT/$pkg/.apm/instructions/"*.md "$ws/.github/instructions/"; fi
   done
   return 0
 }
@@ -74,22 +74,27 @@ seed_workspace() {
     local src="$REPOS_ROOT/$SEED_REPO"
     [[ -d "$src" ]] || { echo "Seed repo not found: $src" >&2; exit 1; }
     rsync -a --exclude bin --exclude obj --exclude TestResults --exclude node_modules "$src/${SEED_PATH:-.}/" "$ws/${SEED_PATH:-.}/"
-    [[ -f "$src/global.json" ]] && cp "$src/global.json" "$ws/"
+    if [[ -f "$src/global.json" ]]; then cp "$src/global.json" "$ws/"; fi
   else
     cp "$SCRIPT_DIR/seed/"* "$ws/"
   fi
+  return 0
 }
 
 STAMP="$(date +%Y%m%d-%H%M%S)"
 OUT="$ROOT/.tmp/eval/service-codegen/$STAMP-$CASE_NAME"
+# Workspaces live outside this repo so Copilot does not pick up fusion-skills' own instructions.
+WORK_ROOT="${EVAL_WORK_ROOT:-${TMPDIR:-/tmp}}"
+WORK_ROOT="${WORK_ROOT%/}/fusion-service-codegen/$STAMP-$CASE_NAME"
 mkdir -p "$OUT"
 git -C "$ROOT" rev-parse --short HEAD > "$OUT/skills-commit.txt"
 echo "Results: $OUT"
 
 for ((i = 1; i <= RUNS; i++)); do
   RUN_DIR="$OUT/run-$i"
-  WS="$RUN_DIR/workspace"
-  mkdir -p "$WS"
+  WS="$WORK_ROOT/run-$i"
+  mkdir -p "$WS" "$RUN_DIR"
+  echo "$WS" > "$RUN_DIR/workspace-path.txt"
   git -C "$WS" init -q
   seed_workspace "$WS"
   install_profile "$WS"
@@ -108,6 +113,7 @@ for ((i = 1; i <= RUNS; i++)); do
   git -C "$WS" diff --cached --stat HEAD > "$RUN_DIR/diffstat.txt" 2>/dev/null || true
 
   dotnet run "$SCRIPT_DIR/checks.cs" -- --workspace "$WS" --case "$CASE_FILE" --out "$RUN_DIR" || true
+  rsync -a --exclude bin --exclude obj --exclude .git --exclude TestResults "$WS/" "$RUN_DIR/workspace/"
 
   if [[ "$JUDGE" == true ]]; then
     REFERENCE="$REPOS_ROOT/fusion-pss-project-demand/backend"

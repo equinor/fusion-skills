@@ -34,12 +34,30 @@ string[] Where(IEnumerable<SourceFile> files, string pattern) => files.Where(f =
 
 if (runBuild)
 {
-    (int buildExit, string buildOut) = Run("dotnet", "build --nologo -clp:ErrorsOnly", workspace);
-    Check("build", Severity.Fail, buildExit == 0, buildExit == 0 ? "dotnet build succeeded" : Tail(buildOut));
+    string? solution = Directory.EnumerateFiles(workspace, "*.sln*", SearchOption.AllDirectories)
+        .Where(p => !excluded.Any(e => p.Replace('\\', '/').Contains(e)))
+        .OrderBy(p => p.Count(c => c == Path.DirectorySeparatorChar))
+        .FirstOrDefault();
+    // Relative path: on macOS /var vs /private/var aliases break test-host assembly loading for absolute paths.
+    string target = solution is null ? "" : $"\"{Path.GetRelativePath(workspace, solution)}\" ";
+    (int buildExit, string buildOut) = Run("dotnet", $"build {target}--nologo -clp:ErrorsOnly", workspace);
+    if (buildExit != 0)
+    {
+        // First builds after restore occasionally fail in static web assets; one retry avoids false negatives.
+        (buildExit, buildOut) = Run("dotnet", $"build {target}--nologo -clp:ErrorsOnly", workspace);
+    }
+
+    Directory.CreateDirectory(outDir);
+    File.WriteAllText(Path.Combine(outDir, "build.log"), buildOut);
+    Check("build", Severity.Fail, buildExit == 0, buildExit == 0 ? $"dotnet build {Path.GetFileName(solution)} succeeded" : Tail(buildOut));
     bool hasTests = projects.Any(p => Regex.IsMatch(p.Content, @"Microsoft\.NET\.Test\.Sdk|xunit|MSTest|NUnit|TUnit"));
     if (buildExit == 0 && hasTests)
     {
-        (int testExit, string testOut) = Run("dotnet", "test --no-build --nologo", workspace);
+        // Microsoft.Testing.Platform mode (global.json "test.runner") rejects positional solution paths.
+        bool mtp = File.Exists(Path.Combine(workspace, "global.json")) && File.ReadAllText(Path.Combine(workspace, "global.json")).Contains("Microsoft.Testing.Platform");
+        string testTarget = solution is null ? "" : (mtp ? $"--solution {target}" : target);
+        (int testExit, string testOut) = Run("dotnet", $"test {testTarget}".TrimEnd(), workspace);
+        File.WriteAllText(Path.Combine(outDir, "test.log"), testOut);
         Check("test", Severity.Fail, testExit == 0, testExit == 0 ? "dotnet test succeeded" : Tail(testOut));
     }
     else
@@ -198,6 +216,12 @@ static (int ExitCode, string Output) Run(string file, string arguments, string w
         RedirectStandardOutput = true,
         RedirectStandardError = true,
     };
+    // `dotnet run` leaks MSBuild/host variables that break nested dotnet build/test runs.
+    foreach (string key in info.Environment.Keys.Where(k => k.StartsWith("MSBuild", StringComparison.OrdinalIgnoreCase) || k.StartsWith("DOTNET_", StringComparison.Ordinal) && k != "DOTNET_ROOT").ToList())
+    {
+        info.Environment.Remove(key);
+    }
+
     using Process process = Process.Start(info)!;
     Task<string> stdout = process.StandardOutput.ReadToEndAsync();
     Task<string> stderr = process.StandardError.ReadToEndAsync();

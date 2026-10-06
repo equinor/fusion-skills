@@ -6,8 +6,10 @@ It checks the generated code only. App registrations, Radix, Roles, and database
 
 ## How a run works
 
-1. Creates `.tmp/eval/service-codegen/<timestamp>-<case>/run-<n>/workspace`, runs `git init`, and seeds it with
-   `seed/` (empty API) or with a sibling repo path (`seed_repo` / `seed_path` front matter).
+1. Creates a fresh workspace outside the repo (`$TMPDIR/fusion-service-codegen/<timestamp>-<case>/run-<n>`, override with
+   `EVAL_WORK_ROOT`), runs `git init`, and seeds it with `seed/` (empty API) or with a sibling repo path
+   (`seed_repo` / `seed_path` front matter). Results and a copy of the generated sources go to
+   `.tmp/eval/service-codegen/<timestamp>-<case>/run-<n>/`.
 2. Copies the **working-tree** skills, agents, and instructions of the profile into `.github/` (resolving nested APM packages),
    so uncommitted skill changes are tested.
 3. Runs `copilot --agent <agent> --allow-all-tools --no-ask-user --autopilot -p "<## User>"` inside the workspace.
