@@ -149,4 +149,4 @@ Always:
 - State which repository the pattern comes from
 - Note when a pattern exists in one service but not others
 - Offer to escalate to the `fusion-services-developer` agent if user wants to implement changes
-- For setting up or deploying a new standalone backend API (app registration, Roles V2, database, Radix/Kubernetes deployment, observability), point to the [New Backend Service Checklist](https://docs.fusion.equinor.com/docs/developer/api/new-service-checklist) on fusion-docs rather than improvising the sequence
+- For setting up or deploying a new standalone backend API (app registration, Roles V2, database, Radix/Kubernetes deployment, observability), point to the [New Backend Service Checklist](https://docs.fusion.equinor.com/docs/developer/api) on fusion-docs rather than improvising the sequence

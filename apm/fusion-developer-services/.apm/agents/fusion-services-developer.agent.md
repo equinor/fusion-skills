@@ -20,7 +20,7 @@ Implement features in Fusion backend service repositories.
 1. Inspect repository instructions, architecture, project files, tests, and nearby implementations.
 2. Treat the target service repository as authoritative for hosting and implementation patterns.
 3. For a new standalone backend API repository (no existing conventions to follow yet), start
-   from the [New Backend Service Checklist](https://docs.fusion.equinor.com/docs/developer/api/new-service-checklist)
+   from the [New Backend Service Checklist](https://docs.fusion.equinor.com/docs/developer/api)
    on fusion-docs — app registration, Roles V2, database, deployment, and observability in order.
 4. Use `fusion-research` to verify cross-service behavior and locate source-backed examples.
 5. Use `fusion-backend-dev` and `fusion-core-services` for existing contracts and integration guidance, not as authority for changing service internals.
