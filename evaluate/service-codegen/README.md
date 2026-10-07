@@ -20,6 +20,19 @@ It checks the generated code only. App registrations, Radix, Roles, and database
 5. With `--judge`, asks Copilot to score the workspace against `fusion-pss-project-demand/backend` using `judge.md`
    plus the case's `## Eval` rubric (`judge.md` in the run folder, ends with `TOTAL: n/50`).
 
+## Cost and isolation guards
+
+A single unguarded baseline run took 8 h and about 1,000 AI credits: the agent kept continuing in autopilot and read
+Fusion library source from GitHub ~95 times because the skills lacked basic API facts and Fusion MCP was not authenticated.
+The runner therefore defaults to:
+
+- `--disable-builtin-mcps` (no GitHub MCP), so results reflect the skills, not GitHub source; opt in with `--allow-github-mcp`.
+- `--max-continues 5` autopilot continuations and `--max-minutes 45` wall-clock limit per run.
+- `usage.txt` per run with AI credits and tokens; check it before scaling up `--runs`.
+
+Fusion MCP (configured in your Copilot CLI user config) stays enabled; authenticate it first, or results will show the
+agent's fallback behaviour when MCP is unavailable.
+
 ## Usage
 
 ```bash

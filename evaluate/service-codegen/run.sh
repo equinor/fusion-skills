@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Runs a service code-generation case with Copilot CLI in a fresh git repo and scores the result.
 # Usage: evaluate/service-codegen/run.sh <case.md> [--runs N] [--model M] [--judge] [--profile apm/fusion-developer-services]
+#        [--max-minutes 45] [--max-continues 5] [--allow-github-mcp]
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -14,6 +15,9 @@ RUNS=1
 MODEL=""
 JUDGE=false
 PROFILE="apm/fusion-developer-services"
+MAX_MINUTES=45
+MAX_CONTINUES=5
+ALLOW_GITHUB_MCP=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -21,7 +25,10 @@ while [[ $# -gt 0 ]]; do
     --model) MODEL="$2"; shift 2 ;;
     --judge) JUDGE=true; shift ;;
     --profile) PROFILE="$2"; shift 2 ;;
-    -h|--help) sed -n 2,3p "$0"; exit 0 ;;
+    --max-minutes) MAX_MINUTES="$2"; shift 2 ;;
+    --max-continues) MAX_CONTINUES="$2"; shift 2 ;;
+    --allow-github-mcp) ALLOW_GITHUB_MCP=true; shift ;;
+    -h|--help) sed -n 2,4p "$0"; exit 0 ;;
     *) CASE_FILE="$1"; shift ;;
   esac
 done
@@ -101,13 +108,26 @@ for ((i = 1; i <= RUNS; i++)); do
   git -C "$WS" add -A
   git -C "$WS" -c user.name=eval -c user.email=eval@localhost commit -q -m "seed" --allow-empty
 
-  echo "== $CASE_NAME run $i/$RUNS (agent: $AGENT)"
-  COPILOT_ARGS=(--agent "$AGENT" --allow-all-tools --no-ask-user --autopilot --max-autopilot-continues 15
+  echo "== $CASE_NAME run $i/$RUNS (agent: $AGENT, limit: ${MAX_MINUTES}m)"
+  COPILOT_ARGS=(--agent "$AGENT" --allow-all-tools --no-ask-user --autopilot --max-autopilot-continues "$MAX_CONTINUES"
     --add-dir "$WS" --log-dir "$RUN_DIR/logs" --share "$RUN_DIR/session.md" -p "$PROMPT")
   [[ -n "$MODEL" ]] && COPILOT_ARGS+=(--model "$MODEL")
+  # Built-in GitHub MCP lets the agent read Fusion source on GitHub, which hides gaps in the skills under test.
+  [[ "$ALLOW_GITHUB_MCP" == true ]] || COPILOT_ARGS+=(--disable-builtin-mcps)
   START=$(date +%s)
-  (cd "$WS" && "$COPILOT_BIN" "${COPILOT_ARGS[@]}") > "$RUN_DIR/transcript.log" 2>&1 || echo "copilot exited non-zero" >> "$RUN_DIR/transcript.log"
+  (cd "$WS" && exec "$COPILOT_BIN" "${COPILOT_ARGS[@]}") > "$RUN_DIR/transcript.log" 2>&1 &
+  COPILOT_PID=$!
+  while kill -0 "$COPILOT_PID" 2>/dev/null; do
+    if (( $(date +%s) - START > MAX_MINUTES * 60 )); then
+      kill "$COPILOT_PID" 2>/dev/null || true
+      echo "killed after ${MAX_MINUTES} minutes" >> "$RUN_DIR/transcript.log"
+      break
+    fi
+    sleep 10
+  done
+  wait "$COPILOT_PID" 2>/dev/null || echo "copilot exited non-zero" >> "$RUN_DIR/transcript.log"
   echo "$(( $(date +%s) - START ))" > "$RUN_DIR/duration-seconds.txt"
+  grep -E "^(AI Credits|Tokens)" "$RUN_DIR/transcript.log" > "$RUN_DIR/usage.txt" 2>/dev/null || true
 
   git -C "$WS" add -A >/dev/null 2>&1 || true
   git -C "$WS" diff --cached --stat HEAD > "$RUN_DIR/diffstat.txt" 2>/dev/null || true
@@ -126,11 +146,16 @@ $(section Eval)
 - Generated workspace: $WS
 - Reference implementation: $REFERENCE
 - Deterministic scorecard: $RUN_DIR/scorecard.md"
-    (cd "$WS" && "$COPILOT_BIN" --allow-all-tools --no-ask-user --add-dir "$WS" --add-dir "$REFERENCE" --add-dir "$RUN_DIR" \
+    (cd "$WS" && "$COPILOT_BIN" --allow-all-tools --no-ask-user --disable-builtin-mcps --add-dir "$WS" --add-dir "$REFERENCE" --add-dir "$RUN_DIR" \
       ${MODEL:+--model "$MODEL"} -p "$JUDGE_PROMPT") > "$RUN_DIR/judge.md" 2>&1 || true
   fi
 done
 
 echo
 echo "Summary ($OUT):"
-for f in "$OUT"/run-*/scorecard.md; do [[ -f "$f" ]] && head -n 3 "$f"; done
+for d in "$OUT"/run-*; do
+  [[ -f "$d/scorecard.md" ]] && head -n 1 "$d/scorecard.md"
+  [[ -f "$d/usage.txt" ]] && cat "$d/usage.txt"
+  [[ -f "$d/judge.md" ]] && grep -E "^TOTAL:" "$d/judge.md" | tail -1
+done
+exit 0
