@@ -15,7 +15,7 @@ Install the current compatible `1.x` release:
 apm install equinor/fusion-skills/apm/fusion-developer-services#^1.6.1 --target copilot
 ```
 
-The current backend skills cover contracts, integration, research, and supporting tools. Service-specific repositories remain authoritative for implementation and hosting patterns until a dedicated service-authoring skill is added.
+The `fusion-developer-service` skill (experimental) guides building Fusion APIs: layout, MediatR, API contracts, ProblemDetails, Roles V2 authorization, OData, Azure SQL, Fusion.Integration, events, multi-pod caching, hosting, and tests. Service-specific repositories remain authoritative for their own conventions.
 
 This package depends on `fusion-developer` and adds service-specific skills, agents, and C# instructions.
 

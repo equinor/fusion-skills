@@ -11,6 +11,9 @@ dependencies:
       path: apm/fusion-developer
       ref: v1.6.4 # release-managed
     - git: equinor/fusion-skills
+      path: skills/.experimental/fusion-developer-service
+      ref: v1.6.4 # release-managed
+    - git: equinor/fusion-skills
       path: skills/fusion-backend-dev
       ref: v1.6.4 # release-managed
     - git: equinor/fusion-skills
