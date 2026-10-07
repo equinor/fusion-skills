@@ -124,8 +124,9 @@ Follow `references/testing.md`.
 
 ## Research
 
-- Fusion MCP: `mcp_fusion_search_docs` for platform guides (Radix, Roles V2, database, PR pipeline),
-  `mcp_fusion_search_backend_code` for library and service source. Use `fusion-research` when unsure.
+- Fusion MCP server (`Fusion MCP` / `fusion`): tool `search_docs` for platform guides (Radix, Roles V2, database, PR
+  pipeline), tool `search_backend_code` for library and service source. Tool ids differ per client (VS Code
+  `mcp_fusion_search_docs`, Copilot CLI `Fusion-MCP-search_docs`). Use `fusion-research` when unsure.
 - If MCP is unavailable, say so and link the docs: `https://docs.fusion.equinor.com/docs/developer/api`.
 - Never invent Fusion package names, extension methods, or endpoints. Check a reference file, MCP, or library README first.
 

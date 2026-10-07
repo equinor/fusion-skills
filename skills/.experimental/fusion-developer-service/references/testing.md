@@ -6,6 +6,15 @@ memory, Fusion test authentication, and a mocked Roles V2 client. Mock only true
 Packages: `xunit.v3`, `Microsoft.AspNetCore.Mvc.Testing`, `Microsoft.EntityFrameworkCore.Sqlite`, `Fusion.Testing`,
 `Fusion.Testing.Authentication`, `AwesomeAssertions`.
 
+xunit.v3 runs on Microsoft.Testing.Platform; on the .NET 10 SDK `dotnet test` then needs the runner opt-in in the repo
+root `global.json`, or it fails with "Testing with VSTest target is no longer supported":
+
+```json
+{ "test": { "runner": "Microsoft.Testing.Platform" } }
+```
+
+Run with `dotnet test --solution <path>.slnx` (positional paths are not accepted in this mode).
+
 ## Factory
 
 ```csharp

@@ -45,7 +45,9 @@ await mediator.Publish(new CategoriesChanged(), cancellationToken);
 ```
 
 Requires an Azure Service Bus namespace/topic for the app (Bicep) and its connection configured as a secret or via
-identity per your platform setup. Without a Service Bus, use a short TTL and state the staleness window explicitly.
+identity per your platform setup. Register it only when the connection is configured, so local runs and tests still work
+(MediatR then publishes in-process, which is correct for a single instance). Without a Service Bus in deployed
+environments, use a short TTL and state the staleness window explicitly.
 
 ## Data Protection with several pods
 

@@ -73,5 +73,5 @@ child property as `null` when not expanded (no `JsonIgnore`).
   `AddODataOpenApi()`, which calls its own `AddOpenApi()`.
 - Count before paging; return `{ value, totalCount }` (`api-conventions.md`).
 
-Learn more: `Fusion.AspNetCore` README in `equinor/fusion-libraries` (`src/Web/Fusion.AspNetCore`), or Fusion MCP
-`mcp_fusion_search_backend_code` "ApplyODataFilters".
+Learn more: `Fusion.AspNetCore` README in `equinor/fusion-libraries` (`src/Web/Fusion.AspNetCore`), or the Fusion MCP
+`search_backend_code` tool with "ApplyODataFilters".

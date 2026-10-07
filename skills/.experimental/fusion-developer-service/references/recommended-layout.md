@@ -1,5 +1,12 @@
 # Recommended layout for a new Fusion API
 
+## Contents
+
+- Repository
+- Naming
+- Project file
+- Program.cs shape
+
 Use for **new** repos only. Existing repos keep their layout. Shape taken from `fusion-pss-project-demand` and
 `fusion-pss-subsea-catalog` (both .NET 10 on Radix).
 
@@ -64,7 +71,7 @@ docs/
 </PropertyGroup>
 ```
 
-Baseline packages (versions as used in Project Demand, Oct 2026 — check for newer):
+Baseline packages (versions from the reference apps; check for newer releases):
 
 | Package | Why |
 | --- | --- |

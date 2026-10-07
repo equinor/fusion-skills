@@ -38,4 +38,4 @@ add it next to nuget.org in `nuget.config`. Source: `equinor/fusion-integration-
 - `Fusion.Hashing`: use `System.IO.Hashing`.
 - `Fusion.Infrastructure.HttpClients` / `.ServiceDiscovery` when you already use Fusion.Integration (overlapping features).
 
-Each package has a README in its source folder; Fusion MCP `mcp_fusion_search_backend_code` finds usages.
+Each package has a README in its source folder; the Fusion MCP `search_backend_code` tool finds usages.

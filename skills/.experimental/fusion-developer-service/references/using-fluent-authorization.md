@@ -1,5 +1,13 @@
 # Authorization with Roles V2 and FluentAuthorization
 
+## Contents
+
+- Model
+- Registration
+- Checking access in actions (imperative)
+- OPTIONS endpoints: tell the frontend what the user can do
+- Tests
+
 ## Model
 
 - **Access role** (`PssInventory.Read`): what the API checks. Defined in the app's Roles V2 system config

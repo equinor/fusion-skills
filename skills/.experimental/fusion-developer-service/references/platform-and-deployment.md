@@ -15,8 +15,8 @@ Fusion already provides the infrastructure; reuse it and read the docs for detai
 | IaC | Bicep for app-owned Azure resources (resource group, pipeline identities, App Insights, storage, Key Vault); app registrations are Terraform in Fusion Infrastructure | repo `infra/bicep/` |
 | CI/CD | GitHub Actions with OIDC (`azure/login` with federated credentials), build → idempotent migration script → provision/migrate → Radix deploy, prod behind an environment approval | reference repos below |
 
-Docs base: `https://docs.fusion.equinor.com/docs/` (start at `developer/api`, the new-service checklist). Use Fusion MCP
-`mcp_fusion_search_docs` for these pages.
+Docs base: `https://docs.fusion.equinor.com/docs/` (start at `developer/api`, the new-service checklist). Use the Fusion MCP
+`search_docs` tool for these pages.
 
 ## Manual steps
 

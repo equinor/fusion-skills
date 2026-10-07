@@ -1,5 +1,13 @@
 # MediatR CQRS
 
+## Contents
+
+- Version and license
+- Registration
+- Request + handler in one file
+- Behaviours
+- FluentValidation
+
 ## Version and license
 
 - Use **MediatR < 13** while it supports your target .NET version. 12.5.0 is the last Apache-2.0 release and is what the

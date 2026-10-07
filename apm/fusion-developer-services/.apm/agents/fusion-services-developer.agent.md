@@ -23,7 +23,7 @@ Implement and review features in Fusion backend API repositories.
    **Existing repository conventions take precedence**; the skill's defaults apply to new code and new repositories.
 3. For a new API repository, follow the skill's recommended layout and new-API checklist, and the
    [New Backend Service Checklist](https://docs.fusion.equinor.com/docs/developer/api) for platform steps.
-4. Use Fusion MCP (`mcp_fusion_search_docs`, `mcp_fusion_search_backend_code`) or `fusion-research` for details the
+4. Use the Fusion MCP `search_docs` and `search_backend_code` tools or `fusion-research` for details the
    skill does not cover; do not invent Fusion packages, APIs, or contracts.
 5. Use `fusion-core-services` for contracts of Fusion core APIs you call; `fusion-infra-cli`, `fusion-roles-cli`,
    `fusion-help-docs`, and `fusion-devtools` when the task enters databases, roles config, help content, or API testing.

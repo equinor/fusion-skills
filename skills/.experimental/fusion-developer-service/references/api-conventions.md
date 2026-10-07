@@ -1,5 +1,16 @@
 # API conventions
 
+## Contents
+
+- MVC controllers
+- Status codes in OpenAPI
+- XML docs → OpenAPI
+- Versioning
+- API models
+- Lists
+- PATCH
+- Caching responses
+
 Defaults for new endpoints. Follow the existing repo when it differs.
 
 ## MVC controllers
