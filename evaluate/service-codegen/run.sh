@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Runs a service code-generation case with Copilot CLI in a fresh git repo and scores the result.
 # Usage: evaluate/service-codegen/run.sh <case.md> [--runs N] [--model M] [--judge] [--profile apm/fusion-developer-services]
-#        [--max-minutes 45] [--max-continues 5] [--allow-github-mcp] [--effort medium]
+#        [--max-minutes 45] [--max-continues 5] [--allow-github-source] [--effort medium]
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -17,7 +17,7 @@ JUDGE=false
 PROFILE="apm/fusion-developer-services"
 MAX_MINUTES=45
 MAX_CONTINUES=5
-ALLOW_GITHUB_MCP=false
+ALLOW_GITHUB_SOURCE=false
 EFFORT="medium"
 
 while [[ $# -gt 0 ]]; do
@@ -28,7 +28,7 @@ while [[ $# -gt 0 ]]; do
     --profile) PROFILE="$2"; shift 2 ;;
     --max-minutes) MAX_MINUTES="$2"; shift 2 ;;
     --max-continues) MAX_CONTINUES="$2"; shift 2 ;;
-    --allow-github-mcp) ALLOW_GITHUB_MCP=true; shift ;;
+    --allow-github-source) ALLOW_GITHUB_SOURCE=true; shift ;;
     --effort) EFFORT="$2"; shift 2 ;;
     -h|--help) sed -n 2,4p "$0"; exit 0 ;;
     *) CASE_FILE="$1"; shift ;;
@@ -97,7 +97,7 @@ WORK_ROOT="${EVAL_WORK_ROOT:-${TMPDIR:-/tmp}}"
 WORK_ROOT="${WORK_ROOT%/}/fusion-service-codegen/$STAMP-$CASE_NAME"
 mkdir -p "$OUT"
 git -C "$ROOT" rev-parse --short HEAD > "$OUT/skills-commit.txt"
-echo "model=${MODEL:-default} effort=$EFFORT github_mcp=$ALLOW_GITHUB_MCP max_minutes=$MAX_MINUTES max_continues=$MAX_CONTINUES" > "$OUT/settings.txt"
+echo "model=${MODEL:-default} effort=$EFFORT github_source=$ALLOW_GITHUB_SOURCE max_minutes=$MAX_MINUTES max_continues=$MAX_CONTINUES" > "$OUT/settings.txt"
 echo "Results: $OUT"
 
 for ((i = 1; i <= RUNS; i++)); do
@@ -116,8 +116,8 @@ for ((i = 1; i <= RUNS; i++)); do
     --add-dir "$WS" --log-dir "$RUN_DIR/logs" --share "$RUN_DIR/session.md" -p "$PROMPT")
   [[ -n "$MODEL" ]] && COPILOT_ARGS+=(--model "$MODEL")
   [[ -n "$EFFORT" ]] && COPILOT_ARGS+=(--reasoning-effort "$EFFORT")
-  # Built-in GitHub MCP lets the agent read Fusion source on GitHub, which hides gaps in the skills under test.
-  [[ "$ALLOW_GITHUB_MCP" == true ]] || COPILOT_ARGS+=(--disable-builtin-mcps)
+  # Reading Fusion source on GitHub hides gaps in the skills under test; the rest of the GitHub MCP stays available.
+  [[ "$ALLOW_GITHUB_SOURCE" == true ]] || COPILOT_ARGS+=(--deny-tool 'github-mcp-server(get_file_contents)' --deny-tool 'github-mcp-server(search_code)')
   START=$(date +%s)
   (cd "$WS" && exec "$COPILOT_BIN" "${COPILOT_ARGS[@]}") > "$RUN_DIR/transcript.log" 2>&1 &
   COPILOT_PID=$!
@@ -150,7 +150,7 @@ $(section Eval)
 - Generated workspace: $WS
 - Reference implementation: $REFERENCE
 - Deterministic scorecard: $RUN_DIR/scorecard.md"
-    (cd "$WS" && "$COPILOT_BIN" --allow-all-tools --no-ask-user --disable-builtin-mcps --add-dir "$WS" --add-dir "$REFERENCE" --add-dir "$RUN_DIR" \
+    (cd "$WS" && "$COPILOT_BIN" --allow-all-tools --no-ask-user --deny-tool 'github-mcp-server(get_file_contents)' --deny-tool 'github-mcp-server(search_code)' --add-dir "$WS" --add-dir "$REFERENCE" --add-dir "$RUN_DIR" \
       ${MODEL:+--model "$MODEL"} ${EFFORT:+--reasoning-effort "$EFFORT"} -p "$JUDGE_PROMPT") > "$RUN_DIR/judge.md" 2>&1 || true
   fi
 done

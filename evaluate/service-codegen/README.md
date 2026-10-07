@@ -26,7 +26,8 @@ A single unguarded baseline run took 8 h and about 1,000 AI credits: the agent k
 Fusion library source from GitHub ~95 times because the skills lacked basic API facts and Fusion MCP was not authenticated.
 The runner therefore defaults to:
 
-- `--disable-builtin-mcps` (no GitHub MCP), so results reflect the skills, not GitHub source; opt in with `--allow-github-mcp`.
+- GitHub MCP stays enabled, but its source-reading tools (`get_file_contents`, `search_code`) are denied, so results reflect
+  the skills and Fusion MCP rather than copied GitHub source; opt in with `--allow-github-source`.
 - `--max-continues 5` autopilot continuations and `--max-minutes 45` wall-clock limit per run.
 - `usage.txt` per run with AI credits and tokens; check it before scaling up `--runs`.
 
