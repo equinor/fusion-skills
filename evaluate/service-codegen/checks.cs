@@ -106,6 +106,8 @@ Check("naming-db-entities", Severity.Warn, AnyApp(@"class\s+Db[A-Z]\w+"), "Db* e
 Check("naming-api-models", Severity.Warn, AnyApp(@"(class|record)\s+Api[A-Z]\w+"), "Api* response models");
 Check("ef-fluent-config", Severity.Warn, AnyApp(@"IEntityTypeConfiguration<|OnModelCreating"), "Fluent API entity configuration");
 Check("design-time-factory", Severity.Warn, AnyApp(@"IDesignTimeDbContextFactory<"), "IDesignTimeDbContextFactory");
+Check("sql-server", Severity.Fail, AnyApp(@"UseSqlServer\(|AddSqlDbContext(Pool)?<"), "EF Core on SQL Server");
+Check("sql-token-auth", Severity.Warn, AnyApp(@"AddAccessTokenSupport|AddDefaultSqlTokenCredentials|Active Directory (Default|Workload Identity|Managed Identity)"), "Entra token auth to SQL (Fusion.Infrastructure.Database)");
 Check("layout", Severity.Warn, appFiles.Any(f => f.Path.Contains("Controllers")) && appFiles.Any(f => f.Path.Contains("Domain")), "Controllers/ and Domain/ folders");
 
 Check("tests-webapplicationfactory", Severity.Fail, testFiles.Any(f => f.Content.Contains("WebApplicationFactory")), "integration tests use WebApplicationFactory");
