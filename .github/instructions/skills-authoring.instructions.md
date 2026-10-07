@@ -58,6 +58,12 @@ bun run validate:scripts
 
 Required local dev contract even though installed skill describes validation generically.
 
+## Behavioral evaluation
+
+- Skills that drive code generation or multi-step workflows should have evaluation cases under `evaluate/` (for example `evaluate/service-codegen/` for backend API skills).
+- Record a baseline before large content changes and post-change results in the PR body; include model, reasoning effort, and cost.
+- Keep evaluation runs bounded (time, autopilot continues) and isolated from source-reading tools that hide skill gaps.
+
 ## Repository completion gate
 
 Before marking skill PR ready, verify:
