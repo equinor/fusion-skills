@@ -24,7 +24,7 @@ Some steps need Fusion Core/Infrastructure (app registrations, `Fusion.Infrastru
 identity, Roles V2 system creation, federated credentials on the cluster). Record every manual step in
 `docs/manual-solution-setup.md` (no secrets) so the next person or agent can repeat it.
 
-## Reference repos
+## Typical repository files
 
-`equinor/fusion-pss-project-demand` and `equinor/fusion-pss-subsea-catalog`: `.github/workflows/` (`build-api.yml`,
-`deploy-api.yml`, `deploy-infra.yml`, `deploy-pr-k8s.yml`, `help-docs.yml`), `infra/`, `docs/manual-solution-setup.md`.
+`.github/workflows/` (`build-api.yml`, `deploy-api.yml`, `deploy-infra.yml`, `deploy-pr-k8s.yml`, `help-docs.yml`),
+`infra/` (`database/`, `roles/`, `radix/`, `bicep/`), `docs/manual-solution-setup.md`.

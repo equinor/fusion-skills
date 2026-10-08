@@ -1,6 +1,6 @@
 # Recommended file layout for an app's Roles V2 config
 
-Pattern from Fusion app repos (for example PSS Project Demand `infra/roles/`). Keep the config as code, one concern per
+Pattern from Fusion app repos (`infra/roles/`), shown for an invented Work Orders app (`work-orders`). Keep the config as code, one concern per
 file, one file set per Roles V2 environment.
 
 ## Contents
@@ -85,8 +85,8 @@ roles, and claimable roles are never deleted by the CLI; remove them in Fusion C
 
 ## Naming
 
-- Access roles: PascalCase with dots, `<App>.<Capability>` (`PssProjectDemand.Read`); mirror them in an API constants class.
-- Roles and claimable roles: kebab-case (`pss-project-demand-admin`, `pss-project-demand-admin-claim`); the API never checks
+- Access roles: PascalCase with dots, `<App>.<Capability>` (`WorkOrders.Read`); mirror them in an API constants class.
+- Roles and claimable roles: kebab-case (`work-orders-admin`, `work-orders-admin-claim`); the API never checks
   role names, so renaming them has no code impact.
 - Keep the user-facing description of the base read access role useful: it is shown to users who lack access.
 

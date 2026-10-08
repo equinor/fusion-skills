@@ -67,9 +67,9 @@ Declare **every** status an action can return with `[ProducesResponseType]`, not
 - `<GenerateDocumentationFile>true</GenerateDocumentationFile>` + `<NoWarn>$(NoWarn);1591</NoWarn>`.
 - `/// <summary>` on every action, `<param>` for route/query parameters, summaries on `Api*` models and properties.
 - `Microsoft.AspNetCore.OpenApi` (.NET 9+) adds XML comments automatically for a plain `AddOpenApi()`. When OpenAPI is
-  registered through `Asp.Versioning.OpenApi` (`.AddOpenApi(...)` on the versioning builder), Project Demand adds
-  small `XmlCommentsOperationTransformer`/`XmlCommentsSchemaTransformer` classes (`backend/Api/OpenApi/`); verify the
-  descriptions appear in `/openapi/v1.json` and copy that approach if they do not.
+  registered through `Asp.Versioning.OpenApi` (`.AddOpenApi(...)` on the versioning builder), add small
+  `XmlCommentsOperationTransformer`/`XmlCommentsSchemaTransformer` classes (`<App>.Api/OpenApi/`) when the
+  descriptions do not appear in `/openapi/v1.json`.
 
 ## Versioning
 

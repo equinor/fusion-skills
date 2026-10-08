@@ -7,16 +7,17 @@
 - Project file
 - Program.cs shape
 
-Use for **new** repos only. Existing repos keep their layout. Shape taken from `fusion-pss-project-demand` and
-`fusion-pss-subsea-catalog` (both .NET 10 on Radix).
+Use for **new** repos only. Existing repos keep their layout. Example names use the invented Work Orders app
+(`<App>` = `WorkOrders`), a .NET 10 API on Radix.
 
 ## Repository
 
 ```text
 backend/
-  <App>.slnx
+  <App>.slnx                    # WorkOrders.slnx
   nuget.config                  # nuget.org + Fusion-Public
-  Api/
+  global.json                   # SDK pin + Microsoft.Testing.Platform runner
+  <App>.Api/                    # WorkOrders.Api/
     <App>.Api.csproj
     Program.cs                  # composition only: calls registration extensions, maps middleware
     ServiceRegistrationExtensions.cs  # AddXxxApplication/Database/Authentication/Authorization/Cors/Telemetry/ApiInfrastructure
@@ -39,7 +40,8 @@ backend/
     ErrorHandling/              # IExceptionHandler implementations
     Observability/              # ActivitySource, enrichment
     OpenApi/                    # OpenAPI transformers
-  Api.Tests/
+  <App>.Api.Tests/              # WorkOrders.Api.Tests/
+    <App>.Api.Tests.csproj
     Fixtures/                   # WebApplicationFactory + Fusion test fixture
     Mocks/                      # IFusionRolesV2Client mock etc.
     Tests/
@@ -55,6 +57,8 @@ docs/
 
 ## Naming
 
+- Projects `<App>.Api` and `<App>.Api.Tests`; folder name = project name = root namespace (`WorkOrders.Api.Domain.Commands`).
+  Add further projects the same way (`<App>.Worker`, `<App>.Api.IntegrationTests`), not generic `Api/` or `Tests/`.
 - `Db*` EF entities, `Api*` response models, `*Request` inputs, `Query*` read models from handlers.
 - `<App>DbContext`, `<App>AccessRoles`, `<App>ActivitySource`.
 
@@ -71,7 +75,7 @@ docs/
 </PropertyGroup>
 ```
 
-Baseline packages (versions from the reference apps; check for newer releases):
+Baseline packages (versions current for .NET 10 Fusion APIs; check for newer releases):
 
 | Package | Why |
 | --- | --- |

@@ -10,7 +10,7 @@
 
 ## Model
 
-- **Access role** (`PssInventory.Read`): what the API checks. Defined in the app's Roles V2 system config
+- **Access role** (`WorkOrders.Read`): what the API checks. Defined in the app's Roles V2 system config
   (`infra/roles/roles.<env>.json`, deployed with `froles`, see `fusion-roles-cli`).
 - **Role / claimable role / binding / assignment**: how people get access roles (Entra groups, time-boxed claims).
   The API never checks these directly.
@@ -20,8 +20,8 @@
 /// <summary>Access roles, matching infra/roles/roles.{env}.json. Never inline these strings.</summary>
 public static class AppAccessRoles
 {
-    public const string Read = "PssInventory.Read";
-    public const string Write = "PssInventory.Write";
+    public const string Read = "WorkOrders.Read";
+    public const string Write = "WorkOrders.Write";
 }
 ```
 
@@ -47,11 +47,11 @@ services.AddAuthorization(o => o.FallbackPolicy = new AuthorizationPolicyBuilder
 // Roles V2
 services.AddFusionIntegration(o =>
 {
-    o.UseServiceInformation("pss-inventory", configuration["Fusion:Environment"] ?? "ci");
+    o.UseServiceInformation("work-orders", configuration["Fusion:Environment"] ?? "ci");
     o.UseDefaultEndpointResolver(configuration["Fusion:Environment"] ?? "ci");
     o.UseMsalTokenProvider();
 });
-services.AddFusionRolesV2(filter => filter.SystemName = "pss-inventory");
+services.AddFusionRolesV2(filter => filter.SystemName = "work-orders");
 ```
 
 Packages: `Microsoft.Identity.Web`, `Fusion.Integration`, `Fusion.Integration.Roles` (brings

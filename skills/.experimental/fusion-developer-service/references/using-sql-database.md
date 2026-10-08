@@ -14,7 +14,7 @@ with EF Core and Entra ID tokens. Never hand-create Azure SQL servers/databases 
 
 ```json
 {
-  "name": "pss-inventory",
+  "name": "work-orders",
   "environment": "ci",
   "accessControl": {
     "administratorGroupName": "<entra group for admins>",
@@ -25,7 +25,7 @@ with EF Core and Entra ID tokens. Never hand-create Azure SQL servers/databases 
 
 ```bash
 # CI build
-dotnet ef migrations script --idempotent --project backend/Api/App.Api.csproj --context AppDbContext \
+dotnet ef migrations script --idempotent --project backend/WorkOrders.Api/WorkOrders.Api.csproj --context WorkOrdersDbContext \
   --configuration Release --no-build --output artifacts/migrations/migration.sql
 
 # Deploy (pipeline identity needs the Fusion.Infrastructure.Database.Manage app role)
@@ -33,7 +33,7 @@ finf database provision -f infra/database/db-config.json -e ci --sql-contributor
 finf database migrate -d "<database name from provisioning output>" -m artifacts/migrations/migration.sql
 
 # PR database: copy of CI, removed when the PR closes
-finf database provision -an pss-inventory -pr <pr-number> -ghr <owner/repo> --sql-contributor-client-id "<id>" -c ci
+finf database provision -an work-orders -pr <pr-number> -ghr <owner/repo> --sql-contributor-client-id "<id>" -c ci
 ```
 
 Database names follow `sqldb-fapp-<app>-db-<env>`; read the real name from the provisioning output.
@@ -72,7 +72,7 @@ Connection string (radixconfig variable, not a secret):
 - SQLite cannot verify SQL Server features (sequences, `rowversion`, migrations). Add a small SQL Server test set gated by
   an environment variable (e.g. `APP_SQLSERVER_TEST_CONNECTION`) and run it in CI against a container or PR database.
 - Local stack: SQL Server in a container or SQLite behind an explicit local-only mock switch that throws when a workload
-  identity token is present (Project Demand ADR 0020).
+  identity token is present; record that choice in an ADR.
 
 ## Pitfalls
 

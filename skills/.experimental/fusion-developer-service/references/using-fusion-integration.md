@@ -8,12 +8,12 @@ HTTP clients to Fusion and other Entra-protected APIs. Package family `Fusion.In
 ```csharp
 services.AddFusionIntegration(o =>
 {
-    o.UseServiceInformation("pss-inventory", configuration["Fusion:Environment"] ?? "ci");   // app key + environment
+    o.UseServiceInformation("work-orders", configuration["Fusion:Environment"] ?? "ci");   // app key + environment
     o.UseDefaultEndpointResolver(configuration["Fusion:Environment"] ?? "ci");              // Fusion service discovery
     o.UseMsalTokenProvider();   // tokens via Microsoft.Identity.Web (workload identity on Radix)
     // o.AddProfileSync<ProfileSyncHandler>();   // see using-fusion-events.md
 });
-services.AddFusionRolesV2(filter => filter.SystemName = "pss-inventory");
+services.AddFusionRolesV2(filter => filter.SystemName = "work-orders");
 ```
 
 Requires `Microsoft.Identity.Web` with `EnableTokenAcquisitionToCallDownstreamApi` (`using-fluent-authorization.md`).
@@ -22,23 +22,23 @@ Never configure a client secret; workload identity supplies the credential.
 ## Calling another API
 
 ```csharp
-services.AddFusionIntegrationHttpClient("subsea-catalog", client =>
+services.AddFusionIntegrationHttpClient("asset-registry", client =>
 {
-    client.Uri = new Uri(configuration["Catalog:BaseUrl"]!);
-    client.Scope = configuration["Catalog:Scope"]!;            // api://<app-id>/.default
+    client.Uri = new Uri(configuration["AssetRegistry:BaseUrl"]!);
+    client.Scope = configuration["AssetRegistry:Scope"]!;            // api://<app-id>/.default
     client.IndividualTimeout = TimeSpan.FromSeconds(10);
     client.OverallTimeout = TimeSpan.FromSeconds(30);
 });
 
-public sealed class CatalogClient(IHttpClientFactory factory)
+public sealed class AssetRegistryClient(IHttpClientFactory factory)
 {
-    public async Task<ApiComponent?> GetAsync(Guid id, CancellationToken ct)
+    public async Task<ApiAsset?> GetAsync(Guid id, CancellationToken ct)
     {
-        HttpClient http = factory.CreateClient("subsea-catalog");
-        using HttpResponseMessage response = await http.GetAsync($"components/{id}", ct);
+        HttpClient http = factory.CreateClient("asset-registry");
+        using HttpResponseMessage response = await http.GetAsync($"assets/{id}", ct);
         if (response.StatusCode == HttpStatusCode.NotFound) return null;
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<ApiComponent>(ct);
+        return await response.Content.ReadFromJsonAsync<ApiAsset>(ct);
     }
 }
 ```

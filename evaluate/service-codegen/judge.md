@@ -9,7 +9,7 @@ Score each area from 1 (absent/wrong) to 5 (matches reference conventions), with
 
 | Area | What good looks like |
 | --- | --- |
-| Layout | Controllers/, Domain/ (Commands, Queries, Behaviours, Errors, Models), Database/ (Db* entities, configurations, migrations), Models/ (Api* response and request models), registration extensions instead of a large Program.cs |
+| Layout | New repos: projects `<App>.Api` and `<App>.Api.Tests` (the reference's generic `Api/` and `Api.Tests/` names are not the target). Controllers/, Domain/ (Commands, Queries, Behaviours, Errors, Models), Database/ (Db* entities, configurations, migrations), Models/ (Api* response and request models), registration extensions instead of a large Program.cs |
 | CQRS | MediatR < 13, handlers next to or nested in their request, thin controllers, pipeline behaviours (telemetry, validation); FluentValidation recommended |
 | API contract | MVC controllers, API versioning, `[ProducesResponseType]` for every status, XML docs feeding OpenAPI, lists wrapped as `{ value, totalCount }`, a dedicated Api model per endpoint, Db entities never exposed, no `JsonIgnore` |
 | Errors | ProblemDetails for all errors, central mapping of domain errors, traceId in the response |

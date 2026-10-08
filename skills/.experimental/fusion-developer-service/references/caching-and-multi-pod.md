@@ -25,7 +25,7 @@ services.AddMediatRDistributedNotification(o =>
 {
     o.ConnectionString = configuration.GetConnectionString("ServiceBus");
     o.TopicPath = "notifications";
-    o.SourceName = "pss-inventory";
+    o.SourceName = "work-orders";
 });
 
 public sealed class CategoriesChanged : DistributedNotification
@@ -56,7 +56,7 @@ same application name on every pod, or tokens issued by one pod fail on another:
 
 ```csharp
 services.AddDataProtection()
-    .SetApplicationName("pss-inventory")
+    .SetApplicationName("work-orders")
     .PersistKeysToAzureBlobStorage(new BlobClient(new Uri(configuration["DataProtection:KeyRingBlobUri"]!), credential))
     .ProtectKeysWithAzureKeyVault(new Uri(configuration["DataProtection:KeyVaultKeyUri"]!), credential);
 ```
@@ -67,8 +67,8 @@ A browser cannot attach a bearer token to `<img src>`. Use `Fusion.Infrastructur
 
 ```csharp
 services.AddAuthentication()                        // keep JWT bearer as default scheme
-    .AddSasToken(configureService: o => o.Purpose = "Pss.Inventory.SasToken");
-services.AddAuthorization(o => o.AddPolicy("ImageDelivery", p => p.RequireSasTokenResource("inventory/images")));
+    .AddSasToken(configureService: o => o.Purpose = "WorkOrders.SasToken");
+services.AddAuthorization(o => o.AddPolicy("ImageDelivery", p => p.RequireSasTokenResource("work-orders/images")));
 services.AddSasTokenProvider(o => { o.Validity = TimeSpan.FromDays(7); o.CacheDuration = TimeSpan.FromDays(5); });
 ```
 

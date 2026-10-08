@@ -56,10 +56,18 @@ Recommendations here are defaults for **new** code and **new** repos. In an exis
 (`docs/adr/`), `CODEMAP.md`, and instructions first, then follow its patterns even where they differ. Mention a
 deviation from these defaults only when it causes a real problem; do not refactor unasked.
 
+## Running example
+
+References use an invented app: **Work Orders**, app key and Roles V2 system `work-orders`, projects `WorkOrders.Api`
+and `WorkOrders.Api.Tests`, access roles `WorkOrders.Read` / `WorkOrders.Write`, and a downstream `asset-registry` API.
+In code, `App` marks where the app's PascalCase name goes (`AppDbContext` → `WorkOrdersDbContext`). Replace with the
+real names.
+
 ## Defaults at a glance
 
 | Area | Default |
 | --- | --- |
+| Layout | `backend/<App>.slnx`, `<App>.Api/`, `<App>.Api.Tests/`; root namespace = project name |
 | API style | MVC controllers (`[ApiController]`, `ControllerBase`), not minimal APIs |
 | CQRS | MediatR **< 13** (12.5.0 is Apache-licensed), handlers next to their request, pipeline behaviours |
 | Validation | FluentValidation through a MediatR behaviour (recommended, not mandatory) |

@@ -10,8 +10,8 @@
 
 ## Version and license
 
-- Use **MediatR < 13** while it supports your target .NET version. 12.5.0 is the last Apache-2.0 release and is what the
-  PSS apps use. MediatR 13+ needs a commercial license key.
+- Use **MediatR < 13** while it supports your target .NET version. 12.5.0 is the last Apache-2.0 release and is what current
+  Fusion app APIs use. MediatR 13+ needs a commercial license key.
 - Equinor holds a MediatR license, but how teams obtain the key is not documented yet; ask the Fusion Core team before
   moving to 13+.
 
