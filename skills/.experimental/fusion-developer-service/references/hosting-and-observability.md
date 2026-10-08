@@ -6,6 +6,7 @@
 - Cloud role name and instance
 - Sampling, noise, and cost
 - CORS
+  - Preflight caching
 - Health
 - Container and Radix
 
@@ -20,9 +21,9 @@ public static class AppActivitySource
 
 public static IServiceCollection AddAppTelemetry(this IServiceCollection services, IConfiguration configuration)
 {
-    // Health probes and CORS preflights are high-volume and carry no diagnostic value.
+    // Health probes and CORS preflights are high-volume and carry no diagnostic value; keep capability OPTIONS calls.
     services.Configure<AspNetCoreTraceInstrumentationOptions>(o =>
-        o.Filter = ctx => ctx.Request.Method != HttpMethods.Options
+        o.Filter = ctx => !(HttpMethods.IsOptions(ctx.Request.Method) && ctx.Request.Headers.ContainsKey("Access-Control-Request-Method"))
             && ctx.Request.Path != "/health" && ctx.Request.Path != "/health/live");
 
     // Radix sets APPLICATIONINSIGHTS_CONNECTION_STRING; skip locally.
@@ -95,7 +96,7 @@ and several components or environments sharing a workspace become hard to tell a
 - Keep 100 % in ci only if volume is low; production APIs with steady traffic should sample.
 - Logs follow trace sampling when `EnableTraceBasedLogsSampler` is on; logs without a trace (startup) are always kept.
 - Metrics are never sampled; use `AddView(..., MetricStreamConfiguration.Drop)` or reduce tag keys for noisy instruments.
-- Filter health, liveness, and OPTIONS requests (above). Add other high-volume, low-value paths (e.g. SAS-token image
+- Filter health, liveness, and CORS preflight requests (above). Add other high-volume, low-value paths (e.g. SAS-token image
   delivery) to the filter or sample them down.
 - The distro does **not** redact URL query strings by default. If query strings can carry credentials (`sastoken`),
   set `OTEL_DOTNET_EXPERIMENTAL_ASPNETCORE_DISABLE_URL_QUERY_REDACTION=false` (and the `HTTPCLIENT` variant) or redact
@@ -129,7 +130,7 @@ internal static partial class CorsExtensions
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials()
-            .WithExposedHeaders(HeaderNames.Allow)
+            .WithExposedHeaders(HeaderNames.Allow, HeaderNames.RetryAfter, HeaderNames.TraceParent, "api-supported-versions")
             .SetPreflightMaxAge(TimeSpan.FromMinutes(30))));
         return services;
     }
@@ -137,6 +138,21 @@ internal static partial class CorsExtensions
 ```
 
 Pipeline order: `UseExceptionHandler` → `UseCors` → `UseAuthentication` → `UseAuthorization` → `MapControllers`.
+
+### Preflight caching
+
+Every cross-origin call with an `Authorization` header or JSON body is preceded by an `OPTIONS` preflight. Without
+`Access-Control-Max-Age` browsers cache the result for only 5 seconds, so a busy page doubles its request count.
+
+- Always call `SetPreflightMaxAge(...)`. Fusion core services and the PSS apps use **30 minutes** (configurable in core
+  services through `FusionCors:PreflightMaxAgeMinutes`).
+- Browsers cap the value: Chromium 2 hours, Firefox 24 hours. Values above 2 hours bring no benefit in Chrome/Edge.
+- The cache is per origin + URL + method/headers, so it helps repeated calls to the same endpoint; distinct ids in the
+  path still preflight once each.
+- Preflights are answered by the CORS middleware before authentication and never reach `[HttpOptions]` actions;
+  capability OPTIONS calls from the frontend (with a token) do reach them.
+- Expose headers the frontend must read cross-origin: `Allow` (OPTIONS capability endpoints), `Retry-After`, `traceparent`,
+  `api-supported-versions`. Core services also expose `x-trace-id` and `x-fusion-retriable`.
 
 ## Health
 

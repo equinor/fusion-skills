@@ -118,7 +118,8 @@ private async Task<List<string>> AllowedMethodsAsync(params (string Method, stri
 ```
 
 CORS must allow the `OPTIONS` method and expose `Allow` if the frontend reads it cross-origin
-(`hosting-and-observability.md`). Exclude OPTIONS from request telemetry to avoid preflight noise.
+(`hosting-and-observability.md`). Exclude CORS preflights (OPTIONS with `Access-Control-Request-Method`) from request
+telemetry, but keep capability OPTIONS calls.
 
 ## Tests
 
