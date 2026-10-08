@@ -37,7 +37,7 @@ agent's fallback behaviour when MCP is unavailable.
 ## Usage
 
 ```bash
-evaluate/service-codegen/run.sh evaluate/service-codegen/cases/service-new-api.md --runs 2 --model claude-sonnet-5.5 --effort medium --judge
+evaluate/service-codegen/run.sh evaluate/service-codegen/cases/service-new-api.md --runs 2 --model gpt-6-luna --effort medium --judge
 ```
 
 Requirements: Copilot CLI (authenticated), .NET 10 SDK, access to the Fusion-Public NuGet feed, and the reference repos

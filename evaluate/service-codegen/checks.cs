@@ -81,6 +81,7 @@ Check("problem-details", Severity.Fail, AnyApp(@"AddProblemDetails|IExceptionHan
 Check("problem-details-trace-id", Severity.Warn, AnyApp(@"""traceId""|TraceId|Activity\.Current"), "traceId added to ProblemDetails");
 Check("opentelemetry", Severity.Fail, AnyApp(@"AddOpenTelemetry|UseAzureMonitor"), "OpenTelemetry / Azure Monitor configured");
 Check("activity-source", Severity.Warn, AnyApp(@"new ActivitySource\(|ActivitySource\s+\w+\s*=\s*new\("), "custom ActivitySource");
+Check("otel-service-name", Severity.Warn, AnyApp(@"\.AddService\(") || sources.Any(f => f.Content.Contains("OTEL_SERVICE_NAME")), "cloud role name set via service.name");
 Check("cors", Severity.Fail, AnyApp(@"AddCors\(") && AnyApp(@"UseCors\("), "AddCors + UseCors");
 Check("health-endpoints", Severity.Warn, AnyApp(@"/health/live") && AnyApp(@"""/health"""), "/health (readiness) and /health/live (liveness)");
 
