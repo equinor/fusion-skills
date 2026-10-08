@@ -1,7 +1,7 @@
 # Service code-generation evaluation
 
 Measures whether the backend profile (`apm/fusion-developer-services`: agent, instructions, and skills) makes Copilot CLI
-generate Fusion backend code shaped like the reference apps (`fusion-pss-project-demand`, `fusion-pss-subsea-catalog`).
+generate Fusion backend code shaped like a production Fusion app API (`fusion-pss-project-demand`, also the judge reference).
 It checks the generated code only. App registrations, Radix, Roles, and databases are out of scope.
 
 ## How a run works
