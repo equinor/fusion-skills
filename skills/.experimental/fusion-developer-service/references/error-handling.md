@@ -53,7 +53,8 @@ public sealed class ConflictError(string message) : DomainException(message)
 
 Throw `new NotFoundError(...) { TrackAsFailure = true }` when a missing resource signals a real problem (for example a
 row that a previous step just created). Keep the classes in the app; Fusion libraries do not ship this base type yet
-(`Fusion.Infrastructure.Core` has `NotFoundError`/`ResourceExistsError` without a status code).
+(`Fusion.Infrastructure.Core` has `NotFoundError`/`ResourceExistsError` without a status code; a shared base type is
+tracked in equinor/fusion-core-tasks#2238).
 
 ## Central mapping
 
