@@ -31,7 +31,7 @@ public async Task<ActionResult<ApiCollection<ApiItem>>> List([FromQuery] ODataQu
 private const int DefaultPageSize = 50;
 private const int MaxPageSize = 200;
 
-IQueryable<DbItem> items = db.Items.AsNoTracking();
+IQueryable<DbItem> items = db.Items.AsNoTracking().TagWith(nameof(GetItems));
 items = items.ApplyODataFilters(request.Query, m =>
 {
     m.MapField("name", x => x.Name);
@@ -45,7 +45,7 @@ items = items.ApplyODataSorting(request.Query, m =>
 {
     m.MapField("name", x => x.Name);
     m.MapField("quantity", x => x.Quantity);
-}, defaultSort: q => q.OrderBy(x => x.Name));
+}, defaultSort: q => q.OrderBy(x => x.Name).ThenBy(x => x.Id));   // unique order, so pages never overlap
 
 int top = Math.Clamp(request.Query.Top.GetValueOrDefault(DefaultPageSize), 1, MaxPageSize);
 List<QueryItem> page = await items

@@ -75,7 +75,7 @@ real names.
 | Errors | ProblemDetails for every error, `traceId` extension, central exception mapping |
 | Auth | Entra ID JWT + Fusion Roles V2 access roles, checked with FluentAuthorization; OPTIONS endpoints return `Allow` |
 | Querying | `Fusion.AspNetCore` OData (`$filter`, `$top`, `$skip`, `$expand`) |
-| Data | Azure SQL via Fusion Database-as-a-Service (`finf`), EF Core, Entra token auth, no passwords; LINQ method syntax, queries tagged with `.TagWith(nameof(<Request>))` |
+| Data | Azure SQL via Fusion Database-as-a-Service (`finf`), EF Core, Entra token auth, no passwords; split queries + retries on, no-tracking queries, bounded lists, LINQ method syntax, `.TagWith(nameof(<Request>))` |
 | Hosting | OpenTelemetry → Azure Monitor, CORS for Fusion origins, `/health` + `/health/live`, Radix |
 | Multi-pod | Assume ≥ 2 replicas: no per-pod state that must be shared; shared Data Protection keys |
 | Tests | `WebApplicationFactory` integration tests with `Fusion.Testing` + `Fusion.Testing.Authentication` |

@@ -21,7 +21,9 @@ Existing repo conventions override any item here.
 ## Data
 
 - [ ] Entity changes have a migration in the same change; migration is backward compatible
-- [ ] Queries use `AsNoTracking` and projections; no N+1
+- [ ] Queries use `AsNoTracking` and projections; no N+1, no queries in loops, no lazy loading
+- [ ] Lists bounded (`Take`), ordered by a unique key before paging
+- [ ] Two or more sibling collections loaded through split queries (default) or a deliberate `AsSingleQuery()`
 - [ ] LINQ method syntax; each query tagged with `.TagWith(nameof(<Request>))`
 - [ ] Concurrency handled where edits can collide (`rowversion` → 409)
 

@@ -50,7 +50,7 @@ public sealed record GetItem(Guid Id) : IRequest<QueryItem?>
 - Commands in `Domain/Commands`, queries in `Domain/Queries`; handler nested (or directly beside) its request.
 - Handlers return `Query*` read models (or result records), never `Db*` entities or `Api*` models.
 - Queries use `AsNoTracking()`, projections, LINQ method (fluent) syntax, and `.TagWith(nameof(<Request>))`
-  (`using-sql-database.md`).
+  (`using-sql-database.md`, "Querying efficiently"). Commands track only the entities they change.
 - Throw domain exceptions from `Domain/Errors` for not-found/conflict/rule violations and map them centrally
   (`error-handling.md`), or return result records the controller maps; pick one per repo.
 - Publish `INotification` after state changes when other parts react; use `DistributedNotification` when every pod must

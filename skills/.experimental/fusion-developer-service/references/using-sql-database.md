@@ -42,10 +42,17 @@ Database names follow `sqldb-fapp-<app>-db-<env>`; read the real name from the p
 
 ```csharp
 // Fusion.Infrastructure.Database: Entra token auth (workload identity on Radix, az login locally)
-services.AddSqlDbContext<AppDbContext>(configuration.GetConnectionString("AppDbContext") ?? string.Empty)
+services.AddSqlDbContext<AppDbContext>(
+        configuration.GetConnectionString("AppDbContext") ?? string.Empty,
+        sqlServerOptionsAction: sql => sql
+            .UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)   // see "Querying efficiently"
+            .EnableRetryOnFailure(maxRetryCount: 5))                          // Azure SQL transient faults
     .AddAccessTokenSupport()
     .AddDefaultSqlTokenCredentials();
 ```
+
+With retries enabled, a manual transaction must run inside the execution strategy, or EF throws:
+`await db.Database.CreateExecutionStrategy().ExecuteAsync(async () => { await using var tx = await db.Database.BeginTransactionAsync(ct); ... })`.
 
 Connection string (radixconfig variable, not a secret):
 `Server=tcp:fusion-test-sqlserver-alias.database.windows.net,1433;Initial Catalog=sqldb-fapp-<app>-db-ci;Encrypt=True;Connection Timeout=30;`
@@ -80,10 +87,62 @@ Connection string (radixconfig variable, not a secret):
 List<QueryWorkOrder> items = await db.WorkOrders.AsNoTracking()
     .TagWith(nameof(GetWorkOrders))
     .Where(x => x.Status == request.Status)
-    .OrderByDescending(x => x.Created)
+    .OrderByDescending(x => x.Created).ThenBy(x => x.Id)
+    .Take(top)
     .Select(QueryWorkOrder.Projection)
     .ToListAsync(cancellationToken);
 ```
+
+## Querying efficiently
+
+From Microsoft Learn "Efficient querying"; apply in every handler.
+
+**Tracking**
+
+- MediatR **queries** always use `AsNoTracking()`: no change-tracker snapshots or identity map for data that is never
+  saved (roughly 30 % faster and less memory in Microsoft's benchmark). Projections into `Query*` models are not tracked
+  anyway, but an entity inside a projection is; `AsNoTracking()` keeps the intent explicit.
+- **Commands** track only the entities they change (`FindAsync`/`SingleAsync` without `AsNoTracking`, modify,
+  `SaveChangesAsync`). Read-only lookups inside a command still use `AsNoTracking()`.
+- Do not switch the context default to `NoTracking`: a command that forgets `AsTracking()` then saves nothing, silently.
+- Use `AsNoTrackingWithIdentityResolution()` only when a no-tracking result must share instances (same row referenced
+  many times).
+
+**Related data and cartesian explosion**
+
+- Loading two or more sibling collections in one query (`Include(x => x.Tasks).Include(x => x.Comments)`, or both in a
+  projection) makes SQL return their cross product: 10 tasks × 10 comments = 100 rows per work order.
+- The registration above makes **split queries the default**: one SQL query per collection, no cross product. Reference
+  (one-to-one/many-to-one) navigations are still joined. EF also stops warning about multiple collection includes.
+- Opt out with `.AsSingleQuery()` for hot queries that load one small collection, where one round trip is cheaper.
+- Split-query caveats: one extra round trip per collection; no consistency across the queries (wrap in a snapshot
+  transaction when it matters); earlier result sets are buffered in memory. Always order by a unique key before
+  `Skip`/`Take` (`.ThenBy(x => x.Id)`); EF before 10 could return wrong rows otherwise.
+- Prefer projecting the needed columns (`Select`) over `Include`: it loads related data without full entities and skips
+  large columns.
+
+**Result size and paging**
+
+- Every list query is bounded: `Take` with a clamped `$top` (`using-odata.md`), never an unbounded `ToListAsync()`.
+- Page on a stable, unique order. `Skip`/`Take` gets slower with deep pages; for feeds or sync endpoints use keyset
+  paging (`Where(x => x.Created < lastCreated || (x.Created == lastCreated && x.Id < lastId))`).
+- Count and page are two queries; skip the count when the client does not need `totalCount`.
+
+**Round trips**
+
+- No lazy loading (do not add `Microsoft.EntityFrameworkCore.Proxies`); it hides N+1 queries.
+- No queries inside loops: load the set once (`Where(x => ids.Contains(x.Id))`) and join in memory.
+- Set-based changes use `ExecuteUpdateAsync`/`ExecuteDeleteAsync` (one SQL statement, no loading). They bypass the change
+  tracker and `SaveChanges` logic, so do not use them where concurrency tokens or domain notifications depend on it.
+- Async APIs only, with the request `CancellationToken`; never mix sync and async EF calls.
+
+**SQL shape**
+
+- Index the columns used in filters, joins and sorting (`HasIndex` in the entity configuration); composite index order
+  matters (an index on A, B serves filters on A and A+B, not B alone).
+- `StartsWith` can use an index; `Contains`/`EndsWith` (OData `contains`) scan the table, so limit them on large tables.
+- Inspect slow queries with the query plan (Query Store; the `TagWith` comment finds the handler).
+- Raw SQL is a last resort: `FromSql($"...{value}")` (parameterized), never `FromSqlRaw` with concatenated input.
 
 ## Local development and tests
 

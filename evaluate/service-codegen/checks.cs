@@ -108,6 +108,8 @@ Check("naming-api-models", Severity.Warn, AnyApp(@"(class|record)\s+Api[A-Z]\w+"
 Check("ef-fluent-config", Severity.Warn, AnyApp(@"IEntityTypeConfiguration<|OnModelCreating"), "Fluent API entity configuration");
 Check("design-time-factory", Severity.Warn, AnyApp(@"IDesignTimeDbContextFactory<"), "IDesignTimeDbContextFactory");
 Check("ef-query-tag", Severity.Warn, AnyApp(@"\.TagWith(CallSite)?\("), "EF queries tagged with TagWith");
+Check("ef-no-tracking", Severity.Warn, AnyApp(@"\.AsNoTracking(WithIdentityResolution)?\("), "read queries use AsNoTracking");
+Check("ef-split-query", Severity.Warn, AnyApp(@"UseQuerySplittingBehavior\(QuerySplittingBehavior\.SplitQuery\)|\.AsSplitQuery\("), "split queries configured");
 Check("linq-method-syntax", Severity.Warn, !AnyApp(@"\bfrom\s+\w+\s+in\s+[\w.]+(\s|$)[\s\S]{0,400}?\bselect\b"), "LINQ method syntax, no query expressions");
 Check("sql-server", Severity.Fail, AnyApp(@"UseSqlServer\(|AddSqlDbContext(Pool)?<"), "EF Core on SQL Server");
 Check("sql-token-auth", Severity.Warn, AnyApp(@"AddAccessTokenSupport|AddDefaultSqlTokenCredentials|Active Directory (Default|Workload Identity|Managed Identity)"), "Entra token auth to SQL (Fusion.Infrastructure.Database)");
