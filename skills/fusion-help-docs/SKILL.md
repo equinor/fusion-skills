@@ -118,33 +118,7 @@ Create markdown files in the articles root folder. The filename (without `.md`) 
 - One topic per article
 - Link related articles by title (platform handles deep linking)
 
-**Example article** (`docs/help/articles/my-app-getting-started.md`):
-
-```markdown
-## Overview
-
-This guide walks you through the basics of using My App.
-
-## Prerequisites
-
-Before you begin, make sure you have:
-- Access to the Fusion portal
-- The correct role assigned to your user
-
-## Step 1: Navigate to the app
-
-Open Fusion and search for "My App" in the app launcher.
-
-![App launcher](images/app-launcher.png)
-
-## Step 2: Create your first item
-
-Click the **New** button in the toolbar to create your first item.
-
-## Need help?
-
-Contact the team on Teams or check the FAQ section.
-```
+Start from [assets/article-template.md](assets/article-template.md) and [assets/help-articles-template.json](assets/help-articles-template.json).
 
 ### 4. Create the release notes config file (optional)
 
@@ -176,27 +150,7 @@ Create `help-release-notes.json` if team publishes release notes:
 | `tags` | No | string[] | Searchable tags. |
 | `relevantApps` | No | string[] | Additional app keys. |
 
-**Example release note** (`docs/help/release-notes/my-app-v2-release.md`):
-
-```markdown
-## What's new in Version 2.0
-
-### New dashboard
-
-We've completely redesigned the dashboard with new charts and filtering capabilities.
-
-![New dashboard](images/new-dashboard.png)
-
-### Performance improvements
-
-- Page load times reduced by 40%
-- Search results now appear in under 1 second
-
-### Bug fixes
-
-- Fixed an issue where filters would reset on navigation
-- Corrected date formatting in the export feature
-```
+Start from [assets/release-note-template.md](assets/release-note-template.md) and [assets/help-release-notes-template.json](assets/help-release-notes-template.json).
 
 ### 5. Install and authenticate the CLI
 
@@ -252,94 +206,7 @@ Test in `ci` before promoting to `fqa` then `fprd`.
 
 ### 7. Set up CI/CD pipeline (recommended)
 
-Automate publishing via Azure DevOps or GitHub Actions.
-
-**Azure DevOps pipeline example:**
-
-```yaml
-parameters:
-  - name: environment
-    type: string
-    default: ci
-    values: [ci, fqa, fprd]
-  - name: azureSubscription
-    type: string
-
-steps:
-  - checkout: self
-
-  - script: |
-      dotnet tool install --global --add-source "https://statoil-proview.pkgs.visualstudio.com/Fusion%20-%20Packages/_packaging/Fusion-Public/nuget/v3/index.json" Fusion.Help.Cli
-    displayName: "Install fusion help CLI"
-
-  - task: AzureCLI@2
-    displayName: "Sync help articles"
-    inputs:
-      azureSubscription: ${{ parameters.azureSubscription }}
-      scriptType: pscore
-      scriptLocation: inlineScript
-      inlineScript: |
-        fhelp article sync `
-          -f ./docs/help/help-articles.json `
-          -r ./docs/help/articles `
-          -e "${{ parameters.environment }}" `
-          -v
-
-  - task: AzureCLI@2
-    displayName: "Sync release notes"
-    inputs:
-      azureSubscription: ${{ parameters.azureSubscription }}
-      scriptType: pscore
-      scriptLocation: inlineScript
-      inlineScript: |
-        fhelp releasenotes sync `
-          -f ./docs/help/help-release-notes.json `
-          -r ./docs/help/release-notes `
-          -e "${{ parameters.environment }}" `
-          -v
-```
-
-**GitHub Actions example:**
-
-```yaml
-name: Sync Help Documentation
-
-on:
-  push:
-    branches: [main]
-    paths: ['docs/help/**']
-
-jobs:
-  sync-docs:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-
-      - name: Install fusion help CLI
-        run: |
-          dotnet tool install --global \
-            --add-source "https://statoil-proview.pkgs.visualstudio.com/Fusion%20-%20Packages/_packaging/Fusion-Public/nuget/v3/index.json" \
-            Fusion.Help.Cli
-
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: '3aa4a235-b6e2-48d5-9195-7fcf05b459b0'
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Sync articles
-        run: |
-          fhelp article sync \
-            -f ./docs/help/help-articles.json \
-            -r ./docs/help/articles \
-            -e ci -v
-```
+Automate publishing via Azure DevOps or GitHub Actions. Use the pipeline examples in [references/ci-pipelines.md](references/ci-pipelines.md).
 
 ### 8. FAQs (supplementary)
 

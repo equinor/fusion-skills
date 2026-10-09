@@ -90,6 +90,10 @@ Minimal example (`roles-config.json`):
 
 See [references/role-config-schema.md](references/role-config-schema.md) for the full schema with all resource types and field definitions.
 
+For an app repo, split the config per environment and concern (`roles.<env>.json`, `bindings.<env>.json`,
+`access-assignments.<env>.json`) and apply them in that order. See [references/file-layout.md](references/file-layout.md)
+for the layout, deploy order, reconcile flags, scoped vs global roles, and naming.
+
 ### 2. Dry-run to verify changes
 
 Always dry-run before deploying to catch unexpected changes:
@@ -135,9 +139,9 @@ The `create` command reconciles each resource type against its natural key:
 | Access roles | `systemIdentifier` + `name` | Create if missing; patch if changed |
 | Roles / claimable roles | `name` | Create if missing; patch if changed; access role mappings fully reconciled |
 | Bindings | `identifier` | Patch all fields; diff shows role/group additions and removals |
-| Role assignments | `roleIdentifier` + `source` + `externalIdentifier` | Create if missing; skip if exists |
+| Role assignments | `roleIdentifier` + `source` + `externalIdentifier` | Create if missing; skip if exists; delete only with `--reconcile-assignments` |
 
-**Important**: Access role mappings on roles/claimable roles are **fully reconciled** — mappings absent from the config are removed. Only access roles belonging to systems declared in the config file are managed.
+**Important**: Access role mappings on roles/claimable roles are **fully reconciled** — mappings absent from the config are removed. Only access roles belonging to systems declared in the config file are managed. Bindings and assignments are only deleted with `--reconcile-bindings=<system>` / `--reconcile-assignments[=<system>]` (see [references/file-layout.md](references/file-layout.md)).
 
 ## Environments
 
@@ -165,5 +169,7 @@ Or see the source documentation:
 
 - Always dry-run before deploying to production
 - Access role mapping reconciliation removes unmapped roles — review the dry-run output carefully
+- `--reconcile-bindings` / `--reconcile-assignments` delete entries missing from the file — use only on complete files, dry-run first, confirm with the user
+- `--dry-run` does not call the server; apply to `ci` before `fprd`
 - Never store tokens in config files; always use `-t <token>` from a secret variable in pipelines
 - `delete role-assignments` is destructive — confirm with user and dry-run first

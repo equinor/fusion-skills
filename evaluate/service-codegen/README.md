@@ -1,0 +1,63 @@
+# Service code-generation evaluation
+
+Measures whether the backend profile (`apm/fusion-developer-services`: agent, instructions, and skills) makes Copilot CLI
+generate Fusion backend code shaped like a production Fusion app API (`fusion-pss-project-demand`, also the judge reference).
+It checks the generated code only. App registrations, Radix, Roles, and databases are out of scope.
+
+## How a run works
+
+1. Creates a fresh workspace outside the repo (`$TMPDIR/fusion-service-codegen/<timestamp>-<case>/run-<n>`, override with
+   `EVAL_WORK_ROOT`), runs `git init`, and seeds it with `seed/` (empty API) or with a sibling repo path
+   (`seed_repo` / `seed_path` front matter). Results and a copy of the generated sources go to
+   `.tmp/eval/service-codegen/<timestamp>-<case>/run-<n>/`.
+2. Copies the **working-tree** skills, agents, and instructions of the profile into `.github/` (resolving nested APM packages),
+   so uncommitted skill changes are tested.
+3. Runs `copilot --agent <agent> --allow-all-tools --no-ask-user --autopilot -p "<## User>"` inside the workspace.
+   File access is limited to the workspace (no `--allow-all-paths`); shell commands are not sandboxed, so run in a
+   container if that matters.
+4. Runs `checks.cs` (`dotnet build`, `dotnet test`, and regex convention checks plus the case's `## Expect` patterns) and writes
+   `scorecard.md` / `scorecard.json`.
+5. With `--judge`, asks Copilot to score the workspace against `fusion-pss-project-demand/backend` using `judge.md`
+   plus the case's `## Eval` rubric (`judge.md` in the run folder, ends with `TOTAL: n/50`).
+
+## Cost and isolation guards
+
+A single unguarded baseline run took 8 h and about 1,000 AI credits: the agent kept continuing in autopilot and read
+Fusion library source from GitHub ~95 times because the skills lacked basic API facts and Fusion MCP was not authenticated.
+The runner therefore defaults to:
+
+- GitHub MCP stays enabled, but its source-reading tools (`get_file_contents`, `search_code`) are denied, so results reflect
+  the skills and Fusion MCP rather than copied GitHub source; opt in with `--allow-github-source`.
+- `--max-continues 5` autopilot continuations and `--max-minutes 45` wall-clock limit per run.
+- `usage.txt` per run with AI credits and tokens; check it before scaling up `--runs`.
+
+Fusion MCP (configured in your Copilot CLI user config) stays enabled; authenticate it first, or results will show the
+agent's fallback behaviour when MCP is unavailable.
+
+## Usage
+
+```bash
+evaluate/service-codegen/run.sh evaluate/service-codegen/cases/service-new-api.md --runs 2 --model gpt-6-luna --effort medium --judge
+```
+
+Requirements: Copilot CLI (authenticated), .NET 10 SDK, access to the Fusion-Public NuGet feed, and the reference repos
+cloned next to this repository (override with `REPOS_ROOT`). Use `COPILOT_BIN` to point at a specific Copilot CLI binary.
+
+Calibrate the checks against a reference without running Copilot:
+
+```bash
+dotnet run evaluate/service-codegen/checks.cs -- --workspace ../fusion-pss-project-demand/backend --no-build
+```
+
+## Case files
+
+`cases/*.md` with front matter (`agent`, optional `seed_repo`, `seed_path`) and sections:
+
+- `## User`: the prompt sent to Copilot.
+- `## Expect`: `- id: \`regex\`` lines; each must match at least one source file (fail if not).
+- `## Eval`: extra rubric for the judge.
+
+## Comparing runs
+
+Run every case before and after a skill change with the same model and at least two runs per case (LLM variance), and
+compare failed checks and judge totals. Record the numbers in the pull request body.

@@ -1,11 +1,13 @@
 ---
 name: fusion-backend-dev
-description: 'Guides consumption and understanding of Fusion backend services, APIs, and patterns for frontend/client developers, integrators, and architects. Shows reference implementations, explains architectural decisions, and clarifies contracts. USE FOR: understanding Fusion backend APIs, learning implementation patterns, exploring reference code, choosing the right integration point, and understanding authorization/validation/async patterns. DO NOT USE FOR: modifying backend services, creating new endpoints, database changes, or backend-specific development (use the fusion-services-developer agent or the target backend service repo instead).'
+description: 'DEPRECATED: Use fusion-developer-service to build or change Fusion backend APIs, and fusion-core-services to call existing Fusion Core APIs. Previously: guided consumption and understanding of Fusion backend services, APIs, and patterns.'
 license: MIT
 compatibility: Works best with Fusion MCP. Works best with mcp_fusion_search_backend_code for reference code discovery. Frontend/client developers should also install fusion-research for deeper architectural context.
 metadata:
   version: "0.1.3"
-  status: active
+  status: deprecated
+  deprecated_at: "2026-10-08"
+  successor: fusion-developer-service
   owner: "@equinor/fusion-core"
   skills:
     - fusion-research
@@ -18,10 +20,18 @@ metadata:
     - architecture
     - reference-implementation
     - csharp
+    - deprecated
   mcp:
     suggested:
       - mcp_fusion_search_backend_code
 ---
+
+> **DEPRECATED**: Superseded by [`fusion-developer-service`](../../.experimental/fusion-developer-service/SKILL.md) for
+> building or changing Fusion backend APIs (layout, MediatR, contracts, authorization, OData, database, events, caching,
+> hosting, tests), and by [`fusion-core-services`](../../.experimental/fusion-core-services/SKILL.md) for calling existing
+> Fusion Core APIs. The name invited implementation requests this skill explicitly declined, and its pattern content
+> now lives, verified against current Fusion libraries, in `fusion-developer-service`. Install those skills instead;
+> `apm/fusion-developer-services` no longer includes this one.
 
 # Fusion Backend Consumption
 
@@ -149,4 +159,4 @@ Always:
 - State which repository the pattern comes from
 - Note when a pattern exists in one service but not others
 - Offer to escalate to the `fusion-services-developer` agent if user wants to implement changes
-- For setting up or deploying a new standalone backend API (app registration, Roles V2, database, Radix/Kubernetes deployment, observability), point to the [New Backend Service Checklist](https://docs.fusion.equinor.com/docs/developer/api/new-service-checklist) on fusion-docs rather than improvising the sequence
+- For setting up or deploying a new standalone backend API (app registration, Roles V2, database, Radix/Kubernetes deployment, observability), point to the [New Backend Service Checklist](https://docs.fusion.equinor.com/docs/developer/api) on fusion-docs rather than improvising the sequence
