@@ -71,6 +71,25 @@ public sealed class TelemetryBehaviour<TRequest, TResponse> : IPipelineBehavior<
             activity?.SetStatus(ActivityStatusCode.Ok);
             return response;
         }
+        catch (DomainException ex) when (!ex.TrackAsFailure && ex.StatusCode < 500)
+        {
+            // Expected outcome (404/409/...): visible on the span, not counted as a dependency failure.
+            activity?.SetTag("mediatr.outcome", ex.StatusCode);
+            activity?.SetStatus(ActivityStatusCode.Ok);
+            throw;
+        }
+        catch (ValidationException)
+        {
+            activity?.SetTag("mediatr.outcome", StatusCodes.Status400BadRequest);
+            activity?.SetStatus(ActivityStatusCode.Ok);
+            throw;
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            // Caller went away; not a fault in this service.
+            activity?.SetTag("mediatr.outcome", "cancelled");
+            throw;
+        }
         catch (Exception ex)
         {
             activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
@@ -92,6 +111,13 @@ What this gives in Application Insights:
   (`hosting-and-observability.md`).
 - Tag the request type only. Never serialize the request into the span: payloads can carry personal data and become
   searchable telemetry.
+- Failed spans feed the Failures view and failure-rate alerts, so only faults should fail: expected domain outcomes
+  (`DomainException` with a 4xx status, `error-handling.md`), validation errors, and client cancellations keep the span
+  successful with a `mediatr.outcome` tag; everything else sets `Error`. In Fusion production telemetry most failed
+  MediatR spans are client cancellations and not-found errors, which hide the real faults.
+- The HTTP request span still records 4xx. To stop expected 404s counting as failed requests, add an OpenTelemetry
+  processor that sets `Ok` on 404 server spans (Fusion core services: `AddOverrideNotFoundTelemetry`, optionally
+  limited by path).
 
 ```csharp
 public sealed class RequestValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)

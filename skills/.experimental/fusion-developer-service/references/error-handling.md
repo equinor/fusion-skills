@@ -22,6 +22,39 @@ app.UseExceptionHandler();   // first in the pipeline
 `[ApiController]` already turns model-binding errors into `ValidationProblemDetails`; `AddProblemDetails` makes
 `NotFound()`, `Conflict()`, unhandled exceptions (500), and status-code results use the same shape and get `traceId`.
 
+## Domain exceptions
+
+One base class carries the HTTP status, like `HttpRequestException.StatusCode` or Azure.Core's
+`RequestFailedException.Status`, so the handler and telemetry never need a type switch:
+
+```csharp
+// Domain/Errors/DomainException.cs
+public abstract class DomainException(string message, Exception? inner = null) : Exception(message, inner)
+{
+    public abstract int StatusCode { get; }
+
+    /// <summary>Stable machine-readable code for clients, e.g. "WorkOrderNotFound".</summary>
+    public virtual string? ErrorCode => null;
+
+    /// <summary>Expected outcomes (4xx) are not telemetry failures unless set; 5xx always are.</summary>
+    public bool TrackAsFailure { get; init; }
+}
+
+public sealed class NotFoundError(string message) : DomainException(message)
+{
+    public override int StatusCode => StatusCodes.Status404NotFound;
+}
+
+public sealed class ConflictError(string message) : DomainException(message)
+{
+    public override int StatusCode => StatusCodes.Status409Conflict;
+}
+```
+
+Throw `new NotFoundError(...) { TrackAsFailure = true }` when a missing resource signals a real problem (for example a
+row that a previous step just created). Keep the classes in the app; Fusion libraries do not ship this base type yet
+(`Fusion.Infrastructure.Core` has `NotFoundError`/`ResourceExistsError` without a status code).
+
 ## Central mapping
 
 ```csharp
@@ -29,24 +62,19 @@ internal sealed class DomainExceptionHandler(IProblemDetailsService problemDetai
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        (int status, string title)? mapped = exception switch
-        {
-            NotFoundError => (StatusCodes.Status404NotFound, "Resource not found"),
-            ConflictError => (StatusCodes.Status409Conflict, "Conflict"),
-            _ => null
-        };
-        if (mapped is null)
+        if (exception is not DomainException domain)
         {
             return false;
         }
 
-        httpContext.Response.StatusCode = mapped.Value.status;
-        return await problemDetails.TryWriteAsync(new ProblemDetailsContext
+        httpContext.Response.StatusCode = domain.StatusCode;
+        ProblemDetails problem = new() { Status = domain.StatusCode, Title = ReasonPhrases.GetReasonPhrase(domain.StatusCode), Detail = domain.Message };
+        if (domain.ErrorCode is not null)
         {
-            HttpContext = httpContext,
-            Exception = exception,
-            ProblemDetails = new ProblemDetails { Status = mapped.Value.status, Title = mapped.Value.title, Detail = exception.Message }
-        });
+            problem.Extensions["errorCode"] = domain.ErrorCode;
+        }
+
+        return await problemDetails.TryWriteAsync(new ProblemDetailsContext { HttpContext = httpContext, Exception = exception, ProblemDetails = problem });
     }
 }
 ```
