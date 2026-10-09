@@ -7,7 +7,9 @@ Packages: `xunit.v3`, `Microsoft.AspNetCore.Mvc.Testing`, `Microsoft.EntityFrame
 `Fusion.Testing.Authentication`, `AwesomeAssertions`.
 
 xunit.v3 runs on Microsoft.Testing.Platform; on the .NET 10 SDK `dotnet test` then needs the runner opt-in in the repo
-root `global.json`, or it fails with "Testing with VSTest target is no longer supported":
+root `global.json`, or it fails with "Testing with VSTest target is no longer supported". `dotnet` reads the
+`global.json` nearest the **working directory**, so extend an existing root file instead of adding a second one under
+`backend/`:
 
 ```json
 { "test": { "runner": "Microsoft.Testing.Platform" } }

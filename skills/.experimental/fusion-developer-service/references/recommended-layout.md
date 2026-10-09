@@ -13,10 +13,10 @@ Use for **new** repos only. Existing repos keep their layout. Example names use 
 ## Repository
 
 ```text
+global.json                     # repo root: SDK pin + Microsoft.Testing.Platform runner (see testing.md)
 backend/
   <App>.slnx                    # WorkOrders.slnx
   nuget.config                  # nuget.org + Fusion-Public
-  global.json                   # SDK pin + Microsoft.Testing.Platform runner
   <App>.Api/                    # WorkOrders.Api/
     <App>.Api.csproj
     Program.cs                  # composition only: calls registration extensions, maps middleware
