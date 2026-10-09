@@ -22,6 +22,7 @@ Existing repo conventions override any item here.
 
 - [ ] Entity changes have a migration in the same change; migration is backward compatible
 - [ ] Queries use `AsNoTracking` and projections; no N+1
+- [ ] LINQ method syntax; each query tagged with `.TagWith(nameof(<Request>))`
 - [ ] Concurrency handled where edits can collide (`rowversion` → 409)
 
 ## Runtime

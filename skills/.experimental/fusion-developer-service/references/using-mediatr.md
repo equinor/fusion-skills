@@ -39,6 +39,7 @@ public sealed record GetItem(Guid Id) : IRequest<QueryItem?>
     {
         public async Task<QueryItem?> Handle(GetItem request, CancellationToken cancellationToken) =>
             await db.Items.AsNoTracking()
+                .TagWith(nameof(GetItem))
                 .Where(x => x.Id == request.Id)
                 .Select(QueryItem.Projection)
                 .SingleOrDefaultAsync(cancellationToken);
@@ -48,7 +49,8 @@ public sealed record GetItem(Guid Id) : IRequest<QueryItem?>
 
 - Commands in `Domain/Commands`, queries in `Domain/Queries`; handler nested (or directly beside) its request.
 - Handlers return `Query*` read models (or result records), never `Db*` entities or `Api*` models.
-- Queries use `AsNoTracking()` and projections.
+- Queries use `AsNoTracking()`, projections, LINQ method (fluent) syntax, and `.TagWith(nameof(<Request>))`
+  (`using-sql-database.md`).
 - Throw domain exceptions from `Domain/Errors` for not-found/conflict/rule violations and map them centrally
   (`error-handling.md`), or return result records the controller maps; pick one per repo.
 - Publish `INotification` after state changes when other parts react; use `DistributedNotification` when every pod must
@@ -78,6 +80,18 @@ public sealed class TelemetryBehaviour<TRequest, TResponse> : IPipelineBehavior<
     }
 }
 ```
+
+What this gives in Application Insights:
+
+- `ActivityKind.Internal` spans become **dependencies of type `InProc`**, named after the request (`GetWorkOrders`).
+  The end-to-end transaction view shows request → `GetWorkOrders` (InProc) → its SQL and HTTP dependencies, so slow
+  or failing database calls are attributed to the command/query that made them.
+- SQL dependencies come from the SqlClient instrumentation in `Azure.Monitor.OpenTelemetry.AspNetCore`; do not add
+  `OpenTelemetry.Instrumentation.EntityFrameworkCore` (duplicate spans).
+- The `ActivitySource` must be registered with `.AddSource(AppActivitySource.Name)` or the spans are dropped
+  (`hosting-and-observability.md`).
+- Tag the request type only. Never serialize the request into the span: payloads can carry personal data and become
+  searchable telemetry.
 
 ```csharp
 public sealed class RequestValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)

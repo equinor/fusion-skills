@@ -65,6 +65,26 @@ Connection string (radixconfig variable, not a secret):
   migration is fine only for local/compose.
 - EF sequential GUIDs are not RFC-variant UUIDs; frontends using strict UUID validation need `guid()`-style checks.
 
+## Queries
+
+- Use LINQ **method (fluent) syntax**: `db.WorkOrders.AsNoTracking().Where(...).OrderBy(...).Select(...)`. It chains
+  with `AsNoTracking`, `TagWith`, and the OData helpers; use query syntax (`from x in ... select`) only where a
+  multi-join is clearly easier to read.
+- Tag every query with the MediatR request that runs it: `.TagWith(nameof(GetWorkOrders))`. EF Core writes the tag as a
+  `-- GetWorkOrders` comment in the SQL, which shows in the SQL dependency text, Query Store, and `sys.dm_exec_*` views,
+  so a slow query can be traced back to its handler. Use constant names only (tags are SQL literals; never user input).
+  Several `TagWith` calls add up, so a shared query helper can add its own tag.
+- `TagWith` does not apply to `SaveChanges`; those commands are identified through the parent MediatR span in traces.
+
+```csharp
+List<QueryWorkOrder> items = await db.WorkOrders.AsNoTracking()
+    .TagWith(nameof(GetWorkOrders))
+    .Where(x => x.Status == request.Status)
+    .OrderByDescending(x => x.Created)
+    .Select(QueryWorkOrder.Projection)
+    .ToListAsync(cancellationToken);
+```
+
 ## Local development and tests
 
 - Integration tests: SQLite `:memory:` (one open connection per fixture) with `EnsureCreated`, swapped in through
